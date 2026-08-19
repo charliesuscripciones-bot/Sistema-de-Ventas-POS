@@ -3,11 +3,7 @@
 <head>
 
 <meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1.0"
->
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>Sistema de Ventas POS</title>
 
@@ -244,8 +240,6 @@ header p{
   border-color:#111827;
 }
 
-/* CLIENTE */
-
 .customer-box{
   margin-top:20px;
   padding-top:20px;
@@ -308,20 +302,35 @@ header p{
   font-size:14px;
 }
 
-.charge{
-  width:100%;
+.charge-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
   margin-top:18px;
+}
+
+.charge,
+.pending{
+  width:100%;
   padding:18px;
   border:none;
   border-radius:12px;
-  background:#16a34a;
   color:#fff;
-  font-size:22px;
+  font-size:18px;
   font-weight:800;
   cursor:pointer;
 }
 
-.charge:disabled{
+.charge{
+  background:#16a34a;
+}
+
+.pending{
+  background:#f59e0b;
+}
+
+.charge:disabled,
+.pending:disabled{
   opacity:.6;
   cursor:wait;
 }
@@ -370,6 +379,10 @@ header p{
     font-size:23px;
   }
 
+  .charge-buttons{
+    grid-template-columns:1fr;
+  }
+
 }
 
 </style>
@@ -380,217 +393,200 @@ header p{
 
 <header>
 
-  <h1>🧾 Sistema de Ventas POS</h1>
+<h1>🧾 Sistema de Ventas POS</h1>
 
-  <p>
-    Administración de negocios y ventas
-  </p>
+<p>
+Administración de negocios y ventas
+</p>
 
 </header>
 
-
 <div class="container">
 
-  <div
-    id="status"
-    class="status">
-  </div>
-
-
-  <!-- NEGOCIOS -->
-
-  <div class="businesses">
-
-    <button
-      type="button"
-      class="business-btn active"
-      data-business="BakeQuiri">
-
-      BakeQuiri
-
-    </button>
-
-
-    <button
-      type="button"
-      class="business-btn"
-      data-business="SpicyRoll">
-
-      SpicyRoll
-
-    </button>
-
-  </div>
-
-
-  <div class="layout">
-
-
-    <!-- PRODUCTOS -->
-
-    <div class="card">
-
-      <h2>
-        Productos
-      </h2>
-
-      <div
-        id="products"
-        class="products">
-
-        <div class="empty">
-          Cargando productos...
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- CARRITO -->
-
-    <div class="card">
-
-      <h2>
-        🛒 Carrito
-      </h2>
-
-      <div id="cart">
-
-        <div class="empty">
-          El carrito está vacío
-        </div>
-
-      </div>
-
-
-      <div class="total">
-
-        <span>
-          Total
-        </span>
-
-        <span id="total">
-          $0.00
-        </span>
-
-      </div>
-
-
-      <!-- CLIENTE -->
-
-      <div class="customer-box">
-
-        <div class="customer-header">
-
-          <div class="customer-title">
-            👤 Cliente
-          </div>
-
-          <button
-            type="button"
-            class="manage-customers"
-            id="manageCustomers">
-
-            + Cliente
-
-          </button>
-
-        </div>
-
-
-        <input
-          id="customerSearch"
-          class="customer-search"
-          type="search"
-          placeholder="🔎 Buscar cliente por nombre o teléfono"
-          autocomplete="off"
-        >
-
-
-        <select
-          id="customerSelect"
-          class="customer-select">
-
-          <option value="">
-            Consumidor general
-          </option>
-
-        </select>
-
-
-        <div
-          id="customerInfo"
-          class="customer-info">
-
-          Consumidor general
-
-        </div>
-
-      </div>
-
-
-      <!-- PAGO -->
-
-      <div class="payment-title">
-
-        Método de pago
-
-      </div>
-
-
-      <div
-        id="payments"
-        class="payments">
-
-        <div class="empty">
-          Cargando métodos de pago...
-        </div>
-
-      </div>
-
-
-      <button
-        type="button"
-        id="chargeButton"
-        class="charge">
-
-        COBRAR
-
-      </button>
-
-    </div>
-
-  </div>
+<div id="status" class="status"></div>
+
+<div class="businesses">
+
+<button
+type="button"
+class="business-btn active"
+data-business="BakeQuiri">
+BakeQuiri
+</button>
+
+<button
+type="button"
+class="business-btn"
+data-business="SpicyRoll">
+SpicyRoll
+</button>
 
 </div>
 
+<div class="layout">
+
+<!-- PRODUCTOS -->
+
+<div class="card">
+
+<h2>
+Productos
+</h2>
+
+<div
+id="products"
+class="products">
+
+<div class="empty">
+Cargando productos...
+</div>
+
+</div>
+
+</div>
+
+<!-- CARRITO -->
+
+<div class="card">
+
+<h2>
+🛒 Carrito
+</h2>
+
+<div id="cart">
+
+<div class="empty">
+El carrito está vacío
+</div>
+
+</div>
+
+<div class="total">
+
+<span>
+Total
+</span>
+
+<span id="total">
+$0.00
+</span>
+
+</div>
+
+<!-- CLIENTE -->
+
+<div class="customer-box">
+
+<div class="customer-header">
+
+<div class="customer-title">
+👤 Cliente
+</div>
+
+<button
+type="button"
+class="manage-customers"
+id="manageCustomers">
++ Cliente
+</button>
+
+</div>
+
+<input
+id="customerSearch"
+class="customer-search"
+type="search"
+placeholder="🔎 Buscar cliente por nombre o teléfono"
+autocomplete="off"
+>
+
+<select
+id="customerSelect"
+class="customer-select">
+
+<option value="">
+Consumidor general
+</option>
+
+</select>
+
+<div
+id="customerInfo"
+class="customer-info">
+
+Consumidor general
+
+</div>
+
+</div>
+
+<!-- PAGO -->
+
+<div class="payment-title">
+Método de pago
+</div>
+
+<div
+id="payments"
+class="payments">
+
+<div class="empty">
+Cargando métodos de pago...
+</div>
+
+</div>
+
+<!-- BOTONES DE VENTA -->
+
+<div class="charge-buttons">
+
+<button
+type="button"
+id="chargeButton"
+class="charge">
+
+💵 COBRAR
+
+</button>
+
+<button
+type="button"
+id="pendingButton"
+class="pending">
+
+🟠 DEJAR A CUENTA
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 
 <script>
 
 "use strict";
-
 
 /* =========================================
    SUPABASE
 ========================================= */
 
 const SUPABASE_URL =
-  "https://jrxklpstlloeckihcduv.supabase.co";
-
+"https://jrxklpstlloeckihcduv.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
-
+"sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
 const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
 
 
 /* =========================================
@@ -600,16 +596,15 @@ const supabaseClient =
 const BUSINESS_IDS = {
 
   BakeQuiri:
-    "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+  "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
 
   SpicyRoll:
-    "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
+  "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
 
 };
 
-
 let currentBusiness =
-  "BakeQuiri";
+"BakeQuiri";
 
 
 /* =========================================
@@ -634,13 +629,13 @@ let selectedCustomerId = null;
 ========================================= */
 
 const $ =
-  id => document.getElementById(id);
+id => document.getElementById(id);
 
 
 const money =
-  value =>
-    "$" +
-    Number(value || 0).toFixed(2);
+value =>
+"$" +
+Number(value || 0).toFixed(2);
 
 
 function esc(value){
@@ -656,18 +651,18 @@ function esc(value){
 
 
 function showStatus(
-  message,
-  type="error"
+message,
+type="error"
 ){
 
   const element =
-    $("status");
+  $("status");
 
   element.textContent =
-    message;
+  message;
 
   element.className =
-    "status " + type;
+  "status " + type;
 
 }
 
@@ -675,16 +670,16 @@ function showStatus(
 function clearStatus(){
 
   $("status").textContent =
-    "";
+  "";
 
   $("status").className =
-    "status";
+  "status";
 
 }
 
 
 /* =========================================
-   CARGAR INFORMACIÓN DEL NEGOCIO
+   CARGAR INFORMACIÓN
 ========================================= */
 
 async function loadBusinessData(){
@@ -692,17 +687,16 @@ async function loadBusinessData(){
   clearStatus();
 
   $("products").innerHTML =
-    '<div class="empty">Cargando productos...</div>';
+  '<div class="empty">Cargando productos...</div>';
 
   $("payments").innerHTML =
-    '<div class="empty">Cargando métodos de pago...</div>';
+  '<div class="empty">Cargando métodos de pago...</div>';
 
   $("customerSelect").innerHTML =
-    '<option value="">Cargando clientes...</option>';
+  '<option value="">Cargando clientes...</option>';
 
   const businessId =
-    BUSINESS_IDS[currentBusiness];
-
+  BUSINESS_IDS[currentBusiness];
 
   try{
 
@@ -711,7 +705,6 @@ async function loadBusinessData(){
       paymentsResult,
       customersResult
     ] = await Promise.all([
-
 
       /* PRODUCTOS */
 
@@ -730,7 +723,6 @@ async function loadBusinessData(){
         )
         .order("name"),
 
-
       /* MÉTODOS DE PAGO */
 
       supabaseClient
@@ -748,13 +740,12 @@ async function loadBusinessData(){
         )
         .order("name"),
 
-
       /* CLIENTES */
 
       supabaseClient
         .from("customers")
         .select(
-          "id,business_id,name,phone"
+          "id,business_id,name,phone,notes"
         )
         .eq(
           "business_id",
@@ -801,15 +792,13 @@ async function loadBusinessData(){
 
 
     products =
-      productsResult.data || [];
-
+    productsResult.data || [];
 
     payments =
-      paymentsResult.data || [];
-
+    paymentsResult.data || [];
 
     customers =
-      customersResult.data || [];
+    customersResult.data || [];
 
 
     if(
@@ -821,13 +810,13 @@ async function loadBusinessData(){
     ){
 
       selectedPaymentId =
-        payments[0]?.id || null;
+      payments[0]?.id || null;
 
     }
 
 
     selectedCustomerId =
-      null;
+    null;
 
 
     renderProducts();
@@ -845,13 +834,13 @@ async function loadBusinessData(){
     console.error(error);
 
     $("products").innerHTML =
-      "";
+    "";
 
     $("payments").innerHTML =
-      "";
+    "";
 
     $("customerSelect").innerHTML =
-      '<option value="">Consumidor general</option>';
+    '<option value="">Consumidor general</option>';
 
     showStatus(
       error.message ||
@@ -870,18 +859,18 @@ async function loadBusinessData(){
 function renderProducts(){
 
   const container =
-    $("products");
+  $("products");
 
   container.innerHTML =
-    "";
+  "";
 
 
   if(!products.length){
 
     container.innerHTML =
-      '<div class="empty">' +
-      'No hay productos activos para este negocio.' +
-      '</div>';
+    '<div class="empty">' +
+    'No hay productos activos para este negocio.' +
+    '</div>';
 
     return;
 
@@ -892,54 +881,45 @@ function renderProducts(){
     product => {
 
       const stock =
-        Number(product.stock || 0);
-
+      Number(product.stock || 0);
 
       const button =
-        document.createElement(
-          "button"
-        );
-
+      document.createElement("button");
 
       button.type =
-        "button";
-
+      "button";
 
       button.className =
-        "product" +
-        (
-          stock <= 0
-          ? " disabled"
-          : ""
-        );
-
+      "product" +
+      (
+        stock <= 0
+        ? " disabled"
+        : ""
+      );
 
       button.disabled =
-        stock <= 0;
-
+      stock <= 0;
 
       button.innerHTML =
 
-        '<div class="product-name">' +
-        esc(product.name) +
-        '</div>' +
+      '<div class="product-name">' +
+      esc(product.name) +
+      '</div>' +
 
-        '<div class="price">' +
-        money(product.price) +
-        '</div>' +
+      '<div class="price">' +
+      money(product.price) +
+      '</div>' +
 
-        '<div class="stock">' +
-        'Existencia: ' +
-        stock +
-        '</div>';
-
+      '<div class="stock">' +
+      'Existencia: ' +
+      stock +
+      '</div>';
 
       button.addEventListener(
         "click",
         () =>
-          addToCart(product)
+        addToCart(product)
       );
-
 
       container.appendChild(
         button
@@ -958,64 +938,58 @@ function renderProducts(){
 function renderCustomers(){
 
   const select =
-    $("customerSelect");
+  $("customerSelect");
 
   const search =
-    $("customerSearch");
-
+  $("customerSearch");
 
   const searchText =
-    search.value
-      .trim()
-      .toLowerCase();
+  search.value
+    .trim()
+    .toLowerCase();
 
 
   const filtered =
-    customers.filter(
-      customer => {
+  customers.filter(
+    customer => {
 
-        if(!searchText)
-          return true;
+      if(!searchText)
+      return true;
 
-        return (
+      return (
 
-          String(
-            customer.name || ""
-          )
-          .toLowerCase()
-          .includes(searchText)
+        String(
+          customer.name || ""
+        )
+        .toLowerCase()
+        .includes(searchText)
 
-          ||
+        ||
 
-          String(
-            customer.phone || ""
-          )
-          .toLowerCase()
-          .includes(searchText)
+        String(
+          customer.phone || ""
+        )
+        .toLowerCase()
+        .includes(searchText)
 
-        );
+      );
 
-      }
-    );
+    }
+  );
 
 
   select.innerHTML =
-    "";
+  "";
 
 
   const general =
-    document.createElement(
-      "option"
-    );
-
+  document.createElement("option");
 
   general.value =
-    "";
-
+  "";
 
   general.textContent =
-    "Consumidor general";
-
+  "Consumidor general";
 
   select.appendChild(
     general
@@ -1026,22 +1000,17 @@ function renderCustomers(){
     customer => {
 
       const option =
-        document.createElement(
-          "option"
-        );
-
+      document.createElement("option");
 
       option.value =
-        customer.id;
-
+      customer.id;
 
       option.textContent =
+      customer.phone
+      ? customer.name +
+        " — " +
         customer.phone
-        ? customer.name +
-          " — " +
-          customer.phone
-        : customer.name;
-
+      : customer.name;
 
       select.appendChild(
         option
@@ -1052,8 +1021,7 @@ function renderCustomers(){
 
 
   select.value =
-    selectedCustomerId || "";
-
+  selectedCustomerId || "";
 
   updateCustomerInfo();
 
@@ -1061,19 +1029,19 @@ function renderCustomers(){
 
 
 /* =========================================
-   INFORMACIÓN DEL CLIENTE
+   INFORMACIÓN CLIENTE
 ========================================= */
 
 function updateCustomerInfo(){
 
   const info =
-    $("customerInfo");
+  $("customerInfo");
 
 
   if(!selectedCustomerId){
 
     info.textContent =
-      "Consumidor general";
+    "Consumidor general";
 
     return;
 
@@ -1081,17 +1049,17 @@ function updateCustomerInfo(){
 
 
   const customer =
-    customers.find(
-      item =>
-        item.id ===
-        selectedCustomerId
-    );
+  customers.find(
+    item =>
+    item.id ===
+    selectedCustomerId
+  );
 
 
   if(!customer){
 
     info.textContent =
-      "Consumidor general";
+    "Consumidor general";
 
     return;
 
@@ -1111,14 +1079,24 @@ function updateCustomerInfo(){
   }
 
 
-  info.textContent =
-    customer.name +
-    (
-      parts.length
-      ? " · " +
-        parts.join(" · ")
-      : ""
+  if(customer.notes){
+
+    parts.push(
+      "📝 " +
+      customer.notes
     );
+
+  }
+
+
+  info.textContent =
+  customer.name +
+  (
+    parts.length
+    ? " · " +
+      parts.join(" · ")
+    : ""
+  );
 
 }
 
@@ -1130,18 +1108,18 @@ function updateCustomerInfo(){
 function renderPayments(){
 
   const container =
-    $("payments");
+  $("payments");
 
   container.innerHTML =
-    "";
+  "";
 
 
   if(!payments.length){
 
     container.innerHTML =
-      '<div class="empty">' +
-      'No hay métodos de pago activos.' +
-      '</div>';
+    '<div class="empty">' +
+    'No hay métodos de pago activos.' +
+    '</div>';
 
     return;
 
@@ -1152,41 +1130,34 @@ function renderPayments(){
     payment => {
 
       const button =
-        document.createElement(
-          "button"
-        );
-
+      document.createElement("button");
 
       button.type =
-        "button";
-
+      "button";
 
       button.className =
-        "payment" +
-        (
-          payment.id ===
-          selectedPaymentId
-          ? " active"
-          : ""
-        );
-
+      "payment" +
+      (
+        payment.id ===
+        selectedPaymentId
+        ? " active"
+        : ""
+      );
 
       button.textContent =
-        payment.name;
-
+      payment.name;
 
       button.addEventListener(
         "click",
         () => {
 
           selectedPaymentId =
-            payment.id;
+          payment.id;
 
           renderPayments();
 
         }
       );
-
 
       container.appendChild(
         button
@@ -1204,16 +1175,17 @@ function renderPayments(){
 
 function addToCart(product){
 
-  const stock =
-    Number(product.stock || 0);
+  clearStatus();
 
+  const stock =
+  Number(product.stock || 0);
 
   const item =
-    cart.find(
-      item =>
-        item.id ===
-        product.id
-    );
+  cart.find(
+    item =>
+    item.id ===
+    product.id
+  );
 
 
   if(item){
@@ -1255,38 +1227,38 @@ function addToCart(product){
 
 
 function changeQuantity(
-  id,
-  amount
+id,
+amount
 ){
 
   const item =
-    cart.find(
-      item =>
-        item.id === id
-    );
+  cart.find(
+    item =>
+    item.id === id
+  );
 
 
   if(!item)
-    return;
+  return;
 
 
   const product =
-    products.find(
-      product =>
-        product.id === id
-    );
+  products.find(
+    product =>
+    product.id === id
+  );
 
 
   const max =
-    Number(
-      product?.stock ??
-      item.stock ??
-      0
-    );
+  Number(
+    product?.stock ??
+    item.stock ??
+    0
+  );
 
 
   item.quantity +=
-    amount;
+  amount;
 
 
   if(
@@ -1294,7 +1266,7 @@ function changeQuantity(
   ){
 
     item.quantity =
-      max;
+    max;
 
   }
 
@@ -1304,10 +1276,10 @@ function changeQuantity(
   ){
 
     cart =
-      cart.filter(
-        item =>
-          item.id !== id
-      );
+    cart.filter(
+      item =>
+      item.id !== id
+    );
 
   }
 
@@ -1320,24 +1292,21 @@ function changeQuantity(
 function renderCart(){
 
   const container =
-    $("cart");
-
+  $("cart");
 
   container.innerHTML =
-    "";
+  "";
 
 
   if(!cart.length){
 
     container.innerHTML =
-      '<div class="empty">' +
-      'El carrito está vacío' +
-      '</div>';
-
+    '<div class="empty">' +
+    'El carrito está vacío' +
+    '</div>';
 
     $("total").textContent =
-      "$0.00";
-
+    "$0.00";
 
     return;
 
@@ -1345,96 +1314,86 @@ function renderCart(){
 
 
   let total =
-    0;
+  0;
 
 
   cart.forEach(
     item => {
 
       const subtotal =
-        Number(item.price) *
-        Number(item.quantity);
-
+      Number(item.price) *
+      Number(item.quantity);
 
       total +=
-        subtotal;
+      subtotal;
 
 
       const row =
-        document.createElement(
-          "div"
-        );
-
+      document.createElement("div");
 
       row.className =
-        "cart-item";
+      "cart-item";
 
 
       const info =
-        document.createElement(
-          "div"
-        );
-
+      document.createElement("div");
 
       info.innerHTML =
 
-        '<div class="cart-name">' +
-        esc(item.name) +
-        '</div>' +
+      '<div class="cart-name">' +
+      esc(item.name) +
+      '</div>' +
 
-        '<div class="cart-price">' +
-        money(item.price) +
-        ' c/u</div>';
+      '<div class="cart-price">' +
+      money(item.price) +
+      ' c/u</div>';
 
 
       const controls =
-        document.createElement(
-          "div"
-        );
-
+      document.createElement("div");
 
       controls.innerHTML =
 
-        '<div class="quantity">' +
+      '<div class="quantity">' +
 
-        '<button type="button">−</button>' +
+      '<button type="button">−</button>' +
 
-        '<span>' +
-        item.quantity +
-        '</span>' +
+      '<span>' +
+      item.quantity +
+      '</span>' +
 
-        '<button type="button">+</button>' +
+      '<button type="button">+</button>' +
 
-        '</div>' +
+      '</div>' +
 
-        '<div class="subtotal">' +
-        money(subtotal) +
-        '</div>';
+      '<div class="subtotal">' +
+      money(subtotal) +
+      '</div>';
 
 
       const buttons =
-        controls.querySelectorAll(
-          "button"
-        );
+      controls.querySelectorAll(
+        "button"
+      );
 
 
       buttons[0].addEventListener(
         "click",
         () =>
-          changeQuantity(
-            item.id,
-            -1
-          )
+        changeQuantity(
+          item.id,
+          -1
+        )
       );
 
 
       buttons[1].addEventListener(
         "click",
         () =>
-          changeQuantity(
-            item.id,
-            1
-          )
+        changeQuantity(
+          item.id,
+          1
+        )
       );
 
 
@@ -1442,7 +1401,6 @@ function renderCart(){
         info,
         controls
       );
-
 
       container.appendChild(
         row
@@ -1453,7 +1411,7 @@ function renderCart(){
 
 
   $("total").textContent =
-    money(total);
+  money(total);
 
 }
 
@@ -1463,8 +1421,8 @@ function renderCart(){
 ========================================= */
 
 async function changeBusiness(
-  name,
-  button
+name,
+button
 ){
 
   if(
@@ -1477,27 +1435,25 @@ async function changeBusiness(
 
 
   currentBusiness =
-    name;
-
+  name;
 
   cart =
-    [];
-
+  [];
 
   selectedCustomerId =
-    null;
+  null;
 
 
   document
-    .querySelectorAll(
-      ".business-btn"
+  .querySelectorAll(
+    ".business-btn"
+  )
+  .forEach(
+    item =>
+    item.classList.remove(
+      "active"
     )
-    .forEach(
-      item =>
-        item.classList.remove(
-          "active"
-        )
-    );
+  );
 
 
   button.classList.add(
@@ -1506,7 +1462,7 @@ async function changeBusiness(
 
 
   $("customerSearch").value =
-    "";
+  "";
 
 
   await loadBusinessData();
@@ -1515,10 +1471,12 @@ async function changeBusiness(
 
 
 /* =========================================
-   COBRAR
+   REGISTRAR VENTA
 ========================================= */
 
-async function chargeSale(){
+async function registerSale(
+isPending
+){
 
   clearStatus();
 
@@ -1534,7 +1492,18 @@ async function chargeSale(){
   }
 
 
-  if(!selectedPaymentId){
+  /*
+    Para una venta pagada necesitamos
+    método de pago.
+
+    Para una venta pendiente NO es
+    necesario seleccionar método de pago.
+  */
+
+  if(
+    !isPending &&
+    !selectedPaymentId
+  ){
 
     showStatus(
       "Selecciona un método de pago."
@@ -1545,71 +1514,120 @@ async function chargeSale(){
   }
 
 
-  const button =
-    $("chargeButton");
+  /*
+    Una cuenta pendiente necesita
+    un cliente identificado.
+  */
+
+  if(
+    isPending &&
+    !selectedCustomerId
+  ){
+
+    showStatus(
+      "Para dejar una venta a cuenta debes seleccionar un cliente."
+    );
+
+    return;
+
+  }
 
 
-  button.disabled =
-    true;
+  const chargeButton =
+  $("chargeButton");
+
+  const pendingButton =
+  $("pendingButton");
 
 
-  button.textContent =
+  chargeButton.disabled =
+  true;
+
+  pendingButton.disabled =
+  true;
+
+
+  if(isPending){
+
+    pendingButton.textContent =
+    "GUARDANDO...";
+
+  }
+  else{
+
+    chargeButton.textContent =
     "REGISTRANDO...";
+
+  }
 
 
   try{
 
     const items =
-      cart.map(
-        item => ({
+    cart.map(
+      item => ({
 
-          product_id:
-            item.id,
+        product_id:
+        item.id,
 
-          description:
-            item.name,
+        description:
+        item.name,
 
-          quantity:
-            Number(item.quantity),
+        quantity:
+        Number(item.quantity),
 
-          unit_price:
-            Number(item.price),
+        unit_price:
+        Number(item.price),
 
-          subtotal:
-            Number(item.price) *
-            Number(item.quantity)
+        subtotal:
+        Number(item.price) *
+        Number(item.quantity)
 
-        })
-      );
+      })
+    );
 
+
+    /*
+      AQUÍ ESTÁ EL CAMBIO IMPORTANTE:
+
+      isPending = false
+      -> venta pagada
+
+      isPending = true
+      -> venta pendiente,
+         balance = total,
+         status = open
+    */
 
     const {
       data,
       error
     } =
-      await supabaseClient.rpc(
-        "register_sale",
-        {
+    await supabaseClient.rpc(
+      "register_sale",
+      {
 
-          p_business_id:
-            BUSINESS_IDS[
-              currentBusiness
-            ],
+        p_business_id:
+        BUSINESS_IDS[
+          currentBusiness
+        ],
 
-          p_customer_id:
-            selectedCustomerId || null,
+        p_customer_id:
+        selectedCustomerId || null,
 
-          p_payment_method_id:
-            selectedPaymentId,
+        p_payment_method_id:
+        isPending
+        ? null
+        : selectedPaymentId,
 
-          p_items:
-            items,
+        p_items:
+        items,
 
-          p_is_pending:
-            false
+        p_is_pending:
+        isPending
 
-        }
-      );
+      }
+    );
 
 
     if(error){
@@ -1620,73 +1638,96 @@ async function chargeSale(){
 
 
     const paymentName =
-      payments.find(
-        payment =>
-          payment.id ===
-          selectedPaymentId
-      )?.name ||
-      "Pago";
+    payments.find(
+      payment =>
+      payment.id ===
+      selectedPaymentId
+    )?.name ||
+    "Pago";
 
 
     const customerName =
-      customers.find(
-        customer =>
-          customer.id ===
-          selectedCustomerId
-      )?.name ||
-      "Consumidor general";
+    customers.find(
+      customer =>
+      customer.id ===
+      selectedCustomerId
+    )?.name ||
+    "Consumidor general";
 
 
     const total =
-      items.reduce(
-        (
-          sum,
-          item
-        ) =>
-          sum +
-          item.subtotal,
-        0
-      );
-
-
-    alert(
-
-      "Venta registrada\n\n" +
-
-      currentBusiness +
-
-      "\nCliente: " +
-
-      customerName +
-
-      "\nTotal: " +
-
-      money(total) +
-
-      "\nPago: " +
-
-      paymentName
-
+    items.reduce(
+      (
+        sum,
+        item
+      ) =>
+      sum +
+      item.subtotal,
+      0
     );
 
 
-    cart =
-      [];
+    if(isPending){
 
+      alert(
+
+        "Cuenta registrada correctamente\n\n" +
+
+        currentBusiness +
+
+        "\nCliente: " +
+
+        customerName +
+
+        "\nTotal pendiente: " +
+
+        money(total)
+
+      );
+
+    }
+    else{
+
+      alert(
+
+        "Venta registrada\n\n" +
+
+        currentBusiness +
+
+        "\nCliente: " +
+
+        customerName +
+
+        "\nTotal: " +
+
+        money(total) +
+
+        "\nPago: " +
+
+        paymentName
+
+      );
+
+    }
+
+
+    cart =
+    [];
 
     selectedCustomerId =
-      null;
-
+    null;
 
     $("customerSearch").value =
-      "";
+    "";
 
 
     await loadBusinessData();
 
 
     showStatus(
-      "Venta guardada correctamente en Supabase.",
+      isPending
+      ? "Cuenta pendiente guardada correctamente en Supabase."
+      : "Venta pagada guardada correctamente en Supabase.",
       "ok"
     );
 
@@ -1698,15 +1739,17 @@ async function chargeSale(){
 
   }
 
-
   catch(error){
 
     console.error(error);
 
-
     showStatus(
 
-      "No se pudo registrar la venta: " +
+      (
+        isPending
+        ? "No se pudo registrar la cuenta: "
+        : "No se pudo registrar la venta: "
+      ) +
 
       (
         error.message ||
@@ -1717,15 +1760,19 @@ async function chargeSale(){
 
   }
 
-
   finally{
 
-    button.disabled =
-      false;
+    chargeButton.disabled =
+    false;
 
+    pendingButton.disabled =
+    false;
 
-    button.textContent =
-      "COBRAR";
+    chargeButton.textContent =
+    "💵 COBRAR";
+
+    pendingButton.textContent =
+    "🟠 DEJAR A CUENTA";
 
   }
 
@@ -1736,80 +1783,90 @@ async function chargeSale(){
    EVENTOS
 ========================================= */
 
-
-/* Negocios */
+/* NEGOCIOS */
 
 document
-  .querySelectorAll(
-    ".business-btn"
-  )
-  .forEach(
-    button => {
+.querySelectorAll(
+  ".business-btn"
+)
+.forEach(
+  button => {
 
-      button.addEventListener(
-        "click",
-        () =>
-          changeBusiness(
-            button.dataset.business,
-            button
-          )
-      );
+    button.addEventListener(
+      "click",
+      () =>
+      changeBusiness(
+        button.dataset.business,
+        button
+      )
+    );
 
-    }
-  );
+  }
+);
 
 
-/* Selección de cliente */
+/* CLIENTE */
 
 $("customerSelect")
-  .addEventListener(
-    "change",
-    event => {
+.addEventListener(
+  "change",
+  event => {
 
-      selectedCustomerId =
-        event.target.value ||
-        null;
+    selectedCustomerId =
+    event.target.value ||
+    null;
 
-      updateCustomerInfo();
+    updateCustomerInfo();
 
-    }
-  );
+  }
+);
 
 
-/* Búsqueda de clientes */
+/* BUSCADOR CLIENTES */
 
 $("customerSearch")
-  .addEventListener(
-    "input",
-    () => {
+.addEventListener(
+  "input",
+  () => {
 
-      renderCustomers();
+    renderCustomers();
 
-    }
-  );
+  }
+);
 
 
-/* Administrar clientes */
+/* ADMINISTRAR CLIENTES */
 
 $("manageCustomers")
-  .addEventListener(
-    "click",
-    () => {
+.addEventListener(
+  "click",
+  () => {
 
-      window.location.href =
-        "clientes.html";
+    window.location.href =
+    "clientes.html";
 
-    }
-  );
+  }
+);
 
 
-/* Cobrar */
+/* COBRAR */
 
 $("chargeButton")
-  .addEventListener(
-    "click",
-    chargeSale
-  );
+.addEventListener(
+  "click",
+  () =>
+  registerSale(false)
+);
+
+
+/* DEJAR A CUENTA */
+
+$("pendingButton")
+.addEventListener(
+  "click",
+  () =>
+  registerSale(true)
+);
 
 
 /* =========================================
