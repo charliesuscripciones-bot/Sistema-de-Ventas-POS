@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Ventas POS</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#f5f5f5;
+  color:#222;
+}
+
+header{
+  background:#111827;
+  color:white;
+  padding:18px;
+}
+
+header h1{
+  font-size:22px;
+}
+
+header p{
+  font-size:13px;
+  opacity:.7;
+  margin-top:4px;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+
+.businesses{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.business-btn{
+  border:none;
+  padding:12px 18px;
+  border-radius:10px;
+  background:white;
+  border:1px solid #ddd;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.business-btn.active{
+  background:#111827;
+  color:white;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:1fr 380px;
+  gap:20px;
+}
+
+.card{
+  background:white;
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+
+.card h2{
+  font-size:18px;
+  margin-bottom:15px;
+}
+
+.products{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.product{
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:15px;
+  cursor:pointer;
+  background:white;
+  text-align:left;
+}
+
+.product:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.product-name{
+  font-weight:600;
+  margin-bottom:8px;
+}
+
+.price{
+  font-size:18px;
+  font-weight:700;
+}
+
+.stock{
+  font-size:12px;
+  color:#666;
+  margin-top:5px;
+}
+
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0;
+  border-bottom:1px solid #eee;
+  gap:12px;
+}
+
+.cart-name{
+  font-weight:600;
+}
+
+.cart-price{
+  font-size:13px;
+  color:#666;
+}
+
+.quantity{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:6px;
+}
+
+.quantity button{
+  width:30px;
+  height:30px;
+  border:none;
+  border-radius:6px;
+  background:#eee;
+  cursor:pointer;
+  font-size:18px;
+}
+
+.total{
+  display:flex;
+  justify-content:space-between;
+  font-size:22px;
+  font-weight:700;
+  margin-top:20px;
+  padding-top:15px;
+  border-top:2px solid #eee;
+}
+
+.payment-title{
+  margin-top:20px;
+  margin-bottom:10px;
+  font-weight:600;
+}
+
+.payments{
+  display:grid;
+  gap:8px;
+}
+
+.payment{
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:9px;
+  background:white;
+  cursor:pointer;
+  text-align:left;
+}
+
+.payment.active{
+  background:#111827;
+  color:white;
+}
+
+.charge{
+  width:100%;
+  margin-top:15px;
+  padding:15px;
+  border:none;
+  border-radius:10px;
+  background:#16a34a;
+  color:white;
+  font-size:17px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.charge:disabled{
+  opacity:.6;
+}
+
+.empty{
+  color:#777;
+  text-align:center;
+  padding:30px 10px;
+}
+
+.status{
+  margin-bottom:15px;
+  padding:10px 12px;
+  border-radius:9px;
+  font-size:13px;
+  display:none;
+}
+
+.status.error{
+  display:block;
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.status.ok{
+  display:block;
+  background:#dcfce7;
+  color:#166534;
+}
+
+@media(max-width:800px){
+
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .products{
+    grid-template-columns:1fr 1fr;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🧾 Sistema de Ventas POS</h1>
+  <p>Administración de negocios y ventas</p>
+</header>
+
+<div class="container">
+
+  <div id="status" class="status"></div>
+
+  <div class="businesses">
+
+    <button
+      type="button"
+      class="business-btn active"
+      data-business="BakeQuiri">
+      BakeQuiri
+    </button>
+
+    <button
+      type="button"
+      class="business-btn"
+      data-business="SpicyRoll">
+      SpicyRoll
+    </button>
+
+  </div>
+
+  <div class="layout">
+
+    <div class="card">
+
+      <h2>Productos</h2>
+
+      <div
+        id="products"
+        class="products">
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <h2>🛒 Carrito</h2>
+
+      <div id="cart"></div>
+
+      <div class="total">
+        <span>Total</span>
+        <span id="total">$0.00</span>
+      </div>
+
+      <div class="payment-title">
+        Método de pago
+      </div>
+
+      <div
+        id="payments"
+        class="payments">
+      </div>
+
+      <button
+        type="button"
+        id="chargeButton"
+        class="charge">
+        COBRAR
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+"use strict";
+
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL =
+"https://jrxklpstlloeckihcduv.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
+
+const supabaseClient =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+
+/* =========================
+   NEGOCIOS
+========================= */
+
+const BUSINESS_IDS = {
+
+  BakeQuiri:
+  "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+
+  SpicyRoll:
+  "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
+
+};
+
+
+/* =========================
+   ESTADO
+========================= */
+
+let currentBusiness = "BakeQuiri";
+
+let products = [];
+
+let payments = [];
+
+let cart = [];
+
+let selectedPaymentId = null;
+
+
+/* =========================
+   UTILIDADES
+========================= */
+
+function $(id){
+  return document.getElementById(id);
+}
+
+
+function money(value){
+
+  return "$" +
+  Number(value || 0).toFixed(2);
+
+}
+
+
+function showStatus(message,type="error"){
+
+  const element = $("status");
+
+  element.textContent = message;
+
+  element.className =
+  "status " + type;
+
+}
+
+
+function clearStatus(){
+
+  $("status").textContent = "";
+
+  $("status").className = "status";
+
+}
+
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+/* =========================
+   CARGAR NEGOCIO
+========================= */
+
+async function loadBusinessData(){
+
+  clearStatus();
+
+  $("products").innerHTML =
+  '<div class="empty">Cargando productos...</div>';
+
+  $("payments").innerHTML =
+  '<div class="empty">Cargando métodos de pago...</div>';
+
+  const businessId =
+  BUSINESS_IDS[currentBusiness];
+
+  try{
+
+    const productsResult =
+    await supabaseClient
+      .from("products")
+      .select(
+        "id,name,price,cost,stock,active"
+      )
+      .eq("business_id",businessId)
+      .eq("active",true)
+      .order("name");
+
+    if(productsResult.error){
+
+      throw new Error(
+        "No pude cargar los productos: " +
+        productsResult.error.message
+      );
+
+    }
+
+
+    const paymentsResult =
+    await supabaseClient
+      .from("payment_methods")
+      .select(
+        "id,name,provider,active"
+      )
+      .eq("business_id",businessId)
+      .eq("active",true)
+      .order("name");
+
+    if(paymentsResult.error){
+
+      throw new Error(
+        "No pude cargar los métodos de pago: " +
+        paymentsResult.error.message
+      );
+
+    }
+
+
+    products =
+    productsResult.data || [];
+
+    payments =
+    paymentsResult.data || [];
+
+
+    if(
+      !payments.some(
+        payment =>
+        payment.id === selectedPaymentId
+      )
+    ){
+
+      selectedPaymentId =
+      payments[0]?.id || null;
+
+    }
+
+
+    renderProducts();
+
+    renderPayments();
+
+    renderCart();
+
+  }
+
+  catch(error){
+
+    $("products").innerHTML = "";
+
+    $("payments").innerHTML = "";
+
+    showStatus(
+      error.message ||
+      "No se pudo conectar con Supabase."
+    );
+
+  }
+
+}
+
+
+/* =========================
+   PRODUCTOS
+========================= */
+
+function renderProducts(){
+
+  const container =
+  $("products");
+
+  container.innerHTML = "";
+
+
+  if(!products.length){
+
+    container.innerHTML =
+    '<div class="empty">' +
+    'No hay productos activos para este negocio.' +
+    '</div>';
+
+    return;
+
+  }
+
+
+  products.forEach(product => {
+
+    const stock =
+    Number(product.stock || 0);
+
+
+    const button =
+    document.createElement("button");
+
+
+    button.type = "button";
+
+    button.className =
+    "product";
+
+
+    button.disabled =
+    stock <= 0;
+
+
+    button.innerHTML =
+
+    '<div class="product-name">' +
+    escapeHTML(product.name) +
+    '</div>' +
+
+    '<div class="price">' +
+    money(product.price) +
+    '</div>' +
+
+    '<div class="stock">' +
+    'Existencia: ' +
+    stock +
+    '</div>';
+
+
+    button.addEventListener(
+      "click",
+      () => addToCart(product)
+    );
+
+
+    container.appendChild(button);
+
+  });
+
+}
+
+
+/* =========================
+   MÉTODOS DE PAGO
+========================= */
+
+function renderPayments(){
+
+  const container =
+  $("payments");
+
+  container.innerHTML = "";
+
+
+  if(!payments.length){
+
+    container.innerHTML =
+    '<div class="empty">' +
+    'No hay métodos de pago activos.' +
+    '</div>';
+
+    return;
+
+  }
+
+
+  payments.forEach(payment => {
+
+    const button =
+    document.createElement("button");
+
+
+    button.type = "button";
+
+    button.className =
+    "payment" +
+    (
+      payment.id === selectedPaymentId
+      ? " active"
+      : ""
+    );
+
+
+    button.textContent =
+    payment.name;
+
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        selectedPaymentId =
+        payment.id;
+
+        renderPayments();
+
+      }
+    );
+
+
+    container.appendChild(button);
+
+  });
+
+}
+
+
+/* =========================
+   CARRITO
+========================= */
+
+function addToCart(product){
+
+  const stock =
+  Number(product.stock || 0);
+
+  const item =
+  cart.find(
+    item => item.id === product.id
+  );
+
+
+  if(item){
+
+    if(item.quantity < stock){
+
+      item.quantity++;
+
+    }
+
+    else{
+
+      showStatus(
+        "No puedes agregar más unidades que la existencia disponible."
+      );
+
+    }
+
+  }
+
+  else if(stock > 0){
+
+    cart.push({
+
+      ...product,
+
+      quantity: 1
+
+    });
+
+  }
+
+
+  renderCart();
+
+}
+
+
+/* =========================
+   CAMBIAR CANTIDAD
+========================= */
+
+function changeQuantity(id,amount){
+
+  const item =
+  cart.find(
+    item => item.id === id
+  );
+
+  if(!item) return;
+
+
+  const product =
+  products.find(
+    product => product.id === id
+  );
+
+
+  const max =
+  Number(
+    product?.stock ??
+    item.stock ??
+    0
+  );
+
+
+  item.quantity += amount;
+
+
+  if(item.quantity > max){
+
+    item.quantity = max;
+
+  }
+
+
+  if(item.quantity <= 0){
+
+    cart =
+    cart.filter(
+      item => item.id !== id
+    );
+
+  }
+
+
+  renderCart();
+
+}
+
+
+/* =========================
+   MOSTRAR CARRITO
+========================= */
+
+function renderCart(){
+
+  const container =
+  $("cart");
+
+  container.innerHTML = "";
+
+
+  if(!cart.length){
+
+    container.innerHTML =
+    '<div class="empty">' +
+    'El carrito está vacío' +
+    '</div>';
+
+    $("total").textContent =
+    "$0.00";
+
+    return;
+
+  }
+
+
+  let total = 0;
+
+
+  cart.forEach(item => {
+
+    const subtotal =
+    Number(item.price) *
+    Number(item.quantity);
+
+
+    total += subtotal;
+
+
+    const row =
+    document.createElement("div");
+
+    row.className =
+    "cart-item";
+
+
+    const info =
+    document.createElement("div");
+
+
+    info.innerHTML =
+
+    '<div class="cart-name">' +
+    escapeHTML(item.name) +
+    '</div>' +
+
+    '<div class="cart-price">' +
+    money(item.price) +
+    ' c/u</div>';
+
+
+    const controls =
+    document.createElement("div");
+
+    controls.className =
+    "quantity";
+
+
+    const minus =
+    document.createElement("button");
+
+    minus.type = "button";
+
+    minus.textContent = "−";
+
+
+    minus.addEventListener(
+      "click",
+      () => changeQuantity(item.id,-1)
+    );
+
+
+    const quantity =
+    document.createElement("span");
+
+    quantity.textContent =
+    item.quantity;
+
+
+    const plus =
+    document.createElement("button");
+
+    plus.type = "button";
+
+    plus.textContent = "+";
+
+
+    plus.addEventListener(
+      "click",
+      () => changeQuantity(item.id,1)
+    );
+
+
+    controls.append(
+      minus,
+      quantity,
+      plus
+    );
+
+
+    info.appendChild(
+      controls
+    );
+
+
+    const subtotalElement =
+    document.createElement("strong");
+
+
+    subtotalElement.textContent =
+    money(subtotal);
+
+
+    row.append(
+      info,
+      subtotalElement
+    );
+
+
+    container.appendChild(row);
+
+  });
+
+
+  $("total").textContent =
+  money(total);
+
+}
+
+
+/* =========================
+   CAMBIAR NEGOCIO
+========================= */
+
+async function changeBusiness(
+  business,
+  button
+){
+
+  currentBusiness =
+  business;
+
+  cart = [];
+
+  selectedPaymentId =
+  null;
+
+
+  document
+    .querySelectorAll(".business-btn")
+    .forEach(button => {
+
+      button.classList.remove(
+        "active"
+      );
+
+    });
+
+
+  button.classList.add(
+    "active"
+  );
+
+
+  await loadBusinessData();
+
+}
+
+
+/* =========================
+   COBRAR
+========================= */
+
+async function chargeSale(){
+
+  clearStatus();
+
+
+  if(!cart.length){
+
+    showStatus(
+      "Agrega al menos un producto."
+    );
+
+    return;
+
+  }
+
+
+  if(!selectedPaymentId){
+
+    showStatus(
+      "Selecciona un método de pago."
+    );
+
+    return;
+
+  }
+
+
+  const button =
+  $("chargeButton");
+
+
+  button.disabled = true;
+
+  button.textContent =
+  "REGISTRANDO...";
+
+
+  try{
+
+    const items =
+    cart.map(item => ({
+
+      product_id:
+      item.id,
+
+      description:
+      item.name,
+
+      quantity:
+      Number(item.quantity),
+
+      unit_price:
+      Number(item.price),
+
+      subtotal:
+      Number(item.price) *
+      Number(item.quantity)
+
+    }));
+
+
+    const result =
+    await supabaseClient.rpc(
+      "register_sale",
+      {
+
+        p_business_id:
+        BUSINESS_IDS[currentBusiness],
+
+        p_customer_id:
+        null,
+
+        p_payment_method_id:
+        selectedPaymentId,
+
+        p_items:
+        items,
+
+        p_is_pending:
+        false
+
+      }
+    );
+
+
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+
+    const paymentName =
+    payments.find(
+      payment =>
+      payment.id ===
+      selectedPaymentId
+    )?.name ||
+    "Pago";
+
+
+    const total =
+    items.reduce(
+      (sum,item) =>
+      sum + item.subtotal,
+      0
+    );
+
+
+    alert(
+      "Venta registrada\n\n" +
+      currentBusiness +
+      "\nTotal: " +
+      money(total) +
+      "\nPago: " +
+      paymentName
+    );
+
+
+    cart = [];
+
+
+    await loadBusinessData();
+
+
+    showStatus(
+      "Venta guardada correctamente en Supabase.",
+      "ok"
+    );
+
+
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    showStatus(
+      "No se pudo registrar la venta: " +
+      (error.message || error)
+    );
+
+  }
+
+  finally{
+
+    button.disabled = false;
+
+    button.textContent =
+    "COBRAR";
+
+  }
+
+}
+
+
+/* =========================
+   EVENTOS
+========================= */
+
+document
+.querySelectorAll(".business-btn")
+.forEach(button => {
+
+  button.addEventListener(
+    "click",
+    () => {
+
+      changeBusiness(
+        button.dataset.business,
+        button
+      );
+
+    }
+  );
+
+});
+
+
+$("chargeButton")
+.addEventListener(
+  "click",
+  chargeSale
+);
+
+
+/* =========================
+   INICIAR
+========================= */
+
+loadBusinessData();
+
+</script>
+
+</body>
+</html>
