@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard | Sistema de Ventas POS</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:#f5f5f5;
+  color:#171717;
+}
+
+header{
+  background:#111827;
+  color:white;
+  padding:25px 20px;
+}
+
+header h1{
+  margin:0;
+  font-size:30px;
+}
+
+header p{
+  margin:8px 0 0;
+  color:#d1d5db;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+
+.topbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+
+button{
+  border:0;
+  cursor:pointer;
+  font-size:16px;
+}
+
+.business-btn{
+  background:white;
+  border:2px solid #ddd;
+  border-radius:12px;
+  padding:12px 22px;
+  font-weight:700;
+}
+
+.business-btn.active{
+  background:#111827;
+  color:white;
+  border-color:#111827;
+}
+
+.refresh{
+  margin-left:auto;
+  background:#2563eb;
+  color:white;
+  padding:12px 20px;
+  border-radius:12px;
+  font-weight:700;
+}
+
+.back{
+  background:white;
+  border:2px solid #ddd;
+  padding:12px 20px;
+  border-radius:12px;
+  font-weight:700;
+}
+
+.status{
+  display:none;
+  padding:13px 15px;
+  border-radius:10px;
+  margin-bottom:20px;
+}
+
+.status.ok{
+  display:block;
+  background:#dcfce7;
+  color:#166534;
+}
+
+.status.error{
+  display:block;
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.card{
+  background:white;
+  border-radius:18px;
+  padding:22px;
+  box-shadow:0 4px 18px rgba(0,0,0,.06);
+}
+
+.metric-title{
+  color:#6b7280;
+  font-size:15px;
+  margin-bottom:10px;
+}
+
+.metric{
+  font-size:30px;
+  font-weight:800;
+}
+
+.metric.blue{
+  color:#2563eb;
+}
+
+.metric.green{
+  color:#16a34a;
+}
+
+.metric.orange{
+  color:#ea580c;
+}
+
+.metric.red{
+  color:#dc2626;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+.section-title{
+  font-size:22px;
+  font-weight:800;
+  margin:0 0 18px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th{
+  text-align:left;
+  color:#6b7280;
+  font-size:13px;
+  padding:10px 6px;
+  border-bottom:2px solid #eee;
+}
+
+td{
+  padding:12px 6px;
+  border-bottom:1px solid #eee;
+}
+
+.status-pill{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.paid{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.open{
+  background:#fef3c7;
+  color:#92400e;
+}
+
+.stock-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:13px 0;
+  border-bottom:1px solid #eee;
+}
+
+.stock-name{
+  font-weight:600;
+}
+
+.stock-number{
+  font-weight:800;
+  color:#dc2626;
+}
+
+.empty{
+  text-align:center;
+  color:#777;
+  padding:30px 10px;
+}
+
+.loading{
+  color:#777;
+  padding:20px 0;
+}
+
+@media(max-width:800px){
+
+  .cards{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .refresh{
+    margin-left:0;
+  }
+
+}
+
+@media(max-width:500px){
+
+  .cards{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .metric{
+    font-size:24px;
+  }
+
+  .card{
+    padding:16px;
+  }
+
+  header h1{
+    font-size:25px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+  <h1>📊 Dashboard</h1>
+
+  <p>
+    Sistema de Ventas POS · Administración
+  </p>
+
+</header>
+
+
+<div class="container">
+
+
+  <div id="status" class="status"></div>
+
+
+  <div class="topbar">
+
+    <button
+      class="business-btn active"
+      data-business="BakeQuiri">
+      BakeQuiri
+    </button>
+
+    <button
+      class="business-btn"
+      data-business="SpicyRoll">
+      SpicyRoll
+    </button>
+
+    <button
+      id="refresh"
+      class="refresh">
+      🔄 Actualizar
+    </button>
+
+    <button
+      id="back"
+      class="back">
+      ← POS
+    </button>
+
+  </div>
+
+
+  <!-- MÉTRICAS -->
+
+  <div class="cards">
+
+
+    <div class="card">
+
+      <div class="metric-title">
+        Ventas de hoy
+      </div>
+
+      <div
+        id="todaySales"
+        class="metric green">
+        $0.00
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <div class="metric-title">
+        Número de ventas
+      </div>
+
+      <div
+        id="salesCount"
+        class="metric blue">
+        0
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <div class="metric-title">
+        Productos
+      </div>
+
+      <div
+        id="productCount"
+        class="metric">
+        0
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <div class="metric-title">
+        Stock bajo
+      </div>
+
+      <div
+        id="lowStock"
+        class="metric red">
+        0
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- CONTENIDO -->
+
+  <div class="grid">
+
+
+    <!-- VENTAS RECIENTES -->
+
+    <div class="card">
+
+      <h2 class="section-title">
+        🧾 Ventas recientes
+      </h2>
+
+      <div id="salesContainer">
+        <div class="loading">
+          Cargando ventas...
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- INVENTARIO -->
+
+    <div class="card">
+
+      <h2 class="section-title">
+        📦 Inventario
+      </h2>
+
+      <div id="inventoryContainer">
+
+        <div class="loading">
+          Cargando inventario...
+        </div>
+
+      </div>
+
+    </div>
+
+
+  </div>
+
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+"use strict";
+
+
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL =
+"https://jrxklpstlloeckihcduv.supabase.co";
+
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
+
+
+const supabaseClient =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+
+/* =========================
+   NEGOCIOS
+========================= */
+
+const BUSINESS_IDS = {
+
+  BakeQuiri:
+  "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+
+  SpicyRoll:
+  "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
+
+};
+
+
+let currentBusiness =
+"BakeQuiri";
+
+
+/* =========================
+   UTILIDADES
+========================= */
+
+function $(id){
+
+  return document.getElementById(id);
+
+}
+
+
+function money(value){
+
+  return "$" +
+  Number(value || 0).toFixed(2);
+
+}
+
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+function showStatus(
+  message,
+  type="error"
+){
+
+  const element =
+  $("status");
+
+  element.textContent =
+  message;
+
+  element.className =
+  "status " + type;
+
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+async function loadDashboard(){
+
+  $("todaySales").textContent =
+  "$0.00";
+
+  $("salesCount").textContent =
+  "0";
+
+  $("productCount").textContent =
+  "0";
+
+  $("lowStock").textContent =
+  "0";
+
+
+  $("salesContainer").innerHTML =
+  '<div class="loading">Cargando ventas...</div>';
+
+
+  $("inventoryContainer").innerHTML =
+  '<div class="loading">Cargando inventario...</div>';
+
+
+  const businessId =
+  BUSINESS_IDS[currentBusiness];
+
+
+  try{
+
+
+    /* =========================
+       PRODUCTOS
+    ========================= */
+
+    const productsResult =
+    await supabaseClient
+      .from("products")
+      .select(
+        "id,name,price,stock,active"
+      )
+      .eq(
+        "business_id",
+        businessId
+      )
+      .eq(
+        "active",
+        true
+      )
+      .order("name");
+
+
+    if(productsResult.error){
+
+      throw productsResult.error;
+
+    }
+
+
+    const products =
+    productsResult.data || [];
+
+
+    $("productCount").textContent =
+    products.length;
+
+
+    const lowStockProducts =
+    products.filter(
+      product =>
+      Number(product.stock || 0) <= 5
+    );
+
+
+    $("lowStock").textContent =
+    lowStockProducts.length;
+
+
+    renderInventory(
+      products
+    );
+
+
+    /* =========================
+       VENTAS
+    ========================= */
+
+    const today =
+    new Date();
+
+
+    const startOfDay =
+    new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    ).toISOString();
+
+
+    const salesResult =
+    await supabaseClient
+      .from("sales")
+      .select(
+        "id,total,status,created_at"
+      )
+      .eq(
+        "business_id",
+        businessId
+      )
+      .gte(
+        "created_at",
+        startOfDay
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+
+    if(salesResult.error){
+
+      throw salesResult.error;
+
+    }
+
+
+    const sales =
+    salesResult.data || [];
+
+
+    const totalToday =
+    sales.reduce(
+      (sum,sale) =>
+      sum +
+      Number(sale.total || 0),
+      0
+    );
+
+
+    $("todaySales").textContent =
+    money(totalToday);
+
+
+    $("salesCount").textContent =
+    sales.length;
+
+
+    renderSales(
+      sales
+    );
+
+
+    showStatus(
+      "Dashboard actualizado correctamente.",
+      "ok"
+    );
+
+
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    showStatus(
+      "No se pudo cargar el Dashboard: " +
+      (
+        error.message ||
+        error
+      )
+    );
+
+  }
+
+}
+
+
+/* =========================
+   INVENTARIO
+========================= */
+
+function renderInventory(
+  products
+){
+
+  const container =
+  $("inventoryContainer");
+
+
+  if(!products.length){
+
+    container.innerHTML =
+    '<div class="empty">' +
+    'No hay productos activos.' +
+    '</div>';
+
+    return;
+
+  }
+
+
+  const sorted =
+  [...products].sort(
+    (a,b) =>
+    Number(a.stock || 0) -
+    Number(b.stock || 0)
+  );
+
+
+  container.innerHTML = "";
+
+
+  sorted.forEach(
+    product => {
+
+      const row =
+      document.createElement("div");
+
+      row.className =
+      "stock-row";
+
+
+      const name =
+      document.createElement("div");
+
+      name.className =
+      "stock-name";
+
+      name.textContent =
+      product.name;
+
+
+      const stock =
+      document.createElement("div");
+
+      stock.className =
+      "stock-number";
+
+      stock.textContent =
+      Number(
+        product.stock || 0
+      ) + " uds";
+
+
+      row.append(
+        name,
+        stock
+      );
+
+
+      container.appendChild(
+        row
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================
+   VENTAS
+========================= */
+
+function renderSales(
+  sales
+){
+
+  const container =
+  $("salesContainer");
+
+
+  if(!sales.length){
+
+    container.innerHTML =
+    '<div class="empty">' +
+    'No hay ventas registradas hoy.' +
+    '</div>';
+
+    return;
+
+  }
+
+
+  const table =
+  document.createElement("table");
+
+
+  table.innerHTML = `
+
+    <thead>
+
+      <tr>
+
+        <th>Hora</th>
+
+        <th>Total</th>
+
+        <th>Estado</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody></tbody>
+
+  `;
+
+
+  const tbody =
+  table.querySelector(
+    "tbody"
+  );
+
+
+  sales
+    .slice(0,20)
+    .forEach(
+      sale => {
+
+        const row =
+        document.createElement("tr");
+
+
+        const date =
+        new Date(
+          sale.created_at
+        );
+
+
+        const time =
+        date.toLocaleTimeString(
+          "es-MX",
+          {
+            hour:"2-digit",
+            minute:"2-digit"
+          }
+        );
+
+
+        const status =
+        String(
+          sale.status || ""
+        );
+
+
+        const statusClass =
+        status === "paid"
+        ? "paid"
+        : "open";
+
+
+        const statusText =
+        status === "paid"
+        ? "Pagada"
+        : status || "Pendiente";
+
+
+        row.innerHTML = `
+
+          <td>
+            ${escapeHTML(time)}
+          </td>
+
+          <td>
+            <strong>
+              ${money(sale.total)}
+            </strong>
+          </td>
+
+          <td>
+            <span
+              class="status-pill ${statusClass}">
+              ${escapeHTML(statusText)}
+            </span>
+          </td>
+
+        `;
+
+
+        tbody.appendChild(
+          row
+        );
+
+      }
+    );
+
+
+  container.appendChild(
+    table
+  );
+
+}
+
+
+/* =========================
+   CAMBIAR NEGOCIO
+========================= */
+
+document
+.querySelectorAll(
+  ".business-btn"
+)
+.forEach(
+  button => {
+
+    button.addEventListener(
+      "click",
+      async () => {
+
+        currentBusiness =
+        button.dataset.business;
+
+
+        document
+        .querySelectorAll(
+          ".business-btn"
+        )
+        .forEach(
+          item =>
+          item.classList.remove(
+            "active"
+          )
+        );
+
+
+        button.classList.add(
+          "active"
+        );
+
+
+        await loadDashboard();
+
+      }
+    );
+
+  }
+);
+
+
+/* =========================
+   ACTUALIZAR
+========================= */
+
+$("refresh")
+.addEventListener(
+  "click",
+  loadDashboard
+);
+
+
+/* =========================
+   VOLVER AL POS
+========================= */
+
+$("back")
+.addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+    "index.html";
+
+  }
+);
+
+
+/* =========================
+   INICIAR
+========================= */
+
+loadDashboard();
+
+</script>
+
+</body>
+</html>
