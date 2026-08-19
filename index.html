@@ -754,7 +754,7 @@ async function loadBusinessData(){
       supabaseClient
         .from("customers")
         .select(
-          "id,business_id,name,phone,notes,active"
+          "id,business_id,name,phone,active"
         )
         .eq(
           "business_id",
@@ -816,8 +816,6 @@ async function loadBusinessData(){
       customersResult.data || [];
 
 
-    /* Mantener pago seleccionado */
-
     if(
       !payments.some(
         payment =>
@@ -831,8 +829,6 @@ async function loadBusinessData(){
 
     }
 
-
-    /* Reiniciar cliente al cambiar negocio */
 
     selectedCustomerId =
       null;
@@ -1117,9 +1113,6 @@ function updateCustomerInfo(){
     );
 
   }
-
-
-  
 
 
   info.textContent =
@@ -1606,8 +1599,6 @@ async function chargeSale(){
             BUSINESS_IDS[
               currentBusiness
             ],
-
-          /* AQUÍ VA EL CLIENTE */
 
           p_customer_id:
             selectedCustomerId || null,
