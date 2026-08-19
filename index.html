@@ -754,15 +754,11 @@ async function loadBusinessData(){
       supabaseClient
         .from("customers")
         .select(
-          "id,business_id,name,phone,active"
+          "id,business_id,name,phone"
         )
         .eq(
           "business_id",
           businessId
-        )
-        .eq(
-          "active",
-          true
         )
         .order(
           "name",
