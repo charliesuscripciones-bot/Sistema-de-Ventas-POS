@@ -43,9 +43,10 @@ header p{
 
 .status{
   display:none;
-  padding:13px 15px;
-  border-radius:10px;
+  padding:14px 16px;
+  border-radius:12px;
   margin-bottom:20px;
+  font-weight:600;
 }
 
 .status.ok{
@@ -74,7 +75,6 @@ button{
 }
 
 .business-btn,
-.back,
 .dashboard{
   background:white;
   border:2px solid #ddd;
@@ -156,6 +156,11 @@ textarea{
   font-weight:800;
 }
 
+.save:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
 .cancel{
   margin-top:15px;
   margin-left:8px;
@@ -167,12 +172,12 @@ textarea{
 }
 
 .search{
-  margin-bottom:18px;
+  margin-bottom:15px;
 }
 
 .customer{
   border-bottom:1px solid #eee;
-  padding:16px 0;
+  padding:17px 0;
 }
 
 .customer:last-child{
@@ -183,29 +188,30 @@ textarea{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:10px;
+  gap:15px;
 }
 
 .customer-name{
-  font-size:18px;
+  font-size:19px;
   font-weight:800;
 }
 
 .customer-info{
   color:#6b7280;
-  margin-top:6px;
-  line-height:1.5;
+  margin-top:7px;
+  line-height:1.6;
 }
 
 .customer-actions{
   display:flex;
   gap:8px;
+  flex-shrink:0;
 }
 
 .edit{
   background:#2563eb;
   color:white;
-  padding:8px 12px;
+  padding:9px 13px;
   border-radius:9px;
   font-weight:700;
 }
@@ -213,7 +219,7 @@ textarea{
 .delete{
   background:#fee2e2;
   color:#991b1b;
-  padding:8px 12px;
+  padding:9px 13px;
   border-radius:9px;
   font-weight:700;
 }
@@ -228,9 +234,18 @@ textarea{
 .count{
   color:#6b7280;
   margin-bottom:15px;
+  font-weight:600;
+}
+
+.editing-title{
+  color:#2563eb;
 }
 
 @media(max-width:600px){
+
+  .container{
+    padding:15px;
+  }
 
   .form-grid{
     grid-template-columns:1fr;
@@ -254,6 +269,12 @@ textarea{
     flex:1;
   }
 
+  .business-btn,
+  .refresh,
+  .dashboard{
+    flex:1;
+  }
+
 }
 
 </style>
@@ -271,9 +292,13 @@ Sistema de Ventas POS · Administración de clientes
 
 </header>
 
+
 <div class="container">
 
 <div id="status" class="status"></div>
+
+
+<!-- BOTONES -->
 
 <div class="topbar">
 
@@ -308,13 +333,16 @@ class="dashboard">
 
 <div class="card">
 
-<h2 class="section-title">
+<h2
+id="formTitle"
+class="section-title">
 ➕ Nuevo cliente
 </h2>
 
 <form id="customerForm">
 
 <div class="form-grid">
+
 
 <div class="field">
 
@@ -372,21 +400,28 @@ placeholder="Notas del cliente">
 
 </div>
 
+
 </div>
+
 
 <button
 type="submit"
 class="save"
 id="saveButton">
+
 Guardar cliente
+
 </button>
+
 
 <button
 type="button"
 class="cancel"
 id="cancelButton"
 style="display:none">
-Cancelar
+
+Cancelar edición
+
 </button>
 
 </form>
@@ -394,12 +429,12 @@ Cancelar
 </div>
 
 
-<!-- LISTA -->
+<!-- LISTA DE CLIENTES -->
 
 <div class="card">
 
 <h2 class="section-title">
-📋 Clientes
+📋 Clientes registrados
 </h2>
 
 <input
@@ -411,7 +446,9 @@ placeholder="🔎 Buscar por nombre, teléfono o correo">
 <div
 id="count"
 class="count">
+
 0 clientes
+
 </div>
 
 <div id="customersContainer">
@@ -434,9 +471,9 @@ Cargando clientes...
 "use strict";
 
 
-/* ================================
+/* =========================================
    SUPABASE
-================================ */
+========================================= */
 
 const SUPABASE_URL =
 "https://jrxklpstlloeckihcduv.supabase.co";
@@ -451,9 +488,9 @@ window.supabase.createClient(
 );
 
 
-/* ================================
+/* =========================================
    NEGOCIOS
-================================ */
+========================================= */
 
 const BUSINESS_IDS = {
 
@@ -474,31 +511,35 @@ let customers = [];
 let editingId = null;
 
 
-/* ================================
-   HELPERS
-================================ */
+/* =========================================
+   ELEMENTOS
+========================================= */
 
 const $ = id =>
 document.getElementById(id);
 
 
-function showStatus(
-  message,
-  type = "ok"
-){
+/* =========================================
+   MENSAJES
+========================================= */
 
-  $("status").textContent =
+function showStatus(message,type="ok"){
+
+  const status =
+  $("status");
+
+  status.textContent =
   message;
 
-  $("status").className =
+  status.className =
   "status " + type;
 
 }
 
 
-/* ================================
+/* =========================================
    CARGAR CLIENTES
-================================ */
+========================================= */
 
 async function loadCustomers(){
 
@@ -509,6 +550,7 @@ async function loadCustomers(){
 
     const businessId =
     BUSINESS_IDS[currentBusiness];
+
 
     const result =
     await supabaseClient
@@ -559,6 +601,7 @@ async function loadCustomers(){
     );
 
   }
+
   catch(error){
 
     console.error(error);
@@ -577,16 +620,15 @@ async function loadCustomers(){
 }
 
 
-/* ================================
+/* =========================================
    MOSTRAR CLIENTES
-================================ */
+========================================= */
 
-function renderCustomers(
-  list
-){
+function renderCustomers(list){
 
   const container =
   $("customersContainer");
+
 
   $("count").textContent =
   list.length +
@@ -611,173 +653,154 @@ function renderCustomers(
   "";
 
 
-  list.forEach(
-    customer => {
+  list.forEach(customer => {
 
-      const item =
-      document.createElement(
-        "div"
-      );
+    const item =
+    document.createElement("div");
 
-      item.className =
-      "customer";
+    item.className =
+    "customer";
 
 
-      const top =
-      document.createElement(
-        "div"
-      );
+    const top =
+    document.createElement("div");
 
-      top.className =
-      "customer-top";
+    top.className =
+    "customer-top";
 
 
-      const info =
-      document.createElement(
-        "div"
-      );
+    const info =
+    document.createElement("div");
 
 
-      const name =
-      document.createElement(
-        "div"
-      );
+    const name =
+    document.createElement("div");
 
-      name.className =
-      "customer-name";
+    name.className =
+    "customer-name";
 
-      name.textContent =
-      customer.name;
+    name.textContent =
+    customer.name;
 
 
-      const details =
-      document.createElement(
-        "div"
-      );
+    const details =
+    document.createElement("div");
 
-      details.className =
-      "customer-info";
+    details.className =
+    "customer-info";
 
 
-      let text = "";
+    const parts = [];
 
 
-      if(customer.phone){
+    if(customer.phone){
 
-        text +=
+      parts.push(
         "📱 " +
-        customer.phone;
-
-      }
-
-
-      if(customer.email){
-
-        if(text) text += " · ";
-
-        text +=
-        "✉️ " +
-        customer.email;
-
-      }
-
-
-      if(customer.notes){
-
-        if(text) text += "<br>";
-
-        text +=
-        "📝 " +
-        customer.notes;
-
-      }
-
-
-      details.innerHTML =
-      text ||
-      "Sin información adicional";
-
-
-      info.append(
-        name,
-        details
-      );
-
-
-      const actions =
-      document.createElement(
-        "div"
-      );
-
-      actions.className =
-      "customer-actions";
-
-
-      const edit =
-      document.createElement(
-        "button"
-      );
-
-      edit.className =
-      "edit";
-
-      edit.textContent =
-      "Editar";
-
-      edit.onclick =
-      () => editCustomer(
-        customer
-      );
-
-
-      const del =
-      document.createElement(
-        "button"
-      );
-
-      del.className =
-      "delete";
-
-      del.textContent =
-      "Eliminar";
-
-      del.onclick =
-      () => deleteCustomer(
-        customer.id
-      );
-
-
-      actions.append(
-        edit,
-        del
-      );
-
-
-      top.append(
-        info,
-        actions
-      );
-
-
-      item.append(
-        top
-      );
-
-
-      container.appendChild(
-        item
+        customer.phone
       );
 
     }
 
-  );
+
+    if(customer.email){
+
+      parts.push(
+        "✉️ " +
+        customer.email
+      );
+
+    }
+
+
+    if(customer.notes){
+
+      parts.push(
+        "📝 " +
+        customer.notes
+      );
+
+    }
+
+
+    details.textContent =
+    parts.length
+    ? parts.join(" · ")
+    : "Sin información adicional";
+
+
+    info.append(
+      name,
+      details
+    );
+
+
+    const actions =
+    document.createElement("div");
+
+    actions.className =
+    "customer-actions";
+
+
+    const edit =
+    document.createElement("button");
+
+    edit.className =
+    "edit";
+
+    edit.textContent =
+    "✏️ Editar";
+
+    edit.addEventListener(
+      "click",
+      () => editCustomer(customer)
+    );
+
+
+    const del =
+    document.createElement("button");
+
+    del.className =
+    "delete";
+
+    del.textContent =
+    "🗑️ Eliminar";
+
+    del.addEventListener(
+      "click",
+      () => deleteCustomer(customer)
+    );
+
+
+    actions.append(
+      edit,
+      del
+    );
+
+
+    top.append(
+      info,
+      actions
+    );
+
+
+    item.append(
+      top
+    );
+
+
+    container.appendChild(
+      item
+    );
+
+  });
 
 }
 
 
-/* ================================
-   CREAR / EDITAR
-================================ */
+/* =========================================
+   CREAR / EDITAR CLIENTE
+========================================= */
 
 $("customerForm")
 .addEventListener(
@@ -816,11 +839,19 @@ $("customerForm")
     BUSINESS_IDS[currentBusiness];
 
 
-    $("saveButton").disabled =
+    const saveButton =
+    $("saveButton");
+
+    saveButton.disabled =
     true;
 
 
     try{
+
+
+      /* ================================
+         EDITAR
+      ================================= */
 
       if(editingId){
 
@@ -832,9 +863,16 @@ $("customerForm")
           .update({
 
             name:name,
-            phone:phone || null,
-            email:email || null,
-            notes:notes || null,
+
+            phone:
+            phone || null,
+
+            email:
+            email || null,
+
+            notes:
+            notes || null,
+
             updated_at:
             new Date().toISOString()
 
@@ -843,6 +881,11 @@ $("customerForm")
           .eq(
             "id",
             editingId
+          )
+
+          .eq(
+            "business_id",
+            businessId
           );
 
 
@@ -859,6 +902,12 @@ $("customerForm")
         );
 
       }
+
+
+      /* ================================
+         NUEVO CLIENTE
+      ================================= */
+
       else{
 
         const result =
@@ -880,7 +929,9 @@ $("customerForm")
             email || null,
 
             notes:
-            notes || null
+            notes || null,
+
+            active:true
 
           });
 
@@ -905,6 +956,7 @@ $("customerForm")
       await loadCustomers();
 
     }
+
     catch(error){
 
       console.error(error);
@@ -916,9 +968,10 @@ $("customerForm")
       );
 
     }
+
     finally{
 
-      $("saveButton").disabled =
+      saveButton.disabled =
       false;
 
     }
@@ -927,13 +980,11 @@ $("customerForm")
 );
 
 
-/* ================================
+/* =========================================
    EDITAR CLIENTE
-================================ */
+========================================= */
 
-function editCustomer(
-  customer
-){
+function editCustomer(customer){
 
   editingId =
   customer.id;
@@ -952,8 +1003,17 @@ function editCustomer(
   customer.notes || "";
 
 
+  $("formTitle").textContent =
+  "✏️ Editando cliente";
+
+  $("formTitle").classList.add(
+    "editing-title"
+  );
+
+
   $("saveButton").textContent =
-  "Actualizar cliente";
+  "Guardar cambios";
+
 
   $("cancelButton").style.display =
   "inline-block";
@@ -967,9 +1027,9 @@ function editCustomer(
 }
 
 
-/* ================================
+/* =========================================
    CANCELAR EDICIÓN
-================================ */
+========================================= */
 
 function resetForm(){
 
@@ -980,8 +1040,17 @@ function resetForm(){
   $("customerForm").reset();
 
 
+  $("formTitle").textContent =
+  "➕ Nuevo cliente";
+
+  $("formTitle").classList.remove(
+    "editing-title"
+  );
+
+
   $("saveButton").textContent =
   "Guardar cliente";
+
 
   $("cancelButton").style.display =
   "none";
@@ -996,21 +1065,22 @@ $("cancelButton")
 );
 
 
-/* ================================
-   ELIMINAR
-================================ */
+/* =========================================
+   ELIMINAR CLIENTE
+========================================= */
 
-async function deleteCustomer(
-  id
-){
+async function deleteCustomer(customer){
 
-  const confirmDelete =
+  const confirmed =
   confirm(
-    "¿Seguro que quieres eliminar este cliente?"
+    "¿Eliminar a " +
+    customer.name +
+    "?\n\n" +
+    "El cliente dejará de aparecer en la lista."
   );
 
 
-  if(!confirmDelete){
+  if(!confirmed){
 
     return;
 
@@ -1018,6 +1088,12 @@ async function deleteCustomer(
 
 
   try{
+
+    /*
+      NO borramos físicamente el registro.
+      Lo desactivamos para conservar
+      la integridad de los datos históricos.
+    */
 
     const result =
     await supabaseClient
@@ -1035,7 +1111,12 @@ async function deleteCustomer(
 
       .eq(
         "id",
-        id
+        customer.id
+      )
+
+      .eq(
+        "business_id",
+        BUSINESS_IDS[currentBusiness]
       );
 
 
@@ -1052,9 +1133,17 @@ async function deleteCustomer(
     );
 
 
+    if(editingId === customer.id){
+
+      resetForm();
+
+    }
+
+
     await loadCustomers();
 
   }
+
   catch(error){
 
     console.error(error);
@@ -1070,9 +1159,9 @@ async function deleteCustomer(
 }
 
 
-/* ================================
+/* =========================================
    BUSCADOR
-================================ */
+========================================= */
 
 $("search")
 .addEventListener(
@@ -1081,8 +1170,8 @@ $("search")
 
     const query =
     event.target.value
-    .toLowerCase()
-    .trim();
+      .trim()
+      .toLowerCase();
 
 
     if(!query){
@@ -1100,24 +1189,25 @@ $("search")
     customers.filter(
       customer => {
 
-        return (
+        const text =
+        [
 
-          (customer.name || "")
-          .toLowerCase()
-          .includes(query)
+          customer.name,
 
-          ||
+          customer.phone,
 
-          (customer.phone || "")
-          .toLowerCase()
-          .includes(query)
+          customer.email,
 
-          ||
+          customer.notes
 
-          (customer.email || "")
-          .toLowerCase()
-          .includes(query)
+        ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
 
+
+        return text.includes(
+          query
         );
 
       }
@@ -1132,61 +1222,56 @@ $("search")
 );
 
 
-/* ================================
+/* =========================================
    CAMBIO DE NEGOCIO
-================================ */
+========================================= */
 
 document
-.querySelectorAll(
-  ".business-btn"
-)
-.forEach(
-  button => {
+.querySelectorAll(".business-btn")
+.forEach(button => {
 
-    button.addEventListener(
-      "click",
-      () => {
+  button.addEventListener(
+    "click",
+    async () => {
 
-        currentBusiness =
-        button.dataset.business;
+      currentBusiness =
+      button.dataset.business;
 
 
-        document
-        .querySelectorAll(
-          ".business-btn"
-        )
-        .forEach(
-          btn =>
-          btn.classList.remove(
-            "active"
-          )
-        );
+      document
+      .querySelectorAll(".business-btn")
+      .forEach(btn => {
 
-
-        button.classList.add(
+        btn.classList.remove(
           "active"
         );
 
-
-        resetForm();
-
-
-        $("search").value =
-        "";
+      });
 
 
-        loadCustomers();
-
-      }
-    );
-
-  }
-);
+      button.classList.add(
+        "active"
+      );
 
 
-/* ================================
-   BOTONES
-================================ */
+      resetForm();
+
+
+      $("search").value =
+      "";
+
+
+      await loadCustomers();
+
+    }
+  );
+
+});
+
+
+/* =========================================
+   ACTUALIZAR
+========================================= */
 
 $("refresh")
 .addEventListener(
@@ -1194,6 +1279,10 @@ $("refresh")
   loadCustomers
 );
 
+
+/* =========================================
+   DASHBOARD
+========================================= */
 
 $("dashboard")
 .addEventListener(
@@ -1207,9 +1296,9 @@ $("dashboard")
 );
 
 
-/* ================================
+/* =========================================
    INICIO
-================================ */
+========================================= */
 
 loadCustomers();
 
