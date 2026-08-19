@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1.0"
+>
+
+<title>Cuentas por cobrar | Sistema de Ventas POS</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#f5f5f5;
+  color:#222;
+}
+
+header{
+  background:#111827;
+  color:#fff;
+  padding:25px 20px;
+}
+
+header h1{
+  font-size:30px;
+}
+
+header p{
+  font-size:17px;
+  opacity:.75;
+  margin-top:8px;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:25px 20px 40px;
+}
+
+.status{
+  display:none;
+  margin-bottom:18px;
+  padding:15px;
+  border-radius:12px;
+  font-weight:600;
+}
+
+.status.ok{
+  display:block;
+  background:#dcfce7;
+  color:#166534;
+}
+
+.status.error{
+  display:block;
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.businesses{
+  display:flex;
+  gap:12px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+
+.business-btn,
+.dashboard-btn,
+.refresh-btn{
+  border:2px solid #ddd;
+  padding:13px 20px;
+  border-radius:12px;
+  background:#fff;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.business-btn{
+  color:#2680eb;
+}
+
+.business-btn.active{
+  background:#111827;
+  color:#fff;
+  border-color:#111827;
+}
+
+.dashboard-btn{
+  color:#111827;
+}
+
+.refresh-btn{
+  background:#2680eb;
+  color:#fff;
+  border-color:#2680eb;
+}
+
+.summary{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.summary-card{
+  background:#fff;
+  border-radius:18px;
+  padding:22px;
+  box-shadow:0 5px 20px rgba(0,0,0,.06);
+}
+
+.summary-label{
+  color:#6b7280;
+  font-size:15px;
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+.summary-value{
+  font-size:30px;
+  font-weight:800;
+}
+
+.summary-card.pending .summary-value{
+  color:#dc2626;
+}
+
+.summary-card.clients .summary-value{
+  color:#2563eb;
+}
+
+.summary-card.sales .summary-value{
+  color:#d97706;
+}
+
+.card{
+  background:#fff;
+  border-radius:20px;
+  padding:25px;
+  box-shadow:0 5px 20px rgba(0,0,0,.06);
+  margin-bottom:20px;
+}
+
+.card h2{
+  font-size:24px;
+  margin-bottom:18px;
+}
+
+.search{
+  width:100%;
+  padding:14px;
+  border:2px solid #ddd;
+  border-radius:11px;
+  font-size:16px;
+  margin-bottom:18px;
+  outline:none;
+}
+
+.search:focus{
+  border-color:#2680eb;
+}
+
+.customer{
+  border:2px solid #eee;
+  border-radius:16px;
+  margin-bottom:15px;
+  overflow:hidden;
+}
+
+.customer-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  padding:18px;
+  cursor:pointer;
+  background:#fff;
+}
+
+.customer-header:hover{
+  background:#fafafa;
+}
+
+.customer-name{
+  font-size:19px;
+  font-weight:800;
+}
+
+.customer-contact{
+  color:#6b7280;
+  font-size:14px;
+  margin-top:5px;
+}
+
+.customer-balance{
+  font-size:22px;
+  font-weight:800;
+  color:#dc2626;
+  white-space:nowrap;
+}
+
+.customer-body{
+  display:none;
+  border-top:1px solid #eee;
+  padding:18px;
+  background:#fafafa;
+}
+
+.customer.open .customer-body{
+  display:block;
+}
+
+.sale{
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:13px;
+  padding:15px;
+  margin-bottom:12px;
+}
+
+.sale:last-child{
+  margin-bottom:0;
+}
+
+.sale-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:15px;
+}
+
+.sale-date{
+  font-weight:700;
+}
+
+.sale-total{
+  font-weight:800;
+}
+
+.sale-details{
+  color:#6b7280;
+  font-size:14px;
+  margin-top:6px;
+}
+
+.sale-balance{
+  margin-top:10px;
+  font-size:17px;
+  font-weight:800;
+  color:#dc2626;
+}
+
+.sale-actions{
+  margin-top:13px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.pay-button{
+  border:none;
+  background:#16a34a;
+  color:#fff;
+  padding:11px 16px;
+  border-radius:10px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.pay-button:hover{
+  background:#15803d;
+}
+
+.history-button{
+  border:none;
+  background:#e5e7eb;
+  color:#111827;
+  padding:11px 16px;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.history{
+  display:none;
+  margin-top:13px;
+  border-top:1px solid #eee;
+  padding-top:13px;
+}
+
+.history.visible{
+  display:block;
+}
+
+.payment-history-item{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  padding:8px 0;
+  color:#4b5563;
+  font-size:14px;
+}
+
+.payment-history-item strong{
+  color:#16a34a;
+}
+
+.empty{
+  text-align:center;
+  color:#777;
+  padding:35px 10px;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  z-index:1000;
+  padding:20px;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal.open{
+  display:flex;
+}
+
+.modal-card{
+  width:100%;
+  max-width:430px;
+  background:#fff;
+  border-radius:20px;
+  padding:25px;
+  box-shadow:0 15px 50px rgba(0,0,0,.25);
+}
+
+.modal-card h2{
+  margin-bottom:8px;
+}
+
+.modal-subtitle{
+  color:#6b7280;
+  margin-bottom:20px;
+}
+
+.field{
+  margin-bottom:15px;
+}
+
+.field label{
+  display:block;
+  font-weight:700;
+  margin-bottom:7px;
+}
+
+.field input,
+.field select{
+  width:100%;
+  padding:14px;
+  border:2px solid #ddd;
+  border-radius:11px;
+  font-size:16px;
+  background:#fff;
+}
+
+.modal-buttons{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.modal-buttons button{
+  flex:1;
+  padding:14px;
+  border:none;
+  border-radius:11px;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.confirm-payment{
+  background:#16a34a;
+  color:#fff;
+}
+
+.cancel-payment{
+  background:#e5e7eb;
+  color:#111827;
+}
+
+.confirm-payment:disabled{
+  opacity:.6;
+  cursor:wait;
+}
+
+@media(max-width:800px){
+
+  .summary{
+    grid-template-columns:1fr;
+  }
+
+}
+
+@media(max-width:600px){
+
+  .container{
+    padding:18px 15px 35px;
+  }
+
+  .customer-header{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .customer-balance{
+    font-size:20px;
+  }
+
+  .sale-top{
+    flex-direction:column;
+  }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+  <h1>💰 Cuentas por cobrar</h1>
+
+  <p>
+    Control de ventas pendientes y abonos
+  </p>
+
+</header>
+
+
+<div class="container">
+
+  <div
+    id="status"
+    class="status">
+  </div>
+
+
+  <!-- NEGOCIOS -->
+
+  <div class="businesses">
+
+    <button
+      type="button"
+      class="business-btn active"
+      data-business="BakeQuiri">
+      BakeQuiri
+    </button>
+
+    <button
+      type="button"
+      class="business-btn"
+      data-business="SpicyRoll">
+      SpicyRoll
+    </button>
+
+    <button
+      type="button"
+      class="refresh-btn"
+      id="refreshButton">
+      🔄 Actualizar
+    </button>
+
+    <button
+      type="button"
+      class="dashboard-btn"
+      id="dashboardButton">
+      ← Dashboard
+    </button>
+
+  </div>
+
+
+  <!-- RESUMEN -->
+
+  <div class="summary">
+
+    <div class="summary-card pending">
+
+      <div class="summary-label">
+        SALDO PENDIENTE
+      </div>
+
+      <div
+        id="totalPending"
+        class="summary-value">
+        $0.00
+      </div>
+
+    </div>
+
+
+    <div class="summary-card clients">
+
+      <div class="summary-label">
+        CLIENTES CON DEUDA
+      </div>
+
+      <div
+        id="totalClients"
+        class="summary-value">
+        0
+      </div>
+
+    </div>
+
+
+    <div class="summary-card sales">
+
+      <div class="summary-label">
+        VENTAS PENDIENTES
+      </div>
+
+      <div
+        id="totalSales"
+        class="summary-value">
+        0
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- CUENTAS -->
+
+  <div class="card">
+
+    <h2>
+      📋 Cuentas pendientes
+    </h2>
+
+    <input
+      id="search"
+      class="search"
+      type="search"
+      placeholder="🔎 Buscar cliente por nombre o teléfono"
+      autocomplete="off"
+    >
+
+
+    <div id="accounts">
+
+      <div class="empty">
+        Cargando cuentas...
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- MODAL DE PAGO -->
+
+<div
+  id="paymentModal"
+  class="modal">
+
+  <div class="modal-card">
+
+    <h2>
+      💵 Registrar abono
+    </h2>
+
+    <div
+      id="paymentSubtitle"
+      class="modal-subtitle">
+      Venta
+    </div>
+
+
+    <div class="field">
+
+      <label for="paymentAmount">
+        Monto del abono
+      </label>
+
+      <input
+        id="paymentAmount"
+        type="number"
+        min="0.01"
+        step="0.01"
+        inputmode="decimal"
+        placeholder="0.00"
+      >
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="paymentMethod">
+        Método de pago
+      </label>
+
+      <select id="paymentMethod">
+
+        <option value="">
+          Selecciona un método
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div class="modal-buttons">
+
+      <button
+        type="button"
+        class="cancel-payment"
+        id="cancelPayment">
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="confirm-payment"
+        id="confirmPayment">
+        Registrar abono
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+"use strict";
+
+
+/* =========================================
+   SUPABASE
+========================================= */
+
+const SUPABASE_URL =
+  "https://jrxklpstlloeckihcduv.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+/* =========================================
+   NEGOCIOS
+========================================= */
+
+const BUSINESS_IDS = {
+
+  BakeQuiri:
+    "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+
+  SpicyRoll:
+    "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
+
+};
+
+
+let currentBusiness =
+  "BakeQuiri";
+
+
+/* =========================================
+   ESTADO
+========================================= */
+
+let customers = [];
+
+let sales = [];
+
+let payments = [];
+
+let selectedSale = null;
+
+
+/* =========================================
+   UTILIDADES
+========================================= */
+
+const $ =
+  id =>
+    document.getElementById(id);
+
+
+function money(value){
+
+  return "$" +
+    Number(value || 0).toFixed(2);
+
+}
+
+
+function showStatus(
+  message,
+  type="ok"
+){
+
+  const status =
+    $("status");
+
+  status.textContent =
+    message;
+
+  status.className =
+    "status " + type;
+
+}
+
+
+function clearStatus(){
+
+  $("status").textContent =
+    "";
+
+  $("status").className =
+    "status";
+
+}
+
+
+function formatDate(value){
+
+  if(!value)
+    return "Sin fecha";
+
+  const date =
+    new Date(value);
+
+  return date.toLocaleDateString(
+    "es-MX",
+    {
+      day:"2-digit",
+      month:"2-digit",
+      year:"numeric"
+    }
+  );
+
+}
+
+
+/* =========================================
+   CARGAR MÉTODOS DE PAGO
+========================================= */
+
+async function loadPaymentMethods(){
+
+  const businessId =
+    BUSINESS_IDS[currentBusiness];
+
+
+  const result =
+    await supabaseClient
+
+      .from("payment_methods")
+
+      .select(
+        "id,name,provider"
+      )
+
+      .eq(
+        "business_id",
+        businessId
+      )
+
+      .eq(
+        "active",
+        true
+      )
+
+      .order("name");
+
+
+  if(result.error){
+
+    throw result.error;
+
+  }
+
+
+  payments =
+    result.data || [];
+
+
+  const select =
+    $("paymentMethod");
+
+
+  select.innerHTML =
+    '<option value="">Selecciona un método</option>';
+
+
+  payments.forEach(
+    payment => {
+
+      const option =
+        document.createElement(
+          "option"
+        );
+
+      option.value =
+        payment.id;
+
+      option.textContent =
+        payment.name;
+
+      select.appendChild(
+        option
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================
+   CARGAR CUENTAS
+========================================= */
+
+async function loadAccounts(){
+
+  clearStatus();
+
+  $("accounts").innerHTML =
+    '<div class="empty">Cargando cuentas...</div>';
+
+
+  try{
+
+    const businessId =
+      BUSINESS_IDS[currentBusiness];
+
+
+    /*
+      Primero cargamos clientes.
+    */
+
+    const customersResult =
+      await supabaseClient
+
+        .from("customers")
+
+        .select(
+          "id,business_id,name,phone,notes,created_at"
+        )
+
+        .eq(
+          "business_id",
+          businessId
+        )
+
+        .order(
+          "name",
+          {
+            ascending:true
+          }
+        );
+
+
+    if(customersResult.error){
+
+      throw customersResult.error;
+
+    }
+
+
+    customers =
+      customersResult.data || [];
+
+
+    /*
+      Cargamos ventas abiertas
+      con saldo pendiente.
+    */
+
+    const salesResult =
+      await supabaseClient
+
+        .from("sales")
+
+        .select(
+          "id,business_id,customer_id,sale_date,total,balance,status,created_at"
+        )
+
+        .eq(
+          "business_id",
+          businessId
+        )
+
+        .gt(
+          "balance",
+          0
+        )
+
+        .order(
+          "created_at",
+          {
+            ascending:false
+          }
+        );
+
+
+    if(salesResult.error){
+
+      throw salesResult.error;
+
+    }
+
+
+    sales =
+      salesResult.data || [];
+
+
+    await loadPaymentMethods();
+
+
+    renderAccounts();
+
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    $("accounts").innerHTML =
+      '<div class="empty">No se pudieron cargar las cuentas.</div>';
+
+    showStatus(
+      "Error al cargar cuentas: " +
+      (
+        error.message ||
+        error
+      ),
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   RENDERIZAR CUENTAS
+========================================= */
+
+function renderAccounts(){
+
+  const searchText =
+    $("search")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  const accountMap =
+    new Map();
+
+
+  sales.forEach(
+    sale => {
+
+      if(!sale.customer_id)
+        return;
+
+
+      const customer =
+        customers.find(
+          item =>
+            item.id ===
+            sale.customer_id
+        );
+
+
+      if(!customer)
+        return;
+
+
+      if(searchText){
+
+        const text =
+          [
+            customer.name,
+            customer.phone
+          ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+
+
+        if(
+          !text.includes(searchText)
+        ){
+
+          return;
+
+        }
+
+      }
+
+
+      if(
+        !accountMap.has(
+          customer.id
+        )
+      ){
+
+        accountMap.set(
+          customer.id,
+          {
+            customer,
+            sales:[],
+            balance:0
+          }
+        );
+
+      }
+
+
+      const account =
+        accountMap.get(
+          customer.id
+        );
+
+
+      account.sales.push(
+        sale
+      );
+
+
+      account.balance +=
+        Number(
+          sale.balance || 0
+        );
+
+    }
+  );
+
+
+  const accounts =
+    Array.from(
+      accountMap.values()
+    );
+
+
+  let totalPending =
+    0;
+
+  let totalSales =
+    0;
+
+
+  accounts.forEach(
+    account => {
+
+      totalPending +=
+        account.balance;
+
+      totalSales +=
+        account.sales.length;
+
+    }
+  );
+
+
+  $("totalPending").textContent =
+    money(totalPending);
+
+
+  $("totalClients").textContent =
+    accounts.length;
+
+
+  $("totalSales").textContent =
+    totalSales;
+
+
+  if(!accounts.length){
+
+    $("accounts").innerHTML =
+      '<div class="empty">' +
+      '🎉 No hay cuentas pendientes de pago.' +
+      '</div>';
+
+    return;
+
+  }
+
+
+  $("accounts").innerHTML =
+    "";
+
+
+  accounts.forEach(
+    account => {
+
+      const wrapper =
+        document.createElement(
+          "div"
+        );
+
+      wrapper.className =
+        "customer";
+
+
+      const header =
+        document.createElement(
+          "div"
+        );
+
+      header.className =
+        "customer-header";
+
+
+      const customerInfo =
+        document.createElement(
+          "div"
+        );
+
+
+      const name =
+        document.createElement(
+          "div"
+        );
+
+      name.className =
+        "customer-name";
+
+      name.textContent =
+        account.customer.name;
+
+
+      const contact =
+        document.createElement(
+          "div"
+        );
+
+      contact.className =
+        "customer-contact";
+
+      contact.textContent =
+        account.customer.phone
+        ? "📱 " +
+          account.customer.phone
+        : "Sin teléfono";
+
+
+      customerInfo.append(
+        name,
+        contact
+      );
+
+
+      const balance =
+        document.createElement(
+          "div"
+        );
+
+      balance.className =
+        "customer-balance";
+
+      balance.textContent =
+        money(account.balance);
+
+
+      header.append(
+        customerInfo,
+        balance
+      );
+
+
+      const body =
+        document.createElement(
+          "div"
+        );
+
+      body.className =
+        "customer-body";
+
+
+      account.sales.forEach(
+        sale => {
+
+          body.appendChild(
+            createSaleElement(
+              sale
+            )
+          );
+
+        }
+      );
+
+
+      header.addEventListener(
+        "click",
+        () => {
+
+          wrapper.classList.toggle(
+            "open"
+          );
+
+        }
+      );
+
+
+      wrapper.append(
+        header,
+        body
+      );
+
+
+      $("accounts").appendChild(
+        wrapper
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================
+   CREAR ELEMENTO DE VENTA
+========================================= */
+
+function createSaleElement(
+  sale
+){
+
+  const element =
+    document.createElement(
+      "div"
+    );
+
+  element.className =
+    "sale";
+
+
+  const top =
+    document.createElement(
+      "div"
+    );
+
+  top.className =
+    "sale-top";
+
+
+  const date =
+    document.createElement(
+      "div"
+    );
+
+  date.className =
+    "sale-date";
+
+  date.textContent =
+    "Venta · " +
+    formatDate(
+      sale.sale_date ||
+      sale.created_at
+    );
+
+
+  const total =
+    document.createElement(
+      "div"
+    );
+
+  total.className =
+    "sale-total";
+
+  total.textContent =
+    "Total " +
+    money(sale.total);
+
+
+  top.append(
+    date,
+    total
+  );
+
+
+  const details =
+    document.createElement(
+      "div"
+    );
+
+  details.className =
+    "sale-details";
+
+  details.textContent =
+    "Estado: " +
+    (
+      sale.status === "open"
+      ? "Pendiente"
+      : sale.status
+    );
+
+
+  const balance =
+    document.createElement(
+      "div"
+    );
+
+  balance.className =
+    "sale-balance";
+
+  balance.textContent =
+    "Saldo pendiente: " +
+    money(sale.balance);
+
+
+  const actions =
+    document.createElement(
+      "div"
+    );
+
+  actions.className =
+    "sale-actions";
+
+
+  const payButton =
+    document.createElement(
+      "button"
+    );
+
+  payButton.type =
+    "button";
+
+  payButton.className =
+    "pay-button";
+
+  payButton.textContent =
+    "💵 Registrar abono";
+
+
+  payButton.addEventListener(
+    "click",
+    event => {
+
+      event.stopPropagation();
+
+      openPaymentModal(
+        sale
+      );
+
+    }
+  );
+
+
+  const historyButton =
+    document.createElement(
+      "button"
+    );
+
+  historyButton.type =
+    "button";
+
+  historyButton.className =
+    "history-button";
+
+  historyButton.textContent =
+    "📋 Historial de pagos";
+
+
+  const history =
+    document.createElement(
+      "div"
+    );
+
+  history.className =
+    "history";
+
+
+  historyButton.addEventListener(
+    "click",
+    async event => {
+
+      event.stopPropagation();
+
+      history.classList.toggle(
+        "visible"
+      );
+
+
+      if(
+        history.classList.contains(
+          "visible"
+        )
+      ){
+
+        history.innerHTML =
+          '<div class="loading">Cargando historial...</div>';
+
+
+        await loadPaymentHistory(
+          sale.id,
+          history
+        );
+
+      }
+
+    }
+  );
+
+
+  actions.append(
+    payButton,
+    historyButton
+  );
+
+
+  element.append(
+    top,
+    details,
+    balance,
+    actions,
+    history
+  );
+
+
+  return element;
+
+}
+
+
+/* =========================================
+   HISTORIAL DE PAGOS
+========================================= */
+
+async function loadPaymentHistory(
+  saleId,
+  container
+){
+
+  try{
+
+    const result =
+      await supabaseClient
+
+        .from("payments")
+
+        .select(
+          "id,amount,paid_at,payment_method_id,notes"
+        )
+
+        .eq(
+          "sale_id",
+          saleId
+        )
+
+        .order(
+          "paid_at",
+          {
+            ascending:false
+          }
+        );
+
+
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+
+    if(!result.data?.length){
+
+      container.innerHTML =
+        '<div class="empty">' +
+        'No hay pagos registrados para esta venta.' +
+        '</div>';
+
+      return;
+
+    }
+
+
+    /*
+      Obtener nombres de métodos
+      desde los métodos ya cargados.
+    */
+
+    container.innerHTML =
+      "";
+
+
+    result.data.forEach(
+      payment => {
+
+        const row =
+          document.createElement(
+            "div"
+          );
+
+        row.className =
+          "payment-history-item";
+
+
+        const method =
+          payments.find(
+            item =>
+              item.id ===
+              payment.payment_method_id
+          );
+
+
+        const left =
+          document.createElement(
+            "span"
+          );
+
+        left.textContent =
+          formatDate(
+            payment.paid_at
+          ) +
+          " · " +
+          (
+            method?.name ||
+            "Pago"
+          );
+
+
+        const right =
+          document.createElement(
+            "strong"
+          );
+
+        right.textContent =
+          money(payment.amount);
+
+
+        row.append(
+          left,
+          right
+        );
+
+
+        container.appendChild(
+          row
+        );
+
+      }
+    );
+
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    container.innerHTML =
+      '<div class="empty">' +
+      'No se pudo cargar el historial.' +
+      '</div>';
+
+  }
+
+}
+
+
+/* =========================================
+   ABRIR MODAL
+========================================= */
+
+function openPaymentModal(
+  sale
+){
+
+  selectedSale =
+    sale;
+
+
+  const customer =
+    customers.find(
+      item =>
+        item.id ===
+        sale.customer_id
+    );
+
+
+  $("paymentSubtitle").textContent =
+    (
+      customer?.name ||
+      "Cliente"
+    ) +
+    " · Saldo: " +
+    money(sale.balance);
+
+
+  $("paymentAmount").value =
+    "";
+
+
+  $("paymentAmount").max =
+    Number(
+      sale.balance
+    ).toFixed(2);
+
+
+  $("paymentMethod").value =
+    "";
+
+
+  $("paymentModal")
+    .classList
+    .add("open");
+
+
+  setTimeout(
+    () =>
+      $("paymentAmount").focus(),
+    100
+  );
+
+}
+
+
+/* =========================================
+   CERRAR MODAL
+========================================= */
+
+function closePaymentModal(){
+
+  selectedSale =
+    null;
+
+
+  $("paymentModal")
+    .classList
+    .remove("open");
+
+}
+
+
+/* =========================================
+   CONFIRMAR ABONO
+========================================= */
+
+async function registerPayment(){
+
+  if(!selectedSale){
+
+    return;
+
+  }
+
+
+  const amount =
+    Number(
+      $("paymentAmount").value
+    );
+
+
+  const paymentMethodId =
+    $("paymentMethod").value;
+
+
+  if(
+    !amount ||
+    amount <= 0
+  ){
+
+    alert(
+      "Ingresa un monto válido."
+    );
+
+    return;
+
+  }
+
+
+  if(
+    amount >
+    Number(selectedSale.balance)
+  ){
+
+    alert(
+      "El abono no puede ser mayor al saldo pendiente."
+    );
+
+    return;
+
+  }
+
+
+  if(!paymentMethodId){
+
+    alert(
+      "Selecciona un método de pago."
+    );
+
+    return;
+
+  }
+
+
+  const button =
+    $("confirmPayment");
+
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    "REGISTRANDO...";
+
+
+  try{
+
+    const result =
+      await supabaseClient.rpc(
+        "register_payment",
+        {
+
+          p_business_id:
+            BUSINESS_IDS[
+              currentBusiness
+            ],
+
+          p_sale_id:
+            selectedSale.id,
+
+          p_payment_method_id:
+            paymentMethodId,
+
+          p_amount:
+            amount
+
+        }
+      );
+
+
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+
+    closePaymentModal();
+
+
+    showStatus(
+      "Abono registrado correctamente.",
+      "ok"
+    );
+
+
+    await loadAccounts();
+
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    showStatus(
+      "No se pudo registrar el abono: " +
+      (
+        error.message ||
+        error
+      ),
+      "error"
+    );
+
+  }
+
+  finally{
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "Registrar abono";
+
+  }
+
+}
+
+
+/* =========================================
+   BUSCADOR
+========================================= */
+
+$("search")
+.addEventListener(
+  "input",
+  renderAccounts
+);
+
+
+/* =========================================
+   NEGOCIOS
+========================================= */
+
+document
+  .querySelectorAll(
+    ".business-btn"
+  )
+  .forEach(
+    button => {
+
+      button.addEventListener(
+        "click",
+        async () => {
+
+          if(
+            button.dataset.business ===
+            currentBusiness
+          ){
+
+            return;
+
+          }
+
+
+          currentBusiness =
+            button.dataset.business;
+
+
+          document
+            .querySelectorAll(
+              ".business-btn"
+            )
+            .forEach(
+              item =>
+                item.classList.remove(
+                  "active"
+                )
+            );
+
+
+          button.classList.add(
+            "active"
+          );
+
+
+          await loadAccounts();
+
+        }
+      );
+
+    }
+  );
+
+
+/* =========================================
+   BOTONES
+========================================= */
+
+$("refreshButton")
+.addEventListener(
+  "click",
+  loadAccounts
+);
+
+
+$("dashboardButton")
+.addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+      "index.html";
+
+  }
+);
+
+
+$("cancelPayment")
+.addEventListener(
+  "click",
+  closePaymentModal
+);
+
+
+$("confirmPayment")
+.addEventListener(
+  "click",
+  registerPayment
+);
+
+
+/* =========================================
+   CERRAR MODAL AL TOCAR FUERA
+========================================= */
+
+$("paymentModal")
+.addEventListener(
+  "click",
+  event => {
+
+    if(
+      event.target ===
+      $("paymentModal")
+    ){
+
+      closePaymentModal();
+
+    }
+
+  }
+);
+
+
+/* =========================================
+   ESC PARA CERRAR
+========================================= */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key === "Escape"
+    ){
+
+      closePaymentModal();
+
+    }
+
+  }
+);
+
+
+/* =========================================
+   INICIO
+========================================= */
+
+loadAccounts();
+
+</script>
+
+</body>
+</html>
