@@ -754,7 +754,7 @@ async function loadBusinessData(){
       supabaseClient
         .from("customers")
         .select(
-          "id,business_id,name,phone,email,notes,active"
+          "id,business_id,name,phone,notes,active"
         )
         .eq(
           "business_id",
