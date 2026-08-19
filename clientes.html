@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Clientes | Sistema de Ventas POS</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:#f5f5f5;
+  color:#171717;
+}
+
+header{
+  background:#111827;
+  color:white;
+  padding:25px 20px;
+}
+
+header h1{
+  margin:0;
+  font-size:30px;
+}
+
+header p{
+  margin:8px 0 0;
+  color:#d1d5db;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+
+.status{
+  display:none;
+  padding:13px 15px;
+  border-radius:10px;
+  margin-bottom:20px;
+}
+
+.status.ok{
+  display:block;
+  background:#dcfce7;
+  color:#166534;
+}
+
+.status.error{
+  display:block;
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.topbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+
+button{
+  border:0;
+  cursor:pointer;
+  font-size:16px;
+}
+
+.business-btn,
+.back,
+.dashboard{
+  background:white;
+  border:2px solid #ddd;
+  border-radius:12px;
+  padding:12px 20px;
+  font-weight:700;
+}
+
+.business-btn.active{
+  background:#111827;
+  color:white;
+  border-color:#111827;
+}
+
+.refresh{
+  background:#2563eb;
+  color:white;
+  padding:12px 20px;
+  border-radius:12px;
+  font-weight:700;
+}
+
+.card{
+  background:white;
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:20px;
+  box-shadow:0 4px 18px rgba(0,0,0,.06);
+}
+
+.section-title{
+  font-size:22px;
+  font-weight:800;
+  margin:0 0 18px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+
+.field.full{
+  grid-column:1 / -1;
+}
+
+label{
+  font-weight:700;
+  color:#4b5563;
+}
+
+input,
+textarea{
+  width:100%;
+  padding:14px;
+  border:2px solid #ddd;
+  border-radius:12px;
+  font-size:16px;
+  font-family:inherit;
+}
+
+textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+.save{
+  margin-top:15px;
+  background:#16a34a;
+  color:white;
+  padding:14px 22px;
+  border-radius:12px;
+  font-weight:800;
+}
+
+.cancel{
+  margin-top:15px;
+  margin-left:8px;
+  background:#e5e7eb;
+  color:#111827;
+  padding:14px 22px;
+  border-radius:12px;
+  font-weight:700;
+}
+
+.search{
+  margin-bottom:18px;
+}
+
+.customer{
+  border-bottom:1px solid #eee;
+  padding:16px 0;
+}
+
+.customer:last-child{
+  border-bottom:0;
+}
+
+.customer-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.customer-name{
+  font-size:18px;
+  font-weight:800;
+}
+
+.customer-info{
+  color:#6b7280;
+  margin-top:6px;
+  line-height:1.5;
+}
+
+.customer-actions{
+  display:flex;
+  gap:8px;
+}
+
+.edit{
+  background:#2563eb;
+  color:white;
+  padding:8px 12px;
+  border-radius:9px;
+  font-weight:700;
+}
+
+.delete{
+  background:#fee2e2;
+  color:#991b1b;
+  padding:8px 12px;
+  border-radius:9px;
+  font-weight:700;
+}
+
+.empty,
+.loading{
+  text-align:center;
+  color:#777;
+  padding:30px 10px;
+}
+
+.count{
+  color:#6b7280;
+  margin-bottom:15px;
+}
+
+@media(max-width:600px){
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .field.full{
+    grid-column:auto;
+  }
+
+  .customer-top{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .customer-actions{
+    width:100%;
+  }
+
+  .edit,
+  .delete{
+    flex:1;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>👥 Clientes</h1>
+
+<p>
+Sistema de Ventas POS · Administración de clientes
+</p>
+
+</header>
+
+<div class="container">
+
+<div id="status" class="status"></div>
+
+<div class="topbar">
+
+<button
+class="business-btn active"
+data-business="BakeQuiri">
+BakeQuiri
+</button>
+
+<button
+class="business-btn"
+data-business="SpicyRoll">
+SpicyRoll
+</button>
+
+<button
+id="refresh"
+class="refresh">
+🔄 Actualizar
+</button>
+
+<button
+id="dashboard"
+class="dashboard">
+← Dashboard
+</button>
+
+</div>
+
+
+<!-- FORMULARIO -->
+
+<div class="card">
+
+<h2 class="section-title">
+➕ Nuevo cliente
+</h2>
+
+<form id="customerForm">
+
+<div class="form-grid">
+
+<div class="field">
+
+<label for="name">
+Nombre *
+</label>
+
+<input
+id="name"
+type="text"
+placeholder="Nombre del cliente"
+required>
+
+</div>
+
+
+<div class="field">
+
+<label for="phone">
+Teléfono
+</label>
+
+<input
+id="phone"
+type="tel"
+placeholder="662 123 4567">
+
+</div>
+
+
+<div class="field">
+
+<label for="email">
+Correo electrónico
+</label>
+
+<input
+id="email"
+type="email"
+placeholder="cliente@email.com">
+
+</div>
+
+
+<div class="field">
+
+<label for="notes">
+Notas
+</label>
+
+<input
+id="notes"
+type="text"
+placeholder="Notas del cliente">
+
+</div>
+
+</div>
+
+<button
+type="submit"
+class="save"
+id="saveButton">
+Guardar cliente
+</button>
+
+<button
+type="button"
+class="cancel"
+id="cancelButton"
+style="display:none">
+Cancelar
+</button>
+
+</form>
+
+</div>
+
+
+<!-- LISTA -->
+
+<div class="card">
+
+<h2 class="section-title">
+📋 Clientes
+</h2>
+
+<input
+id="search"
+class="search"
+type="search"
+placeholder="🔎 Buscar por nombre, teléfono o correo">
+
+<div
+id="count"
+class="count">
+0 clientes
+</div>
+
+<div id="customersContainer">
+
+<div class="loading">
+Cargando clientes...
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+"use strict";
+
+
+/* ================================
+   SUPABASE
+================================ */
+
+const SUPABASE_URL =
+"https://jrxklpstlloeckihcduv.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
+
+const supabaseClient =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+
+/* ================================
+   NEGOCIOS
+================================ */
+
+const BUSINESS_IDS = {
+
+  BakeQuiri:
+  "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+
+  SpicyRoll:
+  "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
+
+};
+
+
+let currentBusiness =
+"BakeQuiri";
+
+let customers = [];
+
+let editingId = null;
+
+
+/* ================================
+   HELPERS
+================================ */
+
+const $ = id =>
+document.getElementById(id);
+
+
+function showStatus(
+  message,
+  type = "ok"
+){
+
+  $("status").textContent =
+  message;
+
+  $("status").className =
+  "status " + type;
+
+}
+
+
+/* ================================
+   CARGAR CLIENTES
+================================ */
+
+async function loadCustomers(){
+
+  $("customersContainer").innerHTML =
+  '<div class="loading">Cargando clientes...</div>';
+
+  try{
+
+    const businessId =
+    BUSINESS_IDS[currentBusiness];
+
+    const result =
+    await supabaseClient
+
+      .from("customers")
+
+      .select(
+        "id,business_id,name,phone,email,notes,active,created_at"
+      )
+
+      .eq(
+        "business_id",
+        businessId
+      )
+
+      .eq(
+        "active",
+        true
+      )
+
+      .order(
+        "name",
+        {
+          ascending:true
+        }
+      );
+
+
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+
+    customers =
+    result.data || [];
+
+
+    renderCustomers(
+      customers
+    );
+
+
+    showStatus(
+      "Clientes actualizados correctamente.",
+      "ok"
+    );
+
+  }
+  catch(error){
+
+    console.error(error);
+
+    $("customersContainer").innerHTML =
+    '<div class="empty">No se pudieron cargar los clientes.</div>';
+
+    showStatus(
+      "Error al cargar clientes: " +
+      (error.message || error),
+      "error"
+    );
+
+  }
+
+}
+
+
+/* ================================
+   MOSTRAR CLIENTES
+================================ */
+
+function renderCustomers(
+  list
+){
+
+  const container =
+  $("customersContainer");
+
+  $("count").textContent =
+  list.length +
+  (
+    list.length === 1
+    ? " cliente"
+    : " clientes"
+  );
+
+
+  if(!list.length){
+
+    container.innerHTML =
+    '<div class="empty">No hay clientes registrados.</div>';
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+  "";
+
+
+  list.forEach(
+    customer => {
+
+      const item =
+      document.createElement(
+        "div"
+      );
+
+      item.className =
+      "customer";
+
+
+      const top =
+      document.createElement(
+        "div"
+      );
+
+      top.className =
+      "customer-top";
+
+
+      const info =
+      document.createElement(
+        "div"
+      );
+
+
+      const name =
+      document.createElement(
+        "div"
+      );
+
+      name.className =
+      "customer-name";
+
+      name.textContent =
+      customer.name;
+
+
+      const details =
+      document.createElement(
+        "div"
+      );
+
+      details.className =
+      "customer-info";
+
+
+      let text = "";
+
+
+      if(customer.phone){
+
+        text +=
+        "📱 " +
+        customer.phone;
+
+      }
+
+
+      if(customer.email){
+
+        if(text) text += " · ";
+
+        text +=
+        "✉️ " +
+        customer.email;
+
+      }
+
+
+      if(customer.notes){
+
+        if(text) text += "<br>";
+
+        text +=
+        "📝 " +
+        customer.notes;
+
+      }
+
+
+      details.innerHTML =
+      text ||
+      "Sin información adicional";
+
+
+      info.append(
+        name,
+        details
+      );
+
+
+      const actions =
+      document.createElement(
+        "div"
+      );
+
+      actions.className =
+      "customer-actions";
+
+
+      const edit =
+      document.createElement(
+        "button"
+      );
+
+      edit.className =
+      "edit";
+
+      edit.textContent =
+      "Editar";
+
+      edit.onclick =
+      () => editCustomer(
+        customer
+      );
+
+
+      const del =
+      document.createElement(
+        "button"
+      );
+
+      del.className =
+      "delete";
+
+      del.textContent =
+      "Eliminar";
+
+      del.onclick =
+      () => deleteCustomer(
+        customer.id
+      );
+
+
+      actions.append(
+        edit,
+        del
+      );
+
+
+      top.append(
+        info,
+        actions
+      );
+
+
+      item.append(
+        top
+      );
+
+
+      container.appendChild(
+        item
+      );
+
+    }
+
+  );
+
+}
+
+
+/* ================================
+   CREAR / EDITAR
+================================ */
+
+$("customerForm")
+.addEventListener(
+  "submit",
+  async event => {
+
+    event.preventDefault();
+
+
+    const name =
+    $("name").value.trim();
+
+    const phone =
+    $("phone").value.trim();
+
+    const email =
+    $("email").value.trim();
+
+    const notes =
+    $("notes").value.trim();
+
+
+    if(!name){
+
+      showStatus(
+        "El nombre es obligatorio.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    const businessId =
+    BUSINESS_IDS[currentBusiness];
+
+
+    $("saveButton").disabled =
+    true;
+
+
+    try{
+
+      if(editingId){
+
+        const result =
+        await supabaseClient
+
+          .from("customers")
+
+          .update({
+
+            name:name,
+            phone:phone || null,
+            email:email || null,
+            notes:notes || null,
+            updated_at:
+            new Date().toISOString()
+
+          })
+
+          .eq(
+            "id",
+            editingId
+          );
+
+
+        if(result.error){
+
+          throw result.error;
+
+        }
+
+
+        showStatus(
+          "Cliente actualizado correctamente.",
+          "ok"
+        );
+
+      }
+      else{
+
+        const result =
+        await supabaseClient
+
+          .from("customers")
+
+          .insert({
+
+            business_id:
+            businessId,
+
+            name:name,
+
+            phone:
+            phone || null,
+
+            email:
+            email || null,
+
+            notes:
+            notes || null
+
+          });
+
+
+        if(result.error){
+
+          throw result.error;
+
+        }
+
+
+        showStatus(
+          "Cliente guardado correctamente.",
+          "ok"
+        );
+
+      }
+
+
+      resetForm();
+
+      await loadCustomers();
+
+    }
+    catch(error){
+
+      console.error(error);
+
+      showStatus(
+        "No se pudo guardar el cliente: " +
+        (error.message || error),
+        "error"
+      );
+
+    }
+    finally{
+
+      $("saveButton").disabled =
+      false;
+
+    }
+
+  }
+);
+
+
+/* ================================
+   EDITAR CLIENTE
+================================ */
+
+function editCustomer(
+  customer
+){
+
+  editingId =
+  customer.id;
+
+
+  $("name").value =
+  customer.name || "";
+
+  $("phone").value =
+  customer.phone || "";
+
+  $("email").value =
+  customer.email || "";
+
+  $("notes").value =
+  customer.notes || "";
+
+
+  $("saveButton").textContent =
+  "Actualizar cliente";
+
+  $("cancelButton").style.display =
+  "inline-block";
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+/* ================================
+   CANCELAR EDICIÓN
+================================ */
+
+function resetForm(){
+
+  editingId =
+  null;
+
+
+  $("customerForm").reset();
+
+
+  $("saveButton").textContent =
+  "Guardar cliente";
+
+  $("cancelButton").style.display =
+  "none";
+
+}
+
+
+$("cancelButton")
+.addEventListener(
+  "click",
+  resetForm
+);
+
+
+/* ================================
+   ELIMINAR
+================================ */
+
+async function deleteCustomer(
+  id
+){
+
+  const confirmDelete =
+  confirm(
+    "¿Seguro que quieres eliminar este cliente?"
+  );
+
+
+  if(!confirmDelete){
+
+    return;
+
+  }
+
+
+  try{
+
+    const result =
+    await supabaseClient
+
+      .from("customers")
+
+      .update({
+
+        active:false,
+
+        updated_at:
+        new Date().toISOString()
+
+      })
+
+      .eq(
+        "id",
+        id
+      );
+
+
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+
+    showStatus(
+      "Cliente eliminado correctamente.",
+      "ok"
+    );
+
+
+    await loadCustomers();
+
+  }
+  catch(error){
+
+    console.error(error);
+
+    showStatus(
+      "No se pudo eliminar el cliente: " +
+      (error.message || error),
+      "error"
+    );
+
+  }
+
+}
+
+
+/* ================================
+   BUSCADOR
+================================ */
+
+$("search")
+.addEventListener(
+  "input",
+  event => {
+
+    const query =
+    event.target.value
+    .toLowerCase()
+    .trim();
+
+
+    if(!query){
+
+      renderCustomers(
+        customers
+      );
+
+      return;
+
+    }
+
+
+    const filtered =
+    customers.filter(
+      customer => {
+
+        return (
+
+          (customer.name || "")
+          .toLowerCase()
+          .includes(query)
+
+          ||
+
+          (customer.phone || "")
+          .toLowerCase()
+          .includes(query)
+
+          ||
+
+          (customer.email || "")
+          .toLowerCase()
+          .includes(query)
+
+        );
+
+      }
+    );
+
+
+    renderCustomers(
+      filtered
+    );
+
+  }
+);
+
+
+/* ================================
+   CAMBIO DE NEGOCIO
+================================ */
+
+document
+.querySelectorAll(
+  ".business-btn"
+)
+.forEach(
+  button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        currentBusiness =
+        button.dataset.business;
+
+
+        document
+        .querySelectorAll(
+          ".business-btn"
+        )
+        .forEach(
+          btn =>
+          btn.classList.remove(
+            "active"
+          )
+        );
+
+
+        button.classList.add(
+          "active"
+        );
+
+
+        resetForm();
+
+
+        $("search").value =
+        "";
+
+
+        loadCustomers();
+
+      }
+    );
+
+  }
+);
+
+
+/* ================================
+   BOTONES
+================================ */
+
+$("refresh")
+.addEventListener(
+  "click",
+  loadCustomers
+);
+
+
+$("dashboard")
+.addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+    "dashboard.html";
+
+  }
+);
+
+
+/* ================================
+   INICIO
+================================ */
+
+loadCustomers();
+
+</script>
+
+</body>
+</html>
