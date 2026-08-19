@@ -63,6 +63,10 @@ header p{
   color:#991b1b;
 }
 
+/* =========================================
+   BOTONES SUPERIORES
+========================================= */
+
 .businesses{
   display:flex;
   gap:12px;
@@ -87,6 +91,27 @@ header p{
   border-color:#111827;
 }
 
+/* CUENTAS PENDIENTES */
+
+.accounts-btn{
+  border:2px solid #f59e0b;
+  padding:15px 22px;
+  border-radius:14px;
+  background:#fff7ed;
+  color:#b45309;
+  font-size:18px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.accounts-btn:active{
+  transform:scale(.98);
+}
+
+/* =========================================
+   LAYOUT
+========================================= */
+
 .layout{
   display:grid;
   grid-template-columns:1fr 400px;
@@ -104,6 +129,10 @@ header p{
   font-size:25px;
   margin-bottom:20px;
 }
+
+/* =========================================
+   PRODUCTOS
+========================================= */
 
 .products{
   display:grid;
@@ -148,6 +177,10 @@ header p{
   font-size:17px;
   margin-top:10px;
 }
+
+/* =========================================
+   CARRITO
+========================================= */
 
 .cart-item{
   display:flex;
@@ -209,36 +242,9 @@ header p{
   border-top:3px solid #eee;
 }
 
-.payment-title{
-  margin-top:25px;
-  margin-bottom:12px;
-  font-size:20px;
-  font-weight:700;
-}
-
-.payments{
-  display:grid;
-  gap:10px;
-}
-
-.payment{
-  width:100%;
-  padding:16px;
-  border:2px solid #ddd;
-  border-radius:12px;
-  background:#fff;
-  color:#2680eb;
-  cursor:pointer;
-  text-align:left;
-  font-size:17px;
-  font-weight:600;
-}
-
-.payment.active{
-  background:#111827;
-  color:#fff;
-  border-color:#111827;
-}
+/* =========================================
+   CLIENTE
+========================================= */
 
 .customer-box{
   margin-top:20px;
@@ -302,6 +308,45 @@ header p{
   font-size:14px;
 }
 
+/* =========================================
+   PAGO
+========================================= */
+
+.payment-title{
+  margin-top:25px;
+  margin-bottom:12px;
+  font-size:20px;
+  font-weight:700;
+}
+
+.payments{
+  display:grid;
+  gap:10px;
+}
+
+.payment{
+  width:100%;
+  padding:16px;
+  border:2px solid #ddd;
+  border-radius:12px;
+  background:#fff;
+  color:#2680eb;
+  cursor:pointer;
+  text-align:left;
+  font-size:17px;
+  font-weight:600;
+}
+
+.payment.active{
+  background:#111827;
+  color:#fff;
+  border-color:#111827;
+}
+
+/* =========================================
+   BOTONES DE VENTA
+========================================= */
+
 .charge-buttons{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -335,6 +380,10 @@ header p{
   cursor:wait;
 }
 
+/* =========================================
+   MENSAJES
+========================================= */
+
 .empty{
   color:#777;
   text-align:center;
@@ -344,6 +393,10 @@ header p{
 .loading{
   opacity:.65;
 }
+
+/* =========================================
+   RESPONSIVE
+========================================= */
 
 @media(max-width:800px){
 
@@ -358,6 +411,11 @@ header p{
 }
 
 @media(max-width:500px){
+
+  .business-btn,
+  .accounts-btn{
+    flex:1;
+  }
 
   .products{
     grid-template-columns:1fr 1fr;
@@ -401,9 +459,15 @@ Administración de negocios y ventas
 
 </header>
 
+
 <div class="container">
 
 <div id="status" class="status"></div>
+
+
+<!-- =========================================
+     NEGOCIOS + CUENTAS
+========================================= -->
 
 <div class="businesses">
 
@@ -411,21 +475,40 @@ Administración de negocios y ventas
 type="button"
 class="business-btn active"
 data-business="BakeQuiri">
+
 BakeQuiri
+
 </button>
+
 
 <button
 type="button"
 class="business-btn"
 data-business="SpicyRoll">
+
 SpicyRoll
+
+</button>
+
+
+<button
+type="button"
+class="accounts-btn"
+id="accountsButton">
+
+💳 Cuentas pendientes
+
 </button>
 
 </div>
 
+
 <div class="layout">
 
-<!-- PRODUCTOS -->
+
+<!-- =========================================
+     PRODUCTOS
+========================================= -->
 
 <div class="card">
 
@@ -445,7 +528,10 @@ Cargando productos...
 
 </div>
 
-<!-- CARRITO -->
+
+<!-- =========================================
+     CARRITO
+========================================= -->
 
 <div class="card">
 
@@ -461,6 +547,7 @@ El carrito está vacío
 
 </div>
 
+
 <div class="total">
 
 <span>
@@ -473,7 +560,10 @@ $0.00
 
 </div>
 
-<!-- CLIENTE -->
+
+<!-- =========================================
+     CLIENTE
+========================================= -->
 
 <div class="customer-box">
 
@@ -487,10 +577,13 @@ $0.00
 type="button"
 class="manage-customers"
 id="manageCustomers">
+
 + Cliente
+
 </button>
 
 </div>
+
 
 <input
 id="customerSearch"
@@ -499,6 +592,7 @@ type="search"
 placeholder="🔎 Buscar cliente por nombre o teléfono"
 autocomplete="off"
 >
+
 
 <select
 id="customerSelect"
@@ -510,6 +604,7 @@ Consumidor general
 
 </select>
 
+
 <div
 id="customerInfo"
 class="customer-info">
@@ -520,11 +615,15 @@ Consumidor general
 
 </div>
 
-<!-- PAGO -->
+
+<!-- =========================================
+     MÉTODO DE PAGO
+========================================= -->
 
 <div class="payment-title">
 Método de pago
 </div>
+
 
 <div
 id="payments"
@@ -536,7 +635,10 @@ Cargando métodos de pago...
 
 </div>
 
-<!-- BOTONES DE VENTA -->
+
+<!-- =========================================
+     BOTONES
+========================================= -->
 
 <div class="charge-buttons">
 
@@ -548,6 +650,7 @@ class="charge">
 💵 COBRAR
 
 </button>
+
 
 <button
 type="button"
@@ -566,11 +669,14 @@ class="pending">
 
 </div>
 
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
 <script>
 
 "use strict";
+
 
 /* =========================================
    SUPABASE
@@ -579,8 +685,10 @@ class="pending">
 const SUPABASE_URL =
 "https://jrxklpstlloeckihcduv.supabase.co";
 
+
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
+
 
 const supabaseClient =
 window.supabase.createClient(
@@ -602,6 +710,7 @@ const BUSINESS_IDS = {
   "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
 
 };
+
 
 let currentBusiness =
 "BakeQuiri";
@@ -629,7 +738,8 @@ let selectedCustomerId = null;
 ========================================= */
 
 const $ =
-id => document.getElementById(id);
+id =>
+document.getElementById(id);
 
 
 const money =
@@ -679,78 +789,119 @@ function clearStatus(){
 
 
 /* =========================================
-   CARGAR INFORMACIÓN
+   CARGAR DATOS DEL NEGOCIO
 ========================================= */
 
 async function loadBusinessData(){
 
   clearStatus();
 
+
   $("products").innerHTML =
   '<div class="empty">Cargando productos...</div>';
+
 
   $("payments").innerHTML =
   '<div class="empty">Cargando métodos de pago...</div>';
 
+
   $("customerSelect").innerHTML =
   '<option value="">Cargando clientes...</option>';
+
 
   const businessId =
   BUSINESS_IDS[currentBusiness];
 
+
   try{
 
     const [
+
       productsResult,
+
       paymentsResult,
+
       customersResult
+
     ] = await Promise.all([
+
 
       /* PRODUCTOS */
 
       supabaseClient
+
         .from("products")
+
         .select(
           "id,name,price,cost,stock,active"
         )
+
         .eq(
           "business_id",
           businessId
         )
+
         .eq(
           "active",
           true
         )
+
         .order("name"),
+
 
       /* MÉTODOS DE PAGO */
 
       supabaseClient
+
         .from("payment_methods")
+
         .select(
           "id,name,provider,active"
         )
+
         .eq(
           "business_id",
           businessId
         )
+
         .eq(
           "active",
           true
         )
+
         .order("name"),
+
 
       /* CLIENTES */
 
+      /*
+        IMPORTANTE:
+        La tabla customers REAL tiene:
+
+        id
+        business_id
+        name
+        phone
+        notes
+        created_at
+
+        NO usamos email.
+        NO usamos active.
+      */
+
       supabaseClient
+
         .from("customers")
+
         .select(
-          "id,business_id,name,phone,notes"
+          "id,business_id,name,phone,notes,created_at"
         )
+
         .eq(
           "business_id",
           businessId
         )
+
         .order(
           "name",
           {
@@ -794,18 +945,25 @@ async function loadBusinessData(){
     products =
     productsResult.data || [];
 
+
     payments =
     paymentsResult.data || [];
+
 
     customers =
     customersResult.data || [];
 
 
+    /*
+      Si el método de pago seleccionado
+      ya no existe, seleccionamos el primero.
+    */
+
     if(
       !payments.some(
         payment =>
-          payment.id ===
-          selectedPaymentId
+        payment.id ===
+        selectedPaymentId
       )
     ){
 
@@ -829,18 +987,23 @@ async function loadBusinessData(){
 
   }
 
+
   catch(error){
 
     console.error(error);
 
+
     $("products").innerHTML =
     "";
+
 
     $("payments").innerHTML =
     "";
 
+
     $("customerSelect").innerHTML =
     '<option value="">Consumidor general</option>';
+
 
     showStatus(
       error.message ||
@@ -860,6 +1023,7 @@ function renderProducts(){
 
   const container =
   $("products");
+
 
   container.innerHTML =
   "";
@@ -883,11 +1047,14 @@ function renderProducts(){
       const stock =
       Number(product.stock || 0);
 
+
       const button =
       document.createElement("button");
 
+
       button.type =
       "button";
+
 
       button.className =
       "product" +
@@ -897,8 +1064,10 @@ function renderProducts(){
         : ""
       );
 
+
       button.disabled =
       stock <= 0;
+
 
       button.innerHTML =
 
@@ -915,11 +1084,13 @@ function renderProducts(){
       stock +
       '</div>';
 
+
       button.addEventListener(
         "click",
         () =>
         addToCart(product)
       );
+
 
       container.appendChild(
         button
@@ -940,8 +1111,10 @@ function renderCustomers(){
   const select =
   $("customerSelect");
 
+
   const search =
   $("customerSearch");
+
 
   const searchText =
   search.value
@@ -953,8 +1126,12 @@ function renderCustomers(){
   customers.filter(
     customer => {
 
-      if(!searchText)
-      return true;
+      if(!searchText){
+
+        return true;
+
+      }
+
 
       return (
 
@@ -983,13 +1160,18 @@ function renderCustomers(){
 
 
   const general =
-  document.createElement("option");
+  document.createElement(
+    "option"
+  );
+
 
   general.value =
   "";
 
+
   general.textContent =
   "Consumidor general";
+
 
   select.appendChild(
     general
@@ -1000,17 +1182,24 @@ function renderCustomers(){
     customer => {
 
       const option =
-      document.createElement("option");
+      document.createElement(
+        "option"
+      );
+
 
       option.value =
       customer.id;
 
+
       option.textContent =
       customer.phone
+
       ? customer.name +
         " — " +
         customer.phone
+
       : customer.name;
+
 
       select.appendChild(
         option
@@ -1023,13 +1212,14 @@ function renderCustomers(){
   select.value =
   selectedCustomerId || "";
 
+
   updateCustomerInfo();
 
 }
 
 
 /* =========================================
-   INFORMACIÓN CLIENTE
+   INFORMACIÓN DEL CLIENTE
 ========================================= */
 
 function updateCustomerInfo(){
@@ -1091,11 +1281,16 @@ function updateCustomerInfo(){
 
   info.textContent =
   customer.name +
+
   (
+
     parts.length
+
     ? " · " +
       parts.join(" · ")
+
     : ""
+
   );
 
 }
@@ -1109,6 +1304,7 @@ function renderPayments(){
 
   const container =
   $("payments");
+
 
   container.innerHTML =
   "";
@@ -1130,22 +1326,33 @@ function renderPayments(){
     payment => {
 
       const button =
-      document.createElement("button");
+      document.createElement(
+        "button"
+      );
+
 
       button.type =
       "button";
 
+
       button.className =
       "payment" +
+
       (
+
         payment.id ===
         selectedPaymentId
+
         ? " active"
+
         : ""
+
       );
+
 
       button.textContent =
       payment.name;
+
 
       button.addEventListener(
         "click",
@@ -1154,10 +1361,12 @@ function renderPayments(){
           selectedPaymentId =
           payment.id;
 
+
           renderPayments();
 
         }
       );
+
 
       container.appendChild(
         button
@@ -1177,8 +1386,10 @@ function addToCart(product){
 
   clearStatus();
 
+
   const stock =
   Number(product.stock || 0);
+
 
   const item =
   cart.find(
@@ -1207,6 +1418,7 @@ function addToCart(product){
     }
 
   }
+
 
   else if(stock > 0){
 
@@ -1238,8 +1450,11 @@ amount
   );
 
 
-  if(!item)
-  return;
+  if(!item){
+
+    return;
+
+  }
 
 
   const product =
@@ -1294,6 +1509,7 @@ function renderCart(){
   const container =
   $("cart");
 
+
   container.innerHTML =
   "";
 
@@ -1305,8 +1521,10 @@ function renderCart(){
     'El carrito está vacío' +
     '</div>';
 
+
     $("total").textContent =
     "$0.00";
+
 
     return;
 
@@ -1324,19 +1542,26 @@ function renderCart(){
       Number(item.price) *
       Number(item.quantity);
 
+
       total +=
       subtotal;
 
 
       const row =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
       row.className =
       "cart-item";
 
 
       const info =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
       info.innerHTML =
 
@@ -1350,7 +1575,10 @@ function renderCart(){
 
 
       const controls =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
       controls.innerHTML =
 
@@ -1402,6 +1630,7 @@ function renderCart(){
         controls
       );
 
+
       container.appendChild(
         row
       );
@@ -1437,8 +1666,10 @@ button
   currentBusiness =
   name;
 
+
   cart =
   [];
+
 
   selectedCustomerId =
   null;
@@ -1493,11 +1724,11 @@ isPending
 
 
   /*
-    Para una venta pagada necesitamos
-    método de pago.
+    Venta pagada:
+    requiere método de pago.
 
-    Para una venta pendiente NO es
-    necesario seleccionar método de pago.
+    Venta pendiente:
+    NO requiere método de pago.
   */
 
   if(
@@ -1515,8 +1746,8 @@ isPending
 
 
   /*
-    Una cuenta pendiente necesita
-    un cliente identificado.
+    Una cuenta pendiente
+    necesita cliente.
   */
 
   if(
@@ -1536,12 +1767,14 @@ isPending
   const chargeButton =
   $("chargeButton");
 
+
   const pendingButton =
   $("pendingButton");
 
 
   chargeButton.disabled =
   true;
+
 
   pendingButton.disabled =
   true;
@@ -1553,6 +1786,7 @@ isPending
     "GUARDANDO...";
 
   }
+
   else{
 
     chargeButton.textContent =
@@ -1588,15 +1822,19 @@ isPending
 
 
     /*
-      AQUÍ ESTÁ EL CAMBIO IMPORTANTE:
+      register_sale recibe:
 
-      isPending = false
-      -> venta pagada
+      p_business_id
+      p_customer_id
+      p_payment_method_id
+      p_items
+      p_is_pending
 
-      isPending = true
-      -> venta pendiente,
-         balance = total,
-         status = open
+      Si p_is_pending = true:
+
+      balance = total
+      status = open
+      no se registra pago.
     */
 
     const {
@@ -1612,16 +1850,20 @@ isPending
           currentBusiness
         ],
 
+
         p_customer_id:
         selectedCustomerId || null,
+
 
         p_payment_method_id:
         isPending
         ? null
         : selectedPaymentId,
 
+
         p_items:
         items,
+
 
         p_is_pending:
         isPending
@@ -1686,6 +1928,7 @@ isPending
       );
 
     }
+
     else{
 
       alert(
@@ -1714,8 +1957,10 @@ isPending
     cart =
     [];
 
+
     selectedCustomerId =
     null;
+
 
     $("customerSearch").value =
     "";
@@ -1725,10 +1970,15 @@ isPending
 
 
     showStatus(
+
       isPending
+
       ? "Cuenta pendiente guardada correctamente en Supabase."
+
       : "Venta pagada guardada correctamente en Supabase.",
+
       "ok"
+
     );
 
 
@@ -1739,37 +1989,49 @@ isPending
 
   }
 
+
   catch(error){
 
     console.error(error);
 
+
     showStatus(
 
       (
+
         isPending
+
         ? "No se pudo registrar la cuenta: "
+
         : "No se pudo registrar la venta: "
+
       ) +
 
       (
+
         error.message ||
         error
+
       )
 
     );
 
   }
 
+
   finally{
 
     chargeButton.disabled =
     false;
 
+
     pendingButton.disabled =
     false;
 
+
     chargeButton.textContent =
     "💵 COBRAR";
+
 
     pendingButton.textContent =
     "🟠 DEJAR A CUENTA";
@@ -1782,6 +2044,7 @@ isPending
 /* =========================================
    EVENTOS
 ========================================= */
+
 
 /* NEGOCIOS */
 
@@ -1816,6 +2079,7 @@ $("customerSelect")
     event.target.value ||
     null;
 
+
     updateCustomerInfo();
 
   }
@@ -1835,7 +2099,9 @@ $("customerSearch")
 );
 
 
-/* ADMINISTRAR CLIENTES */
+/* =========================================
+   ADMINISTRAR CLIENTES
+========================================= */
 
 $("manageCustomers")
 .addEventListener(
@@ -1849,7 +2115,25 @@ $("manageCustomers")
 );
 
 
-/* COBRAR */
+/* =========================================
+   CUENTAS PENDIENTES
+========================================= */
+
+$("accountsButton")
+.addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+    "cuentas.html";
+
+  }
+);
+
+
+/* =========================================
+   COBRAR
+========================================= */
 
 $("chargeButton")
 .addEventListener(
@@ -1859,7 +2143,9 @@ $("chargeButton")
 );
 
 
-/* DEJAR A CUENTA */
+/* =========================================
+   DEJAR A CUENTA
+========================================= */
 
 $("pendingButton")
 .addEventListener(
