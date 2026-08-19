@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -558,17 +559,12 @@ async function loadCustomers(){
       .from("customers")
 
       .select(
-        "id,business_id,name,phone,email,notes,active,created_at"
+        "id,business_id,name,phone,email,notes,created_at"
       )
 
       .eq(
         "business_id",
         businessId
-      )
-
-      .eq(
-        "active",
-        true
       )
 
       .order(
@@ -871,10 +867,7 @@ $("customerForm")
             email || null,
 
             notes:
-            notes || null,
-
-            updated_at:
-            new Date().toISOString()
+            notes || null
 
           })
 
@@ -929,9 +922,7 @@ $("customerForm")
             email || null,
 
             notes:
-            notes || null,
-
-            active:true
+            notes || null
 
           });
 
@@ -1076,7 +1067,7 @@ async function deleteCustomer(customer){
     "¿Eliminar a " +
     customer.name +
     "?\n\n" +
-    "El cliente dejará de aparecer en la lista."
+    "El cliente será eliminado de la base de datos."
   );
 
 
@@ -1089,25 +1080,12 @@ async function deleteCustomer(customer){
 
   try{
 
-    /*
-      NO borramos físicamente el registro.
-      Lo desactivamos para conservar
-      la integridad de los datos históricos.
-    */
-
     const result =
     await supabaseClient
 
       .from("customers")
 
-      .update({
-
-        active:false,
-
-        updated_at:
-        new Date().toISOString()
-
-      })
+      .delete()
 
       .eq(
         "id",
