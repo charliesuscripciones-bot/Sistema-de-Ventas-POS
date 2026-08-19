@@ -279,6 +279,7 @@ textarea{
 }
 
 </style>
+
 </head>
 
 <body>
@@ -299,46 +300,68 @@ Sistema de Ventas POS · Administración de clientes
 <div id="status" class="status"></div>
 
 
-<!-- BOTONES -->
+<!-- =========================================
+     BOTONES
+========================================= -->
 
 <div class="topbar">
 
 <button
+type="button"
 class="business-btn active"
 data-business="BakeQuiri">
+
 BakeQuiri
+
 </button>
 
+
 <button
+type="button"
 class="business-btn"
 data-business="SpicyRoll">
+
 SpicyRoll
+
 </button>
 
+
 <button
+type="button"
 id="refresh"
 class="refresh">
+
 🔄 Actualizar
+
 </button>
 
+
 <button
+type="button"
 id="dashboard"
 class="dashboard">
+
 ← Dashboard
+
 </button>
 
 </div>
 
 
-<!-- FORMULARIO -->
+<!-- =========================================
+     FORMULARIO
+========================================= -->
 
 <div class="card">
 
 <h2
 id="formTitle"
 class="section-title">
+
 ➕ Nuevo cliente
+
 </h2>
+
 
 <form id="customerForm">
 
@@ -374,30 +397,15 @@ placeholder="662 123 4567">
 </div>
 
 
-<div class="field">
-
-<label for="email">
-Correo electrónico
-</label>
-
-<input
-id="email"
-type="email"
-placeholder="cliente@email.com">
-
-</div>
-
-
-<div class="field">
+<div class="field full">
 
 <label for="notes">
 Notas
 </label>
 
-<input
+<textarea
 id="notes"
-type="text"
-placeholder="Notas del cliente">
+placeholder="Notas del cliente"></textarea>
 
 </div>
 
@@ -430,19 +438,25 @@ Cancelar edición
 </div>
 
 
-<!-- LISTA DE CLIENTES -->
+<!-- =========================================
+     LISTA DE CLIENTES
+========================================= -->
 
 <div class="card">
 
 <h2 class="section-title">
+
 📋 Clientes registrados
+
 </h2>
+
 
 <input
 id="search"
 class="search"
 type="search"
-placeholder="🔎 Buscar por nombre, teléfono o correo">
+placeholder="🔎 Buscar por nombre o teléfono">
+
 
 <div
 id="count"
@@ -452,10 +466,13 @@ class="count">
 
 </div>
 
+
 <div id="customersContainer">
 
 <div class="loading">
+
 Cargando clientes...
+
 </div>
 
 </div>
@@ -466,6 +483,7 @@ Cargando clientes...
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
 <script>
 
@@ -479,8 +497,10 @@ Cargando clientes...
 const SUPABASE_URL =
 "https://jrxklpstlloeckihcduv.supabase.co";
 
+
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
+
 
 const supabaseClient =
 window.supabase.createClient(
@@ -507,7 +527,9 @@ const BUSINESS_IDS = {
 let currentBusiness =
 "BakeQuiri";
 
+
 let customers = [];
+
 
 let editingId = null;
 
@@ -524,7 +546,10 @@ document.getElementById(id);
    MENSAJES
 ========================================= */
 
-function showStatus(message,type="ok"){
+function showStatus(
+  message,
+  type="ok"
+){
 
   const status =
   $("status");
@@ -545,7 +570,10 @@ function showStatus(message,type="ok"){
 async function loadCustomers(){
 
   $("customersContainer").innerHTML =
-  '<div class="loading">Cargando clientes...</div>';
+  '<div class="loading">' +
+  'Cargando clientes...' +
+  '</div>';
+
 
   try{
 
@@ -559,7 +587,7 @@ async function loadCustomers(){
       .from("customers")
 
       .select(
-        "id,business_id,name,phone,email,notes,created_at"
+        "id,business_id,name,phone,notes"
       )
 
       .eq(
@@ -602,12 +630,19 @@ async function loadCustomers(){
 
     console.error(error);
 
+
     $("customersContainer").innerHTML =
-    '<div class="empty">No se pudieron cargar los clientes.</div>';
+    '<div class="empty">' +
+    'No se pudieron cargar los clientes.' +
+    '</div>';
+
 
     showStatus(
       "Error al cargar clientes: " +
-      (error.message || error),
+      (
+        error.message ||
+        error
+      ),
       "error"
     );
 
@@ -638,7 +673,9 @@ function renderCustomers(list){
   if(!list.length){
 
     container.innerHTML =
-    '<div class="empty">No hay clientes registrados.</div>';
+    '<div class="empty">' +
+    'No hay clientes registrados.' +
+    '</div>';
 
     return;
 
@@ -649,147 +686,179 @@ function renderCustomers(list){
   "";
 
 
-  list.forEach(customer => {
+  list.forEach(
+    customer => {
 
-    const item =
-    document.createElement("div");
-
-    item.className =
-    "customer";
-
-
-    const top =
-    document.createElement("div");
-
-    top.className =
-    "customer-top";
+      const item =
+      document.createElement(
+        "div"
+      );
 
 
-    const info =
-    document.createElement("div");
+      item.className =
+      "customer";
 
 
-    const name =
-    document.createElement("div");
-
-    name.className =
-    "customer-name";
-
-    name.textContent =
-    customer.name;
+      const top =
+      document.createElement(
+        "div"
+      );
 
 
-    const details =
-    document.createElement("div");
-
-    details.className =
-    "customer-info";
+      top.className =
+      "customer-top";
 
 
-    const parts = [];
+      const info =
+      document.createElement(
+        "div"
+      );
 
 
-    if(customer.phone){
+      const name =
+      document.createElement(
+        "div"
+      );
 
-      parts.push(
-        "📱 " +
-        customer.phone
+
+      name.className =
+      "customer-name";
+
+
+      name.textContent =
+      customer.name;
+
+
+      const details =
+      document.createElement(
+        "div"
+      );
+
+
+      details.className =
+      "customer-info";
+
+
+      const parts = [];
+
+
+      if(customer.phone){
+
+        parts.push(
+          "📱 " +
+          customer.phone
+        );
+
+      }
+
+
+      if(customer.notes){
+
+        parts.push(
+          "📝 " +
+          customer.notes
+        );
+
+      }
+
+
+      details.textContent =
+      parts.length
+      ? parts.join(" · ")
+      : "Sin información adicional";
+
+
+      info.append(
+        name,
+        details
+      );
+
+
+      /* BOTONES */
+
+      const actions =
+      document.createElement(
+        "div"
+      );
+
+
+      actions.className =
+      "customer-actions";
+
+
+      const edit =
+      document.createElement(
+        "button"
+      );
+
+
+      edit.type =
+      "button";
+
+
+      edit.className =
+      "edit";
+
+
+      edit.textContent =
+      "✏️ Editar";
+
+
+      edit.addEventListener(
+        "click",
+        () =>
+        editCustomer(customer)
+      );
+
+
+      const del =
+      document.createElement(
+        "button"
+      );
+
+
+      del.type =
+      "button";
+
+
+      del.className =
+      "delete";
+
+
+      del.textContent =
+      "🗑️ Eliminar";
+
+
+      del.addEventListener(
+        "click",
+        () =>
+        deleteCustomer(customer)
+      );
+
+
+      actions.append(
+        edit,
+        del
+      );
+
+
+      top.append(
+        info,
+        actions
+      );
+
+
+      item.append(
+        top
+      );
+
+
+      container.appendChild(
+        item
       );
 
     }
-
-
-    if(customer.email){
-
-      parts.push(
-        "✉️ " +
-        customer.email
-      );
-
-    }
-
-
-    if(customer.notes){
-
-      parts.push(
-        "📝 " +
-        customer.notes
-      );
-
-    }
-
-
-    details.textContent =
-    parts.length
-    ? parts.join(" · ")
-    : "Sin información adicional";
-
-
-    info.append(
-      name,
-      details
-    );
-
-
-    const actions =
-    document.createElement("div");
-
-    actions.className =
-    "customer-actions";
-
-
-    const edit =
-    document.createElement("button");
-
-    edit.className =
-    "edit";
-
-    edit.textContent =
-    "✏️ Editar";
-
-    edit.addEventListener(
-      "click",
-      () => editCustomer(customer)
-    );
-
-
-    const del =
-    document.createElement("button");
-
-    del.className =
-    "delete";
-
-    del.textContent =
-    "🗑️ Eliminar";
-
-    del.addEventListener(
-      "click",
-      () => deleteCustomer(customer)
-    );
-
-
-    actions.append(
-      edit,
-      del
-    );
-
-
-    top.append(
-      info,
-      actions
-    );
-
-
-    item.append(
-      top
-    );
-
-
-    container.appendChild(
-      item
-    );
-
-  });
+  );
 
 }
 
@@ -809,11 +878,10 @@ $("customerForm")
     const name =
     $("name").value.trim();
 
+
     const phone =
     $("phone").value.trim();
 
-    const email =
-    $("email").value.trim();
 
     const notes =
     $("notes").value.trim();
@@ -838,14 +906,14 @@ $("customerForm")
     const saveButton =
     $("saveButton");
 
+
     saveButton.disabled =
     true;
 
 
     try{
 
-
-      /* ================================
+      /* =================================
          EDITAR
       ================================= */
 
@@ -862,9 +930,6 @@ $("customerForm")
 
             phone:
             phone || null,
-
-            email:
-            email || null,
 
             notes:
             notes || null
@@ -897,7 +962,7 @@ $("customerForm")
       }
 
 
-      /* ================================
+      /* =================================
          NUEVO CLIENTE
       ================================= */
 
@@ -917,9 +982,6 @@ $("customerForm")
 
             phone:
             phone || null,
-
-            email:
-            email || null,
 
             notes:
             notes || null
@@ -944,6 +1006,7 @@ $("customerForm")
 
       resetForm();
 
+
       await loadCustomers();
 
     }
@@ -952,9 +1015,13 @@ $("customerForm")
 
       console.error(error);
 
+
       showStatus(
         "No se pudo guardar el cliente: " +
-        (error.message || error),
+        (
+          error.message ||
+          error
+        ),
         "error"
       );
 
@@ -984,11 +1051,10 @@ function editCustomer(customer){
   $("name").value =
   customer.name || "";
 
+
   $("phone").value =
   customer.phone || "";
 
-  $("email").value =
-  customer.email || "";
 
   $("notes").value =
   customer.notes || "";
@@ -996,6 +1062,7 @@ function editCustomer(customer){
 
   $("formTitle").textContent =
   "✏️ Editando cliente";
+
 
   $("formTitle").classList.add(
     "editing-title"
@@ -1011,8 +1078,11 @@ function editCustomer(customer){
 
 
   window.scrollTo({
+
     top:0,
+
     behavior:"smooth"
+
   });
 
 }
@@ -1033,6 +1103,7 @@ function resetForm(){
 
   $("formTitle").textContent =
   "➕ Nuevo cliente";
+
 
   $("formTitle").classList.remove(
     "editing-title"
@@ -1064,10 +1135,12 @@ async function deleteCustomer(customer){
 
   const confirmed =
   confirm(
+
     "¿Eliminar a " +
     customer.name +
     "?\n\n" +
-    "El cliente será eliminado de la base de datos."
+    "Esta acción eliminará el cliente de la base de datos."
+
   );
 
 
@@ -1111,7 +1184,10 @@ async function deleteCustomer(customer){
     );
 
 
-    if(editingId === customer.id){
+    if(
+      editingId ===
+      customer.id
+    ){
 
       resetForm();
 
@@ -1126,9 +1202,13 @@ async function deleteCustomer(customer){
 
     console.error(error);
 
+
     showStatus(
       "No se pudo eliminar el cliente: " +
-      (error.message || error),
+      (
+        error.message ||
+        error
+      ),
       "error"
     );
 
@@ -1168,20 +1248,18 @@ $("search")
       customer => {
 
         const text =
-        [
 
-          customer.name,
+          [
+            customer.name,
+            customer.phone,
+            customer.notes
+          ]
 
-          customer.phone,
+          .filter(Boolean)
 
-          customer.email,
+          .join(" ")
 
-          customer.notes
-
-        ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
+          .toLowerCase();
 
 
         return text.includes(
@@ -1205,46 +1283,54 @@ $("search")
 ========================================= */
 
 document
-.querySelectorAll(".business-btn")
-.forEach(button => {
+.querySelectorAll(
+  ".business-btn"
+)
+.forEach(
+  button => {
 
-  button.addEventListener(
-    "click",
-    async () => {
+    button.addEventListener(
+      "click",
+      async () => {
 
-      currentBusiness =
-      button.dataset.business;
+        currentBusiness =
+        button.dataset.business;
 
 
-      document
-      .querySelectorAll(".business-btn")
-      .forEach(btn => {
+        document
+        .querySelectorAll(
+          ".business-btn"
+        )
+        .forEach(
+          btn => {
 
-        btn.classList.remove(
+            btn.classList.remove(
+              "active"
+            );
+
+          }
+        );
+
+
+        button.classList.add(
           "active"
         );
 
-      });
+
+        resetForm();
 
 
-      button.classList.add(
-        "active"
-      );
+        $("search").value =
+        "";
 
 
-      resetForm();
+        await loadCustomers();
 
+      }
+    );
 
-      $("search").value =
-      "";
-
-
-      await loadCustomers();
-
-    }
-  );
-
-});
+  }
+);
 
 
 /* =========================================
