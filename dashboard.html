@@ -41,8 +41,6 @@ header p{
   padding:20px;
 }
 
-/* MENSAJE */
-
 .status{
   display:none;
   padding:13px 15px;
@@ -62,8 +60,6 @@ header p{
   color:#991b1b;
 }
 
-/* BOTONES */
-
 .topbar{
   display:flex;
   gap:10px;
@@ -79,7 +75,8 @@ button{
 
 .business-btn,
 .back,
-.history{
+.history,
+.accounts{
   background:white;
   border:2px solid #ddd;
   border-radius:12px;
@@ -105,7 +102,11 @@ button{
   margin-left:auto;
 }
 
-/* TARJETAS */
+.accounts{
+  background:#f59e0b;
+  color:white;
+  border-color:#f59e0b;
+}
 
 .cards{
   display:grid;
@@ -144,8 +145,6 @@ button{
   color:#dc2626;
 }
 
-/* SECCIONES */
-
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -157,8 +156,6 @@ button{
   font-weight:800;
   margin:0 0 18px;
 }
-
-/* TABLA */
 
 table{
   width:100%;
@@ -201,8 +198,6 @@ td{
   color:#991b1b;
 }
 
-/* INVENTARIO */
-
 .stock-row{
   display:flex;
   justify-content:space-between;
@@ -229,8 +224,6 @@ td{
   color:#777;
   padding:30px 10px;
 }
-
-/* RESPONSIVE */
 
 @media(max-width:800px){
 
@@ -262,6 +255,15 @@ td{
     font-size:25px;
   }
 
+  .business-btn,
+  .refresh,
+  .history,
+  .accounts,
+  .back{
+    width:100%;
+    margin-left:0;
+  }
+
 }
 
 </style>
@@ -282,7 +284,6 @@ Sistema de Ventas POS · Administración
 
 <div class="container">
 
-
 <div id="status" class="status"></div>
 
 
@@ -293,45 +294,44 @@ Sistema de Ventas POS · Administración
 <button
 class="business-btn active"
 data-business="BakeQuiri">
-
 BakeQuiri
-
 </button>
 
 
 <button
 class="business-btn"
 data-business="SpicyRoll">
-
 SpicyRoll
-
 </button>
 
 
 <button
 id="refresh"
 class="refresh">
-
 🔄 Actualizar
+</button>
 
+
+<!-- NUEVO BOTÓN DE CUENTAS -->
+
+<button
+id="accounts"
+class="accounts">
+💰 Cuentas pendientes
 </button>
 
 
 <button
 id="history"
 class="history">
-
 🧾 Historial
-
 </button>
 
 
 <button
 id="back"
 class="back">
-
 ← POS
-
 </button>
 
 </div>
@@ -340,7 +340,6 @@ class="back">
 <!-- TARJETAS -->
 
 <div class="cards">
-
 
 <div class="card">
 
@@ -351,9 +350,7 @@ Ventas de hoy
 <div
 id="todaySales"
 class="metric green">
-
 $0.00
-
 </div>
 
 </div>
@@ -368,9 +365,7 @@ Número de ventas
 <div
 id="salesCount"
 class="metric blue">
-
 0
-
 </div>
 
 </div>
@@ -385,9 +380,7 @@ Productos activos
 <div
 id="productCount"
 class="metric">
-
 0
-
 </div>
 
 </div>
@@ -402,13 +395,10 @@ Stock bajo
 <div
 id="lowStock"
 class="metric red">
-
 0
-
 </div>
 
 </div>
-
 
 </div>
 
@@ -421,17 +411,13 @@ class="metric red">
 <div class="card">
 
 <h2 class="section-title">
-
 🧾 Ventas de hoy
-
 </h2>
 
 <div id="salesContainer">
 
 <div class="loading">
-
 Cargando ventas...
-
 </div>
 
 </div>
@@ -442,17 +428,13 @@ Cargando ventas...
 <div class="card">
 
 <h2 class="section-title">
-
 📦 Inventario
-
 </h2>
 
 <div id="inventoryContainer">
 
 <div class="loading">
-
 Cargando inventario...
-
 </div>
 
 </div>
@@ -461,7 +443,6 @@ Cargando inventario...
 
 
 </div>
-
 
 </div>
 
@@ -879,7 +860,6 @@ function renderSales(
   .forEach(
     sale => {
 
-
       const date =
       new Date(
         sale.created_at
@@ -966,9 +946,7 @@ function renderSales(
         row
       );
 
-
     }
-
   );
 
 
@@ -1036,6 +1014,22 @@ $("refresh")
 .addEventListener(
   "click",
   loadDashboard
+);
+
+
+/* ================================
+   CUENTAS PENDIENTES
+================================ */
+
+$("accounts")
+.addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+    "cuentas.html";
+
+  }
 );
 
 
