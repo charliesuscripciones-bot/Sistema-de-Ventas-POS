@@ -7,7 +7,6 @@
 <title>Dashboard | Sistema de Ventas POS</title>
 
 <style>
-
 *{
   box-sizing:border-box;
 }
@@ -137,10 +136,6 @@ button{
   color:#16a34a;
 }
 
-.metric.orange{
-  color:#ea580c;
-}
-
 .metric.red{
   color:#dc2626;
 }
@@ -207,6 +202,9 @@ td{
 
 .stock-number{
   font-weight:800;
+}
+
+.low{
   color:#dc2626;
 }
 
@@ -239,10 +237,6 @@ td{
 
 @media(max-width:500px){
 
-  .cards{
-    grid-template-columns:1fr 1fr;
-  }
-
   .metric{
     font-size:24px;
   }
@@ -256,7 +250,6 @@ td{
   }
 
 }
-
 </style>
 </head>
 
@@ -312,7 +305,6 @@ td{
 
   <div class="cards">
 
-
     <div class="card">
 
       <div class="metric-title">
@@ -346,7 +338,7 @@ td{
     <div class="card">
 
       <div class="metric-title">
-        Productos
+        Productos activos
       </div>
 
       <div
@@ -380,18 +372,20 @@ td{
   <div class="grid">
 
 
-    <!-- VENTAS RECIENTES -->
+    <!-- VENTAS -->
 
     <div class="card">
 
       <h2 class="section-title">
-        🧾 Ventas recientes
+        🧾 Ventas de hoy
       </h2>
 
       <div id="salesContainer">
+
         <div class="loading">
           Cargando ventas...
         </div>
+
       </div>
 
     </div>
@@ -487,18 +481,6 @@ function money(value){
 }
 
 
-function escapeHTML(value){
-
-  return String(value ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-
-}
-
-
 function showStatus(
   message,
   type="error"
@@ -517,37 +499,27 @@ function showStatus(
 
 
 /* =========================
-   DASHBOARD
+   CARGAR DASHBOARD
 ========================= */
 
 async function loadDashboard(){
 
-  $("todaySales").textContent =
-  "$0.00";
-
-  $("salesCount").textContent =
-  "0";
-
-  $("productCount").textContent =
-  "0";
-
-  $("lowStock").textContent =
-  "0";
-
-
   $("salesContainer").innerHTML =
-  '<div class="loading">Cargando ventas...</div>';
+  '<div class="loading">' +
+  'Cargando ventas...' +
+  '</div>';
 
 
   $("inventoryContainer").innerHTML =
-  '<div class="loading">Cargando inventario...</div>';
-
-
-  const businessId =
-  BUSINESS_IDS[currentBusiness];
+  '<div class="loading">' +
+  'Cargando inventario...' +
+  '</div>';
 
 
   try{
+
+    const businessId =
+    BUSINESS_IDS[currentBusiness];
 
 
     /* =========================
@@ -556,18 +528,23 @@ async function loadDashboard(){
 
     const productsResult =
     await supabaseClient
+
       .from("products")
+
       .select(
         "id,name,price,stock,active"
       )
+
       .eq(
         "business_id",
         businessId
       )
+
       .eq(
         "active",
         true
       )
+
       .order("name");
 
 
@@ -586,7 +563,7 @@ async function loadDashboard(){
     products.length;
 
 
-    const lowStockProducts =
+    const lowStock =
     products.filter(
       product =>
       Number(product.stock || 0) <= 5
@@ -594,7 +571,7 @@ async function loadDashboard(){
 
 
     $("lowStock").textContent =
-    lowStockProducts.length;
+    lowStock.length;
 
 
     renderInventory(
@@ -603,35 +580,40 @@ async function loadDashboard(){
 
 
     /* =========================
-       VENTAS
+       VENTAS DE HOY
     ========================= */
 
-    const today =
+    const startOfDay =
     new Date();
 
 
-    const startOfDay =
-    new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate()
-    ).toISOString();
+    startOfDay.setHours(
+      0,
+      0,
+      0,
+      0
+    );
 
 
     const salesResult =
     await supabaseClient
+
       .from("sales")
+
       .select(
         "id,total,status,created_at"
       )
+
       .eq(
         "business_id",
         businessId
       )
+
       .gte(
         "created_at",
-        startOfDay
+        startOfDay.toISOString()
       )
+
       .order(
         "created_at",
         {
@@ -651,7 +633,7 @@ async function loadDashboard(){
     salesResult.data || [];
 
 
-    const totalToday =
+    const total =
     sales.reduce(
       (sum,sale) =>
       sum +
@@ -661,7 +643,7 @@ async function loadDashboard(){
 
 
     $("todaySales").textContent =
-    money(totalToday);
+    money(total);
 
 
     $("salesCount").textContent =
@@ -684,6 +666,7 @@ async function loadDashboard(){
   catch(error){
 
     console.error(error);
+
 
     showStatus(
       "No se pudo cargar el Dashboard: " +
@@ -722,6 +705,10 @@ function renderInventory(
   }
 
 
+  container.innerHTML =
+  "";
+
+
   const sorted =
   [...products].sort(
     (a,b) =>
@@ -730,39 +717,59 @@ function renderInventory(
   );
 
 
-  container.innerHTML = "";
-
-
   sorted.forEach(
     product => {
 
       const row =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
       row.className =
       "stock-row";
 
 
       const name =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
       name.className =
       "stock-name";
+
 
       name.textContent =
       product.name;
 
 
       const stock =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
       stock.className =
       "stock-number";
 
+
+      if(
+        Number(product.stock || 0) <= 5
+      ){
+
+        stock.classList.add(
+          "low"
+        );
+
+      }
+
+
       stock.textContent =
       Number(
         product.stock || 0
-      ) + " uds";
+      ) +
+      " uds";
 
 
       row.append(
@@ -806,7 +813,9 @@ function renderSales(
 
 
   const table =
-  document.createElement("table");
+  document.createElement(
+    "table"
+  );
 
 
   table.innerHTML = `
@@ -837,76 +846,79 @@ function renderSales(
 
 
   sales
-    .slice(0,20)
-    .forEach(
-      sale => {
+  .slice(0,20)
+  .forEach(
+    sale => {
 
-        const row =
-        document.createElement("tr");
-
-
-        const date =
-        new Date(
-          sale.created_at
-        );
+      const row =
+      document.createElement(
+        "tr"
+      );
 
 
-        const time =
-        date.toLocaleTimeString(
-          "es-MX",
-          {
-            hour:"2-digit",
-            minute:"2-digit"
-          }
-        );
+      const date =
+      new Date(
+        sale.created_at
+      );
 
 
-        const status =
-        String(
-          sale.status || ""
-        );
+      const time =
+      date.toLocaleTimeString(
+        "es-MX",
+        {
+          hour:"2-digit",
+          minute:"2-digit"
+        }
+      );
 
 
-        const statusClass =
-        status === "paid"
-        ? "paid"
-        : "open";
+      const paid =
+      sale.status === "paid";
 
 
-        const statusText =
-        status === "paid"
-        ? "Pagada"
-        : status || "Pendiente";
+      row.innerHTML = `
+
+        <td>
+          ${time}
+        </td>
+
+        <td>
+          <strong>
+            ${money(sale.total)}
+          </strong>
+        </td>
+
+        <td>
+
+          <span
+            class="status-pill ${
+              paid
+              ? "paid"
+              : "open"
+            }">
+
+            ${
+              paid
+              ? "Pagada"
+              : (
+                sale.status ||
+                "Pendiente"
+              )
+            }
+
+          </span>
+
+        </td>
+
+      `;
 
 
-        row.innerHTML = `
+      tbody.appendChild(
+        row
+      );
 
-          <td>
-            ${escapeHTML(time)}
-          </td>
-
-          <td>
-            <strong>
-              ${money(sale.total)}
-            </strong>
-          </td>
-
-          <td>
-            <span
-              class="status-pill ${statusClass}">
-              ${escapeHTML(statusText)}
-            </span>
-          </td>
-
-        `;
-
-
-        tbody.appendChild(
-          row
-        );
-
-      }
-    );
+    }
+  );
 
 
   container.appendChild(
