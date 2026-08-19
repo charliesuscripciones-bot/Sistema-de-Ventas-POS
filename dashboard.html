@@ -2,11 +2,12 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Dashboard | Sistema de Ventas POS</title>
 
 <style>
+
 *{
   box-sizing:border-box;
 }
@@ -40,49 +41,7 @@ header p{
   padding:20px;
 }
 
-.topbar{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:20px;
-}
-
-button{
-  border:0;
-  cursor:pointer;
-  font-size:16px;
-}
-
-.business-btn{
-  background:white;
-  border:2px solid #ddd;
-  border-radius:12px;
-  padding:12px 22px;
-  font-weight:700;
-}
-
-.business-btn.active{
-  background:#111827;
-  color:white;
-  border-color:#111827;
-}
-
-.refresh{
-  margin-left:auto;
-  background:#2563eb;
-  color:white;
-  padding:12px 20px;
-  border-radius:12px;
-  font-weight:700;
-}
-
-.back{
-  background:white;
-  border:2px solid #ddd;
-  padding:12px 20px;
-  border-radius:12px;
-  font-weight:700;
-}
+/* MENSAJE */
 
 .status{
   display:none;
@@ -102,6 +61,51 @@ button{
   background:#fee2e2;
   color:#991b1b;
 }
+
+/* BOTONES */
+
+.topbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+
+button{
+  border:0;
+  cursor:pointer;
+  font-size:16px;
+}
+
+.business-btn,
+.back,
+.history{
+  background:white;
+  border:2px solid #ddd;
+  border-radius:12px;
+  padding:12px 20px;
+  font-weight:700;
+}
+
+.business-btn.active{
+  background:#111827;
+  color:white;
+  border-color:#111827;
+}
+
+.refresh{
+  background:#2563eb;
+  color:white;
+  padding:12px 20px;
+  border-radius:12px;
+  font-weight:700;
+}
+
+.history{
+  margin-left:auto;
+}
+
+/* TARJETAS */
 
 .cards{
   display:grid;
@@ -128,17 +132,19 @@ button{
   font-weight:800;
 }
 
-.metric.blue{
-  color:#2563eb;
-}
-
-.metric.green{
+.green{
   color:#16a34a;
 }
 
-.metric.red{
+.blue{
+  color:#2563eb;
+}
+
+.red{
   color:#dc2626;
 }
+
+/* SECCIONES */
 
 .grid{
   display:grid;
@@ -151,6 +157,8 @@ button{
   font-weight:800;
   margin:0 0 18px;
 }
+
+/* TABLA */
 
 table{
   width:100%;
@@ -188,6 +196,13 @@ td{
   color:#92400e;
 }
 
+.cancelled{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+/* INVENTARIO */
+
 .stock-row{
   display:flex;
   justify-content:space-between;
@@ -208,16 +223,14 @@ td{
   color:#dc2626;
 }
 
-.empty{
+.empty,
+.loading{
   text-align:center;
   color:#777;
   padding:30px 10px;
 }
 
-.loading{
-  color:#777;
-  padding:20px 0;
-}
+/* RESPONSIVE */
 
 @media(max-width:800px){
 
@@ -229,7 +242,7 @@ td{
     grid-template-columns:1fr;
   }
 
-  .refresh{
+  .history{
     margin-left:0;
   }
 
@@ -250,6 +263,7 @@ td{
   }
 
 }
+
 </style>
 </head>
 
@@ -257,11 +271,11 @@ td{
 
 <header>
 
-  <h1>📊 Dashboard</h1>
+<h1>📊 Dashboard</h1>
 
-  <p>
-    Sistema de Ventas POS · Administración
-  </p>
+<p>
+Sistema de Ventas POS · Administración
+</p>
 
 </header>
 
@@ -269,148 +283,184 @@ td{
 <div class="container">
 
 
-  <div id="status" class="status"></div>
+<div id="status" class="status"></div>
 
 
-  <div class="topbar">
+<!-- BOTONES -->
 
-    <button
-      class="business-btn active"
-      data-business="BakeQuiri">
-      BakeQuiri
-    </button>
+<div class="topbar">
 
-    <button
-      class="business-btn"
-      data-business="SpicyRoll">
-      SpicyRoll
-    </button>
+<button
+class="business-btn active"
+data-business="BakeQuiri">
 
-    <button
-      id="refresh"
-      class="refresh">
-      🔄 Actualizar
-    </button>
+BakeQuiri
 
-    <button
-      id="back"
-      class="back">
-      ← POS
-    </button>
-
-  </div>
+</button>
 
 
-  <!-- MÉTRICAS -->
+<button
+class="business-btn"
+data-business="SpicyRoll">
 
-  <div class="cards">
+SpicyRoll
 
-    <div class="card">
-
-      <div class="metric-title">
-        Ventas de hoy
-      </div>
-
-      <div
-        id="todaySales"
-        class="metric green">
-        $0.00
-      </div>
-
-    </div>
+</button>
 
 
-    <div class="card">
+<button
+id="refresh"
+class="refresh">
 
-      <div class="metric-title">
-        Número de ventas
-      </div>
+🔄 Actualizar
 
-      <div
-        id="salesCount"
-        class="metric blue">
-        0
-      </div>
-
-    </div>
+</button>
 
 
-    <div class="card">
+<button
+id="history"
+class="history">
 
-      <div class="metric-title">
-        Productos activos
-      </div>
+🧾 Historial
 
-      <div
-        id="productCount"
-        class="metric">
-        0
-      </div>
-
-    </div>
+</button>
 
 
-    <div class="card">
+<button
+id="back"
+class="back">
 
-      <div class="metric-title">
-        Stock bajo
-      </div>
+← POS
 
-      <div
-        id="lowStock"
-        class="metric red">
-        0
-      </div>
+</button>
 
-    </div>
-
-  </div>
+</div>
 
 
-  <!-- CONTENIDO -->
+<!-- TARJETAS -->
 
-  <div class="grid">
-
-
-    <!-- VENTAS -->
-
-    <div class="card">
-
-      <h2 class="section-title">
-        🧾 Ventas de hoy
-      </h2>
-
-      <div id="salesContainer">
-
-        <div class="loading">
-          Cargando ventas...
-        </div>
-
-      </div>
-
-    </div>
+<div class="cards">
 
 
-    <!-- INVENTARIO -->
+<div class="card">
 
-    <div class="card">
+<div class="metric-title">
+Ventas de hoy
+</div>
 
-      <h2 class="section-title">
-        📦 Inventario
-      </h2>
+<div
+id="todaySales"
+class="metric green">
 
-      <div id="inventoryContainer">
+$0.00
 
-        <div class="loading">
-          Cargando inventario...
-        </div>
+</div>
 
-      </div>
-
-    </div>
+</div>
 
 
-  </div>
+<div class="card">
+
+<div class="metric-title">
+Número de ventas
+</div>
+
+<div
+id="salesCount"
+class="metric blue">
+
+0
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="metric-title">
+Productos activos
+</div>
+
+<div
+id="productCount"
+class="metric">
+
+0
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="metric-title">
+Stock bajo
+</div>
+
+<div
+id="lowStock"
+class="metric red">
+
+0
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<!-- VENTAS + INVENTARIO -->
+
+<div class="grid">
+
+
+<div class="card">
+
+<h2 class="section-title">
+
+🧾 Ventas de hoy
+
+</h2>
+
+<div id="salesContainer">
+
+<div class="loading">
+
+Cargando ventas...
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2 class="section-title">
+
+📦 Inventario
+
+</h2>
+
+<div id="inventoryContainer">
+
+<div class="loading">
+
+Cargando inventario...
+
+</div>
+
+</div>
+
+</div>
+
+
+</div>
 
 
 </div>
@@ -424,9 +474,9 @@ td{
 "use strict";
 
 
-/* =========================
+/* ================================
    SUPABASE
-========================= */
+================================ */
 
 const SUPABASE_URL =
 "https://jrxklpstlloeckihcduv.supabase.co";
@@ -443,9 +493,9 @@ window.supabase.createClient(
 );
 
 
-/* =========================
+/* ================================
    NEGOCIOS
-========================= */
+================================ */
 
 const BUSINESS_IDS = {
 
@@ -462,58 +512,48 @@ let currentBusiness =
 "BakeQuiri";
 
 
-/* =========================
-   UTILIDADES
-========================= */
+/* ================================
+   FUNCIONES
+================================ */
 
-function $(id){
-
-  return document.getElementById(id);
-
-}
+const $ = id =>
+document.getElementById(id);
 
 
-function money(value){
+const money = value =>
+"$" + Number(value || 0).toFixed(2);
 
-  return "$" +
-  Number(value || 0).toFixed(2);
 
-}
-
+/* ================================
+   MENSAJES
+================================ */
 
 function showStatus(
   message,
-  type="error"
+  type = "error"
 ){
 
-  const element =
-  $("status");
-
-  element.textContent =
+  $("status").textContent =
   message;
 
-  element.className =
+  $("status").className =
   "status " + type;
 
 }
 
 
-/* =========================
+/* ================================
    CARGAR DASHBOARD
-========================= */
+================================ */
 
 async function loadDashboard(){
 
   $("salesContainer").innerHTML =
-  '<div class="loading">' +
-  'Cargando ventas...' +
-  '</div>';
+  '<div class="loading">Cargando ventas...</div>';
 
 
   $("inventoryContainer").innerHTML =
-  '<div class="loading">' +
-  'Cargando inventario...' +
-  '</div>';
+  '<div class="loading">Cargando inventario...</div>';
 
 
   try{
@@ -522,9 +562,9 @@ async function loadDashboard(){
     BUSINESS_IDS[currentBusiness];
 
 
-    /* =========================
+    /* ================================
        PRODUCTOS
-    ========================= */
+    ================================= */
 
     const productsResult =
     await supabaseClient
@@ -545,7 +585,9 @@ async function loadDashboard(){
         true
       )
 
-      .order("name");
+      .order(
+        "name"
+      );
 
 
     if(productsResult.error){
@@ -563,15 +605,11 @@ async function loadDashboard(){
     products.length;
 
 
-    const lowStock =
+    $("lowStock").textContent =
     products.filter(
       product =>
       Number(product.stock || 0) <= 5
-    );
-
-
-    $("lowStock").textContent =
-    lowStock.length;
+    ).length;
 
 
     renderInventory(
@@ -579,15 +617,15 @@ async function loadDashboard(){
     );
 
 
-    /* =========================
-       VENTAS DE HOY
-    ========================= */
+    /* ================================
+       VENTAS DEL DÍA
+    ================================= */
 
-    const startOfDay =
+    const start =
     new Date();
 
 
-    startOfDay.setHours(
+    start.setHours(
       0,
       0,
       0,
@@ -611,7 +649,7 @@ async function loadDashboard(){
 
       .gte(
         "created_at",
-        startOfDay.toISOString()
+        start.toISOString()
       )
 
       .order(
@@ -661,19 +699,14 @@ async function loadDashboard(){
     );
 
 
-  }
-
-  catch(error){
+  }catch(error){
 
     console.error(error);
 
 
     showStatus(
       "No se pudo cargar el Dashboard: " +
-      (
-        error.message ||
-        error
-      )
+      (error.message || error)
     );
 
   }
@@ -681,9 +714,9 @@ async function loadDashboard(){
 }
 
 
-/* =========================
+/* ================================
    INVENTARIO
-========================= */
+================================ */
 
 function renderInventory(
   products
@@ -696,9 +729,7 @@ function renderInventory(
   if(!products.length){
 
     container.innerHTML =
-    '<div class="empty">' +
-    'No hay productos activos.' +
-    '</div>';
+    '<div class="empty">No hay productos activos.</div>';
 
     return;
 
@@ -709,7 +740,7 @@ function renderInventory(
   "";
 
 
-  const sorted =
+  const sortedProducts =
   [...products].sort(
     (a,b) =>
     Number(a.stock || 0) -
@@ -717,7 +748,7 @@ function renderInventory(
   );
 
 
-  sorted.forEach(
+  sortedProducts.forEach(
     product => {
 
       const row =
@@ -755,7 +786,8 @@ function renderInventory(
 
 
       if(
-        Number(product.stock || 0) <= 5
+        Number(product.stock || 0)
+        <= 5
       ){
 
         stock.classList.add(
@@ -766,10 +798,8 @@ function renderInventory(
 
 
       stock.textContent =
-      Number(
-        product.stock || 0
-      ) +
-      " uds";
+      Number(product.stock || 0)
+      + " uds";
 
 
       row.append(
@@ -783,14 +813,15 @@ function renderInventory(
       );
 
     }
+
   );
 
 }
 
 
-/* =========================
+/* ================================
    VENTAS
-========================= */
+================================ */
 
 function renderSales(
   sales
@@ -803,9 +834,7 @@ function renderSales(
   if(!sales.length){
 
     container.innerHTML =
-    '<div class="empty">' +
-    'No hay ventas registradas hoy.' +
-    '</div>';
+    '<div class="empty">No hay ventas registradas hoy.</div>';
 
     return;
 
@@ -850,11 +879,6 @@ function renderSales(
   .forEach(
     sale => {
 
-      const row =
-      document.createElement(
-        "tr"
-      );
-
 
       const date =
       new Date(
@@ -862,49 +886,74 @@ function renderSales(
       );
 
 
-      const time =
-      date.toLocaleTimeString(
-        "es-MX",
-        {
-          hour:"2-digit",
-          minute:"2-digit"
-        }
+      const paid =
+      sale.status === "paid";
+
+
+      const cancelled =
+      sale.status === "cancelled";
+
+
+      const row =
+      document.createElement(
+        "tr"
       );
 
 
-      const paid =
-      sale.status === "paid";
+      const statusClass =
+      paid
+      ? "paid"
+      : cancelled
+      ? "cancelled"
+      : "open";
+
+
+      const statusText =
+      paid
+      ? "Pagada"
+      : cancelled
+      ? "Cancelada"
+      : (
+        sale.status ||
+        "Pendiente"
+      );
 
 
       row.innerHTML = `
 
         <td>
-          ${time}
+
+          ${date.toLocaleTimeString(
+            "es-MX",
+            {
+              hour:"2-digit",
+              minute:"2-digit"
+            }
+          )}
+
         </td>
 
+
         <td>
+
           <strong>
-            ${money(sale.total)}
+
+            ${money(
+              sale.total
+            )}
+
           </strong>
+
         </td>
+
 
         <td>
 
           <span
-            class="status-pill ${
-              paid
-              ? "paid"
-              : "open"
-            }">
+            class="status-pill ${statusClass}"
+          >
 
-            ${
-              paid
-              ? "Pagada"
-              : (
-                sale.status ||
-                "Pendiente"
-              )
-            }
+            ${statusText}
 
           </span>
 
@@ -917,8 +966,14 @@ function renderSales(
         row
       );
 
+
     }
+
   );
+
+
+  container.innerHTML =
+  "";
 
 
   container.appendChild(
@@ -928,9 +983,9 @@ function renderSales(
 }
 
 
-/* =========================
+/* ================================
    CAMBIAR NEGOCIO
-========================= */
+================================ */
 
 document
 .querySelectorAll(
@@ -952,8 +1007,8 @@ document
           ".business-btn"
         )
         .forEach(
-          item =>
-          item.classList.remove(
+          b =>
+          b.classList.remove(
             "active"
           )
         );
@@ -973,9 +1028,9 @@ document
 );
 
 
-/* =========================
+/* ================================
    ACTUALIZAR
-========================= */
+================================ */
 
 $("refresh")
 .addEventListener(
@@ -984,9 +1039,25 @@ $("refresh")
 );
 
 
-/* =========================
+/* ================================
+   HISTORIAL
+================================ */
+
+$("history")
+.addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+    "historial.html";
+
+  }
+);
+
+
+/* ================================
    VOLVER AL POS
-========================= */
+================================ */
 
 $("back")
 .addEventListener(
@@ -1000,9 +1071,9 @@ $("back")
 );
 
 
-/* =========================
+/* ================================
    INICIAR
-========================= */
+================================ */
 
 loadDashboard();
 
