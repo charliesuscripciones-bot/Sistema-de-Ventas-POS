@@ -91,8 +91,6 @@ header p{
   border-color:#111827;
 }
 
-/* CUENTAS PENDIENTES */
-
 .accounts-btn{
   border:2px solid #f59e0b;
   padding:15px 22px;
@@ -107,8 +105,6 @@ header p{
 .accounts-btn:active{
   transform:scale(.98);
 }
-
-/* HISTORIAL */
 
 .history-btn{
   border:2px solid #2563eb;
@@ -900,7 +896,18 @@ async function loadBusinessData(){
         .order("name"),
 
 
-      /* CLIENTES */
+      /* =====================================
+         CLIENTES COMPARTIDOS
+         
+         IMPORTANTE:
+         Los clientes ahora se cargan desde
+         TODOS los negocios del sistema.
+
+         Esto permite que un cliente creado
+         en BakeQuiri también aparezca cuando
+         estamos trabajando en SpicyRoll,
+         y viceversa.
+      ===================================== */
 
       supabaseClient
 
@@ -910,9 +917,9 @@ async function loadBusinessData(){
           "id,business_id,name,phone,notes,created_at"
         )
 
-        .eq(
+        .in(
           "business_id",
-          businessId
+          Object.values(BUSINESS_IDS)
         )
 
         .order(
@@ -1829,20 +1836,16 @@ isPending
           currentBusiness
         ],
 
-
         p_customer_id:
         selectedCustomerId || null,
-
 
         p_payment_method_id:
         isPending
         ? null
         : selectedPaymentId,
 
-
         p_items:
         items,
-
 
         p_is_pending:
         isPending
