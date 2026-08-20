@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
 <meta charset="UTF-8">
 
-<!-- CORRECCIÓN iPHONE / SAFE AREA -->
 <meta
   name="viewport"
   content="width=device-width, initial-scale=1, viewport-fit=cover"
@@ -43,10 +44,6 @@ body{
 
   background:#f5f6f8;
   color:#171717;
-
-  /* Evita que el contenido quede debajo de la barra superior
-     en iPhone / PWA */
-  padding-top:env(safe-area-inset-top);
 }
 
 
@@ -58,11 +55,12 @@ header{
   background:#111827;
   color:white;
 
-  padding:
-    25px
-    20px
-    25px
-    20px;
+  padding-top:
+    calc(25px + env(safe-area-inset-top));
+
+  padding-right:20px;
+  padding-bottom:25px;
+  padding-left:20px;
 
   position:relative;
   z-index:2;
@@ -212,7 +210,7 @@ button:active{
 
 
 /* =========================================================
-   TARJETAS DE MÉTRICAS
+   TARJETAS
 ========================================================= */
 
 .cards{
@@ -245,9 +243,8 @@ button:active{
   font-size:14px;
   font-weight:700;
   margin-bottom:8px;
-
-  /* Evita desbordamientos */
   line-height:1.25;
+  overflow-wrap:anywhere;
 }
 
 .metric{
@@ -335,10 +332,21 @@ button:active{
   word-break:break-word;
 }
 
+
+/* =========================================================
+   FECHA Y HORA
+========================================================= */
+
 .sale-date{
   color:#6b7280;
   font-size:13px;
-  margin-top:4px;
+  margin-top:5px;
+  line-height:1.35;
+}
+
+.sale-time{
+  color:#6b7280;
+  font-weight:600;
 }
 
 .sale-total{
@@ -445,27 +453,18 @@ button:active{
 
 
 /* =========================================================
-   iPHONE / MÓVIL
+   MÓVIL
 ========================================================= */
 
 @media(max-width:600px){
 
-  body{
-    /*
-      Protección adicional para dispositivos donde
-      safe-area-inset-top no sea reportado correctamente.
-    */
-    padding-top:max(
-      0px,
-      env(safe-area-inset-top)
-    );
-  }
-
   header{
-    padding:
-      22px
-      17px
-      22px;
+    padding-top:
+      calc(22px + env(safe-area-inset-top));
+
+    padding-right:17px;
+    padding-bottom:22px;
+    padding-left:17px;
   }
 
   header h1{
@@ -500,9 +499,8 @@ button:active{
     padding:8px;
   }
 
-  /* =====================================================
-     TARJETAS MÓVILES
-  ===================================================== */
+
+  /* TARJETAS */
 
   .cards{
     grid-template-columns:1fr 1fr;
@@ -527,10 +525,6 @@ button:active{
   .metric-title{
     font-size:12px;
     line-height:1.25;
-
-    /* Permite que el texto se acomode */
-    white-space:normal;
-    overflow-wrap:anywhere;
   }
 
   .metric{
@@ -541,9 +535,8 @@ button:active{
     font-size:19px;
   }
 
-  /* =====================================================
-     VENTAS EN MÓVIL
-  ===================================================== */
+
+  /* VENTAS */
 
   .sale-main{
     grid-template-columns:1fr;
@@ -560,6 +553,10 @@ button:active{
 
   .sale-row{
     padding:16px;
+  }
+
+  .sale-date{
+    font-size:14px;
   }
 
 }
@@ -595,13 +592,14 @@ button:active{
 
 
 /* =========================================================
-   iOS ESPECÍFICO
+   iOS
 ========================================================= */
 
 @supports (-webkit-touch-callout:none){
 
-  body{
-    padding-top:env(safe-area-inset-top);
+  header{
+    padding-top:
+      calc(22px + env(safe-area-inset-top));
   }
 
 }
@@ -611,6 +609,7 @@ button:active{
 
 
 <body>
+
 
 <header>
 
@@ -935,6 +934,69 @@ Number(value || 0).toFixed(2);
 
 
 /* =========================================================
+   FORMATO DE FECHA Y HORA
+========================================================= */
+
+function formatSaleDateTime(
+  createdAt
+){
+
+  if(!createdAt){
+
+    return "";
+
+  }
+
+
+  const date =
+  new Date(
+    createdAt
+  );
+
+
+  if(
+    isNaN(
+      date.getTime()
+    )
+  ){
+
+    return "";
+
+  }
+
+
+  const dateText =
+  date.toLocaleDateString(
+    "es-MX",
+    {
+      day:"2-digit",
+      month:"2-digit",
+      year:"numeric"
+    }
+  );
+
+
+  const timeText =
+  date.toLocaleTimeString(
+    "es-MX",
+    {
+      hour:"numeric",
+      minute:"2-digit",
+      hour12:true
+    }
+  );
+
+
+  return (
+    dateText +
+    " · " +
+    timeText
+  );
+
+}
+
+
+/* =========================================================
    STATUS
 ========================================================= */
 
@@ -1105,11 +1167,6 @@ async function loadDashboard(){
         sale
       ) => {
 
-        /*
-         * Las ventas canceladas no deben
-         * sumarse a las ventas reales.
-         */
-
         if(
           sale.status ===
           "cancelled"
@@ -1145,7 +1202,7 @@ async function loadDashboard(){
 
 
     /* =====================================================
-       CLIENTES
+       VENTAS
     ====================================================== */
 
     const customerLookupFailed =
@@ -1555,14 +1612,8 @@ async function renderSales(
 
 
         /* =================================================
-           FECHA
+           FECHA + HORA
         ================================================== */
-
-        const date =
-        new Date(
-          sale.created_at
-        );
-
 
         const dateDiv =
         document.createElement(
@@ -1574,30 +1625,14 @@ async function renderSales(
         "sale-date";
 
 
-        if(
-          !isNaN(
-            date.getTime()
-          )
-        ){
+        const dateTimeText =
+        formatSaleDateTime(
+          sale.created_at
+        );
 
-          dateDiv.textContent =
-          date.toLocaleDateString(
-            "es-MX",
-            {
-              day:"2-digit",
-              month:"2-digit",
-              year:"numeric"
-            }
-          );
 
-        }
-
-        else{
-
-          dateDiv.textContent =
-          "";
-
-        }
+        dateDiv.textContent =
+        dateTimeText;
 
 
         customerDiv.appendChild(
