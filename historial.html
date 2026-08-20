@@ -74,23 +74,6 @@ header p{
   color:#64748b;
 }
 
-/* NEGOCIO ACTUAL */
-
-.business-banner{
-  display:none;
-  margin-bottom:18px;
-  padding:12px 15px;
-  border-radius:12px;
-  background:#f0fdf4;
-  border:1px solid #bbf7d0;
-  color:#166534;
-  font-weight:800;
-}
-
-.business-banner.visible{
-  display:block;
-}
-
 /* BOTONES */
 
 .toolbar{
@@ -337,6 +320,11 @@ button:disabled{
   color:#334155;
 }
 
+.no-payments{
+  color:#94a3b8;
+  font-size:13px;
+}
+
 /* MODAL */
 
 .modal-overlay{
@@ -518,6 +506,7 @@ button:disabled{
 </style>
 </head>
 
+
 <body>
 
 <header>
@@ -530,12 +519,8 @@ Consulta las ventas registradas de tus negocios
 
 </header>
 
-<div class="container">
 
-<div
-id="businessBanner"
-class="business-banner">
-</div>
+<div class="container">
 
 <div
 id="customerBanner"
@@ -557,11 +542,12 @@ class="customer-banner-phone">
 
 </div>
 
+
 <div class="toolbar">
 
 <button
 type="button"
-class="business"
+class="business active"
 data-business="BakeQuiri">
 BakeQuiri
 </button>
@@ -589,6 +575,7 @@ id="back">
 
 </div>
 
+
 <div class="filters">
 
 <input
@@ -610,6 +597,7 @@ type="date"
 
 </div>
 
+
 <div class="summary">
 
 <div class="summary-card">
@@ -626,6 +614,7 @@ class="value">
 
 </div>
 
+
 <div class="summary-card">
 
 <div class="label">
@@ -639,6 +628,7 @@ $0.00
 </div>
 
 </div>
+
 
 <div class="summary-card">
 
@@ -656,6 +646,7 @@ $0.00
 
 </div>
 
+
 <div class="card">
 
 <div id="message"></div>
@@ -672,7 +663,10 @@ Cargando ventas...
 
 </div>
 
-<!-- MODAL ABONO -->
+
+<!-- =========================
+     MODAL ABONO
+========================= -->
 
 <div
 id="paymentModal"
@@ -761,11 +755,13 @@ Cancelar
 
 </div>
 
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
 "use strict";
+
 
 /* =========================================
    SUPABASE
@@ -800,7 +796,7 @@ const BUSINESS_IDS = {
 
 
 /* =========================================
-   URL
+   CONTEXTO DE LA URL
 ========================================= */
 
 const urlParams =
@@ -808,33 +804,34 @@ new URLSearchParams(
   window.location.search
 );
 
-
-/*
- * Ahora la página reconoce:
- *
- * historial.html
- *
- * historial.html?customer_id=XXXX
- *
- * historial.html?business=SpicyRoll
- *
- * historial.html?business=SpicyRoll&customer_id=XXXX
- */
-
-const urlBusiness =
-urlParams.get("business");
-
-let currentBusiness =
-(
-  urlBusiness &&
-  BUSINESS_IDS[urlBusiness]
-)
-? urlBusiness
-: "BakeQuiri";
-
-
 let selectedCustomerId =
 urlParams.get("customer_id");
+
+
+/*
+ * IMPORTANTE:
+ *
+ * El Dashboard manda:
+ *
+ * historial.html?customer_id=XXX&business=SpicyRoll
+ *
+ * Por lo tanto NO debemos iniciar siempre
+ * en BakeQuiri.
+ *
+ * Si business existe y es válido,
+ * ese será el negocio inicial.
+ */
+
+const requestedBusiness =
+urlParams.get("business");
+
+
+let currentBusiness =
+BUSINESS_IDS[
+  requestedBusiness
+]
+? requestedBusiness
+: "BakeQuiri";
 
 
 let sales = [];
@@ -882,13 +879,15 @@ function formatDate(value){
 
 
 /* =========================================
-   MOSTRAR NEGOCIO
+   ACTUALIZAR BOTONES DE NEGOCIO
 ========================================= */
 
-function updateBusinessUI(){
+function updateBusinessButtons(){
 
   document
-    .querySelectorAll(".business")
+    .querySelectorAll(
+      ".business"
+    )
     .forEach(
       button => {
 
@@ -901,66 +900,6 @@ function updateBusinessUI(){
       }
     );
 
-
-  if(selectedCustomerId){
-
-    $("businessBanner")
-      .textContent =
-        "🏪 " +
-        currentBusiness +
-        " · Historial personal del cliente";
-
-    $("businessBanner")
-      .classList.add("visible");
-
-  }
-  else{
-
-    $("businessBanner")
-      .classList.remove("visible");
-
-  }
-
-}
-
-
-/* =========================================
-   ACTUALIZAR URL
-========================================= */
-
-function updateUrl(){
-
-  const params =
-    new URLSearchParams();
-
-
-  params.set(
-    "business",
-    currentBusiness
-  );
-
-
-  if(selectedCustomerId){
-
-    params.set(
-      "customer_id",
-      selectedCustomerId
-    );
-
-  }
-
-
-  const newUrl =
-    "historial.html?" +
-    params.toString();
-
-
-  window.history.replaceState(
-    {},
-    "",
-    newUrl
-  );
-
 }
 
 
@@ -972,7 +911,6 @@ async function loadPaymentMethods(){
 
   const businessId =
     BUSINESS_IDS[currentBusiness];
-
 
   const result =
     await supabaseClient
@@ -992,10 +930,8 @@ async function loadPaymentMethods(){
         "name"
       );
 
-
   if(result.error)
     throw result.error;
-
 
   paymentMethods =
     result.data || [];
@@ -1004,7 +940,7 @@ async function loadPaymentMethods(){
 
 
 /* =========================================
-   RENDERIZAR MÉTODOS
+   RENDERIZAR MÉTODOS DE PAGO
 ========================================= */
 
 function renderPaymentMethods(){
@@ -1012,38 +948,29 @@ function renderPaymentMethods(){
   const select =
     $("paymentMethod");
 
-
   select.innerHTML = "";
-
 
   if(!paymentMethods.length){
 
     const option =
-      document.createElement(
-        "option"
-      );
+      document.createElement("option");
 
     option.value = "";
 
     option.textContent =
       "No hay métodos de pago configurados";
 
-    select.appendChild(
-      option
-    );
+    select.appendChild(option);
 
     return;
 
   }
 
-
   paymentMethods.forEach(
     method => {
 
       const option =
-        document.createElement(
-          "option"
-        );
+        document.createElement("option");
 
       option.value =
         method.id;
@@ -1051,9 +978,7 @@ function renderPaymentMethods(){
       option.textContent =
         method.name;
 
-      select.appendChild(
-        option
-      );
+      select.appendChild(option);
 
     }
   );
@@ -1062,20 +987,17 @@ function renderPaymentMethods(){
 
 
 /* =========================================
-   CARGAR CLIENTE SELECCIONADO
+   CLIENTE
 ========================================= */
 
 async function loadSelectedCustomer(){
 
-  $("customerBanner")
-    .classList.remove(
-      "visible"
-    );
-
-
   if(!selectedCustomerId){
 
-    updateBusinessUI();
+    $("customerBanner")
+      .classList.remove(
+        "visible"
+      );
 
     return;
 
@@ -1096,49 +1018,27 @@ async function loadSelectedCustomer(){
         )
         .single();
 
-
     if(result.error)
       throw result.error;
-
 
     const customer =
       result.data;
 
-
-    if(!customer){
-
-      selectedCustomerId =
-        null;
-
-      updateUrl();
-
-      updateBusinessUI();
-
+    if(!customer)
       return;
-
-    }
-
 
     $("customerBannerName")
       .textContent =
-        customer.name ||
-        "Cliente";
-
+      customer.name || "Cliente";
 
     $("customerBannerPhone")
       .textContent =
-        customer.phone
-        ? "📱 " + customer.phone
-        : "";
-
+      customer.phone
+      ? "📱 " + customer.phone
+      : "";
 
     $("customerBanner")
-      .classList.add(
-        "visible"
-      );
-
-
-    updateBusinessUI();
+      .classList.add("visible");
 
   }
   catch(error){
@@ -1161,9 +1061,8 @@ async function loadSales(){
 
   $("sales").innerHTML =
     '<div class="empty">' +
-    "Cargando ventas..." +
-    "</div>";
-
+    'Cargando ventas...' +
+    '</div>';
 
   try{
 
@@ -1241,19 +1140,20 @@ async function loadSales(){
     }
 
 
-    /* MÉTODOS */
+    /* MÉTODOS DE PAGO */
 
     await loadPaymentMethods();
 
     renderPaymentMethods();
 
 
-    /* CLIENTE */
+    /*
+     * IMPORTANTE:
+     * El cliente NO se borra al cambiar
+     * de negocio.
+     */
 
     await loadSelectedCustomer();
-
-
-    /* VENTAS */
 
     await renderSales();
 
@@ -1262,14 +1162,17 @@ async function loadSales(){
 
     console.error(error);
 
-
     $("sales").innerHTML =
+
       '<div class="error">' +
+
       "No se pudieron cargar las ventas: " +
+
       (
         error.message ||
         error
       ) +
+
       "</div>";
 
   }
@@ -1289,10 +1192,8 @@ async function renderSales(){
       .trim()
       .toLowerCase();
 
-
   const from =
     $("from").value;
-
 
   const to =
     $("to").value;
@@ -1313,26 +1214,16 @@ async function renderSales(){
         if(from && date < from)
           return false;
 
-
         if(to && date > to)
           return false;
 
 
-        /*
-         * MUY IMPORTANTE:
-         * si estamos viendo historial personal,
-         * filtramos por cliente.
-         */
-
         if(
           selectedCustomerId &&
-          String(sale.customer_id) !==
-          String(selectedCustomerId)
-        ){
-
+          sale.customer_id !==
+          selectedCustomerId
+        )
           return false;
-
-        }
 
 
         return true;
@@ -1345,7 +1236,6 @@ async function renderSales(){
 
   const customerMap =
     new Map();
-
 
   const customerIds =
     [
@@ -1466,13 +1356,7 @@ async function renderSales(){
 
     $("sales").innerHTML =
       '<div class="empty">' +
-      (
-        selectedCustomerId
-        ? "Este cliente no tiene ventas registradas en " +
-          currentBusiness +
-          "."
-        : "No hay ventas que coincidan con los filtros."
-      ) +
+      "No hay ventas que coincidan con los filtros." +
       "</div>";
 
     return;
@@ -1599,9 +1483,7 @@ async function renderSales(){
         "</div>" +
 
         '<div class="details">' +
-        "🏪 " +
-        currentBusiness +
-        " · ID: " +
+        "ID: " +
         sale.id +
         "</div>" +
 
@@ -1819,7 +1701,7 @@ async function renderSales(){
 
 
 /* =========================================
-   MODAL
+   ABRIR MODAL
 ========================================= */
 
 function openPaymentModal(
@@ -1833,16 +1715,18 @@ function openPaymentModal(
 
   $("paymentSubtitle")
     .textContent =
-      currentBusiness +
-      " · " +
       customerName +
       " · Venta de " +
-      money(sale.total);
+      money(
+        sale.total
+      );
 
 
   $("modalBalance")
     .textContent =
-      money(sale.balance);
+      money(
+        sale.balance
+      );
 
 
   $("paymentAmount")
@@ -1901,7 +1785,6 @@ function closePaymentModal(){
   selectedSaleForPayment =
     null;
 
-
   $("paymentModal")
     .classList.remove(
       "visible"
@@ -1921,7 +1804,6 @@ function showPaymentError(
   $("modalError")
     .textContent =
       message;
-
 
   $("modalError")
     .classList.add(
@@ -2010,20 +1892,29 @@ async function registerPayment(
   }
 
 
-  $("savePayment").disabled =
-    true;
+  $("savePayment")
+    .disabled =
+      true;
 
-  $("payFull").disabled =
-    true;
 
-  $("paymentMethod").disabled =
-    true;
+  $("payFull")
+    .disabled =
+      true;
 
-  $("savePayment").textContent =
-    "⏳ Procesando...";
 
-  $("payFull").textContent =
-    "⏳ Procesando...";
+  $("paymentMethod")
+    .disabled =
+      true;
+
+
+  $("savePayment")
+    .textContent =
+      "⏳ Procesando...";
+
+
+  $("payFull")
+    .textContent =
+      "⏳ Procesando...";
 
 
   try{
@@ -2147,20 +2038,29 @@ async function registerPayment(
   }
   finally{
 
-    $("savePayment").disabled =
-      false;
+    $("savePayment")
+      .disabled =
+        false;
 
-    $("payFull").disabled =
-      false;
 
-    $("paymentMethod").disabled =
-      false;
+    $("payFull")
+      .disabled =
+        false;
 
-    $("savePayment").textContent =
-      "💵 Registrar abono";
 
-    $("payFull").textContent =
-      "✓ Liquidar cuenta";
+    $("paymentMethod")
+      .disabled =
+        false;
+
+
+    $("savePayment")
+      .textContent =
+        "💵 Registrar abono";
+
+
+    $("payFull")
+      .textContent =
+        "✓ Liquidar cuenta";
 
   }
 
@@ -2290,29 +2190,59 @@ document
         if(
           business ===
           currentBusiness
-        ){
-
+        )
           return;
 
-        }
 
+        /*
+         * CAMBIO IMPORTANTE:
+         *
+         * NO borramos selectedCustomerId.
+         *
+         * Así, si venimos desde el Dashboard
+         * con un cliente, el cliente permanece
+         * seleccionado al cambiar de negocio.
+         */
 
         currentBusiness =
           business;
 
 
+        updateBusinessButtons();
+
+
         /*
-         * IMPORTANTE:
-         *
-         * YA NO BORRAMOS selectedCustomerId.
-         *
-         * Esto permite conservar el cliente
-         * mientras cambiamos de negocio.
+         * Actualizamos la URL conservando
+         * el cliente seleccionado.
          */
 
-        updateUrl();
+        const params =
+          new URLSearchParams();
 
-        updateBusinessUI();
+
+        if(selectedCustomerId){
+
+          params.set(
+            "customer_id",
+            selectedCustomerId
+          );
+
+        }
+
+
+        params.set(
+          "business",
+          currentBusiness
+        );
+
+
+        window.history.replaceState(
+          {},
+          "",
+          "historial.html?" +
+          params.toString()
+        );
+
 
         await loadSales();
 
@@ -2369,7 +2299,11 @@ $("back")
   () => {
 
     window.location.href =
-      "dashboard.html";
+      "dashboard.html" +
+      "?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
 
   }
 );
@@ -2379,11 +2313,17 @@ $("back")
    INICIO
 ========================================= */
 
-updateBusinessUI();
+/*
+ * Primero ponemos visualmente el negocio
+ * correcto y después cargamos los datos.
+ */
+
+updateBusinessButtons();
 
 loadSales();
 
 </script>
 
 </body>
+
 </html>
