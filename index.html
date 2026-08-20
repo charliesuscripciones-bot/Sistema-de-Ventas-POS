@@ -106,6 +106,29 @@ header p{
   transform:scale(.98);
 }
 
+/* =========================================
+   CLIENTES
+========================================= */
+
+.customers-btn{
+  border:2px solid #16a34a;
+  padding:15px 22px;
+  border-radius:14px;
+  background:#f0fdf4;
+  color:#15803d;
+  font-size:18px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.customers-btn:active{
+  transform:scale(.98);
+}
+
+/* =========================================
+   HISTORIAL
+========================================= */
+
 .history-btn{
   border:2px solid #2563eb;
   padding:15px 22px;
@@ -427,6 +450,7 @@ header p{
 
   .business-btn,
   .accounts-btn,
+  .customers-btn,
   .history-btn{
     flex:1;
   }
@@ -473,12 +497,14 @@ Administración de negocios y ventas
 
 </header>
 
+
 <div class="container">
 
 <div id="status" class="status"></div>
 
+
 <!-- =========================================
-     NEGOCIOS + CUENTAS + HISTORIAL
+     NEGOCIOS + CLIENTES + CUENTAS + HISTORIAL
 ========================================= -->
 
 <div class="businesses">
@@ -492,6 +518,7 @@ BakeQuiri
 
 </button>
 
+
 <button
 type="button"
 class="business-btn"
@@ -501,6 +528,17 @@ SpicyRoll
 
 </button>
 
+
+<button
+type="button"
+class="customers-btn"
+id="customersButton">
+
+👥 Clientes
+
+</button>
+
+
 <button
 type="button"
 class="accounts-btn"
@@ -509,6 +547,7 @@ id="accountsButton">
 💳 Cuentas pendientes
 
 </button>
+
 
 <button
 type="button"
@@ -521,7 +560,9 @@ id="historyButton">
 
 </div>
 
+
 <div class="layout">
+
 
 <!-- =========================================
      PRODUCTOS
@@ -545,6 +586,7 @@ Cargando productos...
 
 </div>
 
+
 <!-- =========================================
      CARRITO
 ========================================= -->
@@ -563,6 +605,7 @@ El carrito está vacío
 
 </div>
 
+
 <div class="total">
 
 <span>
@@ -574,6 +617,7 @@ $0.00
 </span>
 
 </div>
+
 
 <!-- =========================================
      CLIENTE
@@ -598,6 +642,7 @@ id="manageCustomers">
 
 </div>
 
+
 <input
 id="customerSearch"
 class="customer-search"
@@ -605,6 +650,7 @@ type="search"
 placeholder="🔎 Buscar cliente por nombre o teléfono"
 autocomplete="off"
 >
+
 
 <select
 id="customerSelect"
@@ -616,6 +662,7 @@ Consumidor general
 
 </select>
 
+
 <div
 id="customerInfo"
 class="customer-info">
@@ -626,6 +673,7 @@ Consumidor general
 
 </div>
 
+
 <!-- =========================================
      MÉTODO DE PAGO
 ========================================= -->
@@ -633,6 +681,7 @@ Consumidor general
 <div class="payment-title">
 Método de pago
 </div>
+
 
 <div
 id="payments"
@@ -643,6 +692,7 @@ Cargando métodos de pago...
 </div>
 
 </div>
+
 
 <!-- =========================================
      BOTONES
@@ -658,6 +708,7 @@ class="charge">
 💵 COBRAR
 
 </button>
+
 
 <button
 type="button"
@@ -676,11 +727,14 @@ class="pending">
 
 </div>
 
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
 <script>
 
 "use strict";
+
 
 /* =========================================
    SUPABASE
@@ -689,14 +743,17 @@ class="pending">
 const SUPABASE_URL =
 "https://jrxklpstlloeckihcduv.supabase.co";
 
+
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
+
 
 const supabaseClient =
 window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
+
 
 /* =========================================
    NEGOCIOS
@@ -712,8 +769,10 @@ const BUSINESS_IDS = {
 
 };
 
+
 let currentBusiness =
 "BakeQuiri";
+
 
 /* =========================================
    ESTADO
@@ -731,6 +790,7 @@ let selectedPaymentId = null;
 
 let selectedCustomerId = null;
 
+
 /* =========================================
    UTILIDADES
 ========================================= */
@@ -739,10 +799,12 @@ const $ =
 id =>
 document.getElementById(id);
 
+
 const money =
 value =>
 "$" +
 Number(value || 0).toFixed(2);
+
 
 function esc(value){
 
@@ -754,6 +816,7 @@ function esc(value){
     .replaceAll("'","&#039;");
 
 }
+
 
 function showStatus(
 message,
@@ -771,6 +834,7 @@ type="error"
 
 }
 
+
 function clearStatus(){
 
   $("status").textContent =
@@ -781,80 +845,106 @@ function clearStatus(){
 
 }
 
+
 /* =========================================
-   CARGAR DATOS
+   CARGAR DATOS DEL NEGOCIO
 ========================================= */
 
 async function loadBusinessData(){
 
   clearStatus();
 
+
   $("products").innerHTML =
   '<div class="empty">Cargando productos...</div>';
+
 
   $("payments").innerHTML =
   '<div class="empty">Cargando métodos de pago...</div>';
 
+
   $("customerSelect").innerHTML =
   '<option value="">Cargando clientes...</option>';
 
+
   const businessId =
   BUSINESS_IDS[currentBusiness];
+
 
   try{
 
     const [
 
       productsResult,
+
       paymentsResult,
+
       customersResult
 
     ] = await Promise.all([
 
+
+      /* PRODUCTOS */
+
       supabaseClient
+
         .from("products")
+
         .select(
           "id,name,price,cost,stock,active"
         )
+
         .eq(
           "business_id",
           businessId
         )
+
         .eq(
           "active",
           true
         )
+
         .order("name"),
 
+
+      /* MÉTODOS DE PAGO */
+
       supabaseClient
+
         .from("payment_methods")
+
         .select(
           "id,name,provider,active"
         )
+
         .eq(
           "business_id",
           businessId
         )
+
         .eq(
           "active",
           true
         )
+
         .order("name"),
 
-      /*
-       * Los clientes son compartidos entre
-       * BakeQuiri y SpicyRoll.
-       */
+
+      /* CLIENTES COMPARTIDOS */
 
       supabaseClient
+
         .from("customers")
+
         .select(
           "id,business_id,name,phone,notes,created_at"
         )
+
         .in(
           "business_id",
           Object.values(BUSINESS_IDS)
         )
+
         .order(
           "name",
           {
@@ -863,6 +953,7 @@ async function loadBusinessData(){
         )
 
     ]);
+
 
     if(productsResult.error){
 
@@ -873,6 +964,7 @@ async function loadBusinessData(){
 
     }
 
+
     if(paymentsResult.error){
 
       throw new Error(
@@ -881,6 +973,7 @@ async function loadBusinessData(){
       );
 
     }
+
 
     if(customersResult.error){
 
@@ -891,19 +984,18 @@ async function loadBusinessData(){
 
     }
 
+
     products =
     productsResult.data || [];
+
 
     payments =
     paymentsResult.data || [];
 
+
     customers =
     customersResult.data || [];
 
-    /*
-     * Conservamos el método seleccionado
-     * si todavía existe.
-     */
 
     if(
       !payments.some(
@@ -918,8 +1010,10 @@ async function loadBusinessData(){
 
     }
 
+
     selectedCustomerId =
     null;
+
 
     renderProducts();
 
@@ -931,22 +1025,23 @@ async function loadBusinessData(){
 
   }
 
+
   catch(error){
 
     console.error(error);
 
+
     $("products").innerHTML =
-    '<div class="empty">' +
-    'No se pudieron cargar los productos.' +
-    '</div>';
+    "";
+
 
     $("payments").innerHTML =
-    '<div class="empty">' +
-    'No se pudieron cargar los métodos de pago.' +
-    '</div>';
+    "";
+
 
     $("customerSelect").innerHTML =
     '<option value="">Consumidor general</option>';
+
 
     showStatus(
       error.message ||
@@ -957,6 +1052,7 @@ async function loadBusinessData(){
 
 }
 
+
 /* =========================================
    PRODUCTOS
 ========================================= */
@@ -966,8 +1062,10 @@ function renderProducts(){
   const container =
   $("products");
 
+
   container.innerHTML =
   "";
+
 
   if(!products.length){
 
@@ -980,17 +1078,21 @@ function renderProducts(){
 
   }
 
+
   products.forEach(
     product => {
 
       const stock =
       Number(product.stock || 0);
 
+
       const button =
       document.createElement("button");
 
+
       button.type =
       "button";
+
 
       button.className =
       "product" +
@@ -1000,8 +1102,10 @@ function renderProducts(){
         : ""
       );
 
+
       button.disabled =
       stock <= 0;
+
 
       button.innerHTML =
 
@@ -1018,11 +1122,13 @@ function renderProducts(){
       stock +
       '</div>';
 
+
       button.addEventListener(
         "click",
         () =>
         addToCart(product)
       );
+
 
       container.appendChild(
         button
@@ -1033,6 +1139,7 @@ function renderProducts(){
 
 }
 
+
 /* =========================================
    CLIENTES
 ========================================= */
@@ -1042,13 +1149,16 @@ function renderCustomers(){
   const select =
   $("customerSelect");
 
+
   const search =
   $("customerSearch");
+
 
   const searchText =
   search.value
     .trim()
     .toLowerCase();
+
 
   const filtered =
   customers.filter(
@@ -1059,6 +1169,7 @@ function renderCustomers(){
         return true;
 
       }
+
 
       return (
 
@@ -1081,23 +1192,29 @@ function renderCustomers(){
     }
   );
 
+
   select.innerHTML =
   "";
+
 
   const general =
   document.createElement(
     "option"
   );
 
+
   general.value =
   "";
+
 
   general.textContent =
   "Consumidor general";
 
+
   select.appendChild(
     general
   );
+
 
   filtered.forEach(
     customer => {
@@ -1107,8 +1224,10 @@ function renderCustomers(){
         "option"
       );
 
+
       option.value =
       customer.id;
+
 
       option.textContent =
       customer.phone
@@ -1119,6 +1238,7 @@ function renderCustomers(){
 
       : customer.name;
 
+
       select.appendChild(
         option
       );
@@ -1126,21 +1246,25 @@ function renderCustomers(){
     }
   );
 
+
   select.value =
   selectedCustomerId || "";
+
 
   updateCustomerInfo();
 
 }
 
+
 /* =========================================
-   INFORMACIÓN CLIENTE
+   INFORMACIÓN DEL CLIENTE
 ========================================= */
 
 function updateCustomerInfo(){
 
   const info =
   $("customerInfo");
+
 
   if(!selectedCustomerId){
 
@@ -1151,12 +1275,14 @@ function updateCustomerInfo(){
 
   }
 
+
   const customer =
   customers.find(
     item =>
     item.id ===
     selectedCustomerId
   );
+
 
   if(!customer){
 
@@ -1167,7 +1293,9 @@ function updateCustomerInfo(){
 
   }
 
+
   const parts = [];
+
 
   if(customer.phone){
 
@@ -1178,6 +1306,7 @@ function updateCustomerInfo(){
 
   }
 
+
   if(customer.notes){
 
     parts.push(
@@ -1187,17 +1316,23 @@ function updateCustomerInfo(){
 
   }
 
+
   info.textContent =
   customer.name +
 
   (
+
     parts.length
+
     ? " · " +
       parts.join(" · ")
+
     : ""
+
   );
 
 }
+
 
 /* =========================================
    MÉTODOS DE PAGO
@@ -1208,8 +1343,10 @@ function renderPayments(){
   const container =
   $("payments");
 
+
   container.innerHTML =
   "";
+
 
   if(!payments.length){
 
@@ -1222,6 +1359,7 @@ function renderPayments(){
 
   }
 
+
   payments.forEach(
     payment => {
 
@@ -1230,21 +1368,29 @@ function renderPayments(){
         "button"
       );
 
+
       button.type =
       "button";
+
 
       button.className =
       "payment" +
 
       (
+
         payment.id ===
         selectedPaymentId
+
         ? " active"
+
         : ""
+
       );
+
 
       button.textContent =
       payment.name;
+
 
       button.addEventListener(
         "click",
@@ -1253,10 +1399,12 @@ function renderPayments(){
           selectedPaymentId =
           payment.id;
 
+
           renderPayments();
 
         }
       );
+
 
       container.appendChild(
         button
@@ -1267,6 +1415,7 @@ function renderPayments(){
 
 }
 
+
 /* =========================================
    CARRITO
 ========================================= */
@@ -1275,8 +1424,10 @@ function addToCart(product){
 
   clearStatus();
 
+
   const stock =
   Number(product.stock || 0);
+
 
   const item =
   cart.find(
@@ -1284,6 +1435,7 @@ function addToCart(product){
     item.id ===
     product.id
   );
+
 
   if(item){
 
@@ -1305,32 +1457,24 @@ function addToCart(product){
 
   }
 
+
   else if(stock > 0){
 
     cart.push({
 
-      id:
-      product.id,
+      ...product,
 
-      name:
-      product.name,
-
-      price:
-      Number(product.price),
-
-      stock:
-      stock,
-
-      quantity:
-      1
+      quantity:1
 
     });
 
   }
 
+
   renderCart();
 
 }
+
 
 function changeQuantity(
 id,
@@ -1343,17 +1487,20 @@ amount
     item.id === id
   );
 
+
   if(!item){
 
     return;
 
   }
 
+
   const product =
   products.find(
     product =>
     product.id === id
   );
+
 
   const max =
   Number(
@@ -1362,8 +1509,10 @@ amount
     0
   );
 
+
   item.quantity +=
   amount;
+
 
   if(
     item.quantity > max
@@ -1372,11 +1521,8 @@ amount
     item.quantity =
     max;
 
-    showStatus(
-      "No puedes superar la existencia disponible."
-    );
-
   }
+
 
   if(
     item.quantity <= 0
@@ -1390,17 +1536,21 @@ amount
 
   }
 
+
   renderCart();
 
 }
+
 
 function renderCart(){
 
   const container =
   $("cart");
 
+
   container.innerHTML =
   "";
+
 
   if(!cart.length){
 
@@ -1409,15 +1559,19 @@ function renderCart(){
     'El carrito está vacío' +
     '</div>';
 
+
     $("total").textContent =
     "$0.00";
+
 
     return;
 
   }
 
+
   let total =
   0;
+
 
   cart.forEach(
     item => {
@@ -1426,21 +1580,26 @@ function renderCart(){
       Number(item.price) *
       Number(item.quantity);
 
+
       total +=
       subtotal;
+
 
       const row =
       document.createElement(
         "div"
       );
 
+
       row.className =
       "cart-item";
+
 
       const info =
       document.createElement(
         "div"
       );
+
 
       info.innerHTML =
 
@@ -1452,10 +1611,12 @@ function renderCart(){
       money(item.price) +
       ' c/u</div>';
 
+
       const controls =
       document.createElement(
         "div"
       );
+
 
       controls.innerHTML =
 
@@ -1475,10 +1636,12 @@ function renderCart(){
       money(subtotal) +
       '</div>';
 
+
       const buttons =
       controls.querySelectorAll(
         "button"
       );
+
 
       buttons[0].addEventListener(
         "click",
@@ -1489,6 +1652,7 @@ function renderCart(){
         )
       );
 
+
       buttons[1].addEventListener(
         "click",
         () =>
@@ -1498,10 +1662,12 @@ function renderCart(){
         )
       );
 
+
       row.append(
         info,
         controls
       );
+
 
       container.appendChild(
         row
@@ -1510,10 +1676,12 @@ function renderCart(){
     }
   );
 
+
   $("total").textContent =
   money(total);
 
 }
+
 
 /* =========================================
    CAMBIAR NEGOCIO
@@ -1532,14 +1700,18 @@ button
 
   }
 
+
   currentBusiness =
   name;
+
 
   cart =
   [];
 
+
   selectedCustomerId =
   null;
+
 
   document
   .querySelectorAll(
@@ -1552,37 +1724,20 @@ button
     )
   );
 
+
   button.classList.add(
     "active"
   );
 
+
   $("customerSearch").value =
   "";
+
 
   await loadBusinessData();
 
 }
 
-/* =========================================
-   CALCULAR TOTAL
-========================================= */
-
-function getCartTotal(){
-
-  return cart.reduce(
-    (
-      total,
-      item
-    ) =>
-    total +
-    (
-      Number(item.price) *
-      Number(item.quantity)
-    ),
-    0
-  );
-
-}
 
 /* =========================================
    REGISTRAR VENTA
@@ -1594,6 +1749,7 @@ isPending
 
   clearStatus();
 
+
   if(!cart.length){
 
     showStatus(
@@ -1603,6 +1759,7 @@ isPending
     return;
 
   }
+
 
   if(
     !isPending &&
@@ -1617,6 +1774,7 @@ isPending
 
   }
 
+
   if(
     isPending &&
     !selectedCustomerId
@@ -1630,17 +1788,22 @@ isPending
 
   }
 
+
   const chargeButton =
   $("chargeButton");
+
 
   const pendingButton =
   $("pendingButton");
 
+
   chargeButton.disabled =
   true;
 
+
   pendingButton.disabled =
   true;
+
 
   if(isPending){
 
@@ -1656,14 +1819,10 @@ isPending
 
   }
 
+
   try{
 
-    /*
-     * Guardamos una copia del carrito antes
-     * de hacer la llamada a Supabase.
-     */
-
-    const saleItems =
+    const items =
     cart.map(
       item => ({
 
@@ -1686,55 +1845,6 @@ isPending
       })
     );
 
-    const total =
-    saleItems.reduce(
-      (
-        sum,
-        item
-      ) =>
-      sum +
-      item.subtotal,
-      0
-    );
-
-    /*
-     * Validación adicional del stock.
-     */
-
-    for(
-      const item of cart
-    ){
-
-      const currentProduct =
-      products.find(
-        product =>
-        product.id ===
-        item.id
-      );
-
-      const currentStock =
-      Number(
-        currentProduct?.stock || 0
-      );
-
-      if(
-        item.quantity >
-        currentStock
-      ){
-
-        throw new Error(
-          "La existencia de " +
-          item.name +
-          " cambió. Actualiza los productos e inténtalo nuevamente."
-        );
-
-      }
-
-    }
-
-    /*
-     * REGISTRAR EN SUPABASE
-     */
 
     const {
       data,
@@ -1758,7 +1868,7 @@ isPending
         : selectedPaymentId,
 
         p_items:
-        saleItems,
+        items,
 
         p_is_pending:
         isPending
@@ -1766,11 +1876,13 @@ isPending
       }
     );
 
+
     if(error){
 
       throw error;
 
     }
+
 
     const paymentName =
     payments.find(
@@ -1780,6 +1892,7 @@ isPending
     )?.name ||
     "Pago";
 
+
     const customerName =
     customers.find(
       customer =>
@@ -1788,9 +1901,18 @@ isPending
     )?.name ||
     "Consumidor general";
 
-    /*
-     * ÉXITO
-     */
+
+    const total =
+    items.reduce(
+      (
+        sum,
+        item
+      ) =>
+      sum +
+      item.subtotal,
+      0
+    );
+
 
     if(isPending){
 
@@ -1816,7 +1938,7 @@ isPending
 
       alert(
 
-        "Venta registrada correctamente\n\n" +
+        "Venta registrada\n\n" +
 
         currentBusiness +
 
@@ -1836,40 +1958,34 @@ isPending
 
     }
 
-    /*
-     * Limpiar carrito y cliente.
-     */
 
     cart =
     [];
 
+
     selectedCustomerId =
     null;
+
 
     $("customerSearch").value =
     "";
 
-    /*
-     * Volvemos a cargar TODO.
-     *
-     * Esto es importante porque si el RPC
-     * actualizó inventario, aquí veremos
-     * inmediatamente las existencias nuevas.
-     */
 
     await loadBusinessData();
+
 
     showStatus(
 
       isPending
 
-      ? "Cuenta pendiente guardada correctamente."
+      ? "Cuenta pendiente guardada correctamente en Supabase."
 
-      : "Venta pagada guardada correctamente.",
+      : "Venta pagada guardada correctamente en Supabase.",
 
       "ok"
 
     );
+
 
     console.log(
       "register_sale response:",
@@ -1878,40 +1994,49 @@ isPending
 
   }
 
+
   catch(error){
 
-    console.error(
-      "Error register_sale:",
-      error
-    );
+    console.error(error);
+
 
     showStatus(
 
       (
+
         isPending
+
         ? "No se pudo registrar la cuenta: "
+
         : "No se pudo registrar la venta: "
+
       ) +
 
       (
+
         error.message ||
         error
+
       )
 
     );
 
   }
 
+
   finally{
 
     chargeButton.disabled =
     false;
 
+
     pendingButton.disabled =
     false;
 
+
     chargeButton.textContent =
     "💵 COBRAR";
+
 
     pendingButton.textContent =
     "🟠 DEJAR A CUENTA";
@@ -1920,9 +2045,11 @@ isPending
 
 }
 
+
 /* =========================================
    EVENTOS
 ========================================= */
+
 
 /* NEGOCIOS */
 
@@ -1945,7 +2072,26 @@ document
   }
 );
 
-/* CLIENTE */
+
+/* =========================================
+   BOTÓN CLIENTES
+========================================= */
+
+$("customersButton")
+.addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+    "clientes.html";
+
+  }
+);
+
+
+/* =========================================
+   CLIENTE
+========================================= */
 
 $("customerSelect")
 .addEventListener(
@@ -1956,10 +2102,12 @@ $("customerSelect")
     event.target.value ||
     null;
 
+
     updateCustomerInfo();
 
   }
 );
+
 
 /* BUSCADOR CLIENTES */
 
@@ -1973,8 +2121,9 @@ $("customerSearch")
   }
 );
 
+
 /* =========================================
-   ADMINISTRAR CLIENTES
+   + CLIENTE
 ========================================= */
 
 $("manageCustomers")
@@ -1987,6 +2136,7 @@ $("manageCustomers")
 
   }
 );
+
 
 /* =========================================
    CUENTAS PENDIENTES
@@ -2003,8 +2153,9 @@ $("accountsButton")
   }
 );
 
+
 /* =========================================
-   HISTORIAL
+   HISTORIAL DE VENTAS
 ========================================= */
 
 $("historyButton")
@@ -2018,6 +2169,7 @@ $("historyButton")
   }
 );
 
+
 /* =========================================
    COBRAR
 ========================================= */
@@ -2029,6 +2181,7 @@ $("chargeButton")
   registerSale(false)
 );
 
+
 /* =========================================
    DEJAR A CUENTA
 ========================================= */
@@ -2039,6 +2192,7 @@ $("pendingButton")
   () =>
   registerSale(true)
 );
+
 
 /* =========================================
    INICIO
