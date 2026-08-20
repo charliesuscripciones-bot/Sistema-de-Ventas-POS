@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 
 <meta charset="UTF-8">
@@ -250,6 +251,10 @@ header p{
   border-color:#111827;
 }
 
+/* =========================================
+   CLIENTES
+========================================= */
+
 .customer-box{
   position:relative;
 }
@@ -266,6 +271,12 @@ header p{
   border-radius:11px;
   font-size:15px;
   min-width:0;
+  background:#fff;
+}
+
+.customer-search:focus{
+  outline:none;
+  border-color:#2563eb;
 }
 
 .add-client{
@@ -279,31 +290,25 @@ header p{
   white-space:nowrap;
 }
 
-.customer-select{
-  width:100%;
-  margin-top:9px;
-  padding:13px;
-  border:2px solid #ddd;
-  border-radius:11px;
-  font-size:15px;
-  background:#fff;
-}
-
 .customer-results{
   margin-top:8px;
   display:none;
-  border:1px solid #ddd;
+  border:2px solid #ddd;
   border-radius:11px;
   overflow:hidden;
   background:#fff;
+  box-shadow:0 8px 25px rgba(0,0,0,.12);
+  position:relative;
+  z-index:100;
 }
 
 .customer-result{
+  display:block;
   width:100%;
   border:none;
   border-bottom:1px solid #eee;
   background:#fff;
-  padding:12px;
+  padding:13px;
   text-align:left;
   cursor:pointer;
 }
@@ -318,19 +323,24 @@ header p{
 
 .customer-result strong{
   display:block;
+  font-size:15px;
 }
 
 .customer-result small{
+  display:block;
   color:#6b7280;
+  margin-top:4px;
 }
 
 .selected-customer{
   margin-top:8px;
-  padding:10px 12px;
+  padding:12px;
   border-radius:9px;
-  background:#f3f4f6;
-  color:#374151;
+  background:#eff6ff;
+  border:2px solid #bfdbfe;
+  color:#1d4ed8;
   font-size:14px;
+  font-weight:600;
 }
 
 .clear-customer{
@@ -340,7 +350,32 @@ header p{
   font-weight:700;
   cursor:pointer;
   margin-left:8px;
+  padding:0;
 }
+
+.general-customer{
+  margin-top:8px;
+  padding:13px;
+  border-radius:9px;
+  background:#f3f4f6;
+  color:#555;
+  font-weight:700;
+  cursor:pointer;
+  border:2px solid transparent;
+}
+
+.general-customer:hover{
+  background:#e5e7eb;
+  border-color:#d1d5db;
+}
+
+.general-customer:active{
+  transform:scale(.99);
+}
+
+/* =========================================
+   BOTONES
+========================================= */
 
 .charge{
   width:100%;
@@ -383,15 +418,6 @@ header p{
 .loading{
   opacity:.65;
   pointer-events:none;
-}
-
-.general-customer{
-  margin-top:8px;
-  padding:11px 13px;
-  border-radius:9px;
-  background:#f3f4f6;
-  color:#555;
-  font-weight:600;
 }
 
 @media(max-width:850px){
@@ -651,7 +677,6 @@ placeholder="🔎 Buscar cliente por nombre o teléfono"
 autocomplete="off"
 >
 
-
 <button
 type="button"
 id="addClientButton"
@@ -681,7 +706,7 @@ style="display:none">
 id="generalCustomer"
 class="general-customer">
 
-Consumidor general
+👤 Consumidor general
 
 </div>
 
@@ -904,6 +929,8 @@ async function loadBusinessData(){
     ] = await Promise.all([
 
 
+      /* PRODUCTOS */
+
       supabaseClient
 
         .from("products")
@@ -926,6 +953,8 @@ async function loadBusinessData(){
           "name"
         ),
 
+
+      /* MÉTODOS DE PAGO */
 
       supabaseClient
 
@@ -950,6 +979,8 @@ async function loadBusinessData(){
         ),
 
 
+      /* CLIENTES DEL NEGOCIO ACTUAL */
+
       supabaseClient
 
         .from("customers")
@@ -958,9 +989,9 @@ async function loadBusinessData(){
           "id,business_id,name,phone,notes"
         )
 
-        .in(
+        .eq(
           "business_id",
-          Object.values(BUSINESS_IDS)
+          businessId
         )
 
         .order(
@@ -1018,17 +1049,41 @@ async function loadBusinessData(){
     customersResult.data || [];
 
 
+    /* ===============================
+       MÉTODO DE PAGO POR DEFECTO
+    =============================== */
+
     if(
       !payments.some(
         payment =>
-        payment.id ===
-        selectedPaymentId
+          payment.id ===
+          selectedPaymentId
       )
     ){
 
       selectedPaymentId =
-      payments[0]?.id ||
-      null;
+        payments[0]?.id ||
+        null;
+
+    }
+
+
+    /* ===============================
+       VERIFICAR CLIENTE SELECCIONADO
+    =============================== */
+
+    const currentCustomer =
+      customers.find(
+        customer =>
+          customer.id ===
+          selectedCustomerId
+      );
+
+
+    if(!currentCustomer){
+
+      selectedCustomerId =
+        null;
 
     }
 
@@ -1040,7 +1095,6 @@ async function loadBusinessData(){
     renderCart();
 
     renderSelectedCustomer();
-
 
   }
 
@@ -1157,7 +1211,7 @@ function renderProducts(){
       button.addEventListener(
         "click",
         () =>
-        addToCart(product)
+          addToCart(product)
       );
 
 
@@ -1235,8 +1289,7 @@ function renderPayments(){
         () => {
 
           selectedPaymentId =
-          payment.id;
-
+            payment.id;
 
           renderPayments();
 
@@ -1272,8 +1325,8 @@ function addToCart(
   const item =
   cart.find(
     i =>
-    i.id ===
-    product.id
+      i.id ===
+      product.id
   );
 
 
@@ -1326,7 +1379,8 @@ function changeQuantity(
   const item =
   cart.find(
     i =>
-    i.id === id
+      i.id ===
+      id
   );
 
 
@@ -1338,7 +1392,8 @@ function changeQuantity(
   const product =
   products.find(
     p =>
-    p.id === id
+      p.id ===
+      id
   );
 
 
@@ -1360,7 +1415,7 @@ function changeQuantity(
   ){
 
     item.quantity =
-    max;
+      max;
 
   }
 
@@ -1370,10 +1425,10 @@ function changeQuantity(
   ){
 
     cart =
-    cart.filter(
-      i =>
-      i.id !== id
-    );
+      cart.filter(
+        i =>
+          i.id !== id
+      );
 
   }
 
@@ -1503,10 +1558,10 @@ function renderCart(){
       minus.addEventListener(
         "click",
         () =>
-        changeQuantity(
-          item.id,
-          -1
-        )
+          changeQuantity(
+            item.id,
+            -1
+          )
       );
 
 
@@ -1537,10 +1592,10 @@ function renderCart(){
       plus.addEventListener(
         "click",
         () =>
-        changeQuantity(
-          item.id,
-          1
-        )
+          changeQuantity(
+            item.id,
+            1
+          )
       );
 
 
@@ -1595,40 +1650,65 @@ function renderCart(){
    CLIENTES
 ========================================= */
 
+function getCurrentBusinessCustomers(){
+
+  const businessId =
+    BUSINESS_IDS[currentBusiness];
+
+
+  return customers.filter(
+    customer =>
+      customer.business_id ===
+      businessId
+  );
+
+}
+
+
+/* =========================================
+   CLIENTE SELECCIONADO
+========================================= */
+
 function renderSelectedCustomer(){
 
   const selected =
-  customers.find(
-    customer =>
-    customer.id ===
-    selectedCustomerId
-  );
+    customers.find(
+      customer =>
+        customer.id ===
+        selectedCustomerId &&
+        customer.business_id ===
+        BUSINESS_IDS[currentBusiness]
+    );
 
 
   const selectedElement =
-  $("selectedCustomer");
+    $("selectedCustomer");
 
 
   const general =
-  $("generalCustomer");
+    $("generalCustomer");
 
 
   if(!selected){
 
     selectedCustomerId =
-    null;
+      null;
 
 
     selectedElement.style.display =
-    "none";
+      "none";
 
 
     selectedElement.innerHTML =
-    "";
+      "";
 
 
     general.style.display =
-    "block";
+      "block";
+
+
+    general.innerHTML =
+      "👤 Consumidor general";
 
 
     return;
@@ -1637,11 +1717,11 @@ function renderSelectedCustomer(){
 
 
   general.style.display =
-  "none";
+    "none";
 
 
   selectedElement.style.display =
-  "block";
+    "block";
 
 
   selectedElement.innerHTML =
@@ -1649,7 +1729,8 @@ function renderSelectedCustomer(){
     "👤 <strong>" +
 
     escapeHTML(
-      selected.name
+      selected.name ||
+      "Cliente"
     ) +
 
     "</strong>" +
@@ -1657,7 +1738,7 @@ function renderSelectedCustomer(){
     (
       selected.phone
 
-      ? " · " +
+      ? " · 📱 " +
         escapeHTML(
           selected.phone
         )
@@ -1678,13 +1759,20 @@ function renderSelectedCustomer(){
     () => {
 
       selectedCustomerId =
-      null;
+        null;
+
 
       $("customerSearch").value =
-      "";
+        "";
+
+
+      $("customerResults").innerHTML =
+        "";
+
 
       $("customerResults").style.display =
-      "none";
+        "none";
+
 
       renderSelectedCustomer();
 
@@ -1694,80 +1782,106 @@ function renderSelectedCustomer(){
 }
 
 
+/* =========================================
+   BUSCAR CLIENTES
+========================================= */
+
 function renderCustomerResults(
   query
 ){
 
   const container =
-  $("customerResults");
+    $("customerResults");
 
 
   const search =
-  query
-  .trim()
-  .toLowerCase();
+    String(
+      query || ""
+    )
+    .trim()
+    .toLowerCase();
 
 
   if(!search){
 
     container.innerHTML =
-    "";
-
+      "";
 
     container.style.display =
-    "none";
-
+      "none";
 
     return;
 
   }
 
 
+  const businessCustomers =
+    getCurrentBusinessCustomers();
+
+
   const filtered =
-  customers.filter(
-    customer => {
+    businessCustomers.filter(
+      customer => {
 
-      const text =
-      [
-
-        customer.name,
-
-        customer.phone,
-
-        customer.notes
-
-      ]
-
-      .filter(Boolean)
-
-      .join(" ")
-
-      .toLowerCase();
+        const name =
+          String(
+            customer.name || ""
+          )
+          .toLowerCase();
 
 
-      return text.includes(
-        search
-      );
+        const phone =
+          String(
+            customer.phone || ""
+          )
+          .toLowerCase();
 
-    }
-  );
+
+        const notes =
+          String(
+            customer.notes || ""
+          )
+          .toLowerCase();
+
+
+        return (
+          name.includes(search) ||
+          phone.includes(search) ||
+          notes.includes(search)
+        );
+
+      }
+    );
 
 
   container.innerHTML =
-  "";
+    "";
 
 
-  if(
-    !filtered.length
-  ){
+  if(!filtered.length){
 
-    container.innerHTML =
-    '<div class="empty">' +
-    'No encontramos ese cliente.' +
-    '</div>';
+    const empty =
+      document.createElement(
+        "div"
+      );
+
+
+    empty.className =
+      "empty";
+
+
+    empty.textContent =
+      "No encontramos ese cliente.";
+
+
+    container.appendChild(
+      empty
+    );
+
 
     container.style.display =
-    "block";
+      "block";
+
 
     return;
 
@@ -1775,82 +1889,91 @@ function renderCustomerResults(
 
 
   filtered
-  .slice(0,10)
-  .forEach(
-    customer => {
+    .slice(0,10)
+    .forEach(
+      customer => {
 
-      const button =
-      document.createElement(
-        "button"
-      );
-
-
-      button.type =
-      "button";
+        const button =
+          document.createElement(
+            "button"
+          );
 
 
-      button.className =
-      "customer-result";
+        button.type =
+          "button";
 
 
-      button.innerHTML =
+        button.className =
+          "customer-result";
 
-        "<strong>" +
 
-        escapeHTML(
-          customer.name
-        ) +
+        button.innerHTML =
 
-        "</strong>" +
+          "<strong>" +
 
-        (
-          customer.phone
+          escapeHTML(
+            customer.name ||
+            "Cliente sin nombre"
+          ) +
 
-          ? "<small>" +
-            escapeHTML(
-              customer.phone
-            ) +
-            "</small>"
+          "</strong>" +
 
-          : ""
+          (
+            customer.phone
+
+            ? "<small>📱 " +
+              escapeHTML(
+                customer.phone
+              ) +
+              "</small>"
+
+            : ""
+          );
+
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            selectedCustomerId =
+              customer.id;
+
+
+            $("customerSearch").value =
+              customer.name || "";
+
+
+            container.innerHTML =
+              "";
+
+
+            container.style.display =
+              "none";
+
+
+            renderSelectedCustomer();
+
+          }
         );
 
 
-      button.addEventListener(
-        "click",
-        () => {
+        container.appendChild(
+          button
+        );
 
-          selectedCustomerId =
-          customer.id;
-
-
-          $("customerSearch").value =
-          customer.name;
-
-
-          container.style.display =
-          "none";
-
-
-          renderSelectedCustomer();
-
-        }
-      );
-
-
-      container.appendChild(
-        button
-      );
-
-    }
-  );
+      }
+    );
 
 
   container.style.display =
-  "block";
+    "block";
 
 }
 
+
+/* =========================================
+   EVENTO BUSCAR
+========================================= */
 
 $("customerSearch")
 .addEventListener(
@@ -1865,20 +1988,57 @@ $("customerSearch")
 );
 
 
+/* =========================================
+   EVENTO FOCUS
+========================================= */
+
 $("customerSearch")
 .addEventListener(
   "focus",
   event => {
 
-    if(
-      event.target.value.trim()
-    ){
+    const value =
+      event.target.value.trim();
+
+
+    if(value){
 
       renderCustomerResults(
-        event.target.value
+        value
       );
 
     }
+
+  }
+);
+
+
+/* =========================================
+   CONSUMIDOR GENERAL
+========================================= */
+
+$("generalCustomer")
+.addEventListener(
+  "click",
+  () => {
+
+    selectedCustomerId =
+      null;
+
+
+    $("customerSearch").value =
+      "";
+
+
+    $("customerResults").innerHTML =
+      "";
+
+
+    $("customerResults").style.display =
+      "none";
+
+
+    renderSelectedCustomer();
 
   }
 );
@@ -1894,14 +2054,14 @@ $("addClientButton")
   () => {
 
     window.location.href =
-    "clientes.html";
+      "clientes.html";
 
   }
 );
 
 
 /* =========================================
-   CERRAR RESULTADOS AL TOCAR FUERA
+   CERRAR RESULTADOS
 ========================================= */
 
 document.addEventListener(
@@ -1909,9 +2069,9 @@ document.addEventListener(
   event => {
 
     const box =
-    document.querySelector(
-      ".customer-box"
-    );
+      document.querySelector(
+        ".customer-box"
+      );
 
 
     if(
@@ -1922,8 +2082,8 @@ document.addEventListener(
     ){
 
       $("customerResults")
-      .style.display =
-      "none";
+        .style.display =
+        "none";
 
     }
 
@@ -1952,39 +2112,43 @@ async function changeBusiness(
 
 
   currentBusiness =
-  name;
+    name;
 
 
   cart =
-  [];
+    [];
 
 
   selectedPaymentId =
-  null;
+    null;
 
 
   selectedCustomerId =
-  null;
+    null;
 
 
   $("customerSearch").value =
-  "";
+    "";
+
+
+  $("customerResults").innerHTML =
+    "";
 
 
   $("customerResults").style.display =
-  "none";
+    "none";
 
 
   document
-  .querySelectorAll(
-    ".business-btn"
-  )
-  .forEach(
-    b =>
-    b.classList.remove(
-      "active"
+    .querySelectorAll(
+      ".business-btn"
     )
-  );
+    .forEach(
+      b =>
+        b.classList.remove(
+          "active"
+        )
+    );
 
 
   button.classList.add(
@@ -2050,101 +2214,101 @@ async function registerSale(
 
 
   const button =
-  isPending
-  ? $("accountButton")
-  : $("chargeButton");
+    isPending
+    ? $("accountButton")
+    : $("chargeButton");
 
 
   const originalText =
-  button.textContent;
+    button.textContent;
 
 
   button.disabled =
-  true;
+    true;
 
 
   button.textContent =
-  isPending
-  ? "GUARDANDO..."
-  : "REGISTRANDO...";
+    isPending
+    ? "GUARDANDO..."
+    : "REGISTRANDO...";
 
 
   try{
 
     const items =
-    cart.map(
-      item => ({
+      cart.map(
+        item => ({
 
-        product_id:
-        item.id,
+          product_id:
+            item.id,
 
-        description:
-        item.name,
+          description:
+            item.name,
 
-        quantity:
-        Number(
-          item.quantity
-        ),
+          quantity:
+            Number(
+              item.quantity
+            ),
 
-        unit_price:
-        Number(
-          item.price
-        ),
+          unit_price:
+            Number(
+              item.price
+            ),
 
-        subtotal:
-        Number(
-          item.price
-        ) *
-        Number(
-          item.quantity
-        )
+          subtotal:
+            Number(
+              item.price
+            ) *
+            Number(
+              item.quantity
+            )
 
-      })
-    );
+        })
+      );
 
 
     const total =
-    items.reduce(
-      (
-        sum,
-        item
-      ) =>
+      items.reduce(
+        (
+          sum,
+          item
+        ) =>
 
-      sum +
-      item.subtotal,
+          sum +
+          item.subtotal,
 
-      0
-    );
+        0
+      );
 
 
     const result =
-    await supabaseClient
-    .rpc(
-      "register_sale",
-      {
+      await supabaseClient
+        .rpc(
+          "register_sale",
+          {
 
-        p_business_id:
-        BUSINESS_IDS[
-          currentBusiness
-        ],
+            p_business_id:
+              BUSINESS_IDS[
+                currentBusiness
+              ],
 
-        p_customer_id:
-        selectedCustomerId ||
-        null,
+            p_customer_id:
+              selectedCustomerId ||
+              null,
 
-        p_payment_method_id:
-        isPending
-        ? null
-        : selectedPaymentId,
+            p_payment_method_id:
+              isPending
+              ? null
+              : selectedPaymentId,
 
-        p_items:
-        items,
+            p_items:
+              items,
 
-        p_is_pending:
-        isPending
+            p_is_pending:
+              isPending
 
-      }
-    );
+          }
+        );
 
 
     if(
@@ -2157,20 +2321,20 @@ async function registerSale(
 
 
     const customer =
-    customers.find(
-      c =>
-      c.id ===
-      selectedCustomerId
-    );
+      customers.find(
+        c =>
+          c.id ===
+          selectedCustomerId
+      );
 
 
     const paymentName =
-    payments.find(
-      p =>
-      p.id ===
-      selectedPaymentId
-    )?.name ||
-    "Pago";
+      payments.find(
+        p =>
+          p.id ===
+          selectedPaymentId
+      )?.name ||
+      "Pago";
 
 
     let message;
@@ -2227,19 +2391,23 @@ async function registerSale(
 
 
     cart =
-    [];
+      [];
 
 
     selectedCustomerId =
-    null;
+      null;
 
 
     $("customerSearch").value =
-    "";
+      "";
+
+
+    $("customerResults").innerHTML =
+      "";
 
 
     $("customerResults").style.display =
-    "none";
+      "none";
 
 
     renderSelectedCustomer();
@@ -2260,7 +2428,6 @@ async function registerSale(
       "register_sale response:",
       result.data
     );
-
 
   }
 
@@ -2284,11 +2451,11 @@ async function registerSale(
   finally{
 
     button.disabled =
-    false;
+      false;
 
 
     button.textContent =
-    originalText;
+      originalText;
 
   }
 
@@ -2303,9 +2470,9 @@ $("chargeButton")
 .addEventListener(
   "click",
   () =>
-  registerSale(
-    false
-  )
+    registerSale(
+      false
+    )
 );
 
 
@@ -2317,9 +2484,9 @@ $("accountButton")
 .addEventListener(
   "click",
   () =>
-  registerSale(
-    true
-  )
+    registerSale(
+      true
+    )
 );
 
 
@@ -2333,7 +2500,7 @@ $("accountsButton")
   () => {
 
     window.location.href =
-    "cuentas.html";
+      "cuentas.html";
 
   }
 );
@@ -2345,7 +2512,7 @@ $("clientsButton")
   () => {
 
     window.location.href =
-    "clientes.html";
+      "clientes.html";
 
   }
 );
@@ -2357,7 +2524,7 @@ $("historyButton")
   () => {
 
     window.location.href =
-    "historial.html";
+      "historial.html";
 
   }
 );
@@ -2369,7 +2536,7 @@ $("dashboardButton")
   () => {
 
     window.location.href =
-    "dashboard.html";
+      "dashboard.html";
 
   }
 );
@@ -2380,25 +2547,25 @@ $("dashboardButton")
 ========================================= */
 
 document
-.querySelectorAll(
-  ".business-btn"
-)
-.forEach(
-  button => {
+  .querySelectorAll(
+    ".business-btn"
+  )
+  .forEach(
+    button => {
 
-    button.addEventListener(
-      "click",
-      () =>
+      button.addEventListener(
+        "click",
+        () =>
 
-      changeBusiness(
-        button.dataset.business,
-        button
-      )
+          changeBusiness(
+            button.dataset.business,
+            button
+          )
 
-    );
+      );
 
-  }
-);
+    }
+  );
 
 
 /* =========================================
@@ -2410,4 +2577,5 @@ loadBusinessData();
 </script>
 
 </body>
+
 </html>
