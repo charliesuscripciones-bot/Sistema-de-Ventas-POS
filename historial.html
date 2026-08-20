@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 
 <meta charset="UTF-8">
@@ -47,35 +48,14 @@ header p{
   padding:25px 20px 40px;
 }
 
-.status{
-  display:none;
-  margin-bottom:18px;
-  padding:15px;
-  border-radius:12px;
-  font-weight:600;
-}
-
-.status.ok{
-  display:block;
-  background:#dcfce7;
-  color:#166534;
-}
-
-.status.error{
-  display:block;
-  background:#fee2e2;
-  color:#991b1b;
-}
-
 .toolbar{
   display:flex;
-  gap:10px;
+  gap:12px;
   flex-wrap:wrap;
   margin-bottom:20px;
 }
 
-.business-btn,
-.action-btn{
+button{
   border:2px solid #ddd;
   padding:13px 20px;
   border-radius:12px;
@@ -85,66 +65,50 @@ header p{
   cursor:pointer;
 }
 
-.business-btn{
+.business{
   color:#2680eb;
 }
 
-.business-btn.active{
+.business.active{
   background:#111827;
   color:#fff;
   border-color:#111827;
 }
 
-.refresh-btn{
+.refresh{
   background:#2680eb;
   color:#fff;
   border-color:#2680eb;
 }
 
-.dashboard-btn{
+.back{
   color:#111827;
 }
 
 .filters{
-  background:#fff;
-  border-radius:20px;
-  padding:20px;
-  box-shadow:0 5px 20px rgba(0,0,0,.06);
+  display:grid;
+  grid-template-columns:1fr 170px 170px;
+  gap:12px;
   margin-bottom:20px;
 }
 
-.filters-grid{
-  display:grid;
-  grid-template-columns:2fr 1fr 1fr;
-  gap:12px;
-}
-
-.field label{
-  display:block;
-  font-size:14px;
-  font-weight:700;
-  margin-bottom:7px;
-}
-
-.field input,
-.field select{
+.filters input{
   width:100%;
   padding:14px;
   border:2px solid #ddd;
   border-radius:11px;
   font-size:16px;
   background:#fff;
-  outline:none;
 }
 
-.field input:focus,
-.field select:focus{
+.filters input:focus{
+  outline:none;
   border-color:#2680eb;
 }
 
 .summary{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:repeat(3,1fr);
   gap:15px;
   margin-bottom:20px;
 }
@@ -156,28 +120,16 @@ header p{
   box-shadow:0 5px 20px rgba(0,0,0,.06);
 }
 
-.summary-label{
+.label{
   color:#6b7280;
-  font-size:13px;
+  font-size:14px;
   font-weight:700;
-  margin-bottom:7px;
 }
 
-.summary-value{
-  font-size:27px;
+.value{
+  font-size:28px;
   font-weight:800;
-}
-
-.summary-card.sales .summary-value{
-  color:#2563eb;
-}
-
-.summary-card.total .summary-value{
-  color:#16a34a;
-}
-
-.summary-card.pending .summary-value{
-  color:#dc2626;
+  margin-top:7px;
 }
 
 .card{
@@ -187,171 +139,58 @@ header p{
   box-shadow:0 5px 20px rgba(0,0,0,.06);
 }
 
-.card h2{
-  font-size:24px;
-  margin-bottom:18px;
-}
-
 .sale{
   border:2px solid #eee;
   border-radius:16px;
-  margin-bottom:15px;
-  overflow:hidden;
+  padding:18px;
+  margin-bottom:12px;
 }
 
-.sale-header{
+.sale:last-child{
+  margin-bottom:0;
+}
+
+.top{
   display:flex;
   justify-content:space-between;
-  align-items:center;
   gap:15px;
-  padding:18px;
-  cursor:pointer;
 }
 
-.sale-header:hover{
-  background:#fafafa;
-}
-
-.sale-main{
-  min-width:0;
-}
-
-.sale-number{
-  font-size:18px;
+.date{
   font-weight:800;
 }
 
-.sale-customer{
-  margin-top:5px;
-  color:#6b7280;
-  font-size:14px;
+.total{
+  font-weight:800;
+  font-size:19px;
 }
 
-.sale-date{
-  margin-top:4px;
+.customer{
+  color:#2680eb;
+  font-weight:700;
+  margin-top:7px;
+}
+
+.details{
   color:#6b7280;
+  font-size:14px;
+  margin-top:7px;
+}
+
+.status{
+  display:inline-block;
+  margin-top:10px;
+  padding:5px 9px;
+  border-radius:8px;
+  background:#dcfce7;
+  color:#166534;
+  font-weight:700;
   font-size:13px;
 }
 
-.sale-right{
-  text-align:right;
-  white-space:nowrap;
-}
-
-.sale-total{
-  font-size:21px;
-  font-weight:800;
-}
-
-.badge{
-  display:inline-block;
-  margin-top:6px;
-  padding:5px 9px;
-  border-radius:8px;
-  font-size:12px;
-  font-weight:800;
-}
-
-.badge.paid{
-  background:#dcfce7;
-  color:#166534;
-}
-
-.badge.open{
-  background:#fee2e2;
-  color:#991b1b;
-}
-
-.sale-body{
-  display:none;
-  border-top:1px solid #eee;
-  padding:18px;
-  background:#fafafa;
-}
-
-.sale.open .sale-body{
-  display:block;
-}
-
-.detail-row{
-  display:flex;
-  justify-content:space-between;
-  gap:15px;
-  padding:8px 0;
-  border-bottom:1px solid #eee;
-  font-size:14px;
-}
-
-.detail-row:last-child{
-  border-bottom:none;
-}
-
-.detail-label{
-  color:#6b7280;
-}
-
-.detail-value{
-  font-weight:700;
-  text-align:right;
-}
-
-.products-title,
-.payments-title{
-  font-weight:800;
-  margin:15px 0 8px;
-}
-
-.product-line,
-.payment-line{
-  display:flex;
-  justify-content:space-between;
-  gap:15px;
-  padding:8px 0;
-  font-size:14px;
-}
-
-.product-line{
-  border-bottom:1px solid #eee;
-}
-
-.balance{
-  margin-top:15px;
-  padding:13px;
-  border-radius:11px;
-  background:#fff;
-  font-weight:800;
-}
-
-.balance.pending{
-  color:#dc2626;
-}
-
-.balance.paid{
-  color:#16a34a;
-}
-
-.history{
-  margin-top:15px;
-  padding-top:15px;
-  border-top:2px solid #eee;
-}
-
-.history-title{
-  font-weight:800;
-  margin-bottom:8px;
-}
-
-.payment-history-item{
-  display:flex;
-  justify-content:space-between;
-  gap:15px;
-  padding:8px 0;
-  font-size:14px;
-  color:#4b5563;
-}
-
-.payment-history-item strong{
-  color:#16a34a;
+.status.open{
+  background:#fef3c7;
+  color:#92400e;
 }
 
 .empty{
@@ -360,50 +199,30 @@ header p{
   padding:35px 10px;
 }
 
-.loading{
-  text-align:center;
-  padding:30px;
-  color:#777;
+.error{
+  background:#fee2e2;
+  color:#991b1b;
+  padding:15px;
+  border-radius:12px;
+  font-weight:700;
 }
 
-@media(max-width:850px){
+@media(max-width:700px){
 
-  .summary{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .filters-grid{
+  .filters{
     grid-template-columns:1fr;
   }
 
-}
+  .summary{
+    grid-template-columns:1fr;
+  }
 
-@media(max-width:600px){
+  .top{
+    flex-direction:column;
+  }
 
   .container{
     padding:18px 15px 35px;
-  }
-
-  .summary{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .summary-value{
-    font-size:22px;
-  }
-
-  .sale-header{
-    align-items:flex-start;
-  }
-
-  .sale-right{
-    text-align:right;
-  }
-
-  .detail-row,
-  .product-line,
-  .payment-line{
-    font-size:13px;
   }
 
 }
@@ -412,204 +231,176 @@ header p{
 
 </head>
 
+
 <body>
 
 <header>
 
-  <h1>📊 Historial de ventas</h1>
+<h1>
+📊 Historial de ventas
+</h1>
 
-  <p>
-    Consulta de ventas, pagos y cuentas
-  </p>
+<p>
+Consulta las ventas registradas de tus negocios
+</p>
 
 </header>
 
 
 <div class="container">
 
-  <div
-    id="status"
-    class="status">
-  </div>
+
+<!-- BOTONES -->
+
+<div class="toolbar">
+
+<button
+type="button"
+class="business active"
+data-business="BakeQuiri">
+
+BakeQuiri
+
+</button>
 
 
-  <!-- BARRA -->
+<button
+type="button"
+class="business"
+data-business="SpicyRoll">
 
-  <div class="toolbar">
+SpicyRoll
 
-    <button
-      type="button"
-      class="business-btn active"
-      data-business="BakeQuiri">
-      BakeQuiri
-    </button>
-
-    <button
-      type="button"
-      class="business-btn"
-      data-business="SpicyRoll">
-      SpicyRoll
-    </button>
-
-    <button
-      type="button"
-      class="action-btn refresh-btn"
-      id="refreshButton">
-      🔄 Actualizar
-    </button>
-
-    <button
-      type="button"
-      class="action-btn dashboard-btn"
-      id="dashboardButton">
-      ← Dashboard
-    </button>
-
-  </div>
+</button>
 
 
-  <!-- FILTROS -->
+<button
+type="button"
+class="refresh"
+id="refresh">
 
-  <div class="filters">
+🔄 Actualizar
 
-    <div class="filters-grid">
-
-      <div class="field">
-
-        <label for="search">
-          Cliente
-        </label>
-
-        <input
-          id="search"
-          type="search"
-          placeholder="🔎 Nombre o teléfono"
-          autocomplete="off"
-        >
-
-      </div>
+</button>
 
 
-      <div class="field">
+<button
+type="button"
+class="back"
+id="back">
 
-        <label for="dateFrom">
-          Desde
-        </label>
+← Dashboard
 
-        <input
-          id="dateFrom"
-          type="date"
-        >
+</button>
 
-      </div>
+</div>
 
 
-      <div class="field">
+<!-- FILTROS -->
 
-        <label for="dateTo">
-          Hasta
-        </label>
+<div class="filters">
 
-        <input
-          id="dateTo"
-          type="date"
-        >
-
-      </div>
-
-    </div>
-
-  </div>
+<input
+id="search"
+type="search"
+placeholder="🔎 Buscar cliente o venta"
+autocomplete="off"
+>
 
 
-  <!-- RESUMEN -->
-
-  <div class="summary">
-
-    <div class="summary-card sales">
-
-      <div class="summary-label">
-        VENTAS
-      </div>
-
-      <div
-        id="totalSales"
-        class="summary-value">
-        0
-      </div>
-
-    </div>
+<input
+id="from"
+type="date"
+>
 
 
-    <div class="summary-card total">
+<input
+id="to"
+type="date"
+>
 
-      <div class="summary-label">
-        TOTAL VENDIDO
-      </div>
-
-      <div
-        id="totalAmount"
-        class="summary-value">
-        $0.00
-      </div>
-
-    </div>
+</div>
 
 
-    <div class="summary-card pending">
+<!-- RESUMEN -->
 
-      <div class="summary-label">
-        SALDO PENDIENTE
-      </div>
-
-      <div
-        id="totalPending"
-        class="summary-value">
-        $0.00
-      </div>
-
-    </div>
+<div class="summary">
 
 
-    <div class="summary-card">
+<div class="summary-card">
 
-      <div class="summary-label">
-        PAGADO
-      </div>
+<div class="label">
+VENTAS
+</div>
 
-      <div
-        id="totalPaid"
-        class="summary-value">
-        $0.00
-      </div>
+<div
+id="count"
+class="value">
 
-    </div>
+0
 
-  </div>
+</div>
+
+</div>
 
 
-  <!-- VENTAS -->
+<div class="summary-card">
 
-  <div class="card">
+<div class="label">
+TOTAL VENDIDO
+</div>
 
-    <h2>
-      🧾 Ventas
-    </h2>
+<div
+id="total"
+class="value">
 
-    <div id="sales">
+$0.00
 
-      <div class="loading">
-        Cargando historial...
-      </div>
+</div>
 
-    </div>
+</div>
 
-  </div>
+
+<div class="summary-card">
+
+<div class="label">
+PENDIENTE
+</div>
+
+<div
+id="balance"
+class="value">
+
+$0.00
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<!-- VENTAS -->
+
+<div class="card">
+
+<div id="sales">
+
+<div class="empty">
+Cargando ventas...
+</div>
+
+</div>
+
+</div>
+
 
 </div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
 <script>
 
@@ -621,16 +412,18 @@ header p{
 ========================================= */
 
 const SUPABASE_URL =
-  "https://jrxklpstlloeckihcduv.supabase.co";
+"https://jrxklpstlloeckihcduv.supabase.co";
+
 
 const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
+"sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
+
 
 const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
 
 
 /* =========================================
@@ -639,27 +432,20 @@ const supabaseClient =
 
 const BUSINESS_IDS = {
 
-  BakeQuiri:
-    "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+BakeQuiri:
+"c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
 
-  SpicyRoll:
-    "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
+SpicyRoll:
+"ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
 
 };
 
 
 let currentBusiness =
-  "BakeQuiri";
+"BakeQuiri";
+
 
 let sales = [];
-
-let customers = [];
-
-let products = [];
-
-let payments = [];
-
-let paymentMethods = [];
 
 
 /* =========================================
@@ -667,1175 +453,596 @@ let paymentMethods = [];
 ========================================= */
 
 const $ =
-  id =>
-    document.getElementById(id);
+id =>
+document.getElementById(id);
 
 
 function money(value){
 
-  return "$" +
-    Number(value || 0).toFixed(2);
+return "$" +
+Number(value || 0).toFixed(2);
 
 }
 
 
 function formatDate(value){
 
-  if(!value)
-    return "Sin fecha";
+if(!value)
+return "Sin fecha";
 
-  const date =
-    new Date(value);
 
-  return date.toLocaleDateString(
-    "es-MX",
-    {
-      day:"2-digit",
-      month:"2-digit",
-      year:"numeric"
-    }
-  );
+return new Date(value)
+.toLocaleString(
+"es-MX",
+{
+dateStyle:"short",
+timeStyle:"short"
+}
+);
 
 }
 
 
-function formatDateTime(value){
+/* =========================================
+   CARGAR VENTAS
+========================================= */
 
-  if(!value)
-    return "Sin fecha";
+async function loadSales(){
 
-  const date =
-    new Date(value);
+$("sales").innerHTML =
+'<div class="empty">Cargando ventas...</div>';
 
-  return date.toLocaleString(
-    "es-MX",
-    {
-      day:"2-digit",
-      month:"2-digit",
-      year:"numeric",
-      hour:"2-digit",
-      minute:"2-digit"
-    }
-  );
+
+try{
+
+const businessId =
+BUSINESS_IDS[currentBusiness];
+
+
+const result =
+await supabaseClient
+
+.from("sales")
+
+.select(
+"id,business_id,customer_id,sale_date,total,balance,status,created_at"
+)
+
+.eq(
+"business_id",
+businessId
+)
+
+.order(
+"created_at",
+{
+ascending:false
+}
+);
+
+
+if(result.error){
+
+throw result.error;
 
 }
 
 
-function showStatus(
-  message,
-  type="ok"
+sales =
+result.data || [];
+
+
+await renderSales();
+
+}
+
+catch(error){
+
+console.error(error);
+
+
+$("sales").innerHTML =
+
+'<div class="error">' +
+
+"No se pudieron cargar las ventas: " +
+
+(
+error.message ||
+error
+) +
+
+"</div>";
+
+}
+
+}
+
+
+/* =========================================
+   RENDERIZAR VENTAS
+========================================= */
+
+async function renderSales(){
+
+const searchText =
+$("search")
+.value
+.trim()
+.toLowerCase();
+
+
+const from =
+$("from").value;
+
+
+const to =
+$("to").value;
+
+
+let rows =
+sales.filter(
+sale => {
+
+const date =
+(
+sale.sale_date ||
+sale.created_at ||
+""
+).slice(0,10);
+
+
+if(from && date < from)
+return false;
+
+
+if(to && date > to)
+return false;
+
+
+return true;
+
+}
+);
+
+
+/* =========================================
+   CLIENTES
+========================================= */
+
+const customerMap =
+new Map();
+
+
+const customerIds =
+[
+...new Set(
+rows
+.map(
+sale =>
+sale.customer_id
+)
+.filter(Boolean)
+)
+];
+
+
+if(customerIds.length){
+
+const customersResult =
+await supabaseClient
+
+.from("customers")
+
+.select(
+"id,name,phone"
+)
+
+.in(
+"id",
+customerIds
+);
+
+
+if(customersResult.error){
+
+throw customersResult.error;
+
+}
+
+
+(customersResult.data || [])
+.forEach(
+customer => {
+
+customerMap.set(
+customer.id,
+customer
+);
+
+}
+);
+
+}
+
+
+/* =========================================
+   FILTRAR
+========================================= */
+
+rows =
+rows.filter(
+sale => {
+
+if(!searchText)
+return true;
+
+
+const customer =
+customerMap.get(
+sale.customer_id
+);
+
+
+const text =
+[
+customer?.name,
+customer?.phone,
+sale.id
+]
+.filter(Boolean)
+.join(" ")
+.toLowerCase();
+
+
+return text.includes(
+searchText
+);
+
+}
+);
+
+
+/* =========================================
+   RESUMEN
+========================================= */
+
+$("count").textContent =
+rows.length;
+
+
+$("total").textContent =
+money(
+rows.reduce(
+(sum,sale) =>
+sum +
+Number(
+sale.total || 0
+),
+0
+)
+);
+
+
+$("balance").textContent =
+money(
+rows.reduce(
+(sum,sale) =>
+sum +
+Number(
+sale.balance || 0
+),
+0
+)
+);
+
+
+/* =========================================
+   SIN RESULTADOS
+========================================= */
+
+if(!rows.length){
+
+$("sales").innerHTML =
+
+'<div class="empty">' +
+
+"No hay ventas que coincidan con los filtros." +
+
+"</div>";
+
+return;
+
+}
+
+
+/* =========================================
+   MOSTRAR VENTAS
+========================================= */
+
+$("sales").innerHTML =
+"";
+
+
+rows.forEach(
+sale => {
+
+const customer =
+customerMap.get(
+sale.customer_id
+);
+
+
+const element =
+document.createElement(
+"div"
+);
+
+
+element.className =
+"sale";
+
+
+const state =
+sale.status || "";
+
+
+const customerName =
+customer?.name ||
+"Consumidor general";
+
+
+const phone =
+customer?.phone
+? " · 📱 " +
+customer.phone
+: "";
+
+
+let statusText;
+
+
+if(state === "open"){
+
+statusText =
+"Pendiente";
+
+}
+else if(state === "paid"){
+
+statusText =
+"Pagada";
+
+}
+else{
+
+statusText =
+state ||
+"Registrada";
+
+}
+
+
+element.innerHTML =
+
+'<div class="top">' +
+
+'<div class="date">' +
+
+"Venta · " +
+
+formatDate(
+sale.sale_date ||
+sale.created_at
+) +
+
+"</div>" +
+
+'<div class="total">' +
+
+money(
+sale.total
+) +
+
+"</div>" +
+
+"</div>" +
+
+
+'<div class="customer">' +
+
+"👤 " +
+
+customerName +
+
+phone +
+
+"</div>" +
+
+
+'<div class="details">' +
+
+"ID: " +
+
+sale.id +
+
+"</div>" +
+
+
+'<span class="status ' +
+
+(
+state === "open"
+? "open"
+: ""
+) +
+
+'">' +
+
+statusText +
+
+"</span>" +
+
+
+(
+Number(
+sale.balance || 0
+) > 0
+
+?
+
+'<div class="details">' +
+
+"Saldo pendiente: " +
+
+"<strong>" +
+
+money(
+sale.balance
+) +
+
+"</strong>" +
+
+"</div>"
+
+:
+
+""
+
+);
+
+
+$("sales")
+.appendChild(
+element
+);
+
+}
+
+);
+
+}
+
+
+/* =========================================
+   CAMBIAR NEGOCIO
+========================================= */
+
+document
+.querySelectorAll(
+".business"
+)
+.forEach(
+button => {
+
+button.addEventListener(
+"click",
+async () => {
+
+const business =
+button.dataset.business;
+
+
+if(
+business ===
+currentBusiness
 ){
 
-  const element =
-    $("status");
-
-  element.textContent =
-    message;
-
-  element.className =
-    "status " + type;
+return;
 
 }
 
 
-function clearStatus(){
+currentBusiness =
+business;
 
-  $("status").textContent =
-    "";
 
-  $("status").className =
-    "status";
+document
+.querySelectorAll(
+".business"
+)
+.forEach(
+item =>
+item.classList.remove(
+"active"
+)
+);
+
+
+button.classList.add(
+"active"
+);
+
+
+await loadSales();
 
 }
+);
+
+}
+);
 
 
 /* =========================================
-   CARGAR HISTORIAL
-========================================= */
-
-async function loadHistory(){
-
-  clearStatus();
-
-  $("sales").innerHTML =
-    '<div class="loading">Cargando historial...</div>';
-
-
-  try{
-
-    const businessId =
-      BUSINESS_IDS[currentBusiness];
-
-
-    /*
-      CLIENTES
-    */
-
-    const customersResult =
-      await supabaseClient
-
-        .from("customers")
-
-        .select(
-          "id,name,phone"
-        )
-
-        .eq(
-          "business_id",
-          businessId
-        );
-
-
-    if(customersResult.error){
-
-      throw customersResult.error;
-
-    }
-
-
-    customers =
-      customersResult.data || [];
-
-
-    /*
-      PRODUCTOS
-    */
-
-    const productsResult =
-      await supabaseClient
-
-        .from("products")
-
-        .select(
-          "id,name"
-        )
-
-        .eq(
-          "business_id",
-          businessId
-        );
-
-
-    if(productsResult.error){
-
-      throw productsResult.error;
-
-    }
-
-
-    products =
-      productsResult.data || [];
-
-
-    /*
-      MÉTODOS DE PAGO
-    */
-
-    const methodsResult =
-      await supabaseClient
-
-        .from("payment_methods")
-
-        .select(
-          "id,name"
-        )
-
-        .eq(
-          "business_id",
-          businessId
-        );
-
-
-    if(methodsResult.error){
-
-      throw methodsResult.error;
-
-    }
-
-
-    paymentMethods =
-      methodsResult.data || [];
-
-
-    /*
-      VENTAS
-    */
-
-    const salesResult =
-      await supabaseClient
-
-        .from("sales")
-
-        .select(
-          "id,business_id,customer_id,sale_date,total,balance,status,created_at"
-        )
-
-        .eq(
-          "business_id",
-          businessId
-        )
-
-        .order(
-          "created_at",
-          {
-            ascending:false
-          }
-        );
-
-
-    if(salesResult.error){
-
-      throw salesResult.error;
-
-    }
-
-
-    sales =
-      salesResult.data || [];
-
-
-    /*
-      DETALLES DE VENTA
-    */
-
-    const paymentsResult =
-      await supabaseClient
-
-        .from("payments")
-
-        .select(
-          "id,business_id,sale_id,payment_method_id,amount,paid_at,notes"
-        )
-
-        .eq(
-          "business_id",
-          businessId
-        )
-
-        .order(
-          "paid_at",
-          {
-            ascending:false
-          }
-        );
-
-
-    if(paymentsResult.error){
-
-      throw paymentsResult.error;
-
-    }
-
-
-    payments =
-      paymentsResult.data || [];
-
-
-    /*
-      Intentamos cargar detalles.
-    */
-
-    const itemsResult =
-      await supabaseClient
-
-        .from("sale_items")
-
-        .select(
-          "id,sale_id,product_id,description,quantity,unit_price,subtotal"
-        );
-
-
-    if(
-      !itemsResult.error
-    ){
-
-      window.saleItems =
-        itemsResult.data || [];
-
-    }
-    else{
-
-      window.saleItems =
-        [];
-
-    }
-
-
-    renderHistory();
-
-  }
-
-  catch(error){
-
-    console.error(error);
-
-    $("sales").innerHTML =
-      '<div class="empty">' +
-      'No se pudo cargar el historial.' +
-      '</div>';
-
-    showStatus(
-      "Error al cargar historial: " +
-      (
-        error.message ||
-        error
-      ),
-      "error"
-    );
-
-  }
-
-}
-
-
-/* =========================================
-   FILTRAR VENTAS
-========================================= */
-
-function getFilteredSales(){
-
-  const searchText =
-    $("search")
-      .value
-      .trim()
-      .toLowerCase();
-
-
-  const dateFrom =
-    $("dateFrom").value;
-
-
-  const dateTo =
-    $("dateTo").value;
-
-
-  return sales.filter(
-    sale => {
-
-      const customer =
-        customers.find(
-          item =>
-            item.id ===
-            sale.customer_id
-        );
-
-
-      if(searchText){
-
-        const text =
-          [
-            customer?.name,
-            customer?.phone
-          ]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase();
-
-
-        if(
-          !text.includes(searchText)
-        ){
-
-          return false;
-
-        }
-
-      }
-
-
-      const saleDate =
-        new Date(
-          sale.sale_date ||
-          sale.created_at
-        );
-
-
-      if(dateFrom){
-
-        const from =
-          new Date(
-            dateFrom +
-            "T00:00:00"
-          );
-
-
-        if(
-          saleDate < from
-        ){
-
-          return false;
-
-        }
-
-      }
-
-
-      if(dateTo){
-
-        const to =
-          new Date(
-            dateTo +
-            "T23:59:59"
-          );
-
-
-        if(
-          saleDate > to
-        ){
-
-          return false;
-
-        }
-
-      }
-
-
-      return true;
-
-    }
-  );
-
-}
-
-
-/* =========================================
-   RENDER
-========================================= */
-
-function renderHistory(){
-
-  const filteredSales =
-    getFilteredSales();
-
-
-  let totalAmount =
-    0;
-
-  let totalPending =
-    0;
-
-
-  filteredSales.forEach(
-    sale => {
-
-      totalAmount +=
-        Number(
-          sale.total || 0
-        );
-
-      totalPending +=
-        Number(
-          sale.balance || 0
-        );
-
-    }
-  );
-
-
-  const totalPaid =
-    totalAmount -
-    totalPending;
-
-
-  $("totalSales").textContent =
-    filteredSales.length;
-
-
-  $("totalAmount").textContent =
-    money(totalAmount);
-
-
-  $("totalPending").textContent =
-    money(totalPending);
-
-
-  $("totalPaid").textContent =
-    money(
-      Math.max(
-        0,
-        totalPaid
-      )
-    );
-
-
-  if(!filteredSales.length){
-
-    $("sales").innerHTML =
-      '<div class="empty">' +
-      'No hay ventas que coincidan con los filtros.' +
-      '</div>';
-
-    return;
-
-  }
-
-
-  $("sales").innerHTML =
-    "";
-
-
-  filteredSales.forEach(
-    sale => {
-
-      $("sales").appendChild(
-        createSaleElement(
-          sale
-        )
-      );
-
-    }
-  );
-
-}
-
-
-/* =========================================
-   CREAR VENTA
-========================================= */
-
-function createSaleElement(
-  sale
-){
-
-  const customer =
-    customers.find(
-      item =>
-        item.id ===
-        sale.customer_id
-    );
-
-
-  const wrapper =
-    document.createElement(
-      "div"
-    );
-
-  wrapper.className =
-    "sale";
-
-
-  const header =
-    document.createElement(
-      "div"
-    );
-
-  header.className =
-    "sale-header";
-
-
-  const main =
-    document.createElement(
-      "div"
-    );
-
-  main.className =
-    "sale-main";
-
-
-  const number =
-    document.createElement(
-      "div"
-    );
-
-  number.className =
-    "sale-number";
-
-  number.textContent =
-    "Venta #" +
-    sale.id.substring(
-      0,
-      8
-    );
-
-
-  const customerElement =
-    document.createElement(
-      "div"
-    );
-
-  customerElement.className =
-    "sale-customer";
-
-  customerElement.textContent =
-    customer?.name ||
-    "Consumidor general";
-
-
-  const date =
-    document.createElement(
-      "div"
-    );
-
-  date.className =
-    "sale-date";
-
-  date.textContent =
-    formatDateTime(
-      sale.sale_date ||
-      sale.created_at
-    );
-
-
-  main.append(
-    number,
-    customerElement,
-    date
-  );
-
-
-  const right =
-    document.createElement(
-      "div"
-    );
-
-  right.className =
-    "sale-right";
-
-
-  const total =
-    document.createElement(
-      "div"
-    );
-
-  total.className =
-    "sale-total";
-
-  total.textContent =
-    money(sale.total);
-
-
-  const badge =
-    document.createElement(
-      "span"
-    );
-
-  badge.className =
-    "badge " +
-    (
-      Number(sale.balance || 0) > 0
-      ? "open"
-      : "paid"
-    );
-
-
-  badge.textContent =
-    Number(sale.balance || 0) > 0
-    ? "PENDIENTE"
-    : "PAGADA";
-
-
-  right.append(
-    total,
-    badge
-  );
-
-
-  header.append(
-    main,
-    right
-  );
-
-
-  const body =
-    document.createElement(
-      "div"
-    );
-
-  body.className =
-    "sale-body";
-
-
-  /*
-    INFORMACIÓN
-  */
-
-  const infoTitle =
-    document.createElement(
-      "div"
-    );
-
-  infoTitle.className =
-    "products-title";
-
-  infoTitle.textContent =
-    "Información de la venta";
-
-
-  body.appendChild(
-    infoTitle
-  );
-
-
-  addDetail(
-    body,
-    "Cliente",
-    customer?.name ||
-    "Consumidor general"
-  );
-
-
-  if(customer?.phone){
-
-    addDetail(
-      body,
-      "Teléfono",
-      customer.phone
-    );
-
-  }
-
-
-  addDetail(
-    body,
-    "Total",
-    money(sale.total)
-  );
-
-
-  addDetail(
-    body,
-    "Saldo pendiente",
-    money(sale.balance)
-  );
-
-
-  /*
-    PRODUCTOS
-  */
-
-  const items =
-    (window.saleItems || [])
-      .filter(
-        item =>
-          item.sale_id ===
-          sale.id
-      );
-
-
-  const productsTitle =
-    document.createElement(
-      "div"
-    );
-
-  productsTitle.className =
-    "products-title";
-
-  productsTitle.textContent =
-    "🛒 Productos";
-
-
-  body.appendChild(
-    productsTitle
-  );
-
-
-  if(items.length){
-
-    items.forEach(
-      item => {
-
-        const line =
-          document.createElement(
-            "div"
-          );
-
-        line.className =
-          "product-line";
-
-
-        const description =
-          item.description ||
-          products.find(
-            product =>
-              product.id ===
-              item.product_id
-          )?.name ||
-          "Producto";
-
-
-        const left =
-          document.createElement(
-            "span"
-          );
-
-        left.textContent =
-          Number(item.quantity) +
-          " × " +
-          description;
-
-
-        const right =
-          document.createElement(
-            "strong"
-          );
-
-        right.textContent =
-          money(
-            item.subtotal
-          );
-
-
-        line.append(
-          left,
-          right
-        );
-
-
-        body.appendChild(
-          line
-        );
-
-      }
-    );
-
-  }
-  else{
-
-    const empty =
-      document.createElement(
-        "div"
-      );
-
-    empty.className =
-      "sale-details";
-
-    empty.textContent =
-      "No hay detalle de productos disponible.";
-
-    body.appendChild(
-      empty
-    );
-
-  }
-
-
-  /*
-    PAGOS
-  */
-
-  const salePayments =
-    payments.filter(
-      payment =>
-        payment.sale_id ===
-        sale.id
-    );
-
-
-  const paymentsTitle =
-    document.createElement(
-      "div"
-    );
-
-  paymentsTitle.className =
-    "payments-title";
-
-  paymentsTitle.textContent =
-    "💵 Pagos registrados";
-
-
-  body.appendChild(
-    paymentsTitle
-  );
-
-
-  if(salePayments.length){
-
-    salePayments.forEach(
-      payment => {
-
-        const line =
-          document.createElement(
-            "div"
-          );
-
-        line.className =
-          "payment-line";
-
-
-        const method =
-          paymentMethods.find(
-            item =>
-              item.id ===
-              payment.payment_method_id
-          );
-
-
-        const left =
-          document.createElement(
-            "span"
-          );
-
-        left.textContent =
-          formatDateTime(
-            payment.paid_at
-          ) +
-          " · " +
-          (
-            method?.name ||
-            "Pago"
-          );
-
-
-        const right =
-          document.createElement(
-            "strong"
-          );
-
-        right.textContent =
-          money(
-            payment.amount
-          );
-
-
-        line.append(
-          left,
-          right
-        );
-
-
-        body.appendChild(
-          line
-        );
-
-      }
-    );
-
-  }
-  else{
-
-    const empty =
-      document.createElement(
-        "div"
-      );
-
-    empty.className =
-      "sale-details";
-
-    empty.textContent =
-      "No hay pagos registrados.";
-
-    body.appendChild(
-      empty
-    );
-
-  }
-
-
-  /*
-    SALDO
-  */
-
-  const balance =
-    document.createElement(
-      "div"
-    );
-
-  balance.className =
-    "balance " +
-    (
-      Number(sale.balance || 0) > 0
-      ? "pending"
-      : "paid"
-    );
-
-
-  balance.textContent =
-    Number(sale.balance || 0) > 0
-    ? "Saldo pendiente: " +
-      money(sale.balance)
-    : "✓ Venta completamente pagada";
-
-
-  body.appendChild(
-    balance
-  );
-
-
-  header.addEventListener(
-    "click",
-    () => {
-
-      wrapper.classList.toggle(
-        "open"
-      );
-
-    }
-  );
-
-
-  wrapper.append(
-    header,
-    body
-  );
-
-
-  return wrapper;
-
-}
-
-
-/* =========================================
-   DETALLE
-========================================= */
-
-function addDetail(
-  container,
-  label,
-  value
-){
-
-  const row =
-    document.createElement(
-      "div"
-    );
-
-  row.className =
-    "detail-row";
-
-
-  const labelElement =
-    document.createElement(
-      "span"
-    );
-
-  labelElement.className =
-    "detail-label";
-
-  labelElement.textContent =
-    label;
-
-
-  const valueElement =
-    document.createElement(
-      "span"
-    );
-
-  valueElement.className =
-    "detail-value";
-
-  valueElement.textContent =
-    value;
-
-
-  row.append(
-    labelElement,
-    valueElement
-  );
-
-
-  container.appendChild(
-    row
-  );
-
-}
-
-
-/* =========================================
-   EVENTOS
+   FILTROS
 ========================================= */
 
 $("search")
 .addEventListener(
-  "input",
-  renderHistory
+"input",
+renderSales
 );
 
 
-$("dateFrom")
+$("from")
 .addEventListener(
-  "change",
-  renderHistory
+"change",
+renderSales
 );
 
 
-$("dateTo")
+$("to")
 .addEventListener(
-  "change",
-  renderHistory
-);
-
-
-$("refreshButton")
-.addEventListener(
-  "click",
-  loadHistory
-);
-
-
-$("dashboardButton")
-.addEventListener(
-  "click",
-  () => {
-
-    window.location.href =
-      "index.html";
-
-  }
+"change",
+renderSales
 );
 
 
 /* =========================================
-   NEGOCIOS
+   ACTUALIZAR
 ========================================= */
 
-document
-  .querySelectorAll(
-    ".business-btn"
-  )
-  .forEach(
-    button => {
-
-      button.addEventListener(
-        "click",
-        async () => {
-
-          if(
-            button.dataset.business ===
-            currentBusiness
-          ){
-
-            return;
-
-          }
+$("refresh")
+.addEventListener(
+"click",
+loadSales
+);
 
 
-          currentBusiness =
-            button.dataset.business;
+/* =========================================
+   DASHBOARD
+========================================= */
 
+$("back")
+.addEventListener(
+"click",
+() => {
 
-          document
-            .querySelectorAll(
-              ".business-btn"
-            )
-            .forEach(
-              item =>
-                item.classList.remove(
-                  "active"
-                )
-            );
+window.location.href =
+"index.html";
 
-
-          button.classList.add(
-            "active"
-          );
-
-
-          await loadHistory();
-
-        }
-      );
-
-    }
-  );
+}
+);
 
 
 /* =========================================
    INICIO
 ========================================= */
 
-loadHistory();
+loadSales();
 
 </script>
 
 </body>
+
 </html>
