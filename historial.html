@@ -808,20 +808,6 @@ let selectedCustomerId =
 urlParams.get("customer_id");
 
 
-/*
- * IMPORTANTE:
- *
- * El Dashboard manda:
- *
- * historial.html?customer_id=XXX&business=SpicyRoll
- *
- * Por lo tanto NO debemos iniciar siempre
- * en BakeQuiri.
- *
- * Si business existe y es válido,
- * ese será el negocio inicial.
- */
-
 const requestedBusiness =
 urlParams.get("business");
 
@@ -861,19 +847,117 @@ function money(value){
 }
 
 
+/*
+ * =====================================================
+ * FECHA DE LA VENTA
+ * =====================================================
+ *
+ * IMPORTANTE:
+ *
+ * Para el historial utilizamos primero
+ * created_at porque representa el momento
+ * real en que la cuenta fue creada.
+ *
+ * sale_date queda únicamente como respaldo.
+ *
+ * Esto evita que varias cuentas aparezcan
+ * con la misma fecha/hora cuando sale_date
+ * fue guardado con un valor predeterminado.
+ */
+
+function getSaleDate(sale){
+
+  return (
+    sale.created_at ||
+    sale.sale_date ||
+    null
+  );
+
+}
+
+
+/*
+ * Formato de fecha y hora para México.
+ */
+
 function formatDate(value){
 
   if(!value)
     return "Sin fecha";
 
-  return new Date(value)
-    .toLocaleString(
-      "es-MX",
-      {
-        dateStyle:"short",
-        timeStyle:"short"
-      }
-    );
+  const date =
+    new Date(value);
+
+  if(
+    Number.isNaN(
+      date.getTime()
+    )
+  ){
+
+    return "Fecha inválida";
+
+  }
+
+  return date.toLocaleString(
+    "es-MX",
+    {
+      day:"2-digit",
+      month:"2-digit",
+      year:"2-digit",
+      hour:"numeric",
+      minute:"2-digit",
+      hour12:true
+    }
+  );
+
+}
+
+
+/*
+ * Fecha utilizada por los filtros.
+ */
+
+function getSaleDateKey(sale){
+
+  const value =
+    getSaleDate(sale);
+
+  if(!value)
+    return "";
+
+  const date =
+    new Date(value);
+
+  if(
+    Number.isNaN(
+      date.getTime()
+    )
+  ){
+
+    return "";
+
+  }
+
+  const year =
+    date.getFullYear();
+
+  const month =
+    String(
+      date.getMonth() + 1
+    ).padStart(2,"0");
+
+  const day =
+    String(
+      date.getDate()
+    ).padStart(2,"0");
+
+  return (
+    year +
+    "-" +
+    month +
+    "-" +
+    day
+  );
 
 }
 
@@ -1029,7 +1113,8 @@ async function loadSelectedCustomer(){
 
     $("customerBannerName")
       .textContent =
-      customer.name || "Cliente";
+      customer.name ||
+      "Cliente";
 
     $("customerBannerPhone")
       .textContent =
@@ -1038,7 +1123,9 @@ async function loadSelectedCustomer(){
       : "";
 
     $("customerBanner")
-      .classList.add("visible");
+      .classList.add(
+        "visible"
+      );
 
   }
   catch(error){
@@ -1061,8 +1148,8 @@ async function loadSales(){
 
   $("sales").innerHTML =
     '<div class="empty">' +
-    'Cargando ventas...' +
-    '</div>';
+    "Cargando ventas..." +
+    "</div>";
 
   try{
 
@@ -1070,7 +1157,9 @@ async function loadSales(){
       BUSINESS_IDS[currentBusiness];
 
 
-    /* VENTAS */
+    /* =====================================
+       VENTAS
+    ===================================== */
 
     const result =
       await supabaseClient
@@ -1098,7 +1187,36 @@ async function loadSales(){
       result.data || [];
 
 
-    /* ABONOS */
+    /*
+     * Orden de seguridad.
+     *
+     * Si por alguna razón Supabase no devuelve
+     * el orden esperado, aquí volvemos a ordenar
+     * usando created_at.
+     */
+
+    sales.sort(
+      (a,b) => {
+
+        const dateA =
+          new Date(
+            getSaleDate(a) || 0
+          ).getTime();
+
+        const dateB =
+          new Date(
+            getSaleDate(b) || 0
+          ).getTime();
+
+        return dateB - dateA;
+
+      }
+    );
+
+
+    /* =====================================
+       ABONOS
+    ===================================== */
 
     const saleIds =
       sales.map(
@@ -1140,7 +1258,9 @@ async function loadSales(){
     }
 
 
-    /* MÉTODOS DE PAGO */
+    /* =====================================
+       MÉTODOS DE PAGO
+    ===================================== */
 
     await loadPaymentMethods();
 
@@ -1148,8 +1268,7 @@ async function loadSales(){
 
 
     /*
-     * IMPORTANTE:
-     * El cliente NO se borra al cambiar
+     * El cliente se mantiene al cambiar
      * de negocio.
      */
 
@@ -1204,11 +1323,9 @@ async function renderSales(){
       sale => {
 
         const date =
-          (
-            sale.sale_date ||
-            sale.created_at ||
-            ""
-          ).slice(0,10);
+          getSaleDateKey(
+            sale
+          );
 
 
         if(from && date < from)
@@ -1232,7 +1349,9 @@ async function renderSales(){
     );
 
 
-  /* CLIENTES */
+  /* =====================================
+     CLIENTES
+  ===================================== */
 
   const customerMap =
     new Map();
@@ -1283,7 +1402,9 @@ async function renderSales(){
   }
 
 
-  /* BÚSQUEDA */
+  /* =====================================
+     BÚSQUEDA
+  ===================================== */
 
   rows =
     rows.filter(
@@ -1318,7 +1439,9 @@ async function renderSales(){
     );
 
 
-  /* RESUMEN */
+  /* =====================================
+     RESUMEN
+  ===================================== */
 
   $("count").textContent =
     rows.length;
@@ -1350,7 +1473,9 @@ async function renderSales(){
     );
 
 
-  /* SIN RESULTADOS */
+  /* =====================================
+     SIN RESULTADOS
+  ===================================== */
 
   if(!rows.length){
 
@@ -1368,7 +1493,9 @@ async function renderSales(){
     "";
 
 
-  /* VENTAS */
+  /* =====================================
+     VENTAS
+  ===================================== */
 
   rows.forEach(
     sale => {
@@ -1401,7 +1528,9 @@ async function renderSales(){
         );
 
 
-      /* ABONOS */
+      /* =================================
+         ABONOS
+      ================================= */
 
       const salePayments =
         payments.filter(
@@ -1446,7 +1575,9 @@ async function renderSales(){
       }
 
 
-      /* CONTENEDOR */
+      /* =================================
+         CONTENEDOR
+      ================================= */
 
       const element =
         document.createElement(
@@ -1458,6 +1589,12 @@ async function renderSales(){
         "sale";
 
 
+      /*
+       * AQUÍ ESTÁ EL CAMBIO PRINCIPAL:
+       *
+       * La fecha visible utiliza created_at.
+       */
+
       element.innerHTML =
 
         '<div class="top">' +
@@ -1465,8 +1602,7 @@ async function renderSales(){
         '<div class="date">' +
         "Venta · " +
         formatDate(
-          sale.sale_date ||
-          sale.created_at
+          getSaleDate(sale)
         ) +
         "</div>" +
 
@@ -1506,7 +1642,9 @@ async function renderSales(){
         "</span>";
 
 
-      /* HISTORIAL DE ABONOS */
+      /* =================================
+         HISTORIAL DE ABONOS
+      ================================= */
 
       if(salePayments.length){
 
@@ -1616,7 +1754,9 @@ async function renderSales(){
       }
 
 
-      /* SALDO */
+      /* =================================
+         SALDO
+      ================================= */
 
       if(balance > 0){
 
@@ -2126,7 +2266,7 @@ $("cancelPayment")
 
 
 /* =========================================
-   CERRAR FUERA
+   CERRAR FUERA DEL MODAL
 ========================================= */
 
 $("paymentModal")
@@ -2194,27 +2334,12 @@ document
           return;
 
 
-        /*
-         * CAMBIO IMPORTANTE:
-         *
-         * NO borramos selectedCustomerId.
-         *
-         * Así, si venimos desde el Dashboard
-         * con un cliente, el cliente permanece
-         * seleccionado al cambiar de negocio.
-         */
-
         currentBusiness =
           business;
 
 
         updateBusinessButtons();
 
-
-        /*
-         * Actualizamos la URL conservando
-         * el cliente seleccionado.
-         */
 
         const params =
           new URLSearchParams();
@@ -2239,7 +2364,7 @@ document
         window.history.replaceState(
           {},
           "",
-          "historial.html?" +
+          "cuentas.html?" +
           params.toString()
         );
 
@@ -2312,11 +2437,6 @@ $("back")
 /* =========================================
    INICIO
 ========================================= */
-
-/*
- * Primero ponemos visualmente el negocio
- * correcto y después cargamos los datos.
- */
 
 updateBusinessButtons();
 
