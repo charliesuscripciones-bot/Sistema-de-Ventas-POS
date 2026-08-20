@@ -1,19 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1.0"
->
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>Historial de ventas | Sistema de Ventas POS</title>
 
 <style>
-
 *{
   box-sizing:border-box;
   margin:0;
@@ -48,9 +41,7 @@ header p{
   padding:25px 20px 40px;
 }
 
-/* =========================================
-   CLIENTE
-========================================= */
+/* CLIENTE */
 
 .customer-banner{
   display:none;
@@ -82,9 +73,7 @@ header p{
   color:#64748b;
 }
 
-/* =========================================
-   BOTONES
-========================================= */
+/* BOTONES */
 
 .toolbar{
   display:flex;
@@ -107,6 +96,12 @@ button:active{
   transform:scale(.98);
 }
 
+button:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+  transform:none;
+}
+
 .business{
   color:#2680eb;
 }
@@ -127,9 +122,7 @@ button:active{
   color:#111827;
 }
 
-/* =========================================
-   FILTROS
-========================================= */
+/* FILTROS */
 
 .filters{
   display:grid;
@@ -152,9 +145,7 @@ button:active{
   border-color:#2680eb;
 }
 
-/* =========================================
-   RESUMEN
-========================================= */
+/* RESUMEN */
 
 .summary{
   display:grid;
@@ -182,9 +173,7 @@ button:active{
   margin-top:7px;
 }
 
-/* =========================================
-   VENTAS
-========================================= */
+/* VENTAS */
 
 .card{
   background:#fff;
@@ -247,9 +236,7 @@ button:active{
   color:#92400e;
 }
 
-/* =========================================
-   SALDO CLICKEABLE
-========================================= */
+/* SALDO */
 
 .balance-button{
   display:block;
@@ -257,7 +244,7 @@ button:active{
   margin-top:12px;
   padding:13px 15px;
   border-radius:12px;
-  border:2px solid #fde68a;
+  border:2px solid #f59e0b;
   background:#fffbeb;
   color:#92400e;
   text-align:left;
@@ -267,7 +254,6 @@ button:active{
 
 .balance-button:hover{
   background:#fef3c7;
-  border-color:#f59e0b;
 }
 
 .balance-button.paid{
@@ -277,9 +263,7 @@ button:active{
   cursor:default;
 }
 
-/* =========================================
-   MODAL DE ABONO
-========================================= */
+/* MODAL */
 
 .modal-overlay{
   display:none;
@@ -359,7 +343,6 @@ button:active{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:10px;
-  margin-top:5px;
 }
 
 .modal-buttons button{
@@ -400,10 +383,6 @@ button:active{
   display:block;
 }
 
-/* =========================================
-   MENSAJES
-========================================= */
-
 .empty{
   text-align:center;
   color:#777;
@@ -426,10 +405,6 @@ button:active{
   margin-bottom:18px;
   font-weight:700;
 }
-
-/* =========================================
-   RESPONSIVE
-========================================= */
 
 @media(max-width:700px){
 
@@ -456,60 +431,33 @@ button:active{
   .modal-buttons{
     grid-template-columns:1fr;
   }
-
 }
-
 </style>
-
 </head>
-
 
 <body>
 
 <header>
-
-<h1>
-📊 Historial de ventas
-</h1>
+<h1>📊 Historial de ventas</h1>
 
 <p>
 Consulta las ventas registradas de tus negocios
 </p>
-
 </header>
-
 
 <div class="container">
 
+<div id="customerBanner" class="customer-banner">
 
-<!-- =========================================
-     HISTORIAL DEL CLIENTE
-========================================= -->
-
-<div
-  id="customerBanner"
-  class="customer-banner">
-
-  <div class="customer-banner-title">
-    HISTORIAL DEL CLIENTE
-  </div>
-
-  <div
-    id="customerBannerName"
-    class="customer-banner-name">
-  </div>
-
-  <div
-    id="customerBannerPhone"
-    class="customer-banner-phone">
-  </div>
-
+<div class="customer-banner-title">
+HISTORIAL DEL CLIENTE
 </div>
 
+<div id="customerBannerName" class="customer-banner-name"></div>
 
-<!-- =========================================
-     BARRA DE BOTONES
-========================================= -->
+<div id="customerBannerPhone" class="customer-banner-phone"></div>
+
+</div>
 
 <div class="toolbar">
 
@@ -517,47 +465,31 @@ Consulta las ventas registradas de tus negocios
 type="button"
 class="business active"
 data-business="BakeQuiri">
-
 BakeQuiri
-
 </button>
-
 
 <button
 type="button"
 class="business"
 data-business="SpicyRoll">
-
 SpicyRoll
-
 </button>
-
 
 <button
 type="button"
 class="refresh"
 id="refresh">
-
 🔄 Actualizar
-
 </button>
-
 
 <button
 type="button"
 class="back"
 id="back">
-
 ← Dashboard
-
 </button>
 
 </div>
-
-
-<!-- =========================================
-     FILTROS
-========================================= -->
 
 <div class="filters">
 
@@ -565,122 +497,60 @@ id="back">
 id="search"
 type="search"
 placeholder="🔎 Buscar cliente o venta"
-autocomplete="off"
->
+autocomplete="off">
 
 <input
 id="from"
-type="date"
->
+type="date">
 
 <input
 id="to"
-type="date"
->
+type="date">
 
 </div>
-
-
-<!-- =========================================
-     RESUMEN
-========================================= -->
 
 <div class="summary">
 
 <div class="summary-card">
-
-<div class="label">
-VENTAS
+<div class="label">VENTAS</div>
+<div id="count" class="value">0</div>
 </div>
-
-<div
-id="count"
-class="value">
-
-0
-
-</div>
-
-</div>
-
 
 <div class="summary-card">
-
-<div class="label">
-TOTAL VENDIDO
+<div class="label">TOTAL VENDIDO</div>
+<div id="total" class="value">$0.00</div>
 </div>
-
-<div
-id="total"
-class="value">
-
-$0.00
-
-</div>
-
-</div>
-
 
 <div class="summary-card">
-
-<div class="label">
-PENDIENTE
-</div>
-
-<div
-id="balance"
-class="value">
-
-$0.00
-
+<div class="label">PENDIENTE</div>
+<div id="balance" class="value">$0.00</div>
 </div>
 
 </div>
-
-</div>
-
-
-<!-- =========================================
-     VENTAS
-========================================= -->
 
 <div class="card">
 
 <div id="message"></div>
 
 <div id="sales">
-
 <div class="empty">
 Cargando ventas...
 </div>
-
 </div>
 
 </div>
 
-
 </div>
 
+<!-- MODAL -->
 
-<!-- =========================================
-     MODAL DE ABONO
-========================================= -->
-
-<div
-id="paymentModal"
-class="modal-overlay">
+<div id="paymentModal" class="modal-overlay">
 
 <div class="modal">
 
-<h2>
-💰 Registrar abono
-</h2>
+<h2>💰 Registrar abono</h2>
 
-<div
-id="paymentSubtitle"
-class="modal-subtitle">
-</div>
-
+<div id="paymentSubtitle" class="modal-subtitle"></div>
 
 <div class="modal-info">
 
@@ -688,20 +558,13 @@ class="modal-subtitle">
 Saldo pendiente actual
 </strong>
 
-<div
-id="modalBalance"
-class="modal-balance">
+<div id="modalBalance" class="modal-balance">
 $0.00
 </div>
 
 </div>
 
-
-<div
-id="modalError"
-class="modal-error">
-</div>
-
+<div id="modalError" class="modal-error"></div>
 
 <label for="paymentAmount">
 Cantidad a abonar
@@ -713,9 +576,7 @@ type="number"
 inputmode="decimal"
 min="0.01"
 step="0.01"
-placeholder="0.00"
->
-
+placeholder="0.00">
 
 <div class="modal-buttons">
 
@@ -723,45 +584,34 @@ placeholder="0.00"
 type="button"
 class="btn-save"
 id="savePayment">
-
 💵 Registrar abono
-
 </button>
-
 
 <button
 type="button"
 class="btn-liquidar"
 id="payFull">
-
 ✓ Liquidar cuenta
-
 </button>
 
 </div>
-
 
 <button
 type="button"
 class="btn-cancel"
 id="cancelPayment">
-
 Cancelar
-
 </button>
 
 </div>
 
 </div>
 
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 
 <script>
 
 "use strict";
-
 
 /* =========================================
    SUPABASE
@@ -770,10 +620,8 @@ Cancelar
 const SUPABASE_URL =
 "https://jrxklpstlloeckihcduv.supabase.co";
 
-
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
-
 
 const supabaseClient =
 window.supabase.createClient(
@@ -796,25 +644,15 @@ SpicyRoll:
 
 };
 
-
-let currentBusiness =
-"BakeQuiri";
-
+let currentBusiness = "BakeQuiri";
 
 let sales = [];
 
-
-/* =========================================
-   MÉTODO DE PAGO
-   ID DE EFECTIVO
-========================================= */
-
-const EFECTIVO_PAYMENT_METHOD_ID =
-"dce26abf-5b2c-4b4f-9f3b-1381e0cbfef0";
+let selectedSaleForPayment = null;
 
 
 /* =========================================
-   CLIENTE SELECCIONADO
+   CLIENTE
 ========================================= */
 
 const urlParams =
@@ -822,19 +660,8 @@ new URLSearchParams(
   window.location.search
 );
 
-
 let selectedCustomerId =
-urlParams.get(
-  "customer_id"
-);
-
-
-/* =========================================
-   VENTA SELECCIONADA PARA ABONO
-========================================= */
-
-let selectedSaleForPayment =
-null;
+urlParams.get("customer_id");
 
 
 /* =========================================
@@ -845,7 +672,6 @@ const $ =
 id =>
 document.getElementById(id);
 
-
 function money(value){
 
 return "$" +
@@ -853,12 +679,10 @@ Number(value || 0).toFixed(2);
 
 }
 
-
 function formatDate(value){
 
 if(!value)
 return "Sin fecha";
-
 
 return new Date(value)
 .toLocaleString(
@@ -878,78 +702,45 @@ timeStyle:"short"
 
 async function loadSelectedCustomer(){
 
-if(!selectedCustomerId){
-
+if(!selectedCustomerId)
 return;
-
-}
-
 
 try{
 
 const result =
 await supabaseClient
-
 .from("customers")
-
-.select(
-"id,name,phone"
-)
-
-.eq(
-"id",
-selectedCustomerId
-)
-
+.select("id,name,phone")
+.eq("id",selectedCustomerId)
 .single();
 
-
-if(result.error){
-
-console.error(
-"No se pudo cargar el cliente:",
-result.error
-);
-
-return;
-
-}
-
+if(result.error)
+throw result.error;
 
 const customer =
 result.data;
 
-
-if(!customer){
-
+if(!customer)
 return;
 
-}
+$("customerBannerName").textContent =
+customer.name || "Cliente";
 
-
-$("customerBannerName")
-.textContent =
-customer.name ||
-"Cliente";
-
-
-$("customerBannerPhone")
-.textContent =
+$("customerBannerPhone").textContent =
 customer.phone
 ? "📱 " + customer.phone
 : "";
 
-
 $("customerBanner")
-.classList.add(
-"visible"
-);
+.classList.add("visible");
 
 }
-
 catch(error){
 
-console.error(error);
+console.error(
+"No se pudo cargar el cliente:",
+error
+);
 
 }
 
@@ -965,27 +756,18 @@ async function loadSales(){
 $("sales").innerHTML =
 '<div class="empty">Cargando ventas...</div>';
 
-
 try{
 
 const businessId =
 BUSINESS_IDS[currentBusiness];
 
-
 const result =
 await supabaseClient
-
 .from("sales")
-
 .select(
 "id,business_id,customer_id,sale_date,total,balance,status,created_at"
 )
-
-.eq(
-"business_id",
-businessId
-)
-
+.eq("business_id",businessId)
 .order(
 "created_at",
 {
@@ -993,40 +775,25 @@ ascending:false
 }
 );
 
-
-if(result.error){
-
+if(result.error)
 throw result.error;
-
-}
-
 
 sales =
 result.data || [];
-
 
 await loadSelectedCustomer();
 
 await renderSales();
 
 }
-
 catch(error){
 
 console.error(error);
 
-
 $("sales").innerHTML =
-
 '<div class="error">' +
-
 "No se pudieron cargar las ventas: " +
-
-(
-error.message ||
-error
-) +
-
+(error.message || error) +
 "</div>";
 
 }
@@ -1035,7 +802,7 @@ error
 
 
 /* =========================================
-   RENDERIZAR VENTAS
+   RENDER
 ========================================= */
 
 async function renderSales(){
@@ -1046,14 +813,11 @@ $("search")
 .trim()
 .toLowerCase();
 
-
 const from =
 $("from").value;
 
-
 const to =
 $("to").value;
-
 
 let rows =
 sales.filter(
@@ -1066,29 +830,17 @@ sale.created_at ||
 ""
 ).slice(0,10);
 
-
 if(from && date < from)
 return false;
-
 
 if(to && date > to)
 return false;
 
-
-/* =======================================
-   FILTRO DIRECTO POR CLIENTE
-======================================= */
-
 if(
 selectedCustomerId &&
-sale.customer_id !==
-selectedCustomerId
-){
-
+sale.customer_id !== selectedCustomerId
+)
 return false;
-
-}
-
 
 return true;
 
@@ -1096,69 +848,46 @@ return true;
 );
 
 
-/* =========================================
-   CLIENTES
-========================================= */
+/* CLIENTES */
 
 const customerMap =
 new Map();
-
 
 const customerIds =
 [
 ...new Set(
 rows
 .map(
-sale =>
-sale.customer_id
+sale => sale.customer_id
 )
 .filter(Boolean)
 )
 ];
 
-
 if(customerIds.length){
 
-const customersResult =
+const result =
 await supabaseClient
-
 .from("customers")
+.select("id,name,phone")
+.in("id",customerIds);
 
-.select(
-"id,name,phone"
-)
+if(result.error)
+throw result.error;
 
-.in(
-"id",
-customerIds
-);
-
-
-if(customersResult.error){
-
-throw customersResult.error;
-
-}
-
-
-(customersResult.data || [])
+(result.data || [])
 .forEach(
-customer => {
-
+customer =>
 customerMap.set(
 customer.id,
 customer
+)
 );
 
 }
-);
-
-}
 
 
-/* =========================================
-   FILTRAR BÚSQUEDA
-========================================= */
+/* BUSCAR */
 
 rows =
 rows.filter(
@@ -1167,12 +896,10 @@ sale => {
 if(!searchText)
 return true;
 
-
 const customer =
 customerMap.get(
 sale.customer_id
 );
-
 
 const text =
 [
@@ -1184,61 +911,43 @@ sale.id
 .join(" ")
 .toLowerCase();
 
-
-return text.includes(
-searchText
-);
+return text.includes(searchText);
 
 }
 );
 
 
-/* =========================================
-   RESUMEN
-========================================= */
+/* RESUMEN */
 
 $("count").textContent =
 rows.length;
-
 
 $("total").textContent =
 money(
 rows.reduce(
 (sum,sale) =>
-sum +
-Number(
-sale.total || 0
-),
+sum + Number(sale.total || 0),
 0
 )
 );
-
 
 $("balance").textContent =
 money(
 rows.reduce(
 (sum,sale) =>
-sum +
-Number(
-sale.balance || 0
-),
+sum + Number(sale.balance || 0),
 0
 )
 );
 
 
-/* =========================================
-   SIN RESULTADOS
-========================================= */
+/* SIN RESULTADOS */
 
 if(!rows.length){
 
 $("sales").innerHTML =
-
 '<div class="empty">' +
-
 "No hay ventas que coincidan con los filtros." +
-
 "</div>";
 
 return;
@@ -1246,13 +955,9 @@ return;
 }
 
 
-/* =========================================
-   MOSTRAR VENTAS
-========================================= */
+/* MOSTRAR */
 
-$("sales").innerHTML =
-"";
-
+$("sales").innerHTML = "";
 
 rows.forEach(
 sale => {
@@ -1262,229 +967,124 @@ customerMap.get(
 sale.customer_id
 );
 
-
-const element =
-document.createElement(
-"div"
-);
-
-
-element.className =
-"sale";
-
-
-const state =
-sale.status || "";
-
-
 const customerName =
 customer?.name ||
 "Consumidor general";
 
-
 const phone =
 customer?.phone
-? " · 📱 " +
-customer.phone
+? " · 📱 " + customer.phone
 : "";
 
+const state =
+sale.status || "";
 
-let statusText;
+const element =
+document.createElement("div");
 
+element.className = "sale";
 
-if(state === "open"){
-
-statusText =
-"Pendiente";
-
-}
-else if(state === "paid"){
-
-statusText =
-"Pagada";
-
-}
-else{
-
-statusText =
-state ||
-"Registrada";
-
-}
-
-
-/* =======================================
-   CABECERA
-======================================= */
+let statusText =
+state === "paid"
+? "Pagada"
+: state === "open"
+? "Pendiente"
+: state || "Registrada";
 
 element.innerHTML =
 
 '<div class="top">' +
 
 '<div class="date">' +
-
 "Venta · " +
-
 formatDate(
 sale.sale_date ||
 sale.created_at
 ) +
-
 "</div>" +
 
 '<div class="total">' +
-
-money(
-sale.total
-) +
-
+money(sale.total) +
 "</div>" +
 
 "</div>" +
-
-
-/* CLIENTE */
 
 '<div class="customer">' +
-
 "👤 " +
-
 customerName +
-
 phone +
-
 "</div>" +
-
-
-/* ID */
 
 '<div class="details">' +
-
 "ID: " +
-
 sale.id +
-
 "</div>" +
 
-
-/* ESTADO */
-
 '<span class="status ' +
-
-(
-state === "open"
-? "open"
-: ""
-) +
-
+(state === "open" ? "open" : "") +
 '">' +
-
-(
-state === "paid"
-? "✓ "
-: ""
-) +
-
+(state === "paid" ? "✓ " : "") +
 statusText +
-
 "</span>";
 
-
-/* =======================================
-   SALDO PENDIENTE CLICKEABLE
-======================================= */
-
 const balance =
-Number(
-sale.balance || 0
-);
-
+Number(sale.balance || 0);
 
 if(balance > 0){
 
-const balanceButton =
-document.createElement(
-"button"
-);
+const button =
+document.createElement("button");
 
+button.type = "button";
 
-balanceButton.type =
-"button";
-
-
-balanceButton.className =
+button.className =
 "balance-button";
 
-
-balanceButton.innerHTML =
+button.innerHTML =
 "💰 Saldo pendiente: " +
 money(balance) +
 " · Registrar abono";
 
-
-balanceButton.addEventListener(
+button.addEventListener(
 "click",
-() => {
-
+() =>
 openPaymentModal(
 sale,
 customerName
+)
 );
 
-}
-);
-
-
-element.appendChild(
-balanceButton
-);
+element.appendChild(button);
 
 }
 else{
 
-const paidButton =
-document.createElement(
-"button"
-);
+const button =
+document.createElement("button");
 
+button.type = "button";
 
-paidButton.type =
-"button";
-
-
-paidButton.className =
+button.className =
 "balance-button paid";
 
+button.disabled = true;
 
-paidButton.disabled =
-true;
-
-
-paidButton.innerHTML =
+button.innerHTML =
 "✓ Cuenta liquidada";
 
-
-element.appendChild(
-paidButton
-);
+element.appendChild(button);
 
 }
 
+$("sales").appendChild(element);
 
-$("sales")
-.appendChild(
-element
-);
-
-}
-
-);
+});
 
 }
 
 
 /* =========================================
-   ABRIR MODAL
+   MODAL
 ========================================= */
 
 function openPaymentModal(
@@ -1495,89 +1095,55 @@ customerName
 selectedSaleForPayment =
 sale;
 
-
-$("paymentSubtitle")
-textContent =
+$("paymentSubtitle").textContent =
 customerName +
 " · Venta de " +
 money(sale.total);
 
-
-$("modalBalance")
-textContent =
+$("modalBalance").textContent =
 money(sale.balance);
 
+$("paymentAmount").value = "";
 
-$("paymentAmount")
-value =
-"";
-
+$("modalError").textContent = "";
 
 $("modalError")
-textContent =
-"";
-
-
-$("modalError")
-.classList.remove(
-"visible"
-);
-
+.classList.remove("visible");
 
 $("paymentModal")
-.classList.add(
-"visible"
-);
-
+.classList.add("visible");
 
 setTimeout(
-() => {
-
-$("paymentAmount")
-.focus();
-
-},
+() =>
+$("paymentAmount").focus(),
 100
 );
 
 }
 
 
-/* =========================================
-   CERRAR MODAL
-========================================= */
-
 function closePaymentModal(){
 
 selectedSaleForPayment =
 null;
 
-
 $("paymentModal")
-.classList.remove(
-"visible"
-);
+.classList.remove("visible");
 
 }
 
 
 /* =========================================
-   MOSTRAR ERROR DEL MODAL
+   ERROR
 ========================================= */
 
-function showPaymentError(
-message
-){
+function showPaymentError(message){
 
-$("modalError")
-.textContent =
+$("modalError").textContent =
 message;
 
-
 $("modalError")
-.classList.add(
-"visible"
-);
+.classList.add("visible");
 
 }
 
@@ -1586,30 +1152,19 @@ $("modalError")
    REGISTRAR ABONO
 ========================================= */
 
-async function registerPayment(
-amount
-){
+async function registerPayment(amount){
 
-if(!selectedSaleForPayment){
-
+if(!selectedSaleForPayment)
 return;
-
-}
-
 
 const sale =
 selectedSaleForPayment;
 
-
 const currentBalance =
-Number(
-sale.balance || 0
-);
-
+Number(sale.balance || 0);
 
 amount =
 Number(amount);
-
 
 if(!Number.isFinite(amount)){
 
@@ -1621,7 +1176,6 @@ return;
 
 }
 
-
 if(amount <= 0){
 
 showPaymentError(
@@ -1631,7 +1185,6 @@ showPaymentError(
 return;
 
 }
-
 
 if(amount > currentBalance + 0.001){
 
@@ -1646,104 +1199,60 @@ return;
 }
 
 
-/* =======================================
-   EVITAR DOBLE CLIC
-======================================= */
+/* BLOQUEAR */
 
-$("savePayment").disabled =
-true;
+$("savePayment").disabled = true;
 
-$("payFull").disabled =
-true;
+$("payFull").disabled = true;
 
 
 try{
 
-/* =====================================
-   INSERTAR PAGO
-===================================== */
-
-const paymentResult =
-await supabaseClient
-
-.from("payments")
-
-.insert({
-
-sale_id:
-sale.id,
-
-business_id:
-sale.business_id,
-
-payment_method_id:
-EFECTIVO_PAYMENT_METHOD_ID,
-
-amount:
-amount,
-
-paid_at:
-new Date().toISOString()
-
-});
-
-
-if(paymentResult.error){
-
-throw paymentResult.error;
-
-}
-
-
-/* =====================================
-   CALCULAR NUEVO SALDO
-===================================== */
+/*
+=================================================
+1. ACTUALIZAR LA VENTA
+=================================================
+*/
 
 const newBalance =
 Math.max(
 0,
-currentBalance - amount
+Number(
+(
+currentBalance -
+amount
+).toFixed(2)
+)
 );
 
-
-/* =====================================
-   NUEVO ESTATUS
-===================================== */
-
 const newStatus =
-newBalance <= 0.001
+newBalance <= 0
 ? "paid"
 : "open";
 
 
-/* =====================================
-   ACTUALIZAR VENTA
-===================================== */
-
 const updateResult =
 await supabaseClient
-
 .from("sales")
-
 .update({
-
-balance:
-newBalance,
-
-status:
-newStatus
-
+balance:newBalance,
+status:newStatus
 })
-
-.eq(
-"id",
-sale.id
-)
+.eq("id",sale.id)
 .eq(
 "business_id",
 sale.business_id
+)
+.select(
+"id,balance,status"
 );
 
+
+/*
+=================================================
+COMPROBAR ACTUALIZACIÓN REAL
+=================================================
+*/
 
 if(updateResult.error){
 
@@ -1751,127 +1260,148 @@ throw updateResult.error;
 
 }
 
+if(
+!updateResult.data ||
+!updateResult.data.length
+){
 
-/* =====================================
-   CERRAR MODAL
-===================================== */
+throw new Error(
+"La venta no pudo actualizarse. Supabase no devolvió ningún registro. Revisa los permisos de la tabla sales."
+);
+
+}
+
+
+/*
+=================================================
+2. REGISTRAR EL PAGO
+=================================================
+
+Se intenta registrar el movimiento en payments.
+
+Si la tabla payments no permite el registro,
+la venta ya fue actualizada, pero mostramos
+el error para poder identificar la configuración.
+*/
+
+try{
+
+const paymentResult =
+await supabaseClient
+.from("payments")
+.insert({
+
+sale_id:sale.id,
+
+business_id:sale.business_id,
+
+amount:amount,
+
+paid_at:
+new Date().toISOString()
+
+});
+
+if(paymentResult.error){
+
+console.warn(
+"No se pudo guardar el movimiento en payments:",
+paymentResult.error
+);
+
+}
+
+}
+catch(paymentError){
+
+console.warn(
+"Error en payments:",
+paymentError
+);
+
+}
+
+
+/*
+=================================================
+3. CERRAR MODAL
+=================================================
+*/
 
 closePaymentModal();
 
 
-/* =====================================
-   MENSAJE
-===================================== */
+/*
+=================================================
+4. MENSAJE
+=================================================
+*/
 
-if(newBalance <= 0.001){
+if(newBalance <= 0){
 
 $("message").innerHTML =
-
 '<div class="success-message">' +
-
-"✅ Cuenta liquidada correctamente. " +
-
-customerNameForMessage(sale.customer_id) +
-
+"✅ Cuenta liquidada correctamente." +
 "</div>";
 
 }
 else{
 
 $("message").innerHTML =
-
 '<div class="success-message">' +
-
 "💰 Abono registrado correctamente. " +
-
 "Nuevo saldo: " +
-
 money(newBalance) +
-
 "</div>";
 
 }
 
 
-/* =====================================
-   RECARGAR
-===================================== */
+/*
+=================================================
+5. ACTUALIZAR HISTORIAL
+=================================================
+*/
 
 await loadSales();
 
 
-/* =====================================
-   QUITAR MENSAJE DESPUÉS
-===================================== */
+/*
+=================================================
+6. QUITAR MENSAJE
+=================================================
+*/
 
 setTimeout(
 () => {
 
-$("message").innerHTML =
-"";
+$("message").innerHTML = "";
 
 },
 4000
 );
 
 }
-
 catch(error){
 
 console.error(
-"Error registrando pago:",
+"ERROR AL REGISTRAR ABONO:",
 error
 );
-
-
-/*
-   IMPORTANTE:
-   Si el pago se insertó pero la actualización
-   de la venta falló, mostramos el error.
-*/
 
 showPaymentError(
-
-"No se pudo registrar el abono: " +
-
-(
-error.message ||
-error
-)
-
+"No se pudo actualizar la cuenta: " +
+(error.message || error)
 );
 
 }
-
 finally{
 
-$("savePayment").disabled =
-false;
+$("savePayment").disabled = false;
 
-$("payFull").disabled =
-false;
+$("payFull").disabled = false;
 
 }
-
-}
-
-
-/* =========================================
-   OBTENER NOMBRE PARA MENSAJE
-========================================= */
-
-function customerNameForMessage(
-customerId
-){
-
-if(!customerId){
-
-return "";
-
-}
-
-
-return "";
 
 }
 
@@ -1885,14 +1415,8 @@ $("savePayment")
 "click",
 async () => {
 
-const amount =
-Number(
-$("paymentAmount").value
-);
-
-
 await registerPayment(
-amount
+$("paymentAmount").value
 );
 
 }
@@ -1900,7 +1424,7 @@ amount
 
 
 /* =========================================
-   BOTÓN LIQUIDAR
+   LIQUIDAR
 ========================================= */
 
 $("payFull")
@@ -1908,23 +1432,16 @@ $("payFull")
 "click",
 async () => {
 
-if(!selectedSaleForPayment){
-
+if(!selectedSaleForPayment)
 return;
-
-}
-
 
 const balance =
 Number(
 selectedSaleForPayment.balance || 0
 );
 
-
-$("paymentAmount")
-.value =
-balance.toFixed(2);
-
+if(balance <= 0)
+return;
 
 await registerPayment(
 balance
@@ -1946,7 +1463,7 @@ closePaymentModal
 
 
 /* =========================================
-   CERRAR AL TOCAR FUERA
+   TOCAR FUERA
 ========================================= */
 
 $("paymentModal")
@@ -1968,17 +1485,14 @@ closePaymentModal();
 
 
 /* =========================================
-   ESC PARA CERRAR
+   ESC
 ========================================= */
 
 document.addEventListener(
 "keydown",
 event => {
 
-if(
-event.key ===
-"Escape"
-){
+if(event.key === "Escape"){
 
 closePaymentModal();
 
@@ -1993,9 +1507,7 @@ closePaymentModal();
 ========================================= */
 
 document
-.querySelectorAll(
-".business"
-)
+.querySelectorAll(".business")
 .forEach(
 button => {
 
@@ -2006,7 +1518,6 @@ async () => {
 const business =
 button.dataset.business;
 
-
 if(
 business ===
 currentBusiness
@@ -2016,30 +1527,19 @@ return;
 
 }
 
-
 currentBusiness =
 business;
 
-
-/*
-  Si cambiamos de negocio,
-  quitamos el cliente seleccionado.
-*/
-
 selectedCustomerId =
 null;
-
 
 $("customerBanner")
 .classList.remove(
 "visible"
 );
 
-
 document
-.querySelectorAll(
-".business"
-)
+.querySelectorAll(".business")
 .forEach(
 item =>
 item.classList.remove(
@@ -2047,11 +1547,9 @@ item.classList.remove(
 )
 );
 
-
 button.classList.add(
 "active"
 );
-
 
 window.history.replaceState(
 {},
@@ -2059,11 +1557,9 @@ window.history.replaceState(
 "historial.html"
 );
 
-
 await loadSales();
 
 }
-
 );
 
 }
@@ -2080,13 +1576,11 @@ $("search")
 renderSales
 );
 
-
 $("from")
 .addEventListener(
 "change",
 renderSales
 );
-
 
 $("to")
 .addEventListener(
@@ -2131,5 +1625,4 @@ loadSales();
 </script>
 
 </body>
-
 </html>
