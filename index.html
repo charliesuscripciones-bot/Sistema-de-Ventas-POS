@@ -251,9 +251,7 @@ header p{
   border-color:#111827;
 }
 
-/* =========================================
-   CLIENTES
-========================================= */
+/* CLIENTES */
 
 .customer-box{
   position:relative;
@@ -369,13 +367,7 @@ header p{
   border-color:#d1d5db;
 }
 
-.general-customer:active{
-  transform:scale(.99);
-}
-
-/* =========================================
-   BOTONES
-========================================= */
+/* BOTONES */
 
 .charge{
   width:100%;
@@ -504,18 +496,11 @@ Administración de negocios y ventas
 
 </header>
 
-
 <div class="container">
 
-<div
-id="status"
-class="status">
-</div>
+<div id="status" class="status"></div>
 
-
-<!-- =========================
-     NEGOCIOS
-========================= -->
+<!-- NEGOCIOS -->
 
 <div class="businesses">
 
@@ -528,7 +513,6 @@ BakeQuiri
 
 </button>
 
-
 <button
 type="button"
 class="business-btn"
@@ -540,10 +524,7 @@ SpicyRoll
 
 </div>
 
-
-<!-- =========================
-     NAVEGACIÓN
-========================= -->
+<!-- NAVEGACIÓN -->
 
 <div class="navigation">
 
@@ -556,7 +537,6 @@ id="accountsButton">
 
 </button>
 
-
 <button
 type="button"
 class="nav-btn clients"
@@ -566,7 +546,6 @@ id="clientsButton">
 
 </button>
 
-
 <button
 type="button"
 class="nav-btn"
@@ -575,7 +554,6 @@ id="historyButton">
 🧾 Historial
 
 </button>
-
 
 <button
 type="button"
@@ -588,17 +566,11 @@ id="dashboardButton">
 
 </div>
 
-
-<!-- =========================
-     POS
-========================= -->
+<!-- POS -->
 
 <div class="layout">
 
-
-<!-- =========================
-     PRODUCTOS
-========================= -->
+<!-- PRODUCTOS -->
 
 <div class="card">
 
@@ -606,9 +578,7 @@ id="dashboardButton">
 Productos
 </h2>
 
-<div
-id="products"
-class="products">
+<div id="products" class="products">
 
 <div class="loading">
 Cargando productos...
@@ -618,10 +588,7 @@ Cargando productos...
 
 </div>
 
-
-<!-- =========================
-     CARRITO
-========================= -->
+<!-- CARRITO -->
 
 <div class="card">
 
@@ -629,16 +596,13 @@ Cargando productos...
 🛒 Carrito
 </h2>
 
-
-<div
-id="cart">
+<div id="cart">
 
 <div class="empty">
 El carrito está vacío
 </div>
 
 </div>
-
 
 <div class="total">
 
@@ -652,10 +616,7 @@ $0.00
 
 </div>
 
-
-<!-- =========================
-     CLIENTE
-========================= -->
+<!-- CLIENTE -->
 
 <div class="customer-title">
 
@@ -663,9 +624,7 @@ $0.00
 
 </div>
 
-
 <div class="customer-box">
-
 
 <div class="customer-row">
 
@@ -688,19 +647,16 @@ class="add-client">
 
 </div>
 
-
 <div
 id="customerResults"
 class="customer-results">
 </div>
-
 
 <div
 id="selectedCustomer"
 class="selected-customer"
 style="display:none">
 </div>
-
 
 <div
 id="generalCustomer"
@@ -712,10 +668,7 @@ class="general-customer">
 
 </div>
 
-
-<!-- =========================
-     PAGO
-========================= -->
+<!-- PAGO -->
 
 <div class="payment-title">
 
@@ -723,10 +676,7 @@ Método de pago
 
 </div>
 
-
-<div
-id="payments"
-class="payments">
+<div id="payments" class="payments">
 
 <div class="empty">
 Cargando métodos de pago...
@@ -734,10 +684,7 @@ Cargando métodos de pago...
 
 </div>
 
-
-<!-- =========================
-     BOTONES
-========================= -->
+<!-- BOTONES -->
 
 <button
 type="button"
@@ -747,7 +694,6 @@ class="charge">
 💵 COBRAR
 
 </button>
-
 
 <button
 type="button"
@@ -764,16 +710,11 @@ class="account">
 
 </div>
 
-
-<script
-src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-</script>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
 "use strict";
-
 
 /* =========================================
    SUPABASE
@@ -782,17 +723,14 @@ src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 const SUPABASE_URL =
 "https://jrxklpstlloeckihcduv.supabase.co";
 
-
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
-
 
 const supabaseClient =
 window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
-
 
 /* =========================================
    NEGOCIOS
@@ -808,7 +746,6 @@ const BUSINESS_IDS = {
 
 };
 
-
 /* =========================================
    ESTADO
 ========================================= */
@@ -820,16 +757,21 @@ let products = [];
 
 let payments = [];
 
-let cart = [];
+/*
+  IMPORTANTE:
+  Los clientes son COMPARTIDOS.
+  No se cambia esta lista al cambiar de negocio.
+*/
 
 let customers = [];
+
+let cart = [];
 
 let selectedPaymentId =
 null;
 
 let selectedCustomerId =
 null;
-
 
 /* =========================================
    UTILIDADES
@@ -839,15 +781,13 @@ const $ =
 id =>
 document.getElementById(id);
 
-
 function money(value){
 
   return "$" +
   Number(value || 0)
-  .toFixed(2);
+    .toFixed(2);
 
 }
-
 
 function escapeHTML(value){
 
@@ -861,7 +801,6 @@ function escapeHTML(value){
   .replaceAll("'","&#039;");
 
 }
-
 
 function showStatus(
   message,
@@ -879,7 +818,6 @@ function showStatus(
 
 }
 
-
 function clearStatus(){
 
   $("status").textContent =
@@ -890,31 +828,26 @@ function clearStatus(){
 
 }
 
-
 /* =========================================
-   CARGAR DATOS DEL NEGOCIO
+   CARGAR DATOS
 ========================================= */
 
 async function loadBusinessData(){
 
   clearStatus();
 
-
   $("products").innerHTML =
   '<div class="empty">' +
   'Cargando productos...' +
   '</div>';
-
 
   $("payments").innerHTML =
   '<div class="empty">' +
   'Cargando métodos de pago...' +
   '</div>';
 
-
   const businessId =
   BUSINESS_IDS[currentBusiness];
-
 
   try{
 
@@ -928,8 +861,10 @@ async function loadBusinessData(){
 
     ] = await Promise.all([
 
-
-      /* PRODUCTOS */
+      /* ================================
+         PRODUCTOS
+         SEPARADOS POR NEGOCIO
+      ================================= */
 
       supabaseClient
 
@@ -953,8 +888,10 @@ async function loadBusinessData(){
           "name"
         ),
 
-
-      /* MÉTODOS DE PAGO */
+      /* ================================
+         MÉTODOS DE PAGO
+         SEPARADOS POR NEGOCIO
+      ================================= */
 
       supabaseClient
 
@@ -978,8 +915,13 @@ async function loadBusinessData(){
           "name"
         ),
 
-
-      /* CLIENTES DEL NEGOCIO ACTUAL */
+      /* ================================
+         CLIENTES COMPARTIDOS
+         
+         AQUÍ ESTÁ LA CORRECCIÓN:
+         Se cargan clientes de AMBOS
+         negocios.
+      ================================= */
 
       supabaseClient
 
@@ -989,9 +931,9 @@ async function loadBusinessData(){
           "id,business_id,name,phone,notes"
         )
 
-        .eq(
+        .in(
           "business_id",
-          businessId
+          Object.values(BUSINESS_IDS)
         )
 
         .order(
@@ -999,7 +941,6 @@ async function loadBusinessData(){
         )
 
     ]);
-
 
     if(
       productsResult.error
@@ -1012,7 +953,6 @@ async function loadBusinessData(){
 
     }
 
-
     if(
       paymentsResult.error
     ){
@@ -1024,34 +964,32 @@ async function loadBusinessData(){
 
     }
 
-
     if(
       customersResult.error
     ){
 
       throw new Error(
-        "No pude cargar los clientes: " +
+        "No pude cargar los clientes compartidos: " +
         customersResult.error.message
       );
 
     }
 
-
     products =
-    productsResult.data || [];
-
+      productsResult.data || [];
 
     payments =
-    paymentsResult.data || [];
+      paymentsResult.data || [];
 
+    /*
+      NO filtramos customers por currentBusiness.
+      Se conservan todos los clientes de ambos negocios.
+    */
 
     customers =
-    customersResult.data || [];
+      customersResult.data || [];
 
-
-    /* ===============================
-       MÉTODO DE PAGO POR DEFECTO
-    =============================== */
+    /* MÉTODO DE PAGO */
 
     if(
       !payments.some(
@@ -1067,26 +1005,24 @@ async function loadBusinessData(){
 
     }
 
+    /*
+      El cliente seleccionado puede pertenecer
+      originalmente a cualquiera de los dos negocios.
+    */
 
-    /* ===============================
-       VERIFICAR CLIENTE SELECCIONADO
-    =============================== */
-
-    const currentCustomer =
+    const selected =
       customers.find(
         customer =>
           customer.id ===
           selectedCustomerId
       );
 
-
-    if(!currentCustomer){
+    if(!selected){
 
       selectedCustomerId =
         null;
 
     }
-
 
     renderProducts();
 
@@ -1100,16 +1036,15 @@ async function loadBusinessData(){
 
   catch(error){
 
-    console.error(error);
-
+    console.error(
+      error
+    );
 
     $("products").innerHTML =
     "";
 
-
     $("payments").innerHTML =
     "";
-
 
     showStatus(
       error.message ||
@@ -1120,7 +1055,6 @@ async function loadBusinessData(){
 
 }
 
-
 /* =========================================
    PRODUCTOS
 ========================================= */
@@ -1130,10 +1064,8 @@ function renderProducts(){
   const container =
   $("products");
 
-
   container.innerHTML =
   "";
-
 
   if(
     !products.length
@@ -1148,7 +1080,6 @@ function renderProducts(){
 
   }
 
-
   products.forEach(
     product => {
 
@@ -1157,16 +1088,13 @@ function renderProducts(){
         product.stock || 0
       );
 
-
       const button =
       document.createElement(
         "button"
       );
 
-
       button.type =
       "button";
-
 
       button.className =
       "product" +
@@ -1176,10 +1104,8 @@ function renderProducts(){
         : ""
       );
 
-
       button.disabled =
       stock <= 0;
-
 
       button.innerHTML =
 
@@ -1207,24 +1133,20 @@ function renderProducts(){
 
         '</div>';
 
-
       button.addEventListener(
         "click",
         () =>
           addToCart(product)
       );
 
-
       container.appendChild(
         button
       );
 
     }
-
   );
 
 }
-
 
 /* =========================================
    MÉTODOS DE PAGO
@@ -1235,10 +1157,8 @@ function renderPayments(){
   const container =
   $("payments");
 
-
   container.innerHTML =
   "";
-
 
   if(
     !payments.length
@@ -1253,7 +1173,6 @@ function renderPayments(){
 
   }
 
-
   payments.forEach(
     payment => {
 
@@ -1262,10 +1181,8 @@ function renderPayments(){
         "button"
       );
 
-
       button.type =
       "button";
-
 
       button.className =
       "payment" +
@@ -1279,10 +1196,8 @@ function renderPayments(){
         : ""
       );
 
-
       button.textContent =
       payment.name;
-
 
       button.addEventListener(
         "click",
@@ -1296,17 +1211,14 @@ function renderPayments(){
         }
       );
 
-
       container.appendChild(
         button
       );
 
     }
-
   );
 
 }
-
 
 /* =========================================
    CARRITO
@@ -1321,14 +1233,12 @@ function addToCart(
     product.stock || 0
   );
 
-
   const item =
   cart.find(
     i =>
       i.id ===
       product.id
   );
-
 
   if(item){
 
@@ -1365,11 +1275,9 @@ function addToCart(
 
   }
 
-
   renderCart();
 
 }
-
 
 function changeQuantity(
   id,
@@ -1383,11 +1291,9 @@ function changeQuantity(
       id
   );
 
-
   if(!item){
     return;
   }
-
 
   const product =
   products.find(
@@ -1396,7 +1302,6 @@ function changeQuantity(
       id
   );
 
-
   const max =
   Number(
     product?.stock ??
@@ -1404,10 +1309,8 @@ function changeQuantity(
     0
   );
 
-
   item.quantity +=
   amount;
-
 
   if(
     item.quantity >
@@ -1418,7 +1321,6 @@ function changeQuantity(
       max;
 
   }
-
 
   if(
     item.quantity <= 0
@@ -1432,11 +1334,9 @@ function changeQuantity(
 
   }
 
-
   renderCart();
 
 }
-
 
 function getCartTotal(){
 
@@ -1458,16 +1358,13 @@ function getCartTotal(){
 
 }
 
-
 function renderCart(){
 
   const container =
   $("cart");
 
-
   container.innerHTML =
   "";
-
 
   if(
     !cart.length
@@ -1478,15 +1375,12 @@ function renderCart(){
     'El carrito está vacío' +
     '</div>';
 
-
     $("total").textContent =
     "$0.00";
-
 
     return;
 
   }
-
 
   cart.forEach(
     item => {
@@ -1495,22 +1389,18 @@ function renderCart(){
       Number(item.price) *
       Number(item.quantity);
 
-
       const row =
       document.createElement(
         "div"
       );
 
-
       row.className =
       "cart-item";
-
 
       const info =
       document.createElement(
         "div"
       );
-
 
       info.innerHTML =
 
@@ -1530,30 +1420,24 @@ function renderCart(){
 
         ' c/u</div>';
 
-
       const controls =
       document.createElement(
         "div"
       );
 
-
       controls.className =
       "quantity";
-
 
       const minus =
       document.createElement(
         "button"
       );
 
-
       minus.type =
       "button";
 
-
       minus.textContent =
       "−";
-
 
       minus.addEventListener(
         "click",
@@ -1564,30 +1448,24 @@ function renderCart(){
           )
       );
 
-
       const quantity =
       document.createElement(
         "span"
       );
 
-
       quantity.textContent =
       item.quantity;
-
 
       const plus =
       document.createElement(
         "button"
       );
 
-
       plus.type =
       "button";
 
-
       plus.textContent =
       "+";
-
 
       plus.addEventListener(
         "click",
@@ -1598,45 +1476,37 @@ function renderCart(){
           )
       );
 
-
       controls.append(
         minus,
         quantity,
         plus
       );
 
-
       info.appendChild(
         controls
       );
-
 
       const subtotalElement =
       document.createElement(
         "strong"
       );
 
-
       subtotalElement.textContent =
       money(
         subtotal
       );
-
 
       row.append(
         info,
         subtotalElement
       );
 
-
       container.appendChild(
         row
       );
 
     }
-
   );
-
 
   $("total").textContent =
   money(
@@ -1645,25 +1515,20 @@ function renderCart(){
 
 }
 
-
 /* =========================================
-   CLIENTES
+   CLIENTES COMPARTIDOS
 ========================================= */
 
-function getCurrentBusinessCustomers(){
+function getSharedCustomers(){
 
-  const businessId =
-    BUSINESS_IDS[currentBusiness];
+  /*
+    TODOS los clientes cargados desde
+    BakeQuiri + SpicyRoll.
+  */
 
-
-  return customers.filter(
-    customer =>
-      customer.business_id ===
-      businessId
-  );
+  return customers;
 
 }
-
 
 /* =========================================
    CLIENTE SELECCIONADO
@@ -1675,54 +1540,41 @@ function renderSelectedCustomer(){
     customers.find(
       customer =>
         customer.id ===
-        selectedCustomerId &&
-        customer.business_id ===
-        BUSINESS_IDS[currentBusiness]
+        selectedCustomerId
     );
 
-
   const selectedElement =
-    $("selectedCustomer");
-
+  $("selectedCustomer");
 
   const general =
-    $("generalCustomer");
-
+  $("generalCustomer");
 
   if(!selected){
 
     selectedCustomerId =
       null;
 
-
     selectedElement.style.display =
       "none";
-
 
     selectedElement.innerHTML =
       "";
 
-
     general.style.display =
       "block";
 
-
     general.innerHTML =
       "👤 Consumidor general";
-
 
     return;
 
   }
 
-
   general.style.display =
     "none";
 
-
   selectedElement.style.display =
     "block";
-
 
   selectedElement.innerHTML =
 
@@ -1752,7 +1604,6 @@ function renderSelectedCustomer(){
     "Quitar" +
     "</button>";
 
-
   $("clearCustomer")
   .addEventListener(
     "click",
@@ -1761,18 +1612,14 @@ function renderSelectedCustomer(){
       selectedCustomerId =
         null;
 
-
       $("customerSearch").value =
         "";
-
 
       $("customerResults").innerHTML =
         "";
 
-
       $("customerResults").style.display =
         "none";
-
 
       renderSelectedCustomer();
 
@@ -1781,9 +1628,8 @@ function renderSelectedCustomer(){
 
 }
 
-
 /* =========================================
-   BUSCAR CLIENTES
+   BUSCAR CLIENTES COMPARTIDOS
 ========================================= */
 
 function renderCustomerResults(
@@ -1793,14 +1639,12 @@ function renderCustomerResults(
   const container =
     $("customerResults");
 
-
   const search =
     String(
       query || ""
     )
     .trim()
     .toLowerCase();
-
 
   if(!search){
 
@@ -1814,13 +1658,17 @@ function renderCustomerResults(
 
   }
 
+  const sharedCustomers =
+    getSharedCustomers();
 
-  const businessCustomers =
-    getCurrentBusinessCustomers();
-
+  /*
+    Evitamos mostrar dos veces al mismo
+    cliente si accidentalmente existe
+    con el mismo teléfono en ambos negocios.
+  */
 
   const filtered =
-    businessCustomers.filter(
+    sharedCustomers.filter(
       customer => {
 
         const name =
@@ -1829,20 +1677,17 @@ function renderCustomerResults(
           )
           .toLowerCase();
 
-
         const phone =
           String(
             customer.phone || ""
           )
           .toLowerCase();
 
-
         const notes =
           String(
             customer.notes || ""
           )
           .toLowerCase();
-
 
         return (
           name.includes(search) ||
@@ -1853,42 +1698,76 @@ function renderCustomerResults(
       }
     );
 
+  const uniqueCustomers = [];
+
+  const seenPhones =
+    new Set();
+
+  filtered.forEach(
+    customer => {
+
+      const normalizedPhone =
+        String(
+          customer.phone || ""
+        )
+        .replace(/\D/g,"");
+
+      if(
+        normalizedPhone &&
+        seenPhones.has(
+          normalizedPhone
+        )
+      ){
+
+        return;
+
+      }
+
+      if(normalizedPhone){
+
+        seenPhones.add(
+          normalizedPhone
+        );
+
+      }
+
+      uniqueCustomers.push(
+        customer
+      );
+
+    }
+  );
 
   container.innerHTML =
     "";
 
-
-  if(!filtered.length){
+  if(
+    !uniqueCustomers.length
+  ){
 
     const empty =
       document.createElement(
         "div"
       );
 
-
     empty.className =
       "empty";
 
-
     empty.textContent =
       "No encontramos ese cliente.";
-
 
     container.appendChild(
       empty
     );
 
-
     container.style.display =
       "block";
-
 
     return;
 
   }
 
-
-  filtered
+  uniqueCustomers
     .slice(0,10)
     .forEach(
       customer => {
@@ -1898,14 +1777,11 @@ function renderCustomerResults(
             "button"
           );
 
-
         button.type =
           "button";
 
-
         button.className =
           "customer-result";
-
 
         button.innerHTML =
 
@@ -1930,7 +1806,6 @@ function renderCustomerResults(
             : ""
           );
 
-
         button.addEventListener(
           "click",
           () => {
@@ -1938,24 +1813,19 @@ function renderCustomerResults(
             selectedCustomerId =
               customer.id;
 
-
             $("customerSearch").value =
               customer.name || "";
-
 
             container.innerHTML =
               "";
 
-
             container.style.display =
               "none";
-
 
             renderSelectedCustomer();
 
           }
         );
-
 
         container.appendChild(
           button
@@ -1964,15 +1834,13 @@ function renderCustomerResults(
       }
     );
 
-
   container.style.display =
     "block";
 
 }
 
-
 /* =========================================
-   EVENTO BUSCAR
+   BUSCADOR
 ========================================= */
 
 $("customerSearch")
@@ -1987,11 +1855,6 @@ $("customerSearch")
   }
 );
 
-
-/* =========================================
-   EVENTO FOCUS
-========================================= */
-
 $("customerSearch")
 .addEventListener(
   "focus",
@@ -1999,7 +1862,6 @@ $("customerSearch")
 
     const value =
       event.target.value.trim();
-
 
     if(value){
 
@@ -2011,7 +1873,6 @@ $("customerSearch")
 
   }
 );
-
 
 /* =========================================
    CONSUMIDOR GENERAL
@@ -2025,24 +1886,19 @@ $("generalCustomer")
     selectedCustomerId =
       null;
 
-
     $("customerSearch").value =
       "";
-
 
     $("customerResults").innerHTML =
       "";
 
-
     $("customerResults").style.display =
       "none";
-
 
     renderSelectedCustomer();
 
   }
 );
-
 
 /* =========================================
    NUEVO CLIENTE
@@ -2059,7 +1915,6 @@ $("addClientButton")
   }
 );
 
-
 /* =========================================
    CERRAR RESULTADOS
 ========================================= */
@@ -2072,7 +1927,6 @@ document.addEventListener(
       document.querySelector(
         ".customer-box"
       );
-
 
     if(
       box &&
@@ -2090,7 +1944,6 @@ document.addEventListener(
   }
 );
 
-
 /* =========================================
    CAMBIAR NEGOCIO
 ========================================= */
@@ -2102,42 +1955,49 @@ async function changeBusiness(
 
   if(
     name ===
-    currentBusiness &&
-    products.length
+    currentBusiness
   ){
 
     return;
 
   }
 
-
   currentBusiness =
     name;
 
+  /*
+    El carrito sí cambia al cambiar
+    de negocio.
+  */
 
   cart =
     [];
 
+  /*
+    El método de pago debe pertenecer
+    al negocio actual.
+  */
 
   selectedPaymentId =
     null;
 
+  /*
+    IMPORTANTE:
+    NO borramos customers.
+    Los clientes son compartidos.
+  */
 
   selectedCustomerId =
     null;
 
-
   $("customerSearch").value =
     "";
-
 
   $("customerResults").innerHTML =
     "";
 
-
   $("customerResults").style.display =
     "none";
-
 
   document
     .querySelectorAll(
@@ -2150,16 +2010,13 @@ async function changeBusiness(
         )
     );
 
-
   button.classList.add(
     "active"
   );
 
-
   await loadBusinessData();
 
 }
-
 
 /* =========================================
    REGISTRAR VENTA
@@ -2170,7 +2027,6 @@ async function registerSale(
 ){
 
   clearStatus();
-
 
   if(
     !cart.length
@@ -2183,7 +2039,6 @@ async function registerSale(
     return;
 
   }
-
 
   if(
     !isPending &&
@@ -2198,7 +2053,6 @@ async function registerSale(
 
   }
 
-
   if(
     isPending &&
     !selectedCustomerId
@@ -2212,26 +2066,21 @@ async function registerSale(
 
   }
 
-
   const button =
     isPending
     ? $("accountButton")
     : $("chargeButton");
 
-
   const originalText =
     button.textContent;
 
-
   button.disabled =
     true;
-
 
   button.textContent =
     isPending
     ? "GUARDANDO..."
     : "REGISTRANDO...";
-
 
   try{
 
@@ -2266,7 +2115,6 @@ async function registerSale(
         })
       );
 
-
     const total =
       items.reduce(
         (
@@ -2280,6 +2128,14 @@ async function registerSale(
         0
       );
 
+    /*
+      IMPORTANTE:
+      La venta sigue perteneciendo
+      al negocio actual.
+
+      El cliente puede haber sido creado
+      originalmente en el otro negocio.
+    */
 
     const result =
       await supabaseClient
@@ -2310,7 +2166,6 @@ async function registerSale(
           }
         );
 
-
     if(
       result.error
     ){
@@ -2319,14 +2174,12 @@ async function registerSale(
 
     }
 
-
     const customer =
       customers.find(
         c =>
           c.id ===
           selectedCustomerId
       );
-
 
     const paymentName =
       payments.find(
@@ -2336,9 +2189,7 @@ async function registerSale(
       )?.name ||
       "Pago";
 
-
     let message;
-
 
     if(isPending){
 
@@ -2384,37 +2235,28 @@ async function registerSale(
 
     }
 
-
     alert(
       message
     );
 
-
     cart =
       [];
-
 
     selectedCustomerId =
       null;
 
-
     $("customerSearch").value =
       "";
-
 
     $("customerResults").innerHTML =
       "";
 
-
     $("customerResults").style.display =
       "none";
 
-
     renderSelectedCustomer();
 
-
     await loadBusinessData();
-
 
     showStatus(
       isPending
@@ -2422,7 +2264,6 @@ async function registerSale(
       : "Venta guardada correctamente.",
       "ok"
     );
-
 
     console.log(
       "register_sale response:",
@@ -2436,7 +2277,6 @@ async function registerSale(
     console.error(
       error
     );
-
 
     showStatus(
       "No se pudo registrar la operación: " +
@@ -2453,14 +2293,12 @@ async function registerSale(
     button.disabled =
       false;
 
-
     button.textContent =
       originalText;
 
   }
 
 }
-
 
 /* =========================================
    COBRAR
@@ -2475,7 +2313,6 @@ $("chargeButton")
     )
 );
 
-
 /* =========================================
    DEJAR A CUENTA
 ========================================= */
@@ -2488,7 +2325,6 @@ $("accountButton")
       true
     )
 );
-
 
 /* =========================================
    NAVEGACIÓN
@@ -2505,7 +2341,6 @@ $("accountsButton")
   }
 );
 
-
 $("clientsButton")
 .addEventListener(
   "click",
@@ -2516,7 +2351,6 @@ $("clientsButton")
 
   }
 );
-
 
 $("historyButton")
 .addEventListener(
@@ -2529,7 +2363,6 @@ $("historyButton")
   }
 );
 
-
 $("dashboardButton")
 .addEventListener(
   "click",
@@ -2540,7 +2373,6 @@ $("dashboardButton")
 
   }
 );
-
 
 /* =========================================
    NEGOCIOS
@@ -2566,7 +2398,6 @@ document
 
     }
   );
-
 
 /* =========================================
    INICIAR
