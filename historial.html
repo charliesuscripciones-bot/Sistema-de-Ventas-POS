@@ -74,6 +74,23 @@ header p{
   color:#64748b;
 }
 
+/* NEGOCIO ACTUAL */
+
+.business-banner{
+  display:none;
+  margin-bottom:18px;
+  padding:12px 15px;
+  border-radius:12px;
+  background:#f0fdf4;
+  border:1px solid #bbf7d0;
+  color:#166534;
+  font-weight:800;
+}
+
+.business-banner.visible{
+  display:block;
+}
+
 /* BOTONES */
 
 .toolbar{
@@ -320,11 +337,6 @@ button:disabled{
   color:#334155;
 }
 
-.no-payments{
-  color:#94a3b8;
-  font-size:13px;
-}
-
 /* MODAL */
 
 .modal-overlay{
@@ -506,7 +518,6 @@ button:disabled{
 </style>
 </head>
 
-
 <body>
 
 <header>
@@ -519,8 +530,12 @@ Consulta las ventas registradas de tus negocios
 
 </header>
 
-
 <div class="container">
+
+<div
+id="businessBanner"
+class="business-banner">
+</div>
 
 <div
 id="customerBanner"
@@ -542,12 +557,11 @@ class="customer-banner-phone">
 
 </div>
 
-
 <div class="toolbar">
 
 <button
 type="button"
-class="business active"
+class="business"
 data-business="BakeQuiri">
 BakeQuiri
 </button>
@@ -575,7 +589,6 @@ id="back">
 
 </div>
 
-
 <div class="filters">
 
 <input
@@ -597,7 +610,6 @@ type="date"
 
 </div>
 
-
 <div class="summary">
 
 <div class="summary-card">
@@ -614,7 +626,6 @@ class="value">
 
 </div>
 
-
 <div class="summary-card">
 
 <div class="label">
@@ -628,7 +639,6 @@ $0.00
 </div>
 
 </div>
-
 
 <div class="summary-card">
 
@@ -646,7 +656,6 @@ $0.00
 
 </div>
 
-
 <div class="card">
 
 <div id="message"></div>
@@ -663,10 +672,7 @@ Cargando ventas...
 
 </div>
 
-
-<!-- =========================
-     MODAL ABONO
-========================= -->
+<!-- MODAL ABONO -->
 
 <div
 id="paymentModal"
@@ -755,13 +761,11 @@ Cancelar
 
 </div>
 
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
 "use strict";
-
 
 /* =========================================
    SUPABASE
@@ -795,8 +799,43 @@ const BUSINESS_IDS = {
 };
 
 
+/* =========================================
+   URL
+========================================= */
+
+const urlParams =
+new URLSearchParams(
+  window.location.search
+);
+
+
+/*
+ * Ahora la página reconoce:
+ *
+ * historial.html
+ *
+ * historial.html?customer_id=XXXX
+ *
+ * historial.html?business=SpicyRoll
+ *
+ * historial.html?business=SpicyRoll&customer_id=XXXX
+ */
+
+const urlBusiness =
+urlParams.get("business");
+
 let currentBusiness =
-"BakeQuiri";
+(
+  urlBusiness &&
+  BUSINESS_IDS[urlBusiness]
+)
+? urlBusiness
+: "BakeQuiri";
+
+
+let selectedCustomerId =
+urlParams.get("customer_id");
+
 
 let sales = [];
 
@@ -806,19 +845,6 @@ let paymentMethods = [];
 
 let selectedSaleForPayment =
 null;
-
-
-/* =========================================
-   CLIENTE
-========================================= */
-
-const urlParams =
-new URLSearchParams(
-  window.location.search
-);
-
-let selectedCustomerId =
-urlParams.get("customer_id");
 
 
 /* =========================================
@@ -856,6 +882,89 @@ function formatDate(value){
 
 
 /* =========================================
+   MOSTRAR NEGOCIO
+========================================= */
+
+function updateBusinessUI(){
+
+  document
+    .querySelectorAll(".business")
+    .forEach(
+      button => {
+
+        button.classList.toggle(
+          "active",
+          button.dataset.business ===
+          currentBusiness
+        );
+
+      }
+    );
+
+
+  if(selectedCustomerId){
+
+    $("businessBanner")
+      .textContent =
+        "🏪 " +
+        currentBusiness +
+        " · Historial personal del cliente";
+
+    $("businessBanner")
+      .classList.add("visible");
+
+  }
+  else{
+
+    $("businessBanner")
+      .classList.remove("visible");
+
+  }
+
+}
+
+
+/* =========================================
+   ACTUALIZAR URL
+========================================= */
+
+function updateUrl(){
+
+  const params =
+    new URLSearchParams();
+
+
+  params.set(
+    "business",
+    currentBusiness
+  );
+
+
+  if(selectedCustomerId){
+
+    params.set(
+      "customer_id",
+      selectedCustomerId
+    );
+
+  }
+
+
+  const newUrl =
+    "historial.html?" +
+    params.toString();
+
+
+  window.history.replaceState(
+    {},
+    "",
+    newUrl
+  );
+
+}
+
+
+/* =========================================
    CARGAR MÉTODOS DE PAGO
 ========================================= */
 
@@ -863,6 +972,7 @@ async function loadPaymentMethods(){
 
   const businessId =
     BUSINESS_IDS[currentBusiness];
+
 
   const result =
     await supabaseClient
@@ -882,8 +992,10 @@ async function loadPaymentMethods(){
         "name"
       );
 
+
   if(result.error)
     throw result.error;
+
 
   paymentMethods =
     result.data || [];
@@ -892,7 +1004,7 @@ async function loadPaymentMethods(){
 
 
 /* =========================================
-   RENDERIZAR MÉTODOS DE PAGO
+   RENDERIZAR MÉTODOS
 ========================================= */
 
 function renderPaymentMethods(){
@@ -900,29 +1012,38 @@ function renderPaymentMethods(){
   const select =
     $("paymentMethod");
 
+
   select.innerHTML = "";
+
 
   if(!paymentMethods.length){
 
     const option =
-      document.createElement("option");
+      document.createElement(
+        "option"
+      );
 
     option.value = "";
 
     option.textContent =
       "No hay métodos de pago configurados";
 
-    select.appendChild(option);
+    select.appendChild(
+      option
+    );
 
     return;
 
   }
 
+
   paymentMethods.forEach(
     method => {
 
       const option =
-        document.createElement("option");
+        document.createElement(
+          "option"
+        );
 
       option.value =
         method.id;
@@ -930,7 +1051,9 @@ function renderPaymentMethods(){
       option.textContent =
         method.name;
 
-      select.appendChild(option);
+      select.appendChild(
+        option
+      );
 
     }
   );
@@ -939,13 +1062,25 @@ function renderPaymentMethods(){
 
 
 /* =========================================
-   CLIENTE
+   CARGAR CLIENTE SELECCIONADO
 ========================================= */
 
 async function loadSelectedCustomer(){
 
-  if(!selectedCustomerId)
+  $("customerBanner")
+    .classList.remove(
+      "visible"
+    );
+
+
+  if(!selectedCustomerId){
+
+    updateBusinessUI();
+
     return;
+
+  }
+
 
   try{
 
@@ -961,27 +1096,49 @@ async function loadSelectedCustomer(){
         )
         .single();
 
+
     if(result.error)
       throw result.error;
+
 
     const customer =
       result.data;
 
-    if(!customer)
+
+    if(!customer){
+
+      selectedCustomerId =
+        null;
+
+      updateUrl();
+
+      updateBusinessUI();
+
       return;
+
+    }
+
 
     $("customerBannerName")
       .textContent =
-      customer.name || "Cliente";
+        customer.name ||
+        "Cliente";
+
 
     $("customerBannerPhone")
       .textContent =
-      customer.phone
-      ? "📱 " + customer.phone
-      : "";
+        customer.phone
+        ? "📱 " + customer.phone
+        : "";
+
 
     $("customerBanner")
-      .classList.add("visible");
+      .classList.add(
+        "visible"
+      );
+
+
+    updateBusinessUI();
 
   }
   catch(error){
@@ -1004,8 +1161,9 @@ async function loadSales(){
 
   $("sales").innerHTML =
     '<div class="empty">' +
-    'Cargando ventas...' +
-    '</div>';
+    "Cargando ventas..." +
+    "</div>";
+
 
   try{
 
@@ -1083,14 +1241,19 @@ async function loadSales(){
     }
 
 
-    /* MÉTODOS DE PAGO */
+    /* MÉTODOS */
 
     await loadPaymentMethods();
 
     renderPaymentMethods();
 
 
+    /* CLIENTE */
+
     await loadSelectedCustomer();
+
+
+    /* VENTAS */
 
     await renderSales();
 
@@ -1099,17 +1262,14 @@ async function loadSales(){
 
     console.error(error);
 
+
     $("sales").innerHTML =
-
       '<div class="error">' +
-
       "No se pudieron cargar las ventas: " +
-
       (
         error.message ||
         error
       ) +
-
       "</div>";
 
   }
@@ -1129,8 +1289,10 @@ async function renderSales(){
       .trim()
       .toLowerCase();
 
+
   const from =
     $("from").value;
+
 
   const to =
     $("to").value;
@@ -1151,16 +1313,26 @@ async function renderSales(){
         if(from && date < from)
           return false;
 
+
         if(to && date > to)
           return false;
 
 
+        /*
+         * MUY IMPORTANTE:
+         * si estamos viendo historial personal,
+         * filtramos por cliente.
+         */
+
         if(
           selectedCustomerId &&
-          sale.customer_id !==
-          selectedCustomerId
-        )
+          String(sale.customer_id) !==
+          String(selectedCustomerId)
+        ){
+
           return false;
+
+        }
 
 
         return true;
@@ -1173,6 +1345,7 @@ async function renderSales(){
 
   const customerMap =
     new Map();
+
 
   const customerIds =
     [
@@ -1293,7 +1466,13 @@ async function renderSales(){
 
     $("sales").innerHTML =
       '<div class="empty">' +
-      "No hay ventas que coincidan con los filtros." +
+      (
+        selectedCustomerId
+        ? "Este cliente no tiene ventas registradas en " +
+          currentBusiness +
+          "."
+        : "No hay ventas que coincidan con los filtros."
+      ) +
       "</div>";
 
     return;
@@ -1420,7 +1599,9 @@ async function renderSales(){
         "</div>" +
 
         '<div class="details">' +
-        "ID: " +
+        "🏪 " +
+        currentBusiness +
+        " · ID: " +
         sale.id +
         "</div>" +
 
@@ -1638,7 +1819,7 @@ async function renderSales(){
 
 
 /* =========================================
-   ABRIR MODAL
+   MODAL
 ========================================= */
 
 function openPaymentModal(
@@ -1652,18 +1833,16 @@ function openPaymentModal(
 
   $("paymentSubtitle")
     .textContent =
+      currentBusiness +
+      " · " +
       customerName +
       " · Venta de " +
-      money(
-        sale.total
-      );
+      money(sale.total);
 
 
   $("modalBalance")
     .textContent =
-      money(
-        sale.balance
-      );
+      money(sale.balance);
 
 
   $("paymentAmount")
@@ -1722,6 +1901,7 @@ function closePaymentModal(){
   selectedSaleForPayment =
     null;
 
+
   $("paymentModal")
     .classList.remove(
       "visible"
@@ -1741,6 +1921,7 @@ function showPaymentError(
   $("modalError")
     .textContent =
       message;
+
 
   $("modalError")
     .classList.add(
@@ -1829,43 +2010,23 @@ async function registerPayment(
   }
 
 
-  $("savePayment")
-    .disabled =
-      true;
+  $("savePayment").disabled =
+    true;
 
+  $("payFull").disabled =
+    true;
 
-  $("payFull")
-    .disabled =
-      true;
+  $("paymentMethod").disabled =
+    true;
 
+  $("savePayment").textContent =
+    "⏳ Procesando...";
 
-  $("paymentMethod")
-    .disabled =
-      true;
-
-
-  $("savePayment")
-    .textContent =
-      "⏳ Procesando...";
-
-
-  $("payFull")
-    .textContent =
-      "⏳ Procesando...";
+  $("payFull").textContent =
+    "⏳ Procesando...";
 
 
   try{
-
-    /*
-     * IMPORTANTE:
-     * El método de pago ahora se manda
-     * desde el selector:
-     *
-     * EFECTIVO
-     * TRANSFERENCIA
-     * TARJETA
-     * etc.
-     */
 
     const rpcResult =
       await supabaseClient
@@ -1986,29 +2147,20 @@ async function registerPayment(
   }
   finally{
 
-    $("savePayment")
-      .disabled =
-        false;
+    $("savePayment").disabled =
+      false;
 
+    $("payFull").disabled =
+      false;
 
-    $("payFull")
-      .disabled =
-        false;
+    $("paymentMethod").disabled =
+      false;
 
+    $("savePayment").textContent =
+      "💵 Registrar abono";
 
-    $("paymentMethod")
-      .disabled =
-        false;
-
-
-    $("savePayment")
-      .textContent =
-        "💵 Registrar abono";
-
-
-    $("payFull")
-      .textContent =
-        "✓ Liquidar cuenta";
+    $("payFull").textContent =
+      "✓ Liquidar cuenta";
 
   }
 
@@ -2138,47 +2290,29 @@ document
         if(
           business ===
           currentBusiness
-        )
+        ){
+
           return;
+
+        }
 
 
         currentBusiness =
           business;
 
 
-        selectedCustomerId =
-          null;
+        /*
+         * IMPORTANTE:
+         *
+         * YA NO BORRAMOS selectedCustomerId.
+         *
+         * Esto permite conservar el cliente
+         * mientras cambiamos de negocio.
+         */
 
+        updateUrl();
 
-        $("customerBanner")
-          .classList.remove(
-            "visible"
-          );
-
-
-        document
-          .querySelectorAll(
-            ".business"
-          )
-          .forEach(
-            item =>
-              item.classList.remove(
-                "active"
-              )
-          );
-
-
-        button.classList.add(
-          "active"
-        );
-
-
-        window.history.replaceState(
-          {},
-          "",
-          "historial.html"
-        );
-
+        updateBusinessUI();
 
         await loadSales();
 
@@ -2245,10 +2379,11 @@ $("back")
    INICIO
 ========================================= */
 
+updateBusinessUI();
+
 loadSales();
 
 </script>
 
 </body>
-
 </html>
