@@ -304,6 +304,12 @@ button:disabled{
   font-weight:800;
 }
 
+.payment-method{
+  color:#64748b;
+  font-size:12px;
+  margin-top:3px;
+}
+
 .payment-total{
   margin-top:10px;
   padding-top:10px;
@@ -380,17 +386,20 @@ button:disabled{
   margin-bottom:7px;
 }
 
-.modal input{
+.modal input,
+.modal select{
   width:100%;
   padding:15px;
   border:2px solid #ddd;
   border-radius:12px;
-  font-size:20px;
+  font-size:18px;
   font-weight:700;
   margin-bottom:15px;
+  background:#fff;
 }
 
-.modal input:focus{
+.modal input:focus,
+.modal select:focus{
   outline:none;
   border-color:#2680eb;
 }
@@ -512,7 +521,6 @@ Consulta las ventas registradas de tus negocios
 
 
 <div class="container">
-
 
 <div
 id="customerBanner"
@@ -656,7 +664,9 @@ Cargando ventas...
 </div>
 
 
-<!-- MODAL -->
+<!-- =========================
+     MODAL ABONO
+========================= -->
 
 <div
 id="paymentModal"
@@ -704,6 +714,17 @@ min="0.01"
 step="0.01"
 placeholder="0.00"
 >
+
+<label for="paymentMethod">
+Método de pago del abono
+</label>
+
+<select
+id="paymentMethod">
+<option value="">
+Cargando métodos de pago...
+</option>
+</select>
 
 <div class="modal-buttons">
 
@@ -754,8 +775,8 @@ const SUPABASE_PUBLISHABLE_KEY =
 
 const supabaseClient =
 window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_PUBLISHABLE_KEY
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
 );
 
 
@@ -765,21 +786,13 @@ SUPABASE_PUBLISHABLE_KEY
 
 const BUSINESS_IDS = {
 
-BakeQuiri:
-"c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+  BakeQuiri:
+  "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
 
-SpicyRoll:
-"ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
+  SpicyRoll:
+  "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
 
 };
-
-
-/* =========================================
-   MÉTODO DE PAGO
-========================================= */
-
-const EFECTIVO_PAYMENT_METHOD_ID =
-"dce26abf-5b2c-4b4f-9f3b-1381e0cbfef0";
 
 
 let currentBusiness =
@@ -788,6 +801,8 @@ let currentBusiness =
 let sales = [];
 
 let payments = [];
+
+let paymentMethods = [];
 
 let selectedSaleForPayment =
 null;
@@ -799,7 +814,7 @@ null;
 
 const urlParams =
 new URLSearchParams(
-window.location.search
+  window.location.search
 );
 
 let selectedCustomerId =
@@ -817,79 +832,166 @@ document.getElementById(id);
 
 function money(value){
 
-return "$" +
-Number(value || 0).toFixed(2);
+  return "$" +
+    Number(value || 0).toFixed(2);
 
 }
 
 
 function formatDate(value){
 
-if(!value)
-return "Sin fecha";
+  if(!value)
+    return "Sin fecha";
 
-return new Date(value)
-.toLocaleString(
-"es-MX",
-{
-dateStyle:"short",
-timeStyle:"short"
-}
-);
+  return new Date(value)
+    .toLocaleString(
+      "es-MX",
+      {
+        dateStyle:"short",
+        timeStyle:"short"
+      }
+    );
 
 }
 
 
 /* =========================================
-   CLIENTE SELECCIONADO
+   CARGAR MÉTODOS DE PAGO
+========================================= */
+
+async function loadPaymentMethods(){
+
+  const businessId =
+    BUSINESS_IDS[currentBusiness];
+
+  const result =
+    await supabaseClient
+      .from("payment_methods")
+      .select(
+        "id,name,provider,active"
+      )
+      .eq(
+        "business_id",
+        businessId
+      )
+      .eq(
+        "active",
+        true
+      )
+      .order(
+        "name"
+      );
+
+  if(result.error)
+    throw result.error;
+
+  paymentMethods =
+    result.data || [];
+
+}
+
+
+/* =========================================
+   RENDERIZAR MÉTODOS DE PAGO
+========================================= */
+
+function renderPaymentMethods(){
+
+  const select =
+    $("paymentMethod");
+
+  select.innerHTML = "";
+
+  if(!paymentMethods.length){
+
+    const option =
+      document.createElement("option");
+
+    option.value = "";
+
+    option.textContent =
+      "No hay métodos de pago configurados";
+
+    select.appendChild(option);
+
+    return;
+
+  }
+
+  paymentMethods.forEach(
+    method => {
+
+      const option =
+        document.createElement("option");
+
+      option.value =
+        method.id;
+
+      option.textContent =
+        method.name;
+
+      select.appendChild(option);
+
+    }
+  );
+
+}
+
+
+/* =========================================
+   CLIENTE
 ========================================= */
 
 async function loadSelectedCustomer(){
 
-if(!selectedCustomerId)
-return;
+  if(!selectedCustomerId)
+    return;
 
-try{
+  try{
 
-const result =
-await supabaseClient
-.from("customers")
-.select("id,name,phone")
-.eq("id",selectedCustomerId)
-.single();
+    const result =
+      await supabaseClient
+        .from("customers")
+        .select(
+          "id,name,phone"
+        )
+        .eq(
+          "id",
+          selectedCustomerId
+        )
+        .single();
 
-if(result.error)
-throw result.error;
+    if(result.error)
+      throw result.error;
 
-const customer =
-result.data;
+    const customer =
+      result.data;
 
-if(!customer)
-return;
+    if(!customer)
+      return;
 
-$("customerBannerName")
-.textContent =
-customer.name || "Cliente";
+    $("customerBannerName")
+      .textContent =
+      customer.name || "Cliente";
 
-$("customerBannerPhone")
-.textContent =
-customer.phone
-? "📱 " + customer.phone
-: "";
+    $("customerBannerPhone")
+      .textContent =
+      customer.phone
+      ? "📱 " + customer.phone
+      : "";
 
-$("customerBanner")
-.classList.add("visible");
+    $("customerBanner")
+      .classList.add("visible");
 
-}
+  }
+  catch(error){
 
-catch(error){
+    console.error(
+      "No se pudo cargar el cliente:",
+      error
+    );
 
-console.error(
-"No se pudo cargar el cliente:",
-error
-);
-
-}
+  }
 
 }
 
@@ -900,594 +1002,713 @@ error
 
 async function loadSales(){
 
-$("sales").innerHTML =
-'<div class="empty">Cargando ventas...</div>';
+  $("sales").innerHTML =
+    '<div class="empty">' +
+    'Cargando ventas...' +
+    '</div>';
 
-try{
+  try{
 
-const businessId =
-BUSINESS_IDS[currentBusiness];
-
-const result =
-await supabaseClient
-.from("sales")
-.select(
-"id,business_id,customer_id,sale_date,total,balance,status,created_at"
-)
-.eq(
-"business_id",
-businessId
-)
-.order(
-"created_at",
-{
-ascending:false
-}
-);
-
-if(result.error)
-throw result.error;
-
-sales =
-result.data || [];
+    const businessId =
+      BUSINESS_IDS[currentBusiness];
 
 
-/* CARGAR ABONOS */
+    /* VENTAS */
 
-const saleIds =
-sales.map(
-sale => sale.id
-);
-
-
-payments = [];
-
-
-if(saleIds.length){
-
-const paymentsResult =
-await supabaseClient
-.from("payments")
-.select(
-"id,sale_id,amount,paid_at,payment_method_id"
-)
-.in(
-"sale_id",
-saleIds
-)
-.order(
-"paid_at",
-{
-ascending:true
-}
-);
+    const result =
+      await supabaseClient
+        .from("sales")
+        .select(
+          "id,business_id,customer_id,sale_date,total,balance,status,created_at"
+        )
+        .eq(
+          "business_id",
+          businessId
+        )
+        .order(
+          "created_at",
+          {
+            ascending:false
+          }
+        );
 
 
-if(paymentsResult.error)
-throw paymentsResult.error;
+    if(result.error)
+      throw result.error;
 
 
-payments =
-paymentsResult.data || [];
-
-}
+    sales =
+      result.data || [];
 
 
-await loadSelectedCustomer();
+    /* ABONOS */
 
-await renderSales();
+    const saleIds =
+      sales.map(
+        sale =>
+          sale.id
+      );
 
-}
 
-catch(error){
+    payments = [];
 
-console.error(error);
 
-$("sales").innerHTML =
+    if(saleIds.length){
 
-'<div class="error">' +
+      const paymentsResult =
+        await supabaseClient
+          .from("payments")
+          .select(
+            "id,sale_id,amount,paid_at,payment_method_id"
+          )
+          .in(
+            "sale_id",
+            saleIds
+          )
+          .order(
+            "paid_at",
+            {
+              ascending:true
+            }
+          );
 
-"No se pudieron cargar las ventas: " +
 
-(
-error.message ||
-error
-) +
+      if(paymentsResult.error)
+        throw paymentsResult.error;
 
-"</div>";
 
-}
+      payments =
+        paymentsResult.data || [];
+
+    }
+
+
+    /* MÉTODOS DE PAGO */
+
+    await loadPaymentMethods();
+
+    renderPaymentMethods();
+
+
+    await loadSelectedCustomer();
+
+    await renderSales();
+
+  }
+  catch(error){
+
+    console.error(error);
+
+    $("sales").innerHTML =
+
+      '<div class="error">' +
+
+      "No se pudieron cargar las ventas: " +
+
+      (
+        error.message ||
+        error
+      ) +
+
+      "</div>";
+
+  }
 
 }
 
 
 /* =========================================
-   RENDERIZAR
+   RENDERIZAR VENTAS
 ========================================= */
 
 async function renderSales(){
 
-const searchText =
-$("search")
-.value
-.trim()
-.toLowerCase();
+  const searchText =
+    $("search")
+      .value
+      .trim()
+      .toLowerCase();
 
-const from =
-$("from").value;
+  const from =
+    $("from").value;
 
-const to =
-$("to").value;
-
-
-let rows =
-sales.filter(
-sale => {
-
-const date =
-(
-sale.sale_date ||
-sale.created_at ||
-""
-).slice(0,10);
+  const to =
+    $("to").value;
 
 
-if(from && date < from)
-return false;
+  let rows =
+    sales.filter(
+      sale => {
 
-if(to && date > to)
-return false;
-
-
-if(
-selectedCustomerId &&
-sale.customer_id !==
-selectedCustomerId
-)
-return false;
+        const date =
+          (
+            sale.sale_date ||
+            sale.created_at ||
+            ""
+          ).slice(0,10);
 
 
-return true;
+        if(from && date < from)
+          return false;
+
+        if(to && date > to)
+          return false;
+
+
+        if(
+          selectedCustomerId &&
+          sale.customer_id !==
+          selectedCustomerId
+        )
+          return false;
+
+
+        return true;
+
+      }
+    );
+
+
+  /* CLIENTES */
+
+  const customerMap =
+    new Map();
+
+  const customerIds =
+    [
+      ...new Set(
+        rows
+          .map(
+            sale =>
+              sale.customer_id
+          )
+          .filter(Boolean)
+      )
+    ];
+
+
+  if(customerIds.length){
+
+    const result =
+      await supabaseClient
+        .from("customers")
+        .select(
+          "id,name,phone"
+        )
+        .in(
+          "id",
+          customerIds
+        );
+
+
+    if(result.error)
+      throw result.error;
+
+
+    (result.data || [])
+      .forEach(
+        customer => {
+
+          customerMap.set(
+            customer.id,
+            customer
+          );
+
+        }
+      );
+
+  }
+
+
+  /* BÚSQUEDA */
+
+  rows =
+    rows.filter(
+      sale => {
+
+        if(!searchText)
+          return true;
+
+
+        const customer =
+          customerMap.get(
+            sale.customer_id
+          );
+
+
+        const text =
+          [
+            customer?.name,
+            customer?.phone,
+            sale.id
+          ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+
+
+        return text.includes(
+          searchText
+        );
+
+      }
+    );
+
+
+  /* RESUMEN */
+
+  $("count").textContent =
+    rows.length;
+
+
+  $("total").textContent =
+    money(
+      rows.reduce(
+        (sum,sale) =>
+          sum +
+          Number(
+            sale.total || 0
+          ),
+        0
+      )
+    );
+
+
+  $("balance").textContent =
+    money(
+      rows.reduce(
+        (sum,sale) =>
+          sum +
+          Number(
+            sale.balance || 0
+          ),
+        0
+      )
+    );
+
+
+  /* SIN RESULTADOS */
+
+  if(!rows.length){
+
+    $("sales").innerHTML =
+      '<div class="empty">' +
+      "No hay ventas que coincidan con los filtros." +
+      "</div>";
+
+    return;
+
+  }
+
+
+  $("sales").innerHTML =
+    "";
+
+
+  /* VENTAS */
+
+  rows.forEach(
+    sale => {
+
+      const customer =
+        customerMap.get(
+          sale.customer_id
+        );
+
+
+      const customerName =
+        customer?.name ||
+        "Consumidor general";
+
+
+      const phone =
+        customer?.phone
+        ? " · 📱 " +
+          customer.phone
+        : "";
+
+
+      const state =
+        sale.status || "";
+
+
+      const balance =
+        Number(
+          sale.balance || 0
+        );
+
+
+      /* ABONOS */
+
+      const salePayments =
+        payments.filter(
+          payment =>
+            payment.sale_id ===
+            sale.id
+        );
+
+
+      const totalPaid =
+        salePayments.reduce(
+          (sum,payment) =>
+            sum +
+            Number(
+              payment.amount || 0
+            ),
+          0
+        );
+
+
+      let statusText;
+
+
+      if(state === "paid"){
+
+        statusText =
+          "Pagada";
+
+      }
+      else if(state === "open"){
+
+        statusText =
+          "Pendiente";
+
+      }
+      else{
+
+        statusText =
+          state ||
+          "Registrada";
+
+      }
+
+
+      /* CONTENEDOR */
+
+      const element =
+        document.createElement(
+          "div"
+        );
+
+
+      element.className =
+        "sale";
+
+
+      element.innerHTML =
+
+        '<div class="top">' +
+
+        '<div class="date">' +
+        "Venta · " +
+        formatDate(
+          sale.sale_date ||
+          sale.created_at
+        ) +
+        "</div>" +
+
+        '<div class="total">' +
+        money(sale.total) +
+        "</div>" +
+
+        "</div>" +
+
+        '<div class="customer">' +
+        "👤 " +
+        customerName +
+        phone +
+        "</div>" +
+
+        '<div class="details">' +
+        "ID: " +
+        sale.id +
+        "</div>" +
+
+        '<span class="status ' +
+        (
+          state === "open"
+          ? "open"
+          : ""
+        ) +
+        '">' +
+
+        (
+          state === "paid"
+          ? "✓ "
+          : ""
+        ) +
+
+        statusText +
+
+        "</span>";
+
+
+      /* HISTORIAL DE ABONOS */
+
+      if(salePayments.length){
+
+        const history =
+          document.createElement(
+            "div"
+          );
+
+
+        history.className =
+          "payment-history";
+
+
+        history.innerHTML =
+          '<div class="payment-history-title">' +
+          "💵 Historial de abonos" +
+          "</div>";
+
+
+        salePayments.forEach(
+          payment => {
+
+            const row =
+              document.createElement(
+                "div"
+              );
+
+
+            row.className =
+              "payment-row";
+
+
+            const method =
+              paymentMethods.find(
+                method =>
+                  method.id ===
+                  payment.payment_method_id
+              );
+
+
+            row.innerHTML =
+
+              '<div>' +
+
+              '<div class="payment-date">' +
+              "💵 " +
+              formatDate(
+                payment.paid_at
+              ) +
+              "</div>" +
+
+              (
+                method
+                ? '<div class="payment-method">' +
+                  "Método: " +
+                  method.name +
+                  "</div>"
+                : ""
+              ) +
+
+              "</div>" +
+
+              '<div class="payment-amount">' +
+              "+" +
+              money(
+                payment.amount
+              ) +
+              "</div>";
+
+
+            history.appendChild(
+              row
+            );
+
+          }
+        );
+
+
+        const totalRow =
+          document.createElement(
+            "div"
+          );
+
+
+        totalRow.className =
+          "payment-total";
+
+
+        totalRow.innerHTML =
+
+          "<span>Total abonado</span>" +
+
+          "<span>" +
+          money(totalPaid) +
+          "</span>";
+
+
+        history.appendChild(
+          totalRow
+        );
+
+
+        element.appendChild(
+          history
+        );
+
+      }
+
+
+      /* SALDO */
+
+      if(balance > 0){
+
+        const balanceButton =
+          document.createElement(
+            "button"
+          );
+
+
+        balanceButton.type =
+          "button";
+
+
+        balanceButton.className =
+          "balance-button";
+
+
+        balanceButton.innerHTML =
+          "💰 Saldo pendiente: " +
+          money(balance) +
+          " · Registrar abono";
+
+
+        balanceButton.addEventListener(
+          "click",
+          () => {
+
+            openPaymentModal(
+              sale,
+              customerName
+            );
+
+          }
+        );
+
+
+        element.appendChild(
+          balanceButton
+        );
+
+      }
+      else{
+
+        const paidButton =
+          document.createElement(
+            "button"
+          );
+
+
+        paidButton.type =
+          "button";
+
+
+        paidButton.className =
+          "balance-button paid";
+
+
+        paidButton.disabled =
+          true;
+
+
+        paidButton.innerHTML =
+          "✓ Cuenta liquidada";
+
+
+        element.appendChild(
+          paidButton
+        );
+
+      }
+
+
+      $("sales")
+        .appendChild(
+          element
+        );
+
+    }
+  );
 
 }
-);
-
-
-/* CLIENTES */
-
-const customerMap =
-new Map();
-
-const customerIds =
-[
-...new Set(
-rows
-.map(
-sale =>
-sale.customer_id
-)
-.filter(Boolean)
-)
-];
-
-
-if(customerIds.length){
-
-const result =
-await supabaseClient
-.from("customers")
-.select("id,name,phone")
-.in("id",customerIds);
-
-if(result.error)
-throw result.error;
-
-(result.data || [])
-.forEach(
-customer => {
-
-customerMap.set(
-customer.id,
-customer
-);
-
-}
-);
-
-}
-
-
-/* BÚSQUEDA */
-
-rows =
-rows.filter(
-sale => {
-
-if(!searchText)
-return true;
-
-const customer =
-customerMap.get(
-sale.customer_id
-);
-
-const text =
-[
-customer?.name,
-customer?.phone,
-sale.id
-]
-.filter(Boolean)
-.join(" ")
-.toLowerCase();
-
-return text.includes(
-searchText
-);
-
-}
-);
-
-
-/* RESUMEN */
-
-$("count").textContent =
-rows.length;
-
-$("total").textContent =
-money(
-rows.reduce(
-(sum,sale) =>
-sum +
-Number(sale.total || 0),
-0
-)
-);
-
-$("balance").textContent =
-money(
-rows.reduce(
-(sum,sale) =>
-sum +
-Number(sale.balance || 0),
-0
-)
-);
-
-
-/* SIN RESULTADOS */
-
-if(!rows.length){
-
-$("sales").innerHTML =
-'<div class="empty">' +
-"No hay ventas que coincidan con los filtros." +
-"</div>";
-
-return;
-
-}
-
-
-$("sales").innerHTML =
-"";
-
-
-/* VENTAS */
-
-rows.forEach(
-sale => {
-
-const customer =
-customerMap.get(
-sale.customer_id
-);
-
-const customerName =
-customer?.name ||
-"Consumidor general";
-
-const phone =
-customer?.phone
-? " · 📱 " + customer.phone
-: "";
-
-const state =
-sale.status || "";
-
-const balance =
-Number(sale.balance || 0);
-
-
-/* ABONOS DE ESTA VENTA */
-
-const salePayments =
-payments.filter(
-payment =>
-payment.sale_id === sale.id
-);
-
-
-const totalPaid =
-salePayments.reduce(
-(sum,payment) =>
-sum +
-Number(payment.amount || 0),
-0
-);
-
-
-let statusText;
-
-if(state === "paid"){
-
-statusText =
-"Pagada";
-
-}
-else if(state === "open"){
-
-statusText =
-"Pendiente";
-
-}
-else{
-
-statusText =
-state ||
-"Registrada";
-
-}
-
-
-/* CONTENEDOR */
-
-const element =
-document.createElement("div");
-
-element.className =
-"sale";
-
-
-/* INFORMACIÓN */
-
-element.innerHTML =
-
-'<div class="top">' +
-
-'<div class="date">' +
-"Venta · " +
-formatDate(
-sale.sale_date ||
-sale.created_at
-) +
-"</div>" +
-
-'<div class="total">' +
-money(sale.total) +
-"</div>" +
-
-"</div>" +
-
-'<div class="customer">' +
-"👤 " +
-customerName +
-phone +
-"</div>" +
-
-'<div class="details">' +
-"ID: " +
-sale.id +
-"</div>" +
-
-'<span class="status ' +
-(
-state === "open"
-? "open"
-: ""
-) +
-'">' +
-
-(
-state === "paid"
-? "✓ "
-: ""
-) +
-
-statusText +
-
-"</span>";
 
 
 /* =========================================
-   HISTORIAL DE ABONOS
-========================================= */
-
-if(salePayments.length){
-
-const history =
-document.createElement("div");
-
-history.className =
-"payment-history";
-
-history.innerHTML =
-'<div class="payment-history-title">' +
-"💵 Historial de abonos" +
-"</div>";
-
-
-salePayments.forEach(
-payment => {
-
-const row =
-document.createElement("div");
-
-row.className =
-"payment-row";
-
-row.innerHTML =
-
-'<div class="payment-date">' +
-"💵 " +
-formatDate(
-payment.paid_at
-) +
-"</div>" +
-
-'<div class="payment-amount">' +
-"+" +
-money(payment.amount) +
-"</div>";
-
-history.appendChild(row);
-
-});
-
-
-const totalRow =
-document.createElement("div");
-
-totalRow.className =
-"payment-total";
-
-totalRow.innerHTML =
-
-'<span>Total abonado</span>' +
-
-'<span>' +
-money(totalPaid) +
-"</span>";
-
-history.appendChild(
-totalRow
-);
-
-
-element.appendChild(
-history
-);
-
-}
-
-
-/* =========================================
-   SALDO / ABONO
-========================================= */
-
-if(balance > 0){
-
-const balanceButton =
-document.createElement("button");
-
-balanceButton.type =
-"button";
-
-balanceButton.className =
-"balance-button";
-
-balanceButton.innerHTML =
-"💰 Saldo pendiente: " +
-money(balance) +
-" · Registrar abono";
-
-balanceButton.addEventListener(
-"click",
-() => {
-
-openPaymentModal(
-sale,
-customerName
-);
-
-}
-);
-
-element.appendChild(
-balanceButton
-);
-
-}
-else{
-
-const paidButton =
-document.createElement("button");
-
-paidButton.type =
-"button";
-
-paidButton.className =
-"balance-button paid";
-
-paidButton.disabled =
-true;
-
-paidButton.innerHTML =
-"✓ Cuenta liquidada";
-
-element.appendChild(
-paidButton
-);
-
-}
-
-
-$("sales")
-.appendChild(
-element
-);
-
-});
-
-}
-
-
-/* =========================================
-   MODAL
+   ABRIR MODAL
 ========================================= */
 
 function openPaymentModal(
-sale,
-customerName
+  sale,
+  customerName
 ){
 
-selectedSaleForPayment =
-sale;
+  selectedSaleForPayment =
+    sale;
 
-$("paymentSubtitle")
-.textContent =
-customerName +
-" · Venta de " +
-money(sale.total);
 
-$("modalBalance")
-textContent =
-money(sale.balance);
+  $("paymentSubtitle")
+    .textContent =
+      customerName +
+      " · Venta de " +
+      money(
+        sale.total
+      );
 
-$("paymentAmount")
-value =
-"";
 
-$("modalError")
-textContent =
-"";
+  $("modalBalance")
+    .textContent =
+      money(
+        sale.balance
+      );
 
-$("modalError")
-.classList.remove(
-"visible"
-);
 
-$("paymentModal")
-.classList.add(
-"visible"
-);
+  $("paymentAmount")
+    .value =
+      "";
 
-setTimeout(
-() => {
-$("paymentAmount").focus();
-},
-100
-);
+
+  $("modalError")
+    .textContent =
+      "";
+
+
+  $("modalError")
+    .classList.remove(
+      "visible"
+    );
+
+
+  renderPaymentMethods();
+
+
+  if(paymentMethods.length){
+
+    $("paymentMethod")
+      .value =
+        paymentMethods[0].id;
+
+  }
+
+
+  $("paymentModal")
+    .classList.add(
+      "visible"
+    );
+
+
+  setTimeout(
+    () => {
+
+      $("paymentAmount")
+        .focus();
+
+    },
+    100
+  );
 
 }
 
@@ -1498,13 +1719,13 @@ $("paymentAmount").focus();
 
 function closePaymentModal(){
 
-selectedSaleForPayment =
-null;
+  selectedSaleForPayment =
+    null;
 
-$("paymentModal")
-.classList.remove(
-"visible"
-);
+  $("paymentModal")
+    .classList.remove(
+      "visible"
+    );
 
 }
 
@@ -1514,205 +1735,282 @@ $("paymentModal")
 ========================================= */
 
 function showPaymentError(
-message
+  message
 ){
 
-$("modalError")
-textContent =
-message;
+  $("modalError")
+    .textContent =
+      message;
 
-$("modalError")
-.classList.add(
-"visible"
-);
+  $("modalError")
+    .classList.add(
+      "visible"
+    );
 
 }
 
 
 /* =========================================
    REGISTRAR ABONO
-   UTILIZANDO RPC
 ========================================= */
 
 async function registerPayment(
-amount
+  amount
 ){
 
-if(!selectedSaleForPayment)
-return;
+  if(!selectedSaleForPayment)
+    return;
 
 
-const sale =
-selectedSaleForPayment;
-
-const currentBalance =
-Number(
-sale.balance || 0
-);
-
-amount =
-Number(amount);
+  const sale =
+    selectedSaleForPayment;
 
 
-if(!Number.isFinite(amount)){
-
-showPaymentError(
-"Escribe una cantidad válida."
-);
-
-return;
-
-}
+  const currentBalance =
+    Number(
+      sale.balance || 0
+    );
 
 
-if(amount <= 0){
-
-showPaymentError(
-"El abono debe ser mayor a $0.00."
-);
-
-return;
-
-}
+  amount =
+    Number(amount);
 
 
-if(amount >
-currentBalance + 0.001){
-
-showPaymentError(
-"El abono no puede ser mayor al saldo pendiente de " +
-money(currentBalance) +
-"."
-);
-
-return;
-
-}
+  const paymentMethodId =
+    $("paymentMethod").value;
 
 
-$("savePayment").disabled =
-true;
+  if(!Number.isFinite(amount)){
 
-$("payFull").disabled =
-true;
+    showPaymentError(
+      "Escribe una cantidad válida."
+    );
 
-$("savePayment").textContent =
-"⏳ Procesando...";
+    return;
 
-$("payFull").textContent =
-"⏳ Procesando...";
+  }
 
 
-try{
+  if(amount <= 0){
 
-const rpcResult =
-await supabaseClient.rpc(
-"registrar_abono_venta",
-{
-p_sale_id:
-sale.id,
+    showPaymentError(
+      "El abono debe ser mayor a $0.00."
+    );
 
-p_amount:
-amount,
+    return;
 
-p_payment_method_id:
-EFECTIVO_PAYMENT_METHOD_ID
-}
-);
+  }
 
 
-if(rpcResult.error)
-throw rpcResult.error;
+  if(
+    amount >
+    currentBalance + 0.001
+  ){
+
+    showPaymentError(
+      "El abono no puede ser mayor al saldo pendiente de " +
+      money(currentBalance) +
+      "."
+    );
+
+    return;
+
+  }
 
 
-const result =
-Array.isArray(rpcResult.data)
-? rpcResult.data[0]
-: rpcResult.data;
+  if(!paymentMethodId){
+
+    showPaymentError(
+      "Selecciona el método de pago del abono."
+    );
+
+    return;
+
+  }
 
 
-if(!result){
-
-throw new Error(
-"Supabase no devolvió el resultado del abono."
-);
-
-}
+  $("savePayment")
+    .disabled =
+      true;
 
 
-const newBalance =
-Number(
-result.new_balance || 0
-);
+  $("payFull")
+    .disabled =
+      true;
 
 
-closePaymentModal();
+  $("paymentMethod")
+    .disabled =
+      true;
 
 
-if(newBalance <= 0.001){
-
-$("message").innerHTML =
-'<div class="success-message">' +
-"✅ Cuenta liquidada correctamente." +
-"</div>";
-
-}
-else{
-
-$("message").innerHTML =
-'<div class="success-message">' +
-"💰 Abono registrado correctamente. " +
-"Nuevo saldo: " +
-money(newBalance) +
-"</div>";
-
-}
+  $("savePayment")
+    .textContent =
+      "⏳ Procesando...";
 
 
-await loadSales();
+  $("payFull")
+    .textContent =
+      "⏳ Procesando...";
 
 
-setTimeout(
-() => {
-$("message").innerHTML = "";
-},
-4000
-);
+  try{
 
-}
+    /*
+     * IMPORTANTE:
+     * El método de pago ahora se manda
+     * desde el selector:
+     *
+     * EFECTIVO
+     * TRANSFERENCIA
+     * TARJETA
+     * etc.
+     */
 
-catch(error){
+    const rpcResult =
+      await supabaseClient
+        .rpc(
+          "registrar_abono_venta",
+          {
 
-console.error(
-"Error registrando abono:",
-error
-);
+            p_sale_id:
+              sale.id,
 
-showPaymentError(
-"No se pudo registrar el abono: " +
-(
-error.message ||
-"Error desconocido."
-)
-);
+            p_amount:
+              amount,
 
-}
+            p_payment_method_id:
+              paymentMethodId
 
-finally{
+          }
+        );
 
-$("savePayment").disabled =
-false;
 
-$("payFull").disabled =
-false;
+    if(rpcResult.error)
+      throw rpcResult.error;
 
-$("savePayment").textContent =
-"💵 Registrar abono";
 
-$("payFull").textContent =
-"✓ Liquidar cuenta";
+    const result =
+      Array.isArray(
+        rpcResult.data
+      )
+      ? rpcResult.data[0]
+      : rpcResult.data;
 
-}
+
+    if(!result){
+
+      throw new Error(
+        "Supabase no devolvió el resultado del abono."
+      );
+
+    }
+
+
+    const newBalance =
+      Number(
+        result.new_balance || 0
+      );
+
+
+    const selectedMethod =
+      paymentMethods.find(
+        method =>
+          method.id ===
+          paymentMethodId
+      );
+
+
+    closePaymentModal();
+
+
+    if(newBalance <= 0.001){
+
+      $("message").innerHTML =
+        '<div class="success-message">' +
+        "✅ Cuenta liquidada correctamente con " +
+        (
+          selectedMethod?.name ||
+          "el método seleccionado"
+        ) +
+        "." +
+        "</div>";
+
+    }
+    else{
+
+      $("message").innerHTML =
+        '<div class="success-message">' +
+        "💰 Abono registrado correctamente con " +
+        (
+          selectedMethod?.name ||
+          "el método seleccionado"
+        ) +
+        ". Nuevo saldo: " +
+        money(newBalance) +
+        "</div>";
+
+    }
+
+
+    await loadSales();
+
+
+    setTimeout(
+      () => {
+
+        $("message").innerHTML =
+          "";
+
+      },
+      5000
+    );
+
+  }
+  catch(error){
+
+    console.error(
+      "Error registrando abono:",
+      error
+    );
+
+
+    showPaymentError(
+      "No se pudo registrar el abono: " +
+      (
+        error.message ||
+        "Error desconocido."
+      )
+    );
+
+  }
+  finally{
+
+    $("savePayment")
+      .disabled =
+        false;
+
+
+    $("payFull")
+      .disabled =
+        false;
+
+
+    $("paymentMethod")
+      .disabled =
+        false;
+
+
+    $("savePayment")
+      .textContent =
+        "💵 Registrar abono";
+
+
+    $("payFull")
+      .textContent =
+        "✓ Liquidar cuenta";
+
+  }
 
 }
 
@@ -1723,16 +2021,16 @@ $("payFull").textContent =
 
 $("savePayment")
 .addEventListener(
-"click",
-async () => {
+  "click",
+  async () => {
 
-await registerPayment(
-Number(
-$("paymentAmount").value
-)
-);
+    await registerPayment(
+      Number(
+        $("paymentAmount").value
+      )
+    );
 
-}
+  }
 );
 
 
@@ -1742,22 +2040,25 @@ $("paymentAmount").value
 
 $("payFull")
 .addEventListener(
-"click",
-async () => {
+  "click",
+  async () => {
 
-if(!selectedSaleForPayment)
-return;
+    if(!selectedSaleForPayment)
+      return;
 
-const balance =
-Number(
-selectedSaleForPayment.balance || 0
-);
 
-await registerPayment(
-balance
-);
+    const balance =
+      Number(
+        selectedSaleForPayment.balance ||
+        0
+      );
 
-}
+
+    await registerPayment(
+      balance
+    );
+
+  }
 );
 
 
@@ -1767,8 +2068,8 @@ balance
 
 $("cancelPayment")
 .addEventListener(
-"click",
-closePaymentModal
+  "click",
+  closePaymentModal
 );
 
 
@@ -1778,19 +2079,19 @@ closePaymentModal
 
 $("paymentModal")
 .addEventListener(
-"click",
-event => {
+  "click",
+  event => {
 
-if(
-event.target ===
-$("paymentModal")
-){
+    if(
+      event.target ===
+      $("paymentModal")
+    ){
 
-closePaymentModal();
+      closePaymentModal();
 
-}
+    }
 
-}
+  }
 );
 
 
@@ -1799,18 +2100,19 @@ closePaymentModal();
 ========================================= */
 
 document.addEventListener(
-"keydown",
-event => {
+  "keydown",
+  event => {
 
-if(
-event.key === "Escape"
-){
+    if(
+      event.key ===
+      "Escape"
+    ){
 
-closePaymentModal();
+      closePaymentModal();
 
-}
+    }
 
-}
+  }
 );
 
 
@@ -1820,63 +2122,70 @@ closePaymentModal();
 
 document
 .querySelectorAll(
-".business"
+  ".business"
 )
 .forEach(
-button => {
+  button => {
 
-button.addEventListener(
-"click",
-async () => {
+    button.addEventListener(
+      "click",
+      async () => {
 
-const business =
-button.dataset.business;
-
-
-if(
-business === currentBusiness
-)
-return;
+        const business =
+          button.dataset.business;
 
 
-currentBusiness =
-business;
+        if(
+          business ===
+          currentBusiness
+        )
+          return;
 
-selectedCustomerId =
-null;
 
-$("customerBanner")
-.classList.remove(
-"visible"
-);
+        currentBusiness =
+          business;
 
-document
-.querySelectorAll(
-".business"
-)
-.forEach(
-item =>
-item.classList.remove(
-"active"
-)
-);
 
-button.classList.add(
-"active"
-);
+        selectedCustomerId =
+          null;
 
-window.history.replaceState(
-{},
-"",
-"historial.html"
-);
 
-await loadSales();
+        $("customerBanner")
+          .classList.remove(
+            "visible"
+          );
 
-}
-);
 
-}
+        document
+          .querySelectorAll(
+            ".business"
+          )
+          .forEach(
+            item =>
+              item.classList.remove(
+                "active"
+              )
+          );
+
+
+        button.classList.add(
+          "active"
+        );
+
+
+        window.history.replaceState(
+          {},
+          "",
+          "historial.html"
+        );
+
+
+        await loadSales();
+
+      }
+    );
+
+  }
 );
 
 
@@ -1886,20 +2195,22 @@ await loadSales();
 
 $("search")
 .addEventListener(
-"input",
-renderSales
+  "input",
+  renderSales
 );
+
 
 $("from")
 .addEventListener(
-"change",
-renderSales
+  "change",
+  renderSales
 );
+
 
 $("to")
 .addEventListener(
-"change",
-renderSales
+  "change",
+  renderSales
 );
 
 
@@ -1909,8 +2220,8 @@ renderSales
 
 $("refresh")
 .addEventListener(
-"click",
-loadSales
+  "click",
+  loadSales
 );
 
 
@@ -1920,13 +2231,13 @@ loadSales
 
 $("back")
 .addEventListener(
-"click",
-() => {
+  "click",
+  () => {
 
-window.location.href =
-"dashboard.html";
+    window.location.href =
+      "dashboard.html";
 
-}
+  }
 );
 
 
