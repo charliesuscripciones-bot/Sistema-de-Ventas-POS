@@ -3,11 +3,7 @@
 <head>
 
 <meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1.0"
->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Cuentas por cobrar | Sistema de Ventas POS</title>
 
@@ -94,10 +90,6 @@ header p{
   background:#111827;
   color:#fff;
   border-color:#111827;
-}
-
-.dashboard-btn{
-  color:#111827;
 }
 
 .refresh-btn{
@@ -261,6 +253,13 @@ header p{
   color:#dc2626;
 }
 
+.sale-paid{
+  margin-top:6px;
+  font-size:14px;
+  color:#16a34a;
+  font-weight:700;
+}
+
 .sale-actions{
   margin-top:13px;
   display:flex;
@@ -276,10 +275,6 @@ header p{
   border-radius:10px;
   font-weight:800;
   cursor:pointer;
-}
-
-.pay-button:hover{
-  background:#15803d;
 }
 
 .history-button{
@@ -303,23 +298,50 @@ header p{
   display:block;
 }
 
+.history-title{
+  font-weight:800;
+  margin-bottom:8px;
+  color:#111827;
+}
+
 .payment-history-item{
   display:flex;
   justify-content:space-between;
   gap:15px;
-  padding:8px 0;
+  padding:10px 0;
+  border-bottom:1px solid #eee;
   color:#4b5563;
   font-size:14px;
 }
 
+.payment-history-item:last-child{
+  border-bottom:none;
+}
+
 .payment-history-item strong{
   color:#16a34a;
+  white-space:nowrap;
+}
+
+.history-total{
+  display:flex;
+  justify-content:space-between;
+  margin-top:10px;
+  padding-top:10px;
+  border-top:2px solid #ddd;
+  font-weight:800;
 }
 
 .empty{
   text-align:center;
   color:#777;
   padding:35px 10px;
+}
+
+.loading{
+  text-align:center;
+  color:#777;
+  padding:25px;
 }
 
 .modal{
@@ -443,218 +465,208 @@ header p{
 
 <header>
 
-  <h1>ð° Cuentas por cobrar</h1>
+<h1>💰 Cuentas por cobrar</h1>
 
-  <p>
-    Control de ventas pendientes y abonos
-  </p>
+<p>
+Control de ventas pendientes y abonos
+</p>
 
 </header>
 
 
 <div class="container">
 
-  <div
-    id="status"
-    class="status">
-  </div>
+<div id="status" class="status"></div>
 
 
-  <!-- NEGOCIOS -->
+<div class="businesses">
 
-  <div class="businesses">
-
-    <button
-      type="button"
-      class="business-btn active"
-      data-business="BakeQuiri">
-      BakeQuiri
-    </button>
-
-    <button
-      type="button"
-      class="business-btn"
-      data-business="SpicyRoll">
-      SpicyRoll
-    </button>
-
-    <button
-      type="button"
-      class="refresh-btn"
-      id="refreshButton">
-      ð Actualizar
-    </button>
-
-    <button
-      type="button"
-      class="dashboard-btn"
-      id="dashboardButton">
-      â Dashboard
-    </button>
-
-  </div>
+<button
+type="button"
+class="business-btn active"
+data-business="BakeQuiri">
+BakeQuiri
+</button>
 
 
-  <!-- RESUMEN -->
-
-  <div class="summary">
-
-    <div class="summary-card pending">
-
-      <div class="summary-label">
-        SALDO PENDIENTE
-      </div>
-
-      <div
-        id="totalPending"
-        class="summary-value">
-        $0.00
-      </div>
-
-    </div>
+<button
+type="button"
+class="business-btn"
+data-business="SpicyRoll">
+SpicyRoll
+</button>
 
 
-    <div class="summary-card clients">
-
-      <div class="summary-label">
-        CLIENTES CON DEUDA
-      </div>
-
-      <div
-        id="totalClients"
-        class="summary-value">
-        0
-      </div>
-
-    </div>
+<button
+type="button"
+class="refresh-btn"
+id="refreshButton">
+🔄 Actualizar
+</button>
 
 
-    <div class="summary-card sales">
-
-      <div class="summary-label">
-        VENTAS PENDIENTES
-      </div>
-
-      <div
-        id="totalSales"
-        class="summary-value">
-        0
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- CUENTAS -->
-
-  <div class="card">
-
-    <h2>
-      ð Cuentas pendientes
-    </h2>
-
-    <input
-      id="search"
-      class="search"
-      type="search"
-      placeholder="ð Buscar cliente por nombre o telÃ©fono"
-      autocomplete="off"
-    >
-
-
-    <div id="accounts">
-
-      <div class="empty">
-        Cargando cuentas...
-      </div>
-
-    </div>
-
-  </div>
+<button
+type="button"
+class="dashboard-btn"
+id="dashboardButton">
+← Dashboard
+</button>
 
 </div>
 
 
-<!-- MODAL DE PAGO -->
+<div class="summary">
+
+<div class="summary-card pending">
+
+<div class="summary-label">
+SALDO PENDIENTE
+</div>
 
 <div
-  id="paymentModal"
-  class="modal">
+id="totalPending"
+class="summary-value">
+$0.00
+</div>
 
-  <div class="modal-card">
-
-    <h2>
-      ðµ Registrar abono
-    </h2>
-
-    <div
-      id="paymentSubtitle"
-      class="modal-subtitle">
-      Venta
-    </div>
+</div>
 
 
-    <div class="field">
+<div class="summary-card clients">
 
-      <label for="paymentAmount">
-        Monto del abono
-      </label>
+<div class="summary-label">
+CLIENTES CON DEUDA
+</div>
 
-      <input
-        id="paymentAmount"
-        type="number"
-        min="0.01"
-        step="0.01"
-        inputmode="decimal"
-        placeholder="0.00"
-      >
+<div
+id="totalClients"
+class="summary-value">
+0
+</div>
 
-    </div>
+</div>
 
 
-    <div class="field">
+<div class="summary-card sales">
 
-      <label for="paymentMethod">
-        MÃ©todo de pago
-      </label>
+<div class="summary-label">
+VENTAS PENDIENTES
+</div>
 
-      <select id="paymentMethod">
+<div
+id="totalSales"
+class="summary-value">
+0
+</div>
 
-        <option value="">
-          Selecciona un mÃ©todo
-        </option>
+</div>
 
-      </select>
-
-    </div>
+</div>
 
 
-    <div class="modal-buttons">
+<div class="card">
 
-      <button
-        type="button"
-        class="cancel-payment"
-        id="cancelPayment">
-        Cancelar
-      </button>
+<h2>
+📋 Cuentas pendientes
+</h2>
 
-      <button
-        type="button"
-        class="confirm-payment"
-        id="confirmPayment">
-        Registrar abono
-      </button>
+<input
+id="search"
+class="search"
+type="search"
+placeholder="🔎 Buscar cliente por nombre o teléfono"
+autocomplete="off"
+>
 
-    </div>
+<div id="accounts">
 
-  </div>
+<div class="empty">
+Cargando cuentas...
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div
+id="paymentModal"
+class="modal">
+
+<div class="modal-card">
+
+<h2>
+💵 Registrar abono
+</h2>
+
+<div
+id="paymentSubtitle"
+class="modal-subtitle">
+Venta
+</div>
+
+
+<div class="field">
+
+<label for="paymentAmount">
+Monto del abono
+</label>
+
+<input
+id="paymentAmount"
+type="number"
+min="0.01"
+step="0.01"
+inputmode="decimal"
+placeholder="0.00"
+>
+
+</div>
+
+
+<div class="field">
+
+<label for="paymentMethod">
+Método de pago
+</label>
+
+<select id="paymentMethod">
+
+<option value="">
+Selecciona un método
+</option>
+
+</select>
+
+</div>
+
+
+<div class="modal-buttons">
+
+<button
+type="button"
+class="cancel-payment"
+id="cancelPayment">
+Cancelar
+</button>
+
+<button
+type="button"
+class="confirm-payment"
+id="confirmPayment">
+Registrar abono
+</button>
+
+</div>
+
+</div>
 
 </div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 
 <script>
 
@@ -666,16 +678,16 @@ header p{
 ========================================= */
 
 const SUPABASE_URL =
-  "https://jrxklpstlloeckihcduv.supabase.co";
+"https://jrxklpstlloeckihcduv.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
+"sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
 const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
 
 
 /* =========================================
@@ -685,29 +697,25 @@ const supabaseClient =
 const BUSINESS_IDS = {
 
   BakeQuiri:
-    "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+  "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
 
   SpicyRoll:
-    "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
+  "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
 
 };
 
 
 let currentBusiness =
-  "BakeQuiri";
+"BakeQuiri";
 
-
-/* =========================================
-   ESTADO
-========================================= */
 
 let customers = [];
 
 let sales = [];
 
-let payments = [];
-
 let selectedSale = null;
+
+let payments = [];
 
 
 /* =========================================
@@ -715,53 +723,26 @@ let selectedSale = null;
 ========================================= */
 
 const $ =
-  id =>
-    document.getElementById(id);
+id =>
+document.getElementById(id);
 
 
 function money(value){
 
   return "$" +
-    Number(value || 0).toFixed(2);
-
-}
-
-
-function showStatus(
-  message,
-  type="ok"
-){
-
-  const status =
-    $("status");
-
-  status.textContent =
-    message;
-
-  status.className =
-    "status " + type;
-
-}
-
-
-function clearStatus(){
-
-  $("status").textContent =
-    "";
-
-  $("status").className =
-    "status";
+  Number(value || 0).toFixed(2);
 
 }
 
 
 function formatDate(value){
 
-  if(!value)
+  if(!value){
     return "Sin fecha";
+  }
 
   const date =
-    new Date(value);
+  new Date(value);
 
   return date.toLocaleDateString(
     "es-MX",
@@ -775,70 +756,116 @@ function formatDate(value){
 }
 
 
+function formatDateTime(value){
+
+  if(!value){
+    return "Sin fecha";
+  }
+
+  const date =
+  new Date(value);
+
+  return date.toLocaleString(
+    "es-MX",
+    {
+      day:"2-digit",
+      month:"2-digit",
+      year:"numeric",
+      hour:"2-digit",
+      minute:"2-digit"
+    }
+  );
+
+}
+
+
+function showStatus(
+  message,
+  type="ok"
+){
+
+  $("status").textContent =
+  message;
+
+  $("status").className =
+  "status " + type;
+
+}
+
+
+function clearStatus(){
+
+  $("status").textContent =
+  "";
+
+  $("status").className =
+  "status";
+
+}
+
+
 /* =========================================
-   CARGAR MÃTODOS DE PAGO
+   MÉTODOS DE PAGO
 ========================================= */
 
 async function loadPaymentMethods(){
 
   const businessId =
-    BUSINESS_IDS[currentBusiness];
+  BUSINESS_IDS[currentBusiness];
 
 
   const result =
-    await supabaseClient
+  await supabaseClient
 
-      .from("payment_methods")
+    .from("payment_methods")
 
-      .select(
-        "id,name,provider"
-      )
+    .select(
+      "id,name,provider"
+    )
 
-      .eq(
-        "business_id",
-        businessId
-      )
+    .eq(
+      "business_id",
+      businessId
+    )
 
-      .eq(
-        "active",
-        true
-      )
+    .eq(
+      "active",
+      true
+    )
 
-      .order("name");
+    .order("name");
 
 
   if(result.error){
-
     throw result.error;
-
   }
 
 
   payments =
-    result.data || [];
+  result.data || [];
 
 
   const select =
-    $("paymentMethod");
+  $("paymentMethod");
 
 
   select.innerHTML =
-    '<option value="">Selecciona un mÃ©todo</option>';
+  '<option value="">Selecciona un método</option>';
 
 
   payments.forEach(
     payment => {
 
       const option =
-        document.createElement(
-          "option"
-        );
+      document.createElement(
+        "option"
+      );
 
       option.value =
-        payment.id;
+      payment.id;
 
       option.textContent =
-        payment.name;
+      payment.name;
 
       select.appendChild(
         option
@@ -858,100 +885,128 @@ async function loadAccounts(){
 
   clearStatus();
 
+
   $("accounts").innerHTML =
-    '<div class="empty">Cargando cuentas...</div>';
+  '<div class="loading">Cargando cuentas...</div>';
 
 
   try{
 
     const businessId =
-      BUSINESS_IDS[currentBusiness];
+    BUSINESS_IDS[currentBusiness];
 
 
-    /*
-      Primero cargamos clientes.
-    */
+    /* CLIENTES */
 
     const customersResult =
-      await supabaseClient
+    await supabaseClient
 
-        .from("customers")
+      .from("customers")
 
-        .select(
-          "id,business_id,name,phone,notes,created_at"
-        )
+      .select(
+        "id,business_id,name,phone"
+      )
 
-        .eq(
-          "business_id",
-          businessId
-        )
+      .eq(
+        "business_id",
+        businessId
+      )
 
-        .order(
-          "name",
-          {
-            ascending:true
-          }
-        );
+      .order(
+        "name",
+        {
+          ascending:true
+        }
+      );
 
 
     if(customersResult.error){
-
       throw customersResult.error;
-
     }
 
 
     customers =
-      customersResult.data || [];
+    customersResult.data || [];
 
 
-    /*
-      Cargamos ventas abiertas
-      con saldo pendiente.
-    */
+    /* VENTAS PENDIENTES */
 
     const salesResult =
-      await supabaseClient
+    await supabaseClient
 
-        .from("sales")
+      .from("sales")
 
-        .select(
-          "id,business_id,customer_id,sale_date,total,balance,status,created_at"
-        )
+      .select(
+        "id,business_id,customer_id,total,balance,status,created_at,sale_date"
+      )
 
-        .eq(
-          "business_id",
-          businessId
-        )
+      .eq(
+        "business_id",
+        businessId
+      )
 
-        .gt(
-          "balance",
-          0
-        )
+      .eq(
+        "status",
+        "open"
+      )
 
-        .order(
-          "created_at",
-          {
-            ascending:false
-          }
-        );
+      .gt(
+        "balance",
+        0
+      )
+
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
 
 
     if(salesResult.error){
-
       throw salesResult.error;
-
     }
 
 
     sales =
-      salesResult.data || [];
+    salesResult.data || [];
 
 
     await loadPaymentMethods();
 
 
+    $("totalSales").textContent =
+    sales.length;
+
+
+    $("totalPending").textContent =
+    money(
+      sales.reduce(
+        (sum,sale) =>
+        sum +
+        Number(sale.balance || 0),
+        0
+      )
+    );
+
+
+    const clientIds =
+    new Set(
+      sales
+        .map(
+          sale =>
+          sale.customer_id
+        )
+        .filter(Boolean)
+    );
+
+
+    $("totalClients").textContent =
+    clientIds.size;
+
+
     renderAccounts();
+
 
   }
 
@@ -959,8 +1014,12 @@ async function loadAccounts(){
 
     console.error(error);
 
+
     $("accounts").innerHTML =
-      '<div class="empty">No se pudieron cargar las cuentas.</div>';
+    '<div class="empty">' +
+    'No se pudieron cargar las cuentas.' +
+    '</div>';
+
 
     showStatus(
       "Error al cargar cuentas: " +
@@ -982,239 +1041,220 @@ async function loadAccounts(){
 
 function renderAccounts(){
 
-  const searchText =
-    $("search")
-      .value
-      .trim()
-      .toLowerCase();
+  const container =
+  $("accounts");
 
 
-  const accountMap =
-    new Map();
+  const query =
+  $("search").value
+    .trim()
+    .toLowerCase();
 
 
-  sales.forEach(
-    sale => {
-
-      if(!sale.customer_id)
-        return;
+  let visibleSales =
+  sales;
 
 
-      const customer =
+  if(query){
+
+    visibleSales =
+    sales.filter(
+      sale => {
+
+        const customer =
         customers.find(
           item =>
-            item.id ===
-            sale.customer_id
+          item.id ===
+          sale.customer_id
         );
 
-
-      if(!customer)
-        return;
-
-
-      if(searchText){
 
         const text =
-          [
-            customer.name,
-            customer.phone
-          ]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase();
+        [
+          customer?.name,
+          customer?.phone
+        ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
 
 
-        if(
-          !text.includes(searchText)
-        ){
-
-          return;
-
-        }
+        return text.includes(query);
 
       }
-
-
-      if(
-        !accountMap.has(
-          customer.id
-        )
-      ){
-
-        accountMap.set(
-          customer.id,
-          {
-            customer,
-            sales:[],
-            balance:0
-          }
-        );
-
-      }
-
-
-      const account =
-        accountMap.get(
-          customer.id
-        );
-
-
-      account.sales.push(
-        sale
-      );
-
-
-      account.balance +=
-        Number(
-          sale.balance || 0
-        );
-
-    }
-  );
-
-
-  const accounts =
-    Array.from(
-      accountMap.values()
     );
 
-
-  let totalPending =
-    0;
-
-  let totalSales =
-    0;
+  }
 
 
-  accounts.forEach(
-    account => {
+  if(!visibleSales.length){
 
-      totalPending +=
-        account.balance;
-
-      totalSales +=
-        account.sales.length;
-
-    }
-  );
-
-
-  $("totalPending").textContent =
-    money(totalPending);
-
-
-  $("totalClients").textContent =
-    accounts.length;
-
-
-  $("totalSales").textContent =
-    totalSales;
-
-
-  if(!accounts.length){
-
-    $("accounts").innerHTML =
-      '<div class="empty">' +
-      'ð No hay cuentas pendientes de pago.' +
-      '</div>';
+    container.innerHTML =
+    '<div class="empty">' +
+    'No hay cuentas pendientes.' +
+    '</div>';
 
     return;
 
   }
 
 
-  $("accounts").innerHTML =
-    "";
+  const grouped =
+  new Map();
 
 
-  accounts.forEach(
-    account => {
+  visibleSales.forEach(
+    sale => {
 
-      const wrapper =
-        document.createElement(
-          "div"
+      const customer =
+      customers.find(
+        item =>
+        item.id ===
+        sale.customer_id
+      );
+
+
+      const key =
+      sale.customer_id ||
+      "sin-cliente-" +
+      sale.id;
+
+
+      if(!grouped.has(key)){
+
+        grouped.set(
+          key,
+          {
+            customer,
+            sales:[]
+          }
         );
 
-      wrapper.className =
-        "customer";
+      }
+
+
+      grouped
+        .get(key)
+        .sales
+        .push(sale);
+
+    }
+  );
+
+
+  container.innerHTML =
+  "";
+
+
+  grouped.forEach(
+    group => {
+
+      const customer =
+      group.customer;
+
+
+      const customerTotal =
+      group.sales.reduce(
+        (sum,sale) =>
+        sum +
+        Number(sale.balance || 0),
+        0
+      );
+
+
+      const customerElement =
+      document.createElement(
+        "div"
+      );
+
+
+      customerElement.className =
+      "customer";
 
 
       const header =
-        document.createElement(
-          "div"
-        );
+      document.createElement(
+        "div"
+      );
+
 
       header.className =
-        "customer-header";
+      "customer-header";
 
 
-      const customerInfo =
-        document.createElement(
-          "div"
-        );
+      const left =
+      document.createElement(
+        "div"
+      );
 
 
       const name =
-        document.createElement(
-          "div"
-        );
+      document.createElement(
+        "div"
+      );
+
 
       name.className =
-        "customer-name";
+      "customer-name";
+
 
       name.textContent =
-        account.customer.name;
+      customer?.name ||
+      "Cliente sin nombre";
 
 
       const contact =
-        document.createElement(
-          "div"
-        );
+      document.createElement(
+        "div"
+      );
+
 
       contact.className =
-        "customer-contact";
+      "customer-contact";
+
 
       contact.textContent =
-        account.customer.phone
-        ? "ð± " +
-          account.customer.phone
-        : "Sin telÃ©fono";
+      customer?.phone ||
+      "Sin teléfono";
 
 
-      customerInfo.append(
+      left.append(
         name,
         contact
       );
 
 
       const balance =
-        document.createElement(
-          "div"
-        );
+      document.createElement(
+        "div"
+      );
+
 
       balance.className =
-        "customer-balance";
+      "customer-balance";
+
 
       balance.textContent =
-        money(account.balance);
+      money(customerTotal);
 
 
       header.append(
-        customerInfo,
+        left,
         balance
       );
 
 
       const body =
-        document.createElement(
-          "div"
-        );
+      document.createElement(
+        "div"
+      );
+
 
       body.className =
-        "customer-body";
+      "customer-body";
 
 
-      account.sales.forEach(
+      group.sales.forEach(
         sale => {
 
           body.appendChild(
@@ -1231,7 +1271,7 @@ function renderAccounts(){
         "click",
         () => {
 
-          wrapper.classList.toggle(
+          customerElement.classList.toggle(
             "open"
           );
 
@@ -1239,14 +1279,14 @@ function renderAccounts(){
       );
 
 
-      wrapper.append(
+      customerElement.append(
         header,
         body
       );
 
 
-      $("accounts").appendChild(
-        wrapper
+      container.appendChild(
+        customerElement
       );
 
     }
@@ -1264,50 +1304,50 @@ function createSaleElement(
 ){
 
   const element =
-    document.createElement(
-      "div"
-    );
+  document.createElement(
+    "div"
+  );
 
   element.className =
-    "sale";
+  "sale";
 
 
   const top =
-    document.createElement(
-      "div"
-    );
+  document.createElement(
+    "div"
+  );
 
   top.className =
-    "sale-top";
+  "sale-top";
 
 
   const date =
-    document.createElement(
-      "div"
-    );
+  document.createElement(
+    "div"
+  );
 
   date.className =
-    "sale-date";
+  "sale-date";
 
   date.textContent =
-    "Venta Â· " +
-    formatDate(
-      sale.sale_date ||
-      sale.created_at
-    );
+  "Venta · " +
+  formatDate(
+    sale.sale_date ||
+    sale.created_at
+  );
 
 
   const total =
-    document.createElement(
-      "div"
-    );
+  document.createElement(
+    "div"
+  );
 
   total.className =
-    "sale-total";
+  "sale-total";
 
   total.textContent =
-    "Total " +
-    money(sale.total);
+  "Total " +
+  money(sale.total);
 
 
   top.append(
@@ -1317,57 +1357,76 @@ function createSaleElement(
 
 
   const details =
-    document.createElement(
-      "div"
-    );
+  document.createElement(
+    "div"
+  );
 
   details.className =
-    "sale-details";
+  "sale-details";
 
   details.textContent =
-    "Estado: " +
-    (
-      sale.status === "open"
-      ? "Pendiente"
-      : sale.status
-    );
+  "Estado: Pendiente";
 
 
   const balance =
-    document.createElement(
-      "div"
-    );
+  document.createElement(
+    "div"
+  );
 
   balance.className =
-    "sale-balance";
+  "sale-balance";
 
   balance.textContent =
-    "Saldo pendiente: " +
-    money(sale.balance);
+  "Saldo pendiente: " +
+  money(sale.balance);
+
+
+  const paid =
+  document.createElement(
+    "div"
+  );
+
+  paid.className =
+  "sale-paid";
+
+
+  const paidAmount =
+  Number(sale.total || 0) -
+  Number(sale.balance || 0);
+
+
+  paid.textContent =
+  "Total abonado: " +
+  money(
+    Math.max(
+      paidAmount,
+      0
+    )
+  );
 
 
   const actions =
-    document.createElement(
-      "div"
-    );
+  document.createElement(
+    "div"
+  );
 
   actions.className =
-    "sale-actions";
+  "sale-actions";
 
 
   const payButton =
-    document.createElement(
-      "button"
-    );
+  document.createElement(
+    "button"
+  );
 
   payButton.type =
-    "button";
+  "button";
 
   payButton.className =
-    "pay-button";
+  "pay-button";
 
   payButton.textContent =
-    "ðµ Registrar abono";
+  "💵 Registrar abono";
 
 
   payButton.addEventListener(
@@ -1385,27 +1444,27 @@ function createSaleElement(
 
 
   const historyButton =
-    document.createElement(
-      "button"
-    );
+  document.createElement(
+    "button"
+  );
 
   historyButton.type =
-    "button";
+  "button";
 
   historyButton.className =
-    "history-button";
+  "history-button";
 
   historyButton.textContent =
-    "ð Historial de pagos";
+  "📋 Historial de pagos";
 
 
   const history =
-    document.createElement(
-      "div"
-    );
+  document.createElement(
+    "div"
+  );
 
   history.className =
-    "history";
+  "history";
 
 
   historyButton.addEventListener(
@@ -1413,6 +1472,7 @@ function createSaleElement(
     async event => {
 
       event.stopPropagation();
+
 
       history.classList.toggle(
         "visible"
@@ -1426,7 +1486,9 @@ function createSaleElement(
       ){
 
         history.innerHTML =
-          '<div class="loading">Cargando historial...</div>';
+        '<div class="loading">' +
+        'Cargando historial...' +
+        '</div>';
 
 
         await loadPaymentHistory(
@@ -1450,6 +1512,7 @@ function createSaleElement(
     top,
     details,
     balance,
+    paid,
     actions,
     history
   );
@@ -1471,41 +1534,52 @@ async function loadPaymentHistory(
 
   try{
 
+    /*
+      IMPORTANTE:
+      Aquí NO usamos .single()
+      ni limit(1).
+
+      Se solicitan TODOS los pagos
+      relacionados con esta venta.
+    */
+
     const result =
-      await supabaseClient
+    await supabaseClient
 
-        .from("payments")
+      .from("payments")
 
-        .select(
-          "id,amount,paid_at,payment_method_id,notes"
-        )
+      .select(
+        "id,sale_id,business_id,payment_method_id,amount,paid_at"
+      )
 
-        .eq(
-          "sale_id",
-          saleId
-        )
+      .eq(
+        "sale_id",
+        saleId
+      )
 
-        .order(
-          "paid_at",
-          {
-            ascending:false
-          }
-        );
+      .order(
+        "paid_at",
+        {
+          ascending:true
+        }
+      );
 
 
     if(result.error){
-
       throw result.error;
-
     }
 
 
-    if(!result.data?.length){
+    const paymentRows =
+    result.data || [];
+
+
+    if(!paymentRows.length){
 
       container.innerHTML =
-        '<div class="empty">' +
-        'No hay pagos registrados para esta venta.' +
-        '</div>';
+      '<div class="empty">' +
+      'No hay pagos registrados para esta venta.' +
+      '</div>';
 
       return;
 
@@ -1513,57 +1587,86 @@ async function loadPaymentHistory(
 
 
     /*
-      Obtener nombres de mÃ©todos
-      desde los mÃ©todos ya cargados.
+      SUMAMOS TODOS LOS ABONOS.
     */
 
+    const totalPaid =
+    paymentRows.reduce(
+      (sum,payment) =>
+      sum +
+      Number(payment.amount || 0),
+      0
+    );
+
+
     container.innerHTML =
-      "";
+    "";
 
 
-    result.data.forEach(
+    const title =
+    document.createElement(
+      "div"
+    );
+
+    title.className =
+    "history-title";
+
+    title.textContent =
+    "Todos los abonos registrados";
+
+
+    container.appendChild(
+      title
+    );
+
+
+    paymentRows.forEach(
       payment => {
 
         const row =
-          document.createElement(
-            "div"
-          );
+        document.createElement(
+          "div"
+        );
 
         row.className =
-          "payment-history-item";
-
-
-        const method =
-          payments.find(
-            item =>
-              item.id ===
-              payment.payment_method_id
-          );
+        "payment-history-item";
 
 
         const left =
-          document.createElement(
-            "span"
-          );
+        document.createElement(
+          "span"
+        );
+
+
+        const method =
+        payments.find(
+          item =>
+          item.id ===
+          payment.payment_method_id
+        );
+
 
         left.textContent =
-          formatDate(
-            payment.paid_at
-          ) +
-          " Â· " +
-          (
-            method?.name ||
-            "Pago"
-          );
+        formatDateTime(
+          payment.paid_at
+        ) +
+        " · " +
+        (
+          method?.name ||
+          "Pago"
+        );
 
 
         const right =
-          document.createElement(
-            "strong"
-          );
+        document.createElement(
+          "strong"
+        );
+
 
         right.textContent =
-          money(payment.amount);
+        money(
+          payment.amount
+        );
 
 
         row.append(
@@ -1579,16 +1682,58 @@ async function loadPaymentHistory(
       }
     );
 
+
+    const totalRow =
+    document.createElement(
+      "div"
+    );
+
+    totalRow.className =
+    "history-total";
+
+
+    const totalLabel =
+    document.createElement(
+      "span"
+    );
+
+    totalLabel.textContent =
+    "Total abonado";
+
+
+    const totalValue =
+    document.createElement(
+      "span"
+    );
+
+    totalValue.textContent =
+    money(totalPaid);
+
+
+    totalRow.append(
+      totalLabel,
+      totalValue
+    );
+
+
+    container.appendChild(
+      totalRow
+    );
+
   }
 
   catch(error){
 
-    console.error(error);
+    console.error(
+      "Error historial:",
+      error
+    );
+
 
     container.innerHTML =
-      '<div class="empty">' +
-      'No se pudo cargar el historial.' +
-      '</div>';
+    '<div class="empty">' +
+    'No se pudo cargar el historial de pagos.' +
+    '</div>';
 
   }
 
@@ -1604,38 +1749,38 @@ function openPaymentModal(
 ){
 
   selectedSale =
-    sale;
+  sale;
 
 
   const customer =
-    customers.find(
-      item =>
-        item.id ===
-        sale.customer_id
-    );
+  customers.find(
+    item =>
+    item.id ===
+    sale.customer_id
+  );
 
 
   $("paymentSubtitle").textContent =
-    (
-      customer?.name ||
-      "Cliente"
-    ) +
-    " Â· Saldo: " +
-    money(sale.balance);
+  (
+    customer?.name ||
+    "Cliente"
+  ) +
+  " · Saldo: " +
+  money(sale.balance);
 
 
   $("paymentAmount").value =
-    "";
+  "";
 
 
   $("paymentAmount").max =
-    Number(
-      sale.balance
-    ).toFixed(2);
+  Number(
+    sale.balance
+  ).toFixed(2);
 
 
   $("paymentMethod").value =
-    "";
+  "";
 
 
   $("paymentModal")
@@ -1645,7 +1790,7 @@ function openPaymentModal(
 
   setTimeout(
     () =>
-      $("paymentAmount").focus(),
+    $("paymentAmount").focus(),
     100
   );
 
@@ -1659,7 +1804,7 @@ function openPaymentModal(
 function closePaymentModal(){
 
   selectedSale =
-    null;
+  null;
 
 
   $("paymentModal")
@@ -1670,26 +1815,24 @@ function closePaymentModal(){
 
 
 /* =========================================
-   CONFIRMAR ABONO
+   REGISTRAR ABONO
 ========================================= */
 
 async function registerPayment(){
 
   if(!selectedSale){
-
     return;
-
   }
 
 
   const amount =
-    Number(
-      $("paymentAmount").value
-    );
+  Number(
+    $("paymentAmount").value
+  );
 
 
   const paymentMethodId =
-    $("paymentMethod").value;
+  $("paymentMethod").value;
 
 
   if(
@@ -1698,7 +1841,7 @@ async function registerPayment(){
   ){
 
     alert(
-      "Ingresa un monto vÃ¡lido."
+      "Ingresa un monto válido."
     );
 
     return;
@@ -1708,7 +1851,9 @@ async function registerPayment(){
 
   if(
     amount >
-    Number(selectedSale.balance)
+    Number(
+      selectedSale.balance
+    )
   ){
 
     alert(
@@ -1723,7 +1868,7 @@ async function registerPayment(){
   if(!paymentMethodId){
 
     alert(
-      "Selecciona un mÃ©todo de pago."
+      "Selecciona un método de pago."
     );
 
     return;
@@ -1732,45 +1877,44 @@ async function registerPayment(){
 
 
   const button =
-    $("confirmPayment");
+  $("confirmPayment");
 
 
   button.disabled =
-    true;
+  true;
+
 
   button.textContent =
-    "REGISTRANDO...";
+  "REGISTRANDO...";
 
 
   try{
 
     const result =
-      await supabaseClient.rpc(
-        "register_payment",
-        {
+    await supabaseClient.rpc(
+      "register_payment",
+      {
 
-          p_business_id:
-            BUSINESS_IDS[
-              currentBusiness
-            ],
+        p_business_id:
+        BUSINESS_IDS[
+          currentBusiness
+        ],
 
-          p_sale_id:
-            selectedSale.id,
+        p_sale_id:
+        selectedSale.id,
 
-          p_payment_method_id:
-            paymentMethodId,
+        p_payment_method_id:
+        paymentMethodId,
 
-          p_amount:
-            amount
+        p_amount:
+        amount
 
-        }
-      );
+      }
+    );
 
 
     if(result.error){
-
       throw result.error;
-
     }
 
 
@@ -1791,6 +1935,7 @@ async function registerPayment(){
 
     console.error(error);
 
+
     showStatus(
       "No se pudo registrar el abono: " +
       (
@@ -1805,10 +1950,10 @@ async function registerPayment(){
   finally{
 
     button.disabled =
-      false;
+    false;
 
     button.textContent =
-      "Registrar abono";
+    "Registrar abono";
 
   }
 
@@ -1827,62 +1972,66 @@ $("search")
 
 
 /* =========================================
-   NEGOCIOS
+   CAMBIO DE NEGOCIO
 ========================================= */
 
 document
-  .querySelectorAll(
-    ".business-btn"
-  )
-  .forEach(
-    button => {
+.querySelectorAll(
+  ".business-btn"
+)
+.forEach(
+  button => {
 
-      button.addEventListener(
-        "click",
-        async () => {
+    button.addEventListener(
+      "click",
+      async () => {
 
-          if(
-            button.dataset.business ===
-            currentBusiness
-          ){
+        if(
+          button.dataset.business ===
+          currentBusiness
+        ){
 
-            return;
-
-          }
-
-
-          currentBusiness =
-            button.dataset.business;
-
-
-          document
-            .querySelectorAll(
-              ".business-btn"
-            )
-            .forEach(
-              item =>
-                item.classList.remove(
-                  "active"
-                )
-            );
-
-
-          button.classList.add(
-            "active"
-          );
-
-
-          await loadAccounts();
+          return;
 
         }
-      );
 
-    }
-  );
+
+        currentBusiness =
+        button.dataset.business;
+
+
+        document
+        .querySelectorAll(
+          ".business-btn"
+        )
+        .forEach(
+          item =>
+          item.classList.remove(
+            "active"
+          )
+        );
+
+
+        button.classList.add(
+          "active"
+        );
+
+
+        $("search").value =
+        "";
+
+
+        await loadAccounts();
+
+      }
+    );
+
+  }
+);
 
 
 /* =========================================
-   BOTONES
+   ACTUALIZAR
 ========================================= */
 
 $("refreshButton")
@@ -1892,17 +2041,25 @@ $("refreshButton")
 );
 
 
+/* =========================================
+   DASHBOARD
+========================================= */
+
 $("dashboardButton")
 .addEventListener(
   "click",
   () => {
 
     window.location.href =
-      "index.html";
+    "dashboard.html";
 
   }
 );
 
+
+/* =========================================
+   MODAL
+========================================= */
 
 $("cancelPayment")
 .addEventListener(
@@ -1917,10 +2074,6 @@ $("confirmPayment")
   registerPayment
 );
 
-
-/* =========================================
-   CERRAR MODAL AL TOCAR FUERA
-========================================= */
 
 $("paymentModal")
 .addEventListener(
@@ -1940,16 +2093,13 @@ $("paymentModal")
 );
 
 
-/* =========================================
-   ESC PARA CERRAR
-========================================= */
-
 document.addEventListener(
   "keydown",
   event => {
 
     if(
-      event.key === "Escape"
+      event.key ===
+      "Escape"
     ){
 
       closePaymentModal();
