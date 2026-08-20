@@ -48,6 +48,36 @@ header p{
   padding:25px 20px 40px;
 }
 
+.customer-banner{
+  display:none;
+  background:#eff6ff;
+  border:2px solid #bfdbfe;
+  color:#1d4ed8;
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:20px;
+}
+
+.customer-banner.visible{
+  display:block;
+}
+
+.customer-banner-title{
+  font-size:14px;
+  font-weight:700;
+  margin-bottom:5px;
+}
+
+.customer-banner-name{
+  font-size:24px;
+  font-weight:800;
+}
+
+.customer-banner-phone{
+  margin-top:4px;
+  color:#64748b;
+}
+
 .toolbar{
   display:flex;
   gap:12px;
@@ -250,6 +280,31 @@ Consulta las ventas registradas de tus negocios
 <div class="container">
 
 
+<!-- =========================================
+     HISTORIAL DE CLIENTE
+========================================= -->
+
+<div
+  id="customerBanner"
+  class="customer-banner">
+
+  <div class="customer-banner-title">
+    HISTORIAL DEL CLIENTE
+  </div>
+
+  <div
+    id="customerBannerName"
+    class="customer-banner-name">
+  </div>
+
+  <div
+    id="customerBannerPhone"
+    class="customer-banner-phone">
+  </div>
+
+</div>
+
+
 <!-- BOTONES -->
 
 <div class="toolbar">
@@ -449,6 +504,22 @@ let sales = [];
 
 
 /* =========================================
+   CLIENTE SELECCIONADO
+========================================= */
+
+const urlParams =
+new URLSearchParams(
+  window.location.search
+);
+
+
+let selectedCustomerId =
+urlParams.get(
+  "customer_id"
+);
+
+
+/* =========================================
    UTILIDADES
 ========================================= */
 
@@ -479,6 +550,90 @@ dateStyle:"short",
 timeStyle:"short"
 }
 );
+
+}
+
+
+/* =========================================
+   CARGAR INFORMACIÓN DEL CLIENTE
+========================================= */
+
+async function loadSelectedCustomer(){
+
+if(!selectedCustomerId){
+
+return;
+
+}
+
+
+try{
+
+const result =
+await supabaseClient
+
+.from("customers")
+
+.select(
+"id,name,phone"
+)
+
+.eq(
+"id",
+selectedCustomerId
+)
+
+.single();
+
+
+if(result.error){
+
+console.error(
+  "No se pudo cargar el cliente:",
+  result.error
+);
+
+return;
+
+}
+
+
+const customer =
+result.data;
+
+
+if(!customer){
+
+return;
+
+}
+
+
+$("customerBannerName")
+.textContent =
+customer.name ||
+"Cliente";
+
+
+$("customerBannerPhone")
+.textContent =
+customer.phone
+? "📱 " + customer.phone
+: "";
+
+
+$("customerBanner")
+.classList.add(
+"visible"
+);
+
+}
+
+catch(error){
+
+console.error(error);
+
+}
 
 }
 
@@ -531,6 +686,8 @@ throw result.error;
 sales =
 result.data || [];
 
+
+await loadSelectedCustomer();
 
 await renderSales();
 
@@ -600,6 +757,21 @@ if(to && date > to)
 return false;
 
 
+/* =======================================
+   FILTRO DIRECTO POR CLIENTE
+======================================= */
+
+if(
+selectedCustomerId &&
+sale.customer_id !==
+selectedCustomerId
+){
+
+return false;
+
+}
+
+
 return true;
 
 }
@@ -667,7 +839,7 @@ customer
 
 
 /* =========================================
-   FILTRAR
+   FILTRAR POR BÚSQUEDA
 ========================================= */
 
 rows =
@@ -974,6 +1146,30 @@ button.classList.add(
 );
 
 
+/*
+  Si cambiamos de negocio,
+  el cliente seleccionado podría
+  no pertenecer al nuevo negocio.
+  Por seguridad quitamos el filtro.
+*/
+
+selectedCustomerId =
+null;
+
+
+$("customerBanner")
+.classList.remove(
+"visible"
+);
+
+
+window.history.replaceState(
+{},
+"",
+"historial.html"
+);
+
+
 await loadSales();
 
 }
@@ -1029,7 +1225,7 @@ $("back")
 () => {
 
 window.location.href =
-"index.html";
+"dashboard.html";
 
 }
 );
