@@ -1176,9 +1176,20 @@ async function renderSales(
 
         /* FECHA */
 
+        /*
+         * CORRECCIÓN:
+         * La fecha mostrada en el Dashboard
+         * corresponde al momento en que la venta
+         * fue registrada (created_at).
+         *
+         * Antes se utilizaba sale_date, que podía
+         * conservar la fecha original de la venta
+         * y provocar que una venta registrada hoy
+         * apareciera con la fecha de ayer.
+         */
+
         const date =
         new Date(
-          sale.sale_date ||
           sale.created_at
         );
 
