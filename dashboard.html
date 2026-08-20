@@ -59,13 +59,13 @@ header p{
 }
 
 /* =========================================
-   BOTONES DEL DASHBOARD
+   BOTONES
 ========================================= */
 
 .topbar{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
   margin-bottom:20px;
 }
 
@@ -73,17 +73,18 @@ button{
   border:0;
   cursor:pointer;
   font-size:16px;
-  font-family:inherit;
 }
 
-.business-btn{
+.business-btn,
+.back,
+.history,
+.accounts,
+.customers{
   background:white;
   border:2px solid #ddd;
-  border-radius:18px;
-  min-height:72px;
-  padding:12px 15px;
+  border-radius:12px;
+  padding:12px 20px;
   font-weight:700;
-  font-size:18px;
 }
 
 .business-btn.active{
@@ -92,67 +93,28 @@ button{
   border-color:#111827;
 }
 
-.refresh,
-.accounts,
-.customers,
-.history,
-.back{
-  width:100%;
-  min-height:92px;
-  padding:14px 10px;
-  border-radius:18px;
-  font-weight:700;
-  font-size:17px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  line-height:1.2;
-  transition:transform .15s ease,box-shadow .15s ease;
-}
-
-.refresh:active,
-.accounts:active,
-.customers:active,
-.history:active,
-.back:active,
-.business-btn:active{
-  transform:scale(.97);
-}
-
-/* Actualizar */
 .refresh{
   background:#2563eb;
   color:white;
-  border:2px solid #2563eb;
+  padding:12px 20px;
+  border-radius:12px;
+  font-weight:700;
 }
 
-/* Cuentas pendientes */
+.history{
+  margin-left:auto;
+}
+
 .accounts{
-  background:#fff7ed;
-  color:#b45309;
-  border:2px solid #f59e0b;
+  background:#f59e0b;
+  color:white;
+  border-color:#f59e0b;
 }
 
-/* Clientes */
 .customers{
   background:#ecfdf5;
   color:#047857;
-  border:2px solid #10b981;
-}
-
-/* Historial */
-.history{
-  background:white;
-  color:#1479e9;
-  border:2px solid #ddd;
-}
-
-/* POS */
-.back{
-  background:white;
-  color:#1479e9;
-  border:2px solid #ddd;
+  border-color:#10b981;
 }
 
 /* =========================================
@@ -212,6 +174,10 @@ button{
   margin:0 0 18px;
 }
 
+/* =========================================
+   TABLA DE VENTAS
+========================================= */
+
 table{
   width:100%;
   border-collapse:collapse;
@@ -230,12 +196,22 @@ td{
   border-bottom:1px solid #eee;
 }
 
+.customer-name{
+  display:block;
+  font-size:15px;
+}
+
+/* =========================================
+   ESTADOS
+========================================= */
+
 .status-pill{
   display:inline-block;
   padding:5px 9px;
   border-radius:20px;
   font-size:12px;
   font-weight:700;
+  white-space:nowrap;
 }
 
 .paid{
@@ -252,6 +228,10 @@ td{
   background:#fee2e2;
   color:#991b1b;
 }
+
+/* =========================================
+   INVENTARIO
+========================================= */
 
 .stock-row{
   display:flex;
@@ -281,7 +261,7 @@ td{
 }
 
 /* =========================================
-   TABLET
+   RESPONSIVE
 ========================================= */
 
 @media(max-width:800px){
@@ -293,120 +273,59 @@ td{
   .grid{
     grid-template-columns:1fr;
   }
+
+  .history{
+    margin-left:0;
+  }
 }
 
-/* =========================================
-   CELULAR
-========================================= */
+@media(max-width:600px){
+
+  table{
+    font-size:13px;
+  }
+
+  th,
+  td{
+    padding:10px 4px;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2){
+    white-space:nowrap;
+  }
+
+  .status-pill{
+    font-size:11px;
+  }
+
+  .customer-name{
+    font-size:14px;
+  }
+}
 
 @media(max-width:500px){
 
-  header{
-    padding:25px 20px;
-  }
-
-  header h1{
-    font-size:25px;
-  }
-
-  header p{
-    font-size:16px;
-  }
-
-  .container{
-    padding:20px 16px;
-  }
-
-  /*
-    La cuadrícula queda:
-    
-    BakeQuiri | SpicyRoll
-    Actualizar | Cuentas
-    Clientes | Historial
-    POS | vacío
-  */
-
-  .topbar{
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-  }
-
-  .business-btn{
-    min-height:68px;
-    font-size:17px;
-    padding:10px 5px;
-  }
-
-  .refresh,
-  .accounts,
-  .customers,
-  .history,
-  .back{
-    min-height:96px;
-    font-size:16px;
-    padding:10px 6px;
-  }
-
-  .cards{
-    grid-template-columns:1fr 1fr;
-    gap:10px;
+  .metric{
+    font-size:24px;
   }
 
   .card{
     padding:16px;
   }
 
-  .metric{
-    font-size:24px;
+  header h1{
+    font-size:25px;
   }
 
-  .metric-title{
-    font-size:14px;
-  }
-
-  .section-title{
-    font-size:20px;
-  }
-
-  table{
-    font-size:14px;
-  }
-
-  th{
-    font-size:12px;
-  }
-
-  td{
-    padding:10px 4px;
-  }
-}
-
-/* =========================================
-   CELULARES MUY PEQUEÑOS
-========================================= */
-
-@media(max-width:360px){
-
-  .topbar{
-    gap:8px;
-  }
-
-  .business-btn{
-    min-height:62px;
-    font-size:15px;
-  }
-
+  .business-btn,
   .refresh,
+  .history,
   .accounts,
   .customers,
-  .history,
   .back{
-    min-height:88px;
-    font-size:14px;
-  }
-
-  .cards{
-    grid-template-columns:1fr;
+    width:100%;
+    margin-left:0;
   }
 }
 </style>
@@ -415,10 +334,13 @@ td{
 <body>
 
 <header>
+
 <h1>📊 Dashboard</h1>
+
 <p>
 Sistema de Ventas POS · Administración
 </p>
+
 </header>
 
 <div class="container">
@@ -449,40 +371,35 @@ SpicyRoll
 type="button"
 id="refresh"
 class="refresh">
-🔄<br>
-Actualizar
+🔄 Actualizar
 </button>
 
 <button
 type="button"
 id="accounts"
 class="accounts">
-💰<br>
-Cuentas pendientes
+💰 Cuentas pendientes
 </button>
 
 <button
 type="button"
 id="customers"
 class="customers">
-👥<br>
-Clientes
+👥 Clientes
 </button>
 
 <button
 type="button"
 id="history"
 class="history">
-🧾<br>
-Historial
+🧾 Historial
 </button>
 
 <button
 type="button"
 id="back"
 class="back">
-←<br>
-POS
+← POS
 </button>
 
 </div>
@@ -596,6 +513,7 @@ Cargando inventario...
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
+
 "use strict";
 
 /* =========================================
@@ -632,7 +550,7 @@ let currentBusiness =
 "BakeQuiri";
 
 /* =========================================
-   FUNCIONES
+   FUNCIONES GENERALES
 ========================================= */
 
 const $ =
@@ -658,7 +576,6 @@ function showStatus(
 
   $("status").className =
   "status " + type;
-
 }
 
 /* =========================================
@@ -701,7 +618,9 @@ async function loadDashboard(){
       );
 
     if(productsResult.error){
+
       throw productsResult.error;
+
     }
 
     const products =
@@ -738,7 +657,7 @@ async function loadDashboard(){
     await supabaseClient
       .from("sales")
       .select(
-        "id,total,status,created_at"
+        "id,total,balance,status,created_at,customer_id"
       )
       .eq(
         "business_id",
@@ -756,11 +675,68 @@ async function loadDashboard(){
       );
 
     if(salesResult.error){
+
       throw salesResult.error;
+
     }
 
     const sales =
     salesResult.data || [];
+
+    /* =====================================
+       CLIENTES DE LAS VENTAS
+    ===================================== */
+
+    const customerIds =
+    [
+      ...new Set(
+        sales
+          .map(
+            sale =>
+            sale.customer_id
+          )
+          .filter(Boolean)
+      )
+    ];
+
+    let customers = {};
+
+    if(customerIds.length){
+
+      const customersResult =
+      await supabaseClient
+        .from("customers")
+        .select(
+          "id,name"
+        )
+        .in(
+          "id",
+          customerIds
+        );
+
+      if(customersResult.error){
+
+        throw customersResult.error;
+
+      }
+
+      (customersResult.data || [])
+        .forEach(
+          customer => {
+
+            customers[
+              customer.id
+            ] =
+            customer.name;
+
+          }
+        );
+
+    }
+
+    /* =====================================
+       TOTAL DE VENTAS
+    ===================================== */
 
     const total =
     sales.reduce(
@@ -782,7 +758,8 @@ async function loadDashboard(){
     sales.length;
 
     renderSales(
-      sales
+      sales,
+      customers
     );
 
     showStatus(
@@ -907,7 +884,8 @@ function renderInventory(
 ========================================= */
 
 function renderSales(
-  sales
+  sales,
+  customers = {}
 ){
 
   const container =
@@ -930,14 +908,33 @@ function renderSales(
   );
 
   table.innerHTML = `
+
     <thead>
+
       <tr>
-        <th>Hora</th>
-        <th>Total</th>
-        <th>Estado</th>
+
+        <th>
+          Cliente
+        </th>
+
+        <th>
+          Fecha
+        </th>
+
+        <th>
+          Total
+        </th>
+
+        <th>
+          Estado
+        </th>
+
       </tr>
+
     </thead>
+
     <tbody></tbody>
+
   `;
 
   const tbody =
@@ -955,62 +952,118 @@ function renderSales(
         sale.created_at
       );
 
+      const customerName =
+      customers[
+        sale.customer_id
+      ] ||
+      "Consumidor general";
+
+      const total =
+      Number(
+        sale.total || 0
+      );
+
+      const balance =
+      Number(
+        sale.balance || 0
+      );
+
       const paid =
-      sale.status ===
-      "paid";
+      sale.status === "paid" ||
+      balance <= 0;
 
       const cancelled =
-      sale.status ===
-      "cancelled";
+      sale.status === "cancelled";
 
       const row =
       document.createElement(
         "tr"
       );
 
-      const statusClass =
-      paid
-      ? "paid"
-      : cancelled
-      ? "cancelled"
-      : "open";
+      let statusHTML =
+      "";
 
-      const statusText =
-      paid
-      ? "Pagada"
-      : cancelled
-      ? "Cancelada"
-      : (
-        sale.status ||
-        "Pendiente"
-      );
+      if(cancelled){
+
+        statusHTML = `
+
+          <span
+            class="status-pill cancelled"
+          >
+            Cancelada
+          </span>
+
+        `;
+
+      }
+
+      else if(paid){
+
+        statusHTML = `
+
+          <span
+            class="status-pill paid"
+          >
+            ✓ Pagada
+          </span>
+
+        `;
+
+      }
+
+      else{
+
+        statusHTML = `
+
+          <span
+            class="status-pill open"
+          >
+            🔴 Debe ${money(balance)}
+          </span>
+
+        `;
+
+      }
 
       row.innerHTML = `
+
         <td>
-          ${date.toLocaleTimeString(
+
+          <strong
+            class="customer-name"
+          >
+            ${customerName}
+          </strong>
+
+        </td>
+
+        <td>
+
+          ${date.toLocaleDateString(
             "es-MX",
             {
-              hour:"2-digit",
-              minute:"2-digit"
+              day:"2-digit",
+              month:"2-digit",
+              year:"numeric"
             }
           )}
+
         </td>
 
         <td>
+
           <strong>
-            ${money(
-              sale.total
-            )}
+            ${money(total)}
           </strong>
+
         </td>
 
         <td>
-          <span
-            class="status-pill ${statusClass}"
-          >
-            ${statusText}
-          </span>
+
+          ${statusHTML}
+
         </td>
+
       `;
 
       tbody.appendChild(
