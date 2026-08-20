@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
 <meta charset="UTF-8">
 
+<!-- CORRECCIÓN iPHONE / SAFE AREA -->
 <meta
   name="viewport"
   content="width=device-width, initial-scale=1, viewport-fit=cover"
@@ -31,13 +31,8 @@ html{
 body{
   margin:0;
   padding:0;
-
-  /*
-   * IMPORTANTE PARA IPHONE:
-   * Evita que el contenido quede debajo
-   * de la barra superior / Dynamic Island.
-   */
-  padding-top:env(safe-area-inset-top);
+  width:100%;
+  min-height:100vh;
 
   font-family:
     -apple-system,
@@ -49,11 +44,11 @@ body{
   background:#f5f6f8;
   color:#171717;
 
-  min-height:100vh;
-  min-height:100dvh;
-
-  overflow-x:hidden;
+  /* Evita que el contenido quede debajo de la barra superior
+     en iPhone / PWA */
+  padding-top:env(safe-area-inset-top);
 }
+
 
 /* =========================================================
    HEADER
@@ -70,19 +65,20 @@ header{
     20px;
 
   position:relative;
-  z-index:1;
+  z-index:2;
 }
 
 header h1{
   margin:0;
   font-size:30px;
-  line-height:1.2;
+  line-height:1.15;
 }
 
 header p{
   margin:8px 0 0;
   color:#d1d5db;
 }
+
 
 /* =========================================================
    CONTENEDOR
@@ -91,9 +87,10 @@ header p{
 .container{
   width:100%;
   max-width:1100px;
-  margin:auto;
+  margin:0 auto;
   padding:20px;
 }
+
 
 /* =========================================================
    STATUS
@@ -101,13 +98,9 @@ header p{
 
 .status{
   display:none;
-
   padding:13px 15px;
-
   border-radius:12px;
-
   margin-bottom:20px;
-
   font-weight:700;
 }
 
@@ -129,41 +122,32 @@ header p{
   color:#92400e;
 }
 
+
 /* =========================================================
    PANEL DE CONTROL
 ========================================================= */
 
 .control-panel{
   background:#fff;
-
   border-radius:20px;
-
   padding:18px;
-
   margin-bottom:20px;
-
-  box-shadow:
-    0 4px 18px rgba(0,0,0,.06);
+  box-shadow:0 4px 18px rgba(0,0,0,.06);
 }
 
 .business-selector{
   display:grid;
-
   grid-template-columns:1fr 1fr;
-
   gap:10px;
-
   margin-bottom:14px;
 }
 
 .action-grid{
   display:grid;
-
-  grid-template-columns:
-    repeat(6,1fr);
-
+  grid-template-columns:repeat(6,1fr);
   gap:10px;
 }
+
 
 /* =========================================================
    BOTONES
@@ -171,20 +155,12 @@ header p{
 
 button{
   border:0;
-
   cursor:pointer;
-
   font-size:15px;
-
   font-weight:800;
-
   min-height:48px;
-
   border-radius:12px;
-
-  transition:
-    transform .15s ease,
-    opacity .15s ease;
+  transition:.15s ease;
 }
 
 button:active{
@@ -193,17 +169,13 @@ button:active{
 
 .business-btn{
   background:#fff;
-
   color:#2680eb;
-
   border:2px solid #ddd;
 }
 
 .business-btn.active{
   background:#111827;
-
   color:#fff;
-
   border-color:#111827;
 }
 
@@ -234,65 +206,54 @@ button:active{
 
 .back{
   background:#fff;
-
   color:#111827;
-
   border:2px solid #ddd;
 }
 
+
 /* =========================================================
-   TARJETAS / MÉTRICAS
+   TARJETAS DE MÉTRICAS
 ========================================================= */
 
 .cards{
   display:grid;
-
-  grid-template-columns:
-    repeat(4,1fr);
-
+  grid-template-columns:repeat(4,1fr);
   gap:15px;
-
   margin-bottom:20px;
 }
 
 .card{
   background:white;
-
   border-radius:18px;
-
   padding:22px;
-
-  box-shadow:
-    0 4px 18px rgba(0,0,0,.06);
+  box-shadow:0 4px 18px rgba(0,0,0,.06);
 }
 
 .metric-card{
   position:relative;
   overflow:hidden;
+  min-width:0;
 }
 
 .metric-icon{
   font-size:27px;
-
   margin-bottom:12px;
 }
 
 .metric-title{
   color:#6b7280;
-
   font-size:14px;
-
   font-weight:700;
-
   margin-bottom:8px;
+
+  /* Evita desbordamientos */
+  line-height:1.25;
 }
 
 .metric{
   font-size:30px;
-
   font-weight:800;
-
-  line-height:1.15;
+  line-height:1.1;
 }
 
 .green{
@@ -311,30 +272,23 @@ button:active{
   color:#d97706;
 }
 
+
 /* =========================================================
-   GRID PRINCIPAL
+   CONTENIDO PRINCIPAL
 ========================================================= */
 
 .main-grid{
   display:grid;
-
-  grid-template-columns:
-    1.35fr
-    .85fr;
-
+  grid-template-columns:1.35fr .85fr;
   gap:20px;
 }
 
 .section-title{
   font-size:21px;
-
   font-weight:800;
-
-  margin:
-    0
-    0
-    18px;
+  margin:0 0 18px;
 }
+
 
 /* =========================================================
    VENTAS
@@ -346,27 +300,16 @@ button:active{
 }
 
 .sale-row{
-  border:
-    1px solid
-    #e5e7eb;
-
+  border:1px solid #e5e7eb;
   border-radius:14px;
-
   padding:14px;
-
   background:#fff;
 }
 
 .sale-main{
   display:grid;
-
-  grid-template-columns:
-    1.4fr
-    .8fr
-    .7fr;
-
+  grid-template-columns:1.4fr .8fr .7fr;
   gap:12px;
-
   align-items:center;
 }
 
@@ -376,15 +319,9 @@ button:active{
 
 .customer-link{
   color:#2563eb;
-
   font-weight:800;
-
   cursor:pointer;
-
   text-decoration:none;
-
-  display:inline-block;
-
   word-break:break-word;
 }
 
@@ -394,25 +331,18 @@ button:active{
 
 .customer-general{
   color:#222;
-
   font-weight:700;
-
-  display:inline-block;
-
   word-break:break-word;
 }
 
 .sale-date{
   color:#6b7280;
-
   font-size:13px;
-
   margin-top:4px;
 }
 
 .sale-total{
   font-weight:800;
-
   font-size:17px;
 }
 
@@ -422,13 +352,9 @@ button:active{
 
 .status-pill{
   display:inline-block;
-
   padding:6px 10px;
-
   border-radius:20px;
-
   font-size:12px;
-
   font-weight:800;
 }
 
@@ -447,6 +373,7 @@ button:active{
   color:#991b1b;
 }
 
+
 /* =========================================================
    INVENTARIO
 ========================================================= */
@@ -458,37 +385,23 @@ button:active{
 
 .stock-row{
   display:grid;
-
-  grid-template-columns:
-    1fr
-    auto;
-
+  grid-template-columns:1fr auto;
   align-items:center;
-
   gap:10px;
-
   padding:13px 14px;
-
-  border:
-    1px solid
-    #eee;
-
+  border:1px solid #eee;
   border-radius:12px;
-
   background:#fafafa;
 }
 
 .stock-name{
   font-weight:700;
-
   min-width:0;
-
   word-break:break-word;
 }
 
 .stock-number{
   font-weight:800;
-
   white-space:nowrap;
 }
 
@@ -498,24 +411,17 @@ button:active{
 
 .stock-warning{
   font-size:11px;
-
   margin-left:6px;
-
   color:#dc2626;
 }
-
-/* =========================================================
-   ESTADOS VACÍOS / CARGANDO
-========================================================= */
 
 .empty,
 .loading{
   text-align:center;
-
   color:#777;
-
   padding:30px 10px;
 }
+
 
 /* =========================================================
    TABLET
@@ -524,13 +430,11 @@ button:active{
 @media(max-width:900px){
 
   .action-grid{
-    grid-template-columns:
-      repeat(3,1fr);
+    grid-template-columns:repeat(3,1fr);
   }
 
   .cards{
-    grid-template-columns:
-      repeat(2,1fr);
+    grid-template-columns:repeat(2,1fr);
   }
 
   .main-grid{
@@ -539,15 +443,27 @@ button:active{
 
 }
 
+
 /* =========================================================
-   IPHONE / MÓVIL
+   iPHONE / MÓVIL
 ========================================================= */
 
 @media(max-width:600px){
 
+  body{
+    /*
+      Protección adicional para dispositivos donde
+      safe-area-inset-top no sea reportado correctamente.
+    */
+    padding-top:max(
+      0px,
+      env(safe-area-inset-top)
+    );
+  }
+
   header{
     padding:
-      20px
+      22px
       17px
       22px;
   }
@@ -561,54 +477,60 @@ button:active{
   }
 
   .container{
+    width:100%;
     padding:15px;
   }
 
   .control-panel{
     padding:13px;
-
     border-radius:17px;
   }
 
   .business-selector{
-    grid-template-columns:
-      1fr 1fr;
+    grid-template-columns:1fr 1fr;
   }
 
   .action-grid{
-    grid-template-columns:
-      repeat(2,1fr);
+    grid-template-columns:repeat(2,1fr);
   }
 
   button{
     min-height:46px;
-
     font-size:13px;
-
     padding:8px;
   }
 
-  .cards{
-    grid-template-columns:
-      1fr 1fr;
+  /* =====================================================
+     TARJETAS MÓVILES
+  ===================================================== */
 
+  .cards{
+    grid-template-columns:1fr 1fr;
     gap:10px;
   }
 
   .card{
     padding:16px;
-
     border-radius:16px;
+    min-width:0;
+  }
+
+  .metric-card{
+    min-height:150px;
   }
 
   .metric-icon{
     font-size:22px;
+    margin-bottom:10px;
   }
 
   .metric-title{
     font-size:12px;
-
     line-height:1.25;
+
+    /* Permite que el texto se acomode */
+    white-space:normal;
+    overflow-wrap:anywhere;
   }
 
   .metric{
@@ -619,9 +541,12 @@ button:active{
     font-size:19px;
   }
 
+  /* =====================================================
+     VENTAS EN MÓVIL
+  ===================================================== */
+
   .sale-main{
     grid-template-columns:1fr;
-
     gap:7px;
   }
 
@@ -629,50 +554,54 @@ button:active{
     text-align:left;
   }
 
+  .sale-total{
+    font-size:20px;
+  }
+
+  .sale-row{
+    padding:16px;
+  }
+
 }
 
+
 /* =========================================================
-   IPHONE PEQUEÑO
+   iPHONE PEQUEÑO
 ========================================================= */
 
 @media(max-width:390px){
 
   .action-grid{
-    grid-template-columns:
-      1fr 1fr;
+    grid-template-columns:1fr 1fr;
   }
 
   .metric{
     font-size:21px;
   }
 
+  .metric-title{
+    font-size:11px;
+  }
+
   .business-btn{
     font-size:13px;
   }
 
-}
-
-/* =========================================================
-   DISPOSITIVOS MUY ESTRECHOS
-========================================================= */
-
-@media(max-width:350px){
-
-  .cards{
-    grid-template-columns:1fr;
+  .metric-card{
+    min-height:145px;
   }
 
 }
 
+
 /* =========================================================
-   REDUCCIÓN DE ANIMACIONES
+   iOS ESPECÍFICO
 ========================================================= */
 
-@media(prefers-reduced-motion:reduce){
+@supports (-webkit-touch-callout:none){
 
-  *{
-    scroll-behavior:auto !important;
-    transition:none !important;
+  body{
+    padding-top:env(safe-area-inset-top);
   }
 
 }
@@ -680,17 +609,12 @@ button:active{
 </style>
 </head>
 
-<body>
 
-<!-- =======================================================
-     HEADER
-======================================================= -->
+<body>
 
 <header>
 
-  <h1>
-    📊 Dashboard
-  </h1>
+  <h1>📊 Dashboard</h1>
 
   <p>
     Sistema de Ventas POS · Administración
@@ -701,9 +625,6 @@ button:active{
 
 <div class="container">
 
-  <!-- =====================================================
-       MENSAJE DE ESTADO
-  ====================================================== -->
 
   <div
     id="status"
@@ -813,6 +734,7 @@ button:active{
 
   <div class="cards">
 
+
     <div class="card metric-card">
 
       <div class="metric-icon">
@@ -896,19 +818,16 @@ button:active{
 
     </div>
 
+
   </div>
 
 
   <!-- =====================================================
-       CONTENIDO PRINCIPAL
+       VENTAS + INVENTARIO
   ====================================================== -->
 
   <div class="main-grid">
 
-
-    <!-- ===================================================
-         VENTAS
-    ==================================================== -->
 
     <div class="card">
 
@@ -927,10 +846,6 @@ button:active{
     </div>
 
 
-    <!-- ===================================================
-         INVENTARIO
-    ==================================================== -->
-
     <div class="card">
 
       <h2 class="section-title">
@@ -947,7 +862,9 @@ button:active{
 
     </div>
 
+
   </div>
+
 
 </div>
 
@@ -965,22 +882,22 @@ button:active{
 
 
 /* =========================================================
-   CONFIGURACIÓN SUPABASE
+   SUPABASE
 ========================================================= */
 
 const SUPABASE_URL =
-  "https://jrxklpstlloeckihcduv.supabase.co";
+"https://jrxklpstlloeckihcduv.supabase.co";
 
 
 const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
+"sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
 
 const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
 
 
 /* =========================================================
@@ -990,16 +907,16 @@ const supabaseClient =
 const BUSINESS_IDS = {
 
   BakeQuiri:
-    "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+  "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
 
   SpicyRoll:
-    "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
+  "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
 
 };
 
 
 let currentBusiness =
-  "BakeQuiri";
+"BakeQuiri";
 
 
 /* =========================================================
@@ -1007,20 +924,18 @@ let currentBusiness =
 ========================================================= */
 
 const $ =
-  id =>
-  document.getElementById(id);
+id =>
+document.getElementById(id);
 
 
 const money =
-  value =>
-  "$" +
-  Number(
-    value || 0
-  ).toFixed(2);
+value =>
+"$" +
+Number(value || 0).toFixed(2);
 
 
 /* =========================================================
-   ESTADO
+   STATUS
 ========================================================= */
 
 function showStatus(
@@ -1029,38 +944,36 @@ function showStatus(
 ){
 
   $("status").textContent =
-    message;
+  message;
 
   $("status").className =
-    "status " + type;
+  "status " + type;
 
 }
 
 
 /* =========================================================
-   CARGAR DASHBOARD
+   DASHBOARD
 ========================================================= */
 
 async function loadDashboard(){
 
   $("salesContainer").innerHTML =
-    '<div class="loading">Cargando ventas...</div>';
+  '<div class="loading">Cargando ventas...</div>';
 
 
   $("inventoryContainer").innerHTML =
-    '<div class="loading">Cargando inventario...</div>';
+  '<div class="loading">Cargando inventario...</div>';
 
 
   $("status").className =
-    "status";
+  "status";
 
 
   try{
 
     const businessId =
-      BUSINESS_IDS[
-        currentBusiness
-      ];
+    BUSINESS_IDS[currentBusiness];
 
 
     if(!businessId){
@@ -1077,27 +990,27 @@ async function loadDashboard(){
     ====================================================== */
 
     const productsResult =
-      await supabaseClient
+    await supabaseClient
 
-        .from("products")
+      .from("products")
 
-        .select(
-          "id,name,price,stock,active"
-        )
+      .select(
+        "id,name,price,stock,active"
+      )
 
-        .eq(
-          "business_id",
-          businessId
-        )
+      .eq(
+        "business_id",
+        businessId
+      )
 
-        .eq(
-          "active",
-          true
-        )
+      .eq(
+        "active",
+        true
+      )
 
-        .order(
-          "name"
-        );
+      .order(
+        "name"
+      );
 
 
     if(productsResult.error){
@@ -1108,20 +1021,18 @@ async function loadDashboard(){
 
 
     const products =
-      productsResult.data || [];
+    productsResult.data || [];
 
 
     $("productCount").textContent =
-      products.length;
+    products.length;
 
 
     $("lowStock").textContent =
-      products.filter(
-        product =>
-          Number(
-            product.stock || 0
-          ) <= 5
-      ).length;
+    products.filter(
+      product =>
+      Number(product.stock || 0) <= 5
+    ).length;
 
 
     renderInventory(
@@ -1130,19 +1041,11 @@ async function loadDashboard(){
 
 
     /* =====================================================
-       VENTAS
+       VENTAS DE HOY
     ====================================================== */
 
-    /*
-     * Obtenemos el inicio del día LOCAL.
-     *
-     * Esto permite que "Ventas de hoy"
-     * corresponda al día del usuario,
-     * no al día UTC.
-     */
-
     const start =
-      new Date();
+    new Date();
 
 
     start.setHours(
@@ -1154,30 +1057,30 @@ async function loadDashboard(){
 
 
     const salesResult =
-      await supabaseClient
+    await supabaseClient
 
-        .from("sales")
+      .from("sales")
 
-        .select(
-          "id,total,balance,status,created_at,customer_id,sale_date"
-        )
+      .select(
+        "id,total,balance,status,created_at,customer_id,sale_date"
+      )
 
-        .eq(
-          "business_id",
-          businessId
-        )
+      .eq(
+        "business_id",
+        businessId
+      )
 
-        .gte(
-          "created_at",
-          start.toISOString()
-        )
+      .gte(
+        "created_at",
+        start.toISOString()
+      )
 
-        .order(
-          "created_at",
-          {
-            ascending:false
-          }
-        );
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
 
 
     if(salesResult.error){
@@ -1188,7 +1091,7 @@ async function loadDashboard(){
 
 
     const sales =
-      salesResult.data || [];
+    salesResult.data || [];
 
 
     /* =====================================================
@@ -1196,35 +1099,59 @@ async function loadDashboard(){
     ====================================================== */
 
     const total =
-      sales.reduce(
-        (
-          sum,
-          sale
-        ) =>
+    sales.reduce(
+      (
+        sum,
+        sale
+      ) => {
+
+        /*
+         * Las ventas canceladas no deben
+         * sumarse a las ventas reales.
+         */
+
+        if(
+          sale.status ===
+          "cancelled"
+        ){
+
+          return sum;
+
+        }
+
+
+        return (
           sum +
           Number(
             sale.total || 0
-          ),
-        0
-      );
+          )
+        );
+
+      },
+      0
+    );
 
 
     $("todaySales").textContent =
-      money(total);
+    money(total);
 
 
     $("salesCount").textContent =
-      sales.length;
+    sales.filter(
+      sale =>
+      sale.status !==
+      "cancelled"
+    ).length;
 
 
     /* =====================================================
-       CLIENTES / VENTAS
+       CLIENTES
     ====================================================== */
 
     const customerLookupFailed =
-      await renderSales(
-        sales
-      );
+    await renderSales(
+      sales
+    );
 
 
     if(customerLookupFailed){
@@ -1279,15 +1206,15 @@ function renderInventory(
 ){
 
   const container =
-    $("inventoryContainer");
+  $("inventoryContainer");
 
 
   if(!products.length){
 
     container.innerHTML =
-      '<div class="empty">' +
-      "No hay productos activos." +
-      "</div>";
+    '<div class="empty">' +
+    "No hay productos activos." +
+    "</div>";
 
     return;
 
@@ -1295,62 +1222,58 @@ function renderInventory(
 
 
   container.innerHTML =
-    "";
+  "";
 
 
   const sortedProducts =
-    [...products].sort(
-      (a,b) =>
-        Number(
-          a.stock || 0
-        ) -
-        Number(
-          b.stock || 0
-        )
-    );
+  [...products].sort(
+    (a,b) =>
+    Number(a.stock || 0) -
+    Number(b.stock || 0)
+  );
 
 
   sortedProducts.forEach(
     product => {
 
       const row =
-        document.createElement(
-          "div"
-        );
+      document.createElement(
+        "div"
+      );
 
 
       row.className =
-        "stock-row";
+      "stock-row";
 
 
       const name =
-        document.createElement(
-          "div"
-        );
+      document.createElement(
+        "div"
+      );
 
 
       name.className =
-        "stock-name";
+      "stock-name";
 
 
       name.textContent =
-        product.name;
+      product.name;
 
 
       const stock =
-        document.createElement(
-          "div"
-        );
+      document.createElement(
+        "div"
+      );
 
 
       stock.className =
-        "stock-number";
+      "stock-number";
 
 
       const stockValue =
-        Number(
-          product.stock || 0
-        );
+      Number(
+        product.stock || 0
+      );
 
 
       if(stockValue <= 5){
@@ -1363,24 +1286,24 @@ function renderInventory(
 
 
       stock.textContent =
-        stockValue +
-        " uds";
+      stockValue +
+      " uds";
 
 
       if(stockValue <= 5){
 
         const warning =
-          document.createElement(
-            "span"
-          );
+        document.createElement(
+          "span"
+        );
 
 
         warning.className =
-          "stock-warning";
+        "stock-warning";
 
 
         warning.textContent =
-          "⚠️";
+        "⚠️";
 
 
         stock.appendChild(
@@ -1415,68 +1338,63 @@ async function renderSales(
 ){
 
   const container =
-    $("salesContainer");
+  $("salesContainer");
 
 
   if(!sales.length){
 
     container.innerHTML =
-      '<div class="empty">' +
-      "No hay ventas registradas hoy." +
-      "</div>";
-
+    '<div class="empty">' +
+    "No hay ventas registradas hoy." +
+    "</div>";
 
     return false;
 
   }
 
 
-  /* =======================================================
-     IDS DE CLIENTES
-  ======================================================== */
-
   const customerIds =
-    [
-      ...new Set(
-        sales
-          .map(
-            sale =>
-              sale.customer_id
-          )
-          .filter(Boolean)
-      )
-    ];
+  [
+    ...new Set(
+      sales
+        .map(
+          sale =>
+          sale.customer_id
+        )
+        .filter(Boolean)
+    )
+  ];
 
 
   const customerMap =
-    new Map();
+  new Map();
 
 
   let customerLookupFailed =
-    false;
+  false;
 
 
-  /* =======================================================
-     BUSCAR CLIENTES
-  ======================================================== */
+  /* =====================================================
+     OBTENER CLIENTES
+  ====================================================== */
 
   if(customerIds.length){
 
     try{
 
       const customersResult =
-        await supabaseClient
+      await supabaseClient
 
-          .from("customers")
+        .from("customers")
 
-          .select(
-            "id,name,phone"
-          )
+        .select(
+          "id,name,phone"
+        )
 
-          .in(
-            "id",
-            customerIds
-          );
+        .in(
+          "id",
+          customerIds
+        );
 
 
       if(customersResult.error){
@@ -1487,8 +1405,7 @@ async function renderSales(
 
 
       (
-        customersResult.data ||
-        []
+        customersResult.data || []
       ).forEach(
         customer => {
 
@@ -1511,81 +1428,66 @@ async function renderSales(
 
 
       customerLookupFailed =
-        true;
+      true;
 
     }
 
   }
 
 
-  /* =======================================================
-     LIMPIAR CONTENEDOR
-  ======================================================== */
-
   container.innerHTML =
-    "";
+  "";
 
 
   const list =
-    document.createElement(
-      "div"
-    );
+  document.createElement(
+    "div"
+  );
 
 
   list.className =
-    "sales-list";
+  "sales-list";
 
-
-  /* =======================================================
-     MOSTRAR MÁXIMO 20 VENTAS
-  ======================================================== */
 
   sales
-    .slice(
-      0,
-      20
-    )
+    .slice(0,20)
     .forEach(
       sale => {
 
-        /* ===============================================
-           CLIENTE
-        ================================================ */
-
         const customer =
-          customerMap.get(
-            sale.customer_id
-          );
+        customerMap.get(
+          sale.customer_id
+        );
 
 
         const customerName =
-          customer?.name ||
-          "Consumidor general";
+        customer?.name ||
+        "Consumidor general";
 
 
         const row =
-          document.createElement(
-            "div"
-          );
+        document.createElement(
+          "div"
+        );
 
 
         row.className =
-          "sale-row";
+        "sale-row";
 
+
+        /* =================================================
+           CLIENTE
+        ================================================== */
 
         const customerDiv =
-          document.createElement(
-            "div"
-          );
+        document.createElement(
+          "div"
+        );
 
 
         customerDiv.className =
-          "sale-customer";
+        "sale-customer";
 
-
-        /* ===============================================
-           CLIENTE CON HISTORIAL
-        ================================================ */
 
         if(
           sale.customer_id &&
@@ -1593,34 +1495,34 @@ async function renderSales(
         ){
 
           const link =
-            document.createElement(
-              "a"
-            );
+          document.createElement(
+            "a"
+          );
 
 
           link.className =
-            "customer-link";
+          "customer-link";
 
 
           link.href =
-            "historial.html" +
-            "?customer_id=" +
-            encodeURIComponent(
-              sale.customer_id
-            ) +
-            "&business=" +
-            encodeURIComponent(
-              currentBusiness
-            );
+          "historial.html" +
+          "?customer_id=" +
+          encodeURIComponent(
+            sale.customer_id
+          ) +
+          "&business=" +
+          encodeURIComponent(
+            currentBusiness
+          );
 
 
           link.textContent =
-            customerName;
+          customerName;
 
 
           link.title =
-            "Ver historial de " +
-            customerName;
+          "Ver historial de " +
+          customerName;
 
 
           customerDiv.appendChild(
@@ -1632,17 +1534,17 @@ async function renderSales(
         else{
 
           const general =
-            document.createElement(
-              "span"
-            );
+          document.createElement(
+            "span"
+          );
 
 
           general.className =
-            "customer-general";
+          "customer-general";
 
 
           general.textContent =
-            customerName;
+          customerName;
 
 
           customerDiv.appendChild(
@@ -1652,36 +1554,24 @@ async function renderSales(
         }
 
 
-        /* ===============================================
+        /* =================================================
            FECHA
-        ================================================ */
-
-        /*
-         * IMPORTANTE:
-         *
-         * Para el Dashboard usamos created_at.
-         *
-         * created_at = momento en que la venta
-         * realmente fue registrada.
-         *
-         * Esto evita que sale_date muestre
-         * una fecha anterior.
-         */
+        ================================================== */
 
         const date =
-          new Date(
-            sale.created_at
-          );
+        new Date(
+          sale.created_at
+        );
 
 
         const dateDiv =
-          document.createElement(
-            "div"
-          );
+        document.createElement(
+          "div"
+        );
 
 
         dateDiv.className =
-          "sale-date";
+        "sale-date";
 
 
         if(
@@ -1691,21 +1581,21 @@ async function renderSales(
         ){
 
           dateDiv.textContent =
-            date.toLocaleDateString(
-              "es-MX",
-              {
-                day:"2-digit",
-                month:"2-digit",
-                year:"numeric"
-              }
-            );
+          date.toLocaleDateString(
+            "es-MX",
+            {
+              day:"2-digit",
+              month:"2-digit",
+              year:"numeric"
+            }
+          );
 
         }
 
         else{
 
           dateDiv.textContent =
-            "";
+          "";
 
         }
 
@@ -1715,88 +1605,88 @@ async function renderSales(
         );
 
 
-        /* ===============================================
+        /* =================================================
            TOTAL
-        ================================================ */
+        ================================================== */
 
         const totalDiv =
-          document.createElement(
-            "div"
-          );
+        document.createElement(
+          "div"
+        );
 
 
         totalDiv.className =
-          "sale-total";
+        "sale-total";
 
 
         totalDiv.textContent =
-          money(
-            sale.total
-          );
+        money(
+          sale.total
+        );
 
 
-        /* ===============================================
+        /* =================================================
            ESTADO
-        ================================================ */
+        ================================================== */
 
         const statusDiv =
-          document.createElement(
-            "div"
-          );
+        document.createElement(
+          "div"
+        );
 
 
         statusDiv.className =
-          "sale-status";
+        "sale-status";
 
 
         const paid =
-          sale.status ===
-          "paid";
+        sale.status ===
+        "paid";
 
 
         const cancelled =
-          sale.status ===
-          "cancelled";
+        sale.status ===
+        "cancelled";
 
 
         const statusPill =
-          document.createElement(
-            "span"
-          );
+        document.createElement(
+          "span"
+        );
 
 
         statusPill.className =
-          "status-pill " +
-          (
-            paid
-              ? "paid"
-              : cancelled
-                ? "cancelled"
-                : "open"
-          );
+        "status-pill " +
+        (
+          paid
+          ? "paid"
+          : cancelled
+          ? "cancelled"
+          : "open"
+        );
 
 
         if(paid){
 
           statusPill.textContent =
-            "✓ Pagada";
+          "✓ Pagada";
 
         }
 
         else if(cancelled){
 
           statusPill.textContent =
-            "Cancelada";
+          "Cancelada";
 
         }
 
         else{
 
           statusPill.textContent =
-            "🔴 Debe " +
-            money(
-              sale.balance || 0
-            );
+          "🔴 Debe " +
+          money(
+            sale.balance || 0
+          );
 
         }
 
@@ -1806,18 +1696,18 @@ async function renderSales(
         );
 
 
-        /* ===============================================
-           FILA PRINCIPAL
-        ================================================ */
+        /* =================================================
+           FILA
+        ================================================== */
 
         const main =
-          document.createElement(
-            "div"
-          );
+        document.createElement(
+          "div"
+        );
 
 
         main.className =
-          "sale-main";
+        "sale-main";
 
 
         main.append(
@@ -1855,172 +1745,159 @@ async function renderSales(
 ========================================================= */
 
 document
-  .querySelectorAll(
-    ".business-btn"
-  )
-  .forEach(
-    button => {
+.querySelectorAll(
+  ".business-btn"
+)
+.forEach(
+  button => {
 
-      button.addEventListener(
-        "click",
-        async () => {
+    button.addEventListener(
+      "click",
+      async () => {
 
-          const business =
-            button.dataset.business;
-
-
-          if(
-            business ===
-            currentBusiness
-          ){
-
-            return;
-
-          }
+        const business =
+        button.dataset.business;
 
 
-          currentBusiness =
-            business;
+        if(
+          business ===
+          currentBusiness
+        ){
 
-
-          document
-            .querySelectorAll(
-              ".business-btn"
-            )
-            .forEach(
-              b =>
-                b.classList.remove(
-                  "active"
-                )
-            );
-
-
-          button.classList.add(
-            "active"
-          );
-
-
-          await loadDashboard();
+          return;
 
         }
-      );
 
-    }
-  );
+
+        currentBusiness =
+        business;
+
+
+        document
+        .querySelectorAll(
+          ".business-btn"
+        )
+        .forEach(
+          b =>
+          b.classList.remove(
+            "active"
+          )
+        );
+
+
+        button.classList.add(
+          "active"
+        );
+
+
+        await loadDashboard();
+
+      }
+    );
+
+  }
+);
 
 
 /* =========================================================
-   BOTÓN ACTUALIZAR
+   BOTONES
 ========================================================= */
 
 $("refresh")
-  .addEventListener(
-    "click",
-    loadDashboard
-  );
+.addEventListener(
+  "click",
+  loadDashboard
+);
 
-
-/* =========================================================
-   CUENTAS
-========================================================= */
 
 $("accounts")
-  .addEventListener(
-    "click",
-    () => {
+.addEventListener(
+  "click",
+  () => {
 
-      window.location.href =
-        "cuentas.html" +
-        "?business=" +
-        encodeURIComponent(
-          currentBusiness
-        );
+    window.location.href =
+    "cuentas.html" +
+    "?business=" +
+    encodeURIComponent(
+      currentBusiness
+    );
 
-    }
-  );
+  }
+);
 
-
-/* =========================================================
-   CLIENTES
-========================================================= */
 
 $("customers")
-  .addEventListener(
-    "click",
-    () => {
+.addEventListener(
+  "click",
+  () => {
 
-      window.location.href =
-        "clientes.html" +
-        "?business=" +
-        encodeURIComponent(
-          currentBusiness
-        );
+    window.location.href =
+    "clientes.html" +
+    "?business=" +
+    encodeURIComponent(
+      currentBusiness
+    );
 
-    }
-  );
+  }
+);
 
-
-/* =========================================================
-   HISTORIAL
-========================================================= */
 
 $("history")
-  .addEventListener(
-    "click",
-    () => {
+.addEventListener(
+  "click",
+  () => {
 
-      window.location.href =
-        "historial.html" +
-        "?business=" +
-        encodeURIComponent(
-          currentBusiness
-        );
+    window.location.href =
+    "historial.html" +
+    "?business=" +
+    encodeURIComponent(
+      currentBusiness
+    );
 
-    }
-  );
+  }
+);
 
-
-/* =========================================================
-   INVENTARIO
-========================================================= */
 
 $("inventory")
-  .addEventListener(
-    "click",
-    () => {
+.addEventListener(
+  "click",
+  () => {
 
-      window.location.href =
-        "inventario.html" +
-        "?business=" +
-        encodeURIComponent(
-          currentBusiness
-        );
+    window.location.href =
+    "inventario.html" +
+    "?business=" +
+    encodeURIComponent(
+      currentBusiness
+    );
 
-    }
-  );
+  }
+);
 
-
-/* =========================================================
-   REGRESAR AL POS
-========================================================= */
 
 $("back")
-  .addEventListener(
-    "click",
-    () => {
+.addEventListener(
+  "click",
+  () => {
 
-      window.location.href =
-        "index.html";
+    window.location.href =
+    "index.html";
 
-    }
-  );
+  }
+);
 
 
 /* =========================================================
    INICIO
 ========================================================= */
 
-loadDashboard();
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    loadDashboard();
+
+  }
+);
 
 </script>
 
