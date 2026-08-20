@@ -2,7 +2,6 @@
 <html lang="es">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
@@ -92,7 +91,7 @@ header p{
 
 .navigation{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:repeat(5,1fr);
   gap:10px;
   margin-bottom:20px;
 }
@@ -111,6 +110,18 @@ header p{
   background:#ecfdf5;
   border-color:#10b981;
   color:#047857;
+}
+
+.nav-btn.history{
+  background:#f5f3ff;
+  border-color:#7c3aed;
+  color:#6d28d9;
+}
+
+.nav-btn.inventory{
+  background:#eff6ff;
+  border-color:#2563eb;
+  color:#1d4ed8;
 }
 
 .layout{
@@ -412,6 +423,14 @@ header p{
   pointer-events:none;
 }
 
+@media(max-width:950px){
+
+  .navigation{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+}
+
 @media(max-width:850px){
 
   .layout{
@@ -509,7 +528,7 @@ type="button"
 class="business-btn active"
 data-business="BakeQuiri">
 
-BakeQuiri
+🧁 BakeQuiri
 
 </button>
 
@@ -518,7 +537,7 @@ type="button"
 class="business-btn"
 data-business="SpicyRoll">
 
-SpicyRoll
+🍣 SpicyRoll
 
 </button>
 
@@ -548,10 +567,19 @@ id="clientsButton">
 
 <button
 type="button"
-class="nav-btn"
+class="nav-btn history"
 id="historyButton">
 
 🧾 Historial
+
+</button>
+
+<button
+type="button"
+class="nav-btn inventory"
+id="inventoryButton">
+
+📦 Inventario
 
 </button>
 
@@ -757,12 +785,6 @@ let products = [];
 
 let payments = [];
 
-/*
-  IMPORTANTE:
-  Los clientes son COMPARTIDOS.
-  No se cambia esta lista al cambiar de negocio.
-*/
-
 let customers = [];
 
 let cart = [];
@@ -861,11 +883,6 @@ async function loadBusinessData(){
 
     ] = await Promise.all([
 
-      /* ================================
-         PRODUCTOS
-         SEPARADOS POR NEGOCIO
-      ================================= */
-
       supabaseClient
 
         .from("products")
@@ -888,11 +905,6 @@ async function loadBusinessData(){
           "name"
         ),
 
-      /* ================================
-         MÉTODOS DE PAGO
-         SEPARADOS POR NEGOCIO
-      ================================= */
-
       supabaseClient
 
         .from("payment_methods")
@@ -914,14 +926,6 @@ async function loadBusinessData(){
         .order(
           "name"
         ),
-
-      /* ================================
-         CLIENTES COMPARTIDOS
-         
-         AQUÍ ESTÁ LA CORRECCIÓN:
-         Se cargan clientes de AMBOS
-         negocios.
-      ================================= */
 
       supabaseClient
 
@@ -981,15 +985,8 @@ async function loadBusinessData(){
     payments =
       paymentsResult.data || [];
 
-    /*
-      NO filtramos customers por currentBusiness.
-      Se conservan todos los clientes de ambos negocios.
-    */
-
     customers =
       customersResult.data || [];
-
-    /* MÉTODO DE PAGO */
 
     if(
       !payments.some(
@@ -1004,11 +1001,6 @@ async function loadBusinessData(){
         null;
 
     }
-
-    /*
-      El cliente seleccionado puede pertenecer
-      originalmente a cualquiera de los dos negocios.
-    */
 
     const selected =
       customers.find(
@@ -1516,32 +1508,17 @@ function renderCart(){
 }
 
 /* =========================================
-   CLIENTES COMPARTIDOS
-========================================= */
-
-function getSharedCustomers(){
-
-  /*
-    TODOS los clientes cargados desde
-    BakeQuiri + SpicyRoll.
-  */
-
-  return customers;
-
-}
-
-/* =========================================
    CLIENTE SELECCIONADO
 ========================================= */
 
 function renderSelectedCustomer(){
 
   const selected =
-    customers.find(
-      customer =>
-        customer.id ===
-        selectedCustomerId
-    );
+  customers.find(
+    customer =>
+      customer.id ===
+      selectedCustomerId
+  );
 
   const selectedElement =
   $("selectedCustomer");
@@ -1629,7 +1606,7 @@ function renderSelectedCustomer(){
 }
 
 /* =========================================
-   BUSCAR CLIENTES COMPARTIDOS
+   BUSCAR CLIENTES
 ========================================= */
 
 function renderCustomerResults(
@@ -1658,17 +1635,8 @@ function renderCustomerResults(
 
   }
 
-  const sharedCustomers =
-    getSharedCustomers();
-
-  /*
-    Evitamos mostrar dos veces al mismo
-    cliente si accidentalmente existe
-    con el mismo teléfono en ambos negocios.
-  */
-
   const filtered =
-    sharedCustomers.filter(
+    customers.filter(
       customer => {
 
         const name =
@@ -1698,51 +1666,11 @@ function renderCustomerResults(
       }
     );
 
-  const uniqueCustomers = [];
-
-  const seenPhones =
-    new Set();
-
-  filtered.forEach(
-    customer => {
-
-      const normalizedPhone =
-        String(
-          customer.phone || ""
-        )
-        .replace(/\D/g,"");
-
-      if(
-        normalizedPhone &&
-        seenPhones.has(
-          normalizedPhone
-        )
-      ){
-
-        return;
-
-      }
-
-      if(normalizedPhone){
-
-        seenPhones.add(
-          normalizedPhone
-        );
-
-      }
-
-      uniqueCustomers.push(
-        customer
-      );
-
-    }
-  );
-
   container.innerHTML =
     "";
 
   if(
-    !uniqueCustomers.length
+    !filtered.length
   ){
 
     const empty =
@@ -1767,7 +1695,7 @@ function renderCustomerResults(
 
   }
 
-  uniqueCustomers
+  filtered
     .slice(0,10)
     .forEach(
       customer => {
@@ -1965,27 +1893,11 @@ async function changeBusiness(
   currentBusiness =
     name;
 
-  /*
-    El carrito sí cambia al cambiar
-    de negocio.
-  */
-
   cart =
     [];
 
-  /*
-    El método de pago debe pertenecer
-    al negocio actual.
-  */
-
   selectedPaymentId =
     null;
-
-  /*
-    IMPORTANTE:
-    NO borramos customers.
-    Los clientes son compartidos.
-  */
 
   selectedCustomerId =
     null;
@@ -2127,15 +2039,6 @@ async function registerSale(
 
         0
       );
-
-    /*
-      IMPORTANTE:
-      La venta sigue perteneciendo
-      al negocio actual.
-
-      El cliente puede haber sido creado
-      originalmente en el otro negocio.
-    */
 
     const result =
       await supabaseClient
@@ -2336,7 +2239,11 @@ $("accountsButton")
   () => {
 
     window.location.href =
-      "cuentas.html";
+      "cuentas.html" +
+      "?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
 
   }
 );
@@ -2347,7 +2254,11 @@ $("clientsButton")
   () => {
 
     window.location.href =
-      "clientes.html";
+      "clientes.html" +
+      "?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
 
   }
 );
@@ -2358,10 +2269,37 @@ $("historyButton")
   () => {
 
     window.location.href =
-      "historial.html";
+      "historial.html" +
+      "?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
 
   }
 );
+
+/* =========================================
+   INVENTARIO
+========================================= */
+
+$("inventoryButton")
+.addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+      "inventario.html" +
+      "?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
+
+  }
+);
+
+/* =========================================
+   DASHBOARD
+========================================= */
 
 $("dashboardButton")
 .addEventListener(
@@ -2369,7 +2307,11 @@ $("dashboardButton")
   () => {
 
     window.location.href =
-      "dashboard.html";
+      "dashboard.html" +
+      "?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
 
   }
 );
@@ -2408,5 +2350,4 @@ loadBusinessData();
 </script>
 
 </body>
-
 </html>
