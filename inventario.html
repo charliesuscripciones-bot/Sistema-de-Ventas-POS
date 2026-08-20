@@ -80,10 +80,9 @@ header p{
 }
 
 .businesses{
-  display:flex;
+  display:grid;
+  grid-template-columns:1fr 1fr;
   gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:14px;
 }
 
 .business-btn,
@@ -96,6 +95,7 @@ header p{
   font-size:15px;
   font-weight:800;
   cursor:pointer;
+  min-height:48px;
 }
 
 .business-btn{
@@ -215,13 +215,6 @@ header p{
   background:#fffafa;
 }
 
-.product-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:15px;
-}
-
 .product-name{
   font-size:18px;
   font-weight:800;
@@ -234,10 +227,10 @@ header p{
 }
 
 .stock-area{
-  display:flex;
-  align-items:center;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
   gap:10px;
-  flex-wrap:wrap;
+  align-items:center;
   margin-top:15px;
 }
 
@@ -246,7 +239,7 @@ header p{
 }
 
 .stock-input{
-  width:110px;
+  width:100%;
   padding:11px;
   border:2px solid #ddd;
   border-radius:10px;
@@ -268,6 +261,7 @@ header p{
   border-radius:10px;
   font-weight:800;
   cursor:pointer;
+  min-height:44px;
 }
 
 .save-button:disabled{
@@ -276,6 +270,7 @@ header p{
 }
 
 .stock-status{
+  grid-column:1 / -1;
   font-size:13px;
   font-weight:700;
 }
@@ -292,17 +287,18 @@ header p{
   margin-top:12px;
   display:flex;
   gap:8px;
-  flex-wrap:wrap;
 }
 
 .quick-button{
+  flex:1;
   border:none;
   background:#eef2ff;
   color:#3730a3;
-  padding:9px 12px;
+  padding:10px 12px;
   border-radius:9px;
   font-weight:800;
   cursor:pointer;
+  min-height:42px;
 }
 
 .quick-button:hover{
@@ -347,7 +343,6 @@ header p{
   }
 
   .businesses{
-    display:grid;
     grid-template-columns:1fr 1fr;
   }
 
@@ -363,13 +358,8 @@ header p{
     padding:17px;
   }
 
-  .product-top{
-    flex-direction:column;
-  }
-
   .stock-area{
-    align-items:flex-start;
-    flex-direction:column;
+    grid-template-columns:1fr;
   }
 
   .stock-input{
@@ -380,8 +370,8 @@ header p{
     width:100%;
   }
 
-  .quick-button{
-    flex:1;
+  .stock-status{
+    grid-column:auto;
   }
 
 }
@@ -535,7 +525,6 @@ class="summary-value low-value">
 
 <div class="card">
 
-
 <h2>
 📋 Productos
 </h2>
@@ -680,16 +669,6 @@ async function loadInventory(){
     BUSINESS_IDS[currentBusiness];
 
 
-    /*
-      IMPORTANTE:
-
-      El inventario se obtiene directamente
-      desde products usando el business_id.
-
-      Esto evita mezclar productos de
-      BakeQuiri con SpicyRoll.
-    */
-
     const result =
     await supabaseClient
 
@@ -729,7 +708,6 @@ async function loadInventory(){
 
 
     updateSummary();
-
 
     renderProducts();
 
@@ -904,35 +882,17 @@ function createProductElement(
   );
 
 
-  /* ================================
-     PARTE SUPERIOR
-  ================================= */
-
-  const top =
-  document.createElement(
-    "div"
-  );
-
-
-  top.className =
-  "product-top";
-
-
-  const info =
-  document.createElement(
-    "div"
-  );
-
+  /* =====================================
+     NOMBRE
+  ===================================== */
 
   const name =
   document.createElement(
     "div"
   );
 
-
   name.className =
   "product-name";
-
 
   name.textContent =
   product.name ||
@@ -944,41 +904,28 @@ function createProductElement(
     "div"
   );
 
-
   price.className =
   "product-price";
-
 
   price.textContent =
   "Precio: " +
   money(product.price);
 
 
-  info.append(
+  element.append(
     name,
     price
   );
 
 
-  top.appendChild(
-    info
-  );
-
-
-  element.appendChild(
-    top
-  );
-
-
-  /* ================================
+  /* =====================================
      STOCK
-  ================================= */
+  ===================================== */
 
   const stockArea =
   document.createElement(
     "div"
   );
-
 
   stockArea.className =
   "stock-area";
@@ -989,10 +936,8 @@ function createProductElement(
     "span"
   );
 
-
   label.className =
   "stock-label";
-
 
   label.textContent =
   "Stock:";
@@ -1002,7 +947,6 @@ function createProductElement(
   document.createElement(
     "input"
   );
-
 
   input.type =
   "number";
@@ -1028,7 +972,6 @@ function createProductElement(
     "button"
   );
 
-
   save.type =
   "button";
 
@@ -1044,7 +987,6 @@ function createProductElement(
     "span"
   );
 
-
   status.className =
   "stock-status " +
   (
@@ -1052,7 +994,6 @@ function createProductElement(
     ? "low"
     : "ok"
   );
-
 
   status.textContent =
   currentStock <= 5
@@ -1064,8 +1005,8 @@ function createProductElement(
     "click",
     async event => {
 
+      event.preventDefault();
       event.stopPropagation();
-
 
       await saveStock(
         product,
@@ -1110,15 +1051,14 @@ function createProductElement(
   );
 
 
-  /* ================================
+  /* =====================================
      BOTONES RÁPIDOS
-  ================================= */
+  ===================================== */
 
   const actions =
   document.createElement(
     "div"
   );
-
 
   actions.className =
   "product-actions";
@@ -1128,7 +1068,6 @@ function createProductElement(
   document.createElement(
     "button"
   );
-
 
   minus.type =
   "button";
@@ -1146,7 +1085,9 @@ function createProductElement(
 
       const value =
       Math.max(
-        Number(input.value || 0) - 1,
+        Number(
+          input.value || 0
+        ) - 1,
         0
       );
 
@@ -1161,7 +1102,6 @@ function createProductElement(
   document.createElement(
     "button"
   );
-
 
   plus.type =
   "button";
@@ -1178,7 +1118,9 @@ function createProductElement(
     () => {
 
       const value =
-      Number(input.value || 0) + 1;
+      Number(
+        input.value || 0
+      ) + 1;
 
       input.value =
       value;
@@ -1191,7 +1133,6 @@ function createProductElement(
   document.createElement(
     "button"
   );
-
 
   plusFive.type =
   "button";
@@ -1208,7 +1149,9 @@ function createProductElement(
     () => {
 
       const value =
-      Number(input.value || 0) + 5;
+      Number(
+        input.value || 0
+      ) + 5;
 
       input.value =
       value;
@@ -1235,7 +1178,7 @@ function createProductElement(
 
 
 /* =========================================
-   GUARDAR STOCK
+   GUARDAR STOCK — CORREGIDO
 ========================================= */
 
 async function saveStock(
@@ -1251,9 +1194,9 @@ async function saveStock(
   );
 
 
-  /* ================================
+  /* =====================================
      VALIDACIÓN
-  ================================= */
+  ===================================== */
 
   if(
     !Number.isInteger(
@@ -1274,9 +1217,12 @@ async function saveStock(
   }
 
 
+  const businessId =
+  BUSINESS_IDS[currentBusiness];
+
+
   button.disabled =
   true;
-
 
   button.textContent =
   "Guardando...";
@@ -1287,27 +1233,22 @@ async function saveStock(
 
   try{
 
-    /*
-      ========================================
-      ACTUALIZACIÓN DIRECTA EN SUPABASE
-      ========================================
+    /* =====================================
+       PASO 1
+       UPDATE DIRECTO
 
-      Se actualiza:
-      products.stock
+       IMPORTANTE:
+       NO usamos .select().single()
+       aquí.
+    ===================================== */
 
-      PERO además verificamos que:
-      - el producto pertenezca al negocio actual
-      - Supabase realmente haya guardado el valor
-    */
-
-    const result =
+    const updateResult =
     await supabaseClient
 
       .from("products")
 
       .update({
-        stock:
-        newStock
+        stock:newStock
       })
 
       .eq(
@@ -1317,42 +1258,84 @@ async function saveStock(
 
       .eq(
         "business_id",
-        BUSINESS_IDS[currentBusiness]
-      )
-
-      .select(
-        "id,business_id,name,price,stock,active"
-      )
-      .single();
+        businessId
+      );
 
 
-    if(result.error){
+    if(updateResult.error){
 
-      throw result.error;
+      throw updateResult.error;
 
     }
 
 
-    if(!result.data){
+    /* =====================================
+       PASO 2
+       VOLVER A CONSULTAR EL PRODUCTO
+
+       Usamos LIMIT 1 y NO .single().
+       Así evitamos el error:
+
+       "Cannot coerce the result
+        to a single JSON object"
+    ===================================== */
+
+    const verifyResult =
+    await supabaseClient
+
+      .from("products")
+
+      .select(
+        "id,business_id,name,price,stock,active"
+      )
+
+      .eq(
+        "id",
+        product.id
+      )
+
+      .eq(
+        "business_id",
+        businessId
+      )
+
+      .limit(1);
+
+
+    if(verifyResult.error){
+
+      throw verifyResult.error;
+
+    }
+
+
+    const rows =
+    verifyResult.data || [];
+
+
+    if(!rows.length){
 
       throw new Error(
-        "No se encontró el producto o no tienes permiso para modificarlo."
+        "Supabase no encontró el producto después de guardarlo. Revisa los permisos de la tabla products."
       );
 
     }
 
 
+    const savedProduct =
+    rows[0];
+
+
     const savedStock =
     Number(
-      result.data.stock || 0
+      savedProduct.stock || 0
     );
 
 
-    /*
-      ========================================
-      VERIFICACIÓN REAL
-      ========================================
-    */
+    /* =====================================
+       PASO 3
+       VERIFICAR EL VALOR REAL
+    ===================================== */
 
     if(
       savedStock !==
@@ -1360,15 +1343,18 @@ async function saveStock(
     ){
 
       throw new Error(
-        "Supabase no confirmó el nuevo stock."
+        "El cambio no fue confirmado por Supabase. El stock sigue en " +
+        savedStock +
+        " unidades."
       );
 
     }
 
 
-    /*
-      Actualizamos el objeto local.
-    */
+    /* =====================================
+       PASO 4
+       ACTUALIZAR MEMORIA LOCAL
+    ===================================== */
 
     const index =
     products.findIndex(
@@ -1381,17 +1367,18 @@ async function saveStock(
     if(index !== -1){
 
       products[index] =
-      result.data;
+      savedProduct;
 
     }
 
 
+    /* =====================================
+       PASO 5
+       ACTUALIZAR INTERFAZ
+    ===================================== */
+
     updateSummary();
 
-
-    /*
-      Actualizamos indicador.
-    */
 
     statusElement.className =
     "stock-status " +
@@ -1410,7 +1397,7 @@ async function saveStock(
 
     showStatus(
       "✅ Stock de " +
-      result.data.name +
+      savedProduct.name +
       " actualizado a " +
       savedStock +
       " unidades.",
@@ -1418,22 +1405,12 @@ async function saveStock(
     );
 
 
-    /*
-      ========================================
-      IMPORTANTE
-
-      NO recargamos toda la página.
-      Así el cambio se ve inmediatamente.
-      ========================================
-    */
-
-
   }
 
   catch(error){
 
     console.error(
-      "Error guardando stock:",
+      "ERROR GUARDANDO STOCK:",
       error
     );
 
@@ -1452,14 +1429,12 @@ async function saveStock(
       "error"
     );
 
-
   }
 
   finally{
 
     button.disabled =
     false;
-
 
     button.textContent =
     "💾 Guardar";
