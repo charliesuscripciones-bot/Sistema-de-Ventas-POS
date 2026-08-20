@@ -48,6 +48,10 @@ header p{
   padding:25px 20px 40px;
 }
 
+/* =========================================
+   CLIENTE
+========================================= */
+
 .customer-banner{
   display:none;
   background:#eff6ff;
@@ -78,6 +82,10 @@ header p{
   color:#64748b;
 }
 
+/* =========================================
+   BOTONES
+========================================= */
+
 .toolbar{
   display:flex;
   gap:12px;
@@ -93,6 +101,10 @@ button{
   font-size:16px;
   font-weight:700;
   cursor:pointer;
+}
+
+button:active{
+  transform:scale(.98);
 }
 
 .business{
@@ -115,6 +127,10 @@ button{
   color:#111827;
 }
 
+/* =========================================
+   FILTROS
+========================================= */
+
 .filters{
   display:grid;
   grid-template-columns:1fr 170px 170px;
@@ -135,6 +151,10 @@ button{
   outline:none;
   border-color:#2680eb;
 }
+
+/* =========================================
+   RESUMEN
+========================================= */
 
 .summary{
   display:grid;
@@ -161,6 +181,10 @@ button{
   font-weight:800;
   margin-top:7px;
 }
+
+/* =========================================
+   VENTAS
+========================================= */
 
 .card{
   background:#fff;
@@ -210,8 +234,8 @@ button{
 .status{
   display:inline-block;
   margin-top:10px;
-  padding:5px 9px;
-  border-radius:8px;
+  padding:6px 10px;
+  border-radius:9px;
   background:#dcfce7;
   color:#166534;
   font-weight:700;
@@ -222,6 +246,163 @@ button{
   background:#fef3c7;
   color:#92400e;
 }
+
+/* =========================================
+   SALDO CLICKEABLE
+========================================= */
+
+.balance-button{
+  display:block;
+  width:100%;
+  margin-top:12px;
+  padding:13px 15px;
+  border-radius:12px;
+  border:2px solid #fde68a;
+  background:#fffbeb;
+  color:#92400e;
+  text-align:left;
+  font-size:15px;
+  font-weight:800;
+}
+
+.balance-button:hover{
+  background:#fef3c7;
+  border-color:#f59e0b;
+}
+
+.balance-button.paid{
+  background:#dcfce7;
+  border-color:#bbf7d0;
+  color:#166534;
+  cursor:default;
+}
+
+/* =========================================
+   MODAL DE ABONO
+========================================= */
+
+.modal-overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  z-index:9999;
+  padding:20px;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal-overlay.visible{
+  display:flex;
+}
+
+.modal{
+  width:100%;
+  max-width:430px;
+  background:#fff;
+  border-radius:22px;
+  padding:25px;
+  box-shadow:0 15px 50px rgba(0,0,0,.25);
+}
+
+.modal h2{
+  font-size:23px;
+  margin-bottom:8px;
+}
+
+.modal-subtitle{
+  color:#6b7280;
+  margin-bottom:20px;
+  line-height:1.4;
+}
+
+.modal-info{
+  background:#f8fafc;
+  border-radius:14px;
+  padding:15px;
+  margin-bottom:18px;
+}
+
+.modal-info strong{
+  display:block;
+  margin-bottom:5px;
+}
+
+.modal-balance{
+  color:#dc2626;
+  font-size:20px;
+  font-weight:800;
+}
+
+.modal label{
+  display:block;
+  font-weight:700;
+  margin-bottom:7px;
+}
+
+.modal input{
+  width:100%;
+  padding:15px;
+  border:2px solid #ddd;
+  border-radius:12px;
+  font-size:20px;
+  font-weight:700;
+  margin-bottom:15px;
+}
+
+.modal input:focus{
+  outline:none;
+  border-color:#2680eb;
+}
+
+.modal-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:5px;
+}
+
+.modal-buttons button{
+  padding:14px;
+}
+
+.btn-save{
+  background:#16a34a;
+  border-color:#16a34a;
+  color:#fff;
+}
+
+.btn-liquidar{
+  background:#2563eb;
+  border-color:#2563eb;
+  color:#fff;
+}
+
+.btn-cancel{
+  width:100%;
+  margin-top:10px;
+  background:#f1f5f9;
+  border-color:#e2e8f0;
+}
+
+.modal-error{
+  display:none;
+  background:#fee2e2;
+  color:#991b1b;
+  border-radius:10px;
+  padding:11px;
+  margin-bottom:12px;
+  font-size:14px;
+  font-weight:700;
+}
+
+.modal-error.visible{
+  display:block;
+}
+
+/* =========================================
+   MENSAJES
+========================================= */
 
 .empty{
   text-align:center;
@@ -236,6 +417,19 @@ button{
   border-radius:12px;
   font-weight:700;
 }
+
+.success-message{
+  background:#dcfce7;
+  color:#166534;
+  padding:14px;
+  border-radius:12px;
+  margin-bottom:18px;
+  font-weight:700;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
 
 @media(max-width:700px){
 
@@ -253,6 +447,14 @@ button{
 
   .container{
     padding:18px 15px 35px;
+  }
+
+  .modal{
+    padding:20px;
+  }
+
+  .modal-buttons{
+    grid-template-columns:1fr;
   }
 
 }
@@ -281,7 +483,7 @@ Consulta las ventas registradas de tus negocios
 
 
 <!-- =========================================
-     HISTORIAL DE CLIENTE
+     HISTORIAL DEL CLIENTE
 ========================================= -->
 
 <div
@@ -305,7 +507,9 @@ Consulta las ventas registradas de tus negocios
 </div>
 
 
-<!-- BOTONES -->
+<!-- =========================================
+     BARRA DE BOTONES
+========================================= -->
 
 <div class="toolbar">
 
@@ -351,7 +555,9 @@ id="back">
 </div>
 
 
-<!-- FILTROS -->
+<!-- =========================================
+     FILTROS
+========================================= -->
 
 <div class="filters">
 
@@ -362,12 +568,10 @@ placeholder="🔎 Buscar cliente o venta"
 autocomplete="off"
 >
 
-
 <input
 id="from"
 type="date"
 >
-
 
 <input
 id="to"
@@ -377,10 +581,11 @@ type="date"
 </div>
 
 
-<!-- RESUMEN -->
+<!-- =========================================
+     RESUMEN
+========================================= -->
 
 <div class="summary">
-
 
 <div class="summary-card">
 
@@ -432,13 +637,16 @@ $0.00
 
 </div>
 
-
 </div>
 
 
-<!-- VENTAS -->
+<!-- =========================================
+     VENTAS
+========================================= -->
 
 <div class="card">
+
+<div id="message"></div>
 
 <div id="sales">
 
@@ -450,6 +658,99 @@ Cargando ventas...
 
 </div>
 
+
+</div>
+
+
+<!-- =========================================
+     MODAL DE ABONO
+========================================= -->
+
+<div
+id="paymentModal"
+class="modal-overlay">
+
+<div class="modal">
+
+<h2>
+💰 Registrar abono
+</h2>
+
+<div
+id="paymentSubtitle"
+class="modal-subtitle">
+</div>
+
+
+<div class="modal-info">
+
+<strong>
+Saldo pendiente actual
+</strong>
+
+<div
+id="modalBalance"
+class="modal-balance">
+$0.00
+</div>
+
+</div>
+
+
+<div
+id="modalError"
+class="modal-error">
+</div>
+
+
+<label for="paymentAmount">
+Cantidad a abonar
+</label>
+
+<input
+id="paymentAmount"
+type="number"
+inputmode="decimal"
+min="0.01"
+step="0.01"
+placeholder="0.00"
+>
+
+
+<div class="modal-buttons">
+
+<button
+type="button"
+class="btn-save"
+id="savePayment">
+
+💵 Registrar abono
+
+</button>
+
+
+<button
+type="button"
+class="btn-liquidar"
+id="payFull">
+
+✓ Liquidar cuenta
+
+</button>
+
+</div>
+
+
+<button
+type="button"
+class="btn-cancel"
+id="cancelPayment">
+
+Cancelar
+
+</button>
+
+</div>
 
 </div>
 
@@ -504,6 +805,15 @@ let sales = [];
 
 
 /* =========================================
+   MÉTODO DE PAGO
+   ID DE EFECTIVO
+========================================= */
+
+const EFECTIVO_PAYMENT_METHOD_ID =
+"dce26abf-5b2c-4b4f-9f3b-1381e0cbfef0";
+
+
+/* =========================================
    CLIENTE SELECCIONADO
 ========================================= */
 
@@ -517,6 +827,14 @@ let selectedCustomerId =
 urlParams.get(
   "customer_id"
 );
+
+
+/* =========================================
+   VENTA SELECCIONADA PARA ABONO
+========================================= */
+
+let selectedSaleForPayment =
+null;
 
 
 /* =========================================
@@ -555,7 +873,7 @@ timeStyle:"short"
 
 
 /* =========================================
-   CARGAR INFORMACIÓN DEL CLIENTE
+   CARGAR CLIENTE
 ========================================= */
 
 async function loadSelectedCustomer(){
@@ -589,8 +907,8 @@ selectedCustomerId
 if(result.error){
 
 console.error(
-  "No se pudo cargar el cliente:",
-  result.error
+"No se pudo cargar el cliente:",
+result.error
 );
 
 return;
@@ -839,7 +1157,7 @@ customer
 
 
 /* =========================================
-   FILTRAR POR BÚSQUEDA
+   FILTRAR BÚSQUEDA
 ========================================= */
 
 rows =
@@ -995,6 +1313,10 @@ state ||
 }
 
 
+/* =======================================
+   CABECERA
+======================================= */
+
 element.innerHTML =
 
 '<div class="top">' +
@@ -1021,6 +1343,8 @@ sale.total
 "</div>" +
 
 
+/* CLIENTE */
+
 '<div class="customer">' +
 
 "👤 " +
@@ -1032,6 +1356,8 @@ phone +
 "</div>" +
 
 
+/* ID */
+
 '<div class="details">' +
 
 "ID: " +
@@ -1040,6 +1366,8 @@ sale.id +
 
 "</div>" +
 
+
+/* ESTADO */
 
 '<span class="status ' +
 
@@ -1051,37 +1379,96 @@ state === "open"
 
 '">' +
 
-statusText +
-
-"</span>" +
-
-
 (
-Number(
-sale.balance || 0
-) > 0
-
-?
-
-'<div class="details">' +
-
-"Saldo pendiente: " +
-
-"<strong>" +
-
-money(
-sale.balance
+state === "paid"
+? "✓ "
+: ""
 ) +
 
-"</strong>" +
+statusText +
 
-"</div>"
+"</span>";
 
-:
 
-""
+/* =======================================
+   SALDO PENDIENTE CLICKEABLE
+======================================= */
 
+const balance =
+Number(
+sale.balance || 0
 );
+
+
+if(balance > 0){
+
+const balanceButton =
+document.createElement(
+"button"
+);
+
+
+balanceButton.type =
+"button";
+
+
+balanceButton.className =
+"balance-button";
+
+
+balanceButton.innerHTML =
+"💰 Saldo pendiente: " +
+money(balance) +
+" · Registrar abono";
+
+
+balanceButton.addEventListener(
+"click",
+() => {
+
+openPaymentModal(
+sale,
+customerName
+);
+
+}
+);
+
+
+element.appendChild(
+balanceButton
+);
+
+}
+else{
+
+const paidButton =
+document.createElement(
+"button"
+);
+
+
+paidButton.type =
+"button";
+
+
+paidButton.className =
+"balance-button paid";
+
+
+paidButton.disabled =
+true;
+
+
+paidButton.innerHTML =
+"✓ Cuenta liquidada";
+
+
+element.appendChild(
+paidButton
+);
+
+}
 
 
 $("sales")
@@ -1094,6 +1481,511 @@ element
 );
 
 }
+
+
+/* =========================================
+   ABRIR MODAL
+========================================= */
+
+function openPaymentModal(
+sale,
+customerName
+){
+
+selectedSaleForPayment =
+sale;
+
+
+$("paymentSubtitle")
+textContent =
+customerName +
+" · Venta de " +
+money(sale.total);
+
+
+$("modalBalance")
+textContent =
+money(sale.balance);
+
+
+$("paymentAmount")
+value =
+"";
+
+
+$("modalError")
+textContent =
+"";
+
+
+$("modalError")
+.classList.remove(
+"visible"
+);
+
+
+$("paymentModal")
+.classList.add(
+"visible"
+);
+
+
+setTimeout(
+() => {
+
+$("paymentAmount")
+.focus();
+
+},
+100
+);
+
+}
+
+
+/* =========================================
+   CERRAR MODAL
+========================================= */
+
+function closePaymentModal(){
+
+selectedSaleForPayment =
+null;
+
+
+$("paymentModal")
+.classList.remove(
+"visible"
+);
+
+}
+
+
+/* =========================================
+   MOSTRAR ERROR DEL MODAL
+========================================= */
+
+function showPaymentError(
+message
+){
+
+$("modalError")
+.textContent =
+message;
+
+
+$("modalError")
+.classList.add(
+"visible"
+);
+
+}
+
+
+/* =========================================
+   REGISTRAR ABONO
+========================================= */
+
+async function registerPayment(
+amount
+){
+
+if(!selectedSaleForPayment){
+
+return;
+
+}
+
+
+const sale =
+selectedSaleForPayment;
+
+
+const currentBalance =
+Number(
+sale.balance || 0
+);
+
+
+amount =
+Number(amount);
+
+
+if(!Number.isFinite(amount)){
+
+showPaymentError(
+"Escribe una cantidad válida."
+);
+
+return;
+
+}
+
+
+if(amount <= 0){
+
+showPaymentError(
+"El abono debe ser mayor a $0.00."
+);
+
+return;
+
+}
+
+
+if(amount > currentBalance + 0.001){
+
+showPaymentError(
+"El abono no puede ser mayor al saldo pendiente de " +
+money(currentBalance) +
+"."
+);
+
+return;
+
+}
+
+
+/* =======================================
+   EVITAR DOBLE CLIC
+======================================= */
+
+$("savePayment").disabled =
+true;
+
+$("payFull").disabled =
+true;
+
+
+try{
+
+/* =====================================
+   INSERTAR PAGO
+===================================== */
+
+const paymentResult =
+await supabaseClient
+
+.from("payments")
+
+.insert({
+
+sale_id:
+sale.id,
+
+business_id:
+sale.business_id,
+
+payment_method_id:
+EFECTIVO_PAYMENT_METHOD_ID,
+
+amount:
+amount,
+
+paid_at:
+new Date().toISOString()
+
+});
+
+
+if(paymentResult.error){
+
+throw paymentResult.error;
+
+}
+
+
+/* =====================================
+   CALCULAR NUEVO SALDO
+===================================== */
+
+const newBalance =
+Math.max(
+0,
+currentBalance - amount
+);
+
+
+/* =====================================
+   NUEVO ESTATUS
+===================================== */
+
+const newStatus =
+newBalance <= 0.001
+? "paid"
+: "open";
+
+
+/* =====================================
+   ACTUALIZAR VENTA
+===================================== */
+
+const updateResult =
+await supabaseClient
+
+.from("sales")
+
+.update({
+
+balance:
+newBalance,
+
+status:
+newStatus
+
+})
+
+.eq(
+"id",
+sale.id
+)
+.eq(
+"business_id",
+sale.business_id
+);
+
+
+if(updateResult.error){
+
+throw updateResult.error;
+
+}
+
+
+/* =====================================
+   CERRAR MODAL
+===================================== */
+
+closePaymentModal();
+
+
+/* =====================================
+   MENSAJE
+===================================== */
+
+if(newBalance <= 0.001){
+
+$("message").innerHTML =
+
+'<div class="success-message">' +
+
+"✅ Cuenta liquidada correctamente. " +
+
+customerNameForMessage(sale.customer_id) +
+
+"</div>";
+
+}
+else{
+
+$("message").innerHTML =
+
+'<div class="success-message">' +
+
+"💰 Abono registrado correctamente. " +
+
+"Nuevo saldo: " +
+
+money(newBalance) +
+
+"</div>";
+
+}
+
+
+/* =====================================
+   RECARGAR
+===================================== */
+
+await loadSales();
+
+
+/* =====================================
+   QUITAR MENSAJE DESPUÉS
+===================================== */
+
+setTimeout(
+() => {
+
+$("message").innerHTML =
+"";
+
+},
+4000
+);
+
+}
+
+catch(error){
+
+console.error(
+"Error registrando pago:",
+error
+);
+
+
+/*
+   IMPORTANTE:
+   Si el pago se insertó pero la actualización
+   de la venta falló, mostramos el error.
+*/
+
+showPaymentError(
+
+"No se pudo registrar el abono: " +
+
+(
+error.message ||
+error
+)
+
+);
+
+}
+
+finally{
+
+$("savePayment").disabled =
+false;
+
+$("payFull").disabled =
+false;
+
+}
+
+}
+
+
+/* =========================================
+   OBTENER NOMBRE PARA MENSAJE
+========================================= */
+
+function customerNameForMessage(
+customerId
+){
+
+if(!customerId){
+
+return "";
+
+}
+
+
+return "";
+
+}
+
+
+/* =========================================
+   BOTÓN ABONO
+========================================= */
+
+$("savePayment")
+.addEventListener(
+"click",
+async () => {
+
+const amount =
+Number(
+$("paymentAmount").value
+);
+
+
+await registerPayment(
+amount
+);
+
+}
+);
+
+
+/* =========================================
+   BOTÓN LIQUIDAR
+========================================= */
+
+$("payFull")
+.addEventListener(
+"click",
+async () => {
+
+if(!selectedSaleForPayment){
+
+return;
+
+}
+
+
+const balance =
+Number(
+selectedSaleForPayment.balance || 0
+);
+
+
+$("paymentAmount")
+.value =
+balance.toFixed(2);
+
+
+await registerPayment(
+balance
+);
+
+}
+);
+
+
+/* =========================================
+   CANCELAR
+========================================= */
+
+$("cancelPayment")
+.addEventListener(
+"click",
+closePaymentModal
+);
+
+
+/* =========================================
+   CERRAR AL TOCAR FUERA
+========================================= */
+
+$("paymentModal")
+.addEventListener(
+"click",
+event => {
+
+if(
+event.target ===
+$("paymentModal")
+){
+
+closePaymentModal();
+
+}
+
+}
+);
+
+
+/* =========================================
+   ESC PARA CERRAR
+========================================= */
+
+document.addEventListener(
+"keydown",
+event => {
+
+if(
+event.key ===
+"Escape"
+){
+
+closePaymentModal();
+
+}
+
+}
+);
 
 
 /* =========================================
@@ -1129,6 +2021,21 @@ currentBusiness =
 business;
 
 
+/*
+  Si cambiamos de negocio,
+  quitamos el cliente seleccionado.
+*/
+
+selectedCustomerId =
+null;
+
+
+$("customerBanner")
+.classList.remove(
+"visible"
+);
+
+
 document
 .querySelectorAll(
 ".business"
@@ -1146,23 +2053,6 @@ button.classList.add(
 );
 
 
-/*
-  Si cambiamos de negocio,
-  el cliente seleccionado podría
-  no pertenecer al nuevo negocio.
-  Por seguridad quitamos el filtro.
-*/
-
-selectedCustomerId =
-null;
-
-
-$("customerBanner")
-.classList.remove(
-"visible"
-);
-
-
 window.history.replaceState(
 {},
 "",
@@ -1173,6 +2063,7 @@ window.history.replaceState(
 await loadSales();
 
 }
+
 );
 
 }
