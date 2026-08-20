@@ -39,10 +39,6 @@ header p{
   padding:20px;
 }
 
-/* ================================
-   MENSAJES
-================================ */
-
 .status{
   display:none;
   padding:13px 15px;
@@ -62,10 +58,6 @@ header p{
   background:#fee2e2;
   color:#991b1b;
 }
-
-/* ================================
-   PANEL DE CONTROLES
-================================ */
 
 .control-panel{
   background:#fff;
@@ -134,15 +126,16 @@ button:active{
   color:white;
 }
 
+.inventory-btn{
+  background:#0891b2;
+  color:white;
+}
+
 .back{
   background:#fff;
   color:#111827;
   border:2px solid #ddd;
 }
-
-/* ================================
-   MÉTRICAS
-================================ */
 
 .cards{
   display:grid;
@@ -196,10 +189,6 @@ button:active{
   color:#d97706;
 }
 
-/* ================================
-   SECCIONES PRINCIPALES
-================================ */
-
 .main-grid{
   display:grid;
   grid-template-columns:1.35fr .85fr;
@@ -211,10 +200,6 @@ button:active{
   font-weight:800;
   margin:0 0 18px;
 }
-
-/* ================================
-   TABLA DE VENTAS
-================================ */
 
 .sales-list{
   display:grid;
@@ -270,10 +255,6 @@ button:active{
   text-align:right;
 }
 
-/* ================================
-   ESTADOS
-================================ */
-
 .status-pill{
   display:inline-block;
   padding:6px 10px;
@@ -296,10 +277,6 @@ button:active{
   background:#fee2e2;
   color:#991b1b;
 }
-
-/* ================================
-   INVENTARIO
-================================ */
 
 .inventory-list{
   display:grid;
@@ -336,20 +313,12 @@ button:active{
   color:#dc2626;
 }
 
-/* ================================
-   VACÍO / CARGANDO
-================================ */
-
 .empty,
 .loading{
   text-align:center;
   color:#777;
   padding:30px 10px;
 }
-
-/* ================================
-   RESPONSIVE TABLET
-================================ */
 
 @media(max-width:900px){
 
@@ -366,10 +335,6 @@ button:active{
   }
 
 }
-
-/* ================================
-   RESPONSIVE CELULAR
-================================ */
 
 @media(max-width:600px){
 
@@ -445,10 +410,6 @@ button:active{
 
 }
 
-/* ================================
-   CELULAR MUY PEQUEÑO
-================================ */
-
 @media(max-width:390px){
 
   .action-grid{
@@ -477,10 +438,6 @@ button:active{
 <div class="container">
 
   <div id="status" class="status"></div>
-
-  <!-- ============================
-       CONTROLES
-  ============================= -->
 
   <div class="control-panel">
 
@@ -534,6 +491,13 @@ button:active{
 
       <button
         type="button"
+        id="inventory"
+        class="inventory-btn">
+        📦 Inventario
+      </button>
+
+      <button
+        type="button"
         id="back"
         class="back">
         ← POS
@@ -542,11 +506,6 @@ button:active{
     </div>
 
   </div>
-
-
-  <!-- ============================
-       MÉTRICAS
-  ============================= -->
 
   <div class="cards">
 
@@ -568,7 +527,6 @@ button:active{
 
     </div>
 
-
     <div class="card metric-card">
 
       <div class="metric-icon">
@@ -587,7 +545,6 @@ button:active{
 
     </div>
 
-
     <div class="card metric-card">
 
       <div class="metric-icon">
@@ -605,7 +562,6 @@ button:active{
       </div>
 
     </div>
-
 
     <div class="card metric-card">
 
@@ -627,11 +583,6 @@ button:active{
 
   </div>
 
-
-  <!-- ============================
-       VENTAS + INVENTARIO
-  ============================= -->
-
   <div class="main-grid">
 
     <div class="card">
@@ -647,7 +598,6 @@ button:active{
       </div>
 
     </div>
-
 
     <div class="card">
 
@@ -667,36 +617,23 @@ button:active{
 
 </div>
 
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
 "use strict";
 
-
-/* =========================================
-   SUPABASE
-========================================= */
-
 const SUPABASE_URL =
 "https://jrxklpstlloeckihcduv.supabase.co";
 
-
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
-
 
 const supabaseClient =
 window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
-
-
-/* =========================================
-   NEGOCIOS
-========================================= */
 
 const BUSINESS_IDS = {
 
@@ -708,29 +645,17 @@ const BUSINESS_IDS = {
 
 };
 
-
 let currentBusiness =
 "BakeQuiri";
-
-
-/* =========================================
-   UTILIDADES
-========================================= */
 
 const $ =
 id =>
 document.getElementById(id);
 
-
 const money =
 value =>
 "$" +
 Number(value || 0).toFixed(2);
-
-
-/* =========================================
-   MENSAJES
-========================================= */
 
 function showStatus(
   message,
@@ -745,11 +670,6 @@ function showStatus(
 
 }
 
-
-/* =========================================
-   CARGAR DASHBOARD
-========================================= */
-
 async function loadDashboard(){
 
   $("salesContainer").innerHTML =
@@ -761,16 +681,10 @@ async function loadDashboard(){
   $("status").className =
   "status";
 
-
   try{
 
     const businessId =
     BUSINESS_IDS[currentBusiness];
-
-
-    /* =====================================
-       PRODUCTOS
-    ===================================== */
 
     const productsResult =
     await supabaseClient
@@ -795,21 +709,17 @@ async function loadDashboard(){
         "name"
       );
 
-
     if(productsResult.error){
 
       throw productsResult.error;
 
     }
 
-
     const products =
     productsResult.data || [];
 
-
     $("productCount").textContent =
     products.length;
-
 
     $("lowStock").textContent =
     products.filter(
@@ -817,15 +727,9 @@ async function loadDashboard(){
       Number(product.stock || 0) <= 5
     ).length;
 
-
     renderInventory(
       products
     );
-
-
-    /* =====================================
-       VENTAS DEL DÍA
-    ===================================== */
 
     const start =
     new Date();
@@ -836,7 +740,6 @@ async function loadDashboard(){
       0,
       0
     );
-
 
     const salesResult =
     await supabaseClient
@@ -864,17 +767,14 @@ async function loadDashboard(){
         }
       );
 
-
     if(salesResult.error){
 
       throw salesResult.error;
 
     }
 
-
     const sales =
     salesResult.data || [];
-
 
     const total =
     sales.reduce(
@@ -889,19 +789,15 @@ async function loadDashboard(){
       0
     );
 
-
     $("todaySales").textContent =
     money(total);
-
 
     $("salesCount").textContent =
     sales.length;
 
-
     await renderSales(
       sales
     );
-
 
     showStatus(
       currentBusiness +
@@ -918,7 +814,6 @@ async function loadDashboard(){
       error
     );
 
-
     showStatus(
       "No se pudo cargar el Dashboard: " +
       (
@@ -932,18 +827,12 @@ async function loadDashboard(){
 
 }
 
-
-/* =========================================
-   INVENTARIO
-========================================= */
-
 function renderInventory(
   products
 ){
 
   const container =
   $("inventoryContainer");
-
 
   if(!products.length){
 
@@ -956,10 +845,8 @@ function renderInventory(
 
   }
 
-
   container.innerHTML =
   "";
-
 
   const sortedProducts =
   [...products].sort(
@@ -967,7 +854,6 @@ function renderInventory(
     Number(a.stock || 0) -
     Number(b.stock || 0)
   );
-
 
   sortedProducts.forEach(
     product => {
@@ -977,40 +863,32 @@ function renderInventory(
         "div"
       );
 
-
       row.className =
       "stock-row";
-
 
       const name =
       document.createElement(
         "div"
       );
 
-
       name.className =
       "stock-name";
 
-
       name.textContent =
       product.name;
-
 
       const stock =
       document.createElement(
         "div"
       );
 
-
       stock.className =
       "stock-number";
-
 
       const stockValue =
       Number(
         product.stock || 0
       );
-
 
       if(stockValue <= 5){
 
@@ -1020,11 +898,9 @@ function renderInventory(
 
       }
 
-
       stock.textContent =
       stockValue +
       " uds";
-
 
       if(stockValue <= 5){
 
@@ -1033,14 +909,11 @@ function renderInventory(
           "span"
         );
 
-
         warning.className =
         "stock-warning";
 
-
         warning.textContent =
         "⚠️";
-
 
         stock.appendChild(
           warning
@@ -1048,12 +921,10 @@ function renderInventory(
 
       }
 
-
       row.append(
         name,
         stock
       );
-
 
       container.appendChild(
         row
@@ -1064,18 +935,12 @@ function renderInventory(
 
 }
 
-
-/* =========================================
-   VENTAS DE HOY
-========================================= */
-
 async function renderSales(
   sales
 ){
 
   const container =
   $("salesContainer");
-
 
   if(!sales.length){
 
@@ -1087,11 +952,6 @@ async function renderSales(
     return;
 
   }
-
-
-  /* =======================================
-     OBTENER CLIENTES
-  ======================================= */
 
   const customerIds =
   [
@@ -1105,10 +965,8 @@ async function renderSales(
     )
   ];
 
-
   const customerMap =
   new Map();
-
 
   if(customerIds.length){
 
@@ -1126,13 +984,11 @@ async function renderSales(
         customerIds
       );
 
-
     if(customersResult.error){
 
       throw customersResult.error;
 
     }
-
 
     (
       customersResult.data || []
@@ -1149,24 +1005,16 @@ async function renderSales(
 
   }
 
-
-  /* =======================================
-     LISTA
-  ======================================= */
-
   container.innerHTML =
   "";
-
 
   const list =
   document.createElement(
     "div"
   );
 
-
   list.className =
   "sales-list";
-
 
   sales
     .slice(0,20)
@@ -1178,35 +1026,25 @@ async function renderSales(
           sale.customer_id
         );
 
-
         const customerName =
         customer?.name ||
         "Consumidor general";
-
 
         const row =
         document.createElement(
           "div"
         );
 
-
         row.className =
         "sale-row";
-
-
-        /* =================================
-           CLIENTE
-        ================================= */
 
         const customerDiv =
         document.createElement(
           "div"
         );
 
-
         customerDiv.className =
         "sale-customer";
-
 
         if(
           sale.customer_id &&
@@ -1218,17 +1056,8 @@ async function renderSales(
             "a"
           );
 
-
           link.className =
           "customer-link";
-
-
-          /*
-            IMPORTANTE:
-
-            Ahora mandamos también
-            el negocio actual al historial.
-          */
 
           link.href =
           "historial.html" +
@@ -1241,15 +1070,12 @@ async function renderSales(
             currentBusiness
           );
 
-
           link.textContent =
           customerName;
-
 
           link.title =
           "Ver historial de " +
           customerName;
-
 
           customerDiv.appendChild(
             link
@@ -1263,14 +1089,11 @@ async function renderSales(
             "span"
           );
 
-
           general.className =
           "customer-general";
 
-
           general.textContent =
           customerName;
-
 
           customerDiv.appendChild(
             general
@@ -1278,13 +1101,11 @@ async function renderSales(
 
         }
 
-
         const date =
         new Date(
           sale.sale_date ||
           sale.created_at
         );
-
 
         const formattedDate =
         date.toLocaleDateString(
@@ -1296,75 +1117,54 @@ async function renderSales(
           }
         );
 
-
         const dateDiv =
         document.createElement(
           "div"
         );
 
-
         dateDiv.className =
         "sale-date";
-
 
         dateDiv.textContent =
         formattedDate;
 
-
         customerDiv.appendChild(
           dateDiv
         );
-
-
-        /* =================================
-           TOTAL
-        ================================= */
 
         const totalDiv =
         document.createElement(
           "div"
         );
 
-
         totalDiv.className =
         "sale-total";
-
 
         totalDiv.textContent =
         money(
           sale.total
         );
 
-
-        /* =================================
-           ESTADO
-        ================================= */
-
         const statusDiv =
         document.createElement(
           "div"
         );
 
-
         statusDiv.className =
         "sale-status";
-
 
         const paid =
         sale.status ===
         "paid";
 
-
         const cancelled =
         sale.status ===
         "cancelled";
-
 
         const statusPill =
         document.createElement(
           "span"
         );
-
 
         statusPill.className =
         "status-pill " +
@@ -1375,7 +1175,6 @@ async function renderSales(
           ? "cancelled"
           : "open"
         );
-
 
         if(paid){
 
@@ -1399,25 +1198,17 @@ async function renderSales(
 
         }
 
-
         statusDiv.appendChild(
           statusPill
         );
-
-
-        /* =================================
-           CONTENEDOR
-        ================================= */
 
         const main =
         document.createElement(
           "div"
         );
 
-
         main.className =
         "sale-main";
-
 
         main.append(
           customerDiv,
@@ -1425,11 +1216,9 @@ async function renderSales(
           statusDiv
         );
 
-
         row.appendChild(
           main
         );
-
 
         list.appendChild(
           row
@@ -1438,17 +1227,11 @@ async function renderSales(
       }
     );
 
-
   container.appendChild(
     list
   );
 
 }
-
-
-/* =========================================
-   CAMBIAR NEGOCIO
-========================================= */
 
 document
 .querySelectorAll(
@@ -1464,7 +1247,6 @@ document
         const business =
         button.dataset.business;
 
-
         if(
           business ===
           currentBusiness
@@ -1474,10 +1256,8 @@ document
 
         }
 
-
         currentBusiness =
         business;
-
 
         document
         .querySelectorAll(
@@ -1490,11 +1270,9 @@ document
           )
         );
 
-
         button.classList.add(
           "active"
         );
-
 
         await loadDashboard();
 
@@ -1504,21 +1282,11 @@ document
   }
 );
 
-
-/* =========================================
-   ACTUALIZAR
-========================================= */
-
 $("refresh")
 .addEventListener(
   "click",
   loadDashboard
 );
-
-
-/* =========================================
-   CUENTAS PENDIENTES
-========================================= */
 
 $("accounts")
 .addEventListener(
@@ -1535,11 +1303,6 @@ $("accounts")
   }
 );
 
-
-/* =========================================
-   CLIENTES
-========================================= */
-
 $("customers")
 .addEventListener(
   "click",
@@ -1554,11 +1317,6 @@ $("customers")
 
   }
 );
-
-
-/* =========================================
-   HISTORIAL GENERAL
-========================================= */
 
 $("history")
 .addEventListener(
@@ -1575,10 +1333,24 @@ $("history")
   }
 );
 
-
 /* =========================================
-   VOLVER AL POS
+   INVENTARIO
 ========================================= */
+
+$("inventory")
+.addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+    "inventario.html" +
+    "?business=" +
+    encodeURIComponent(
+      currentBusiness
+    );
+
+  }
+);
 
 $("back")
 .addEventListener(
@@ -1590,11 +1362,6 @@ $("back")
 
   }
 );
-
-
-/* =========================================
-   INICIAR
-========================================= */
 
 loadDashboard();
 
