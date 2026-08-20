@@ -13,7 +13,7 @@
 body{
   margin:0;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-  background:#f5f5f5;
+  background:#f5f6f8;
   color:#171717;
 }
 
@@ -39,11 +39,16 @@ header p{
   padding:20px;
 }
 
+/* ================================
+   MENSAJES
+================================ */
+
 .status{
   display:none;
   padding:13px 15px;
-  border-radius:10px;
+  border-radius:12px;
   margin-bottom:20px;
+  font-weight:700;
 }
 
 .status.ok{
@@ -58,60 +63,86 @@ header p{
   color:#991b1b;
 }
 
-.topbar{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
+/* ================================
+   PANEL DE CONTROLES
+================================ */
+
+.control-panel{
+  background:#fff;
+  border-radius:20px;
+  padding:18px;
   margin-bottom:20px;
+  box-shadow:0 4px 18px rgba(0,0,0,.06);
+}
+
+.business-selector{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+.action-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
 }
 
 button{
   border:0;
   cursor:pointer;
-  font-size:16px;
+  font-size:15px;
+  font-weight:800;
+  min-height:48px;
+  border-radius:12px;
+  transition:.15s ease;
 }
 
-.business-btn,
-.back,
-.history,
-.accounts,
-.customers{
-  background:white;
+button:active{
+  transform:scale(.98);
+}
+
+.business-btn{
+  background:#fff;
+  color:#2680eb;
   border:2px solid #ddd;
-  border-radius:12px;
-  padding:12px 20px;
-  font-weight:700;
 }
 
 .business-btn.active{
   background:#111827;
-  color:white;
+  color:#fff;
   border-color:#111827;
 }
 
 .refresh{
   background:#2563eb;
   color:white;
-  padding:12px 20px;
-  border-radius:12px;
-  font-weight:700;
-}
-
-.history{
-  margin-left:auto;
 }
 
 .accounts{
   background:#f59e0b;
   color:white;
-  border-color:#f59e0b;
 }
 
 .customers{
-  background:#ecfdf5;
-  color:#047857;
-  border-color:#10b981;
+  background:#10b981;
+  color:white;
 }
+
+.history{
+  background:#7c3aed;
+  color:white;
+}
+
+.back{
+  background:#fff;
+  color:#111827;
+  border:2px solid #ddd;
+}
+
+/* ================================
+   MÉTRICAS
+================================ */
 
 .cards{
   display:grid;
@@ -127,10 +158,21 @@ button{
   box-shadow:0 4px 18px rgba(0,0,0,.06);
 }
 
+.metric-card{
+  position:relative;
+  overflow:hidden;
+}
+
+.metric-icon{
+  font-size:27px;
+  margin-bottom:12px;
+}
+
 .metric-title{
   color:#6b7280;
-  font-size:15px;
-  margin-bottom:10px;
+  font-size:14px;
+  font-weight:700;
+  margin-bottom:8px;
 }
 
 .metric{
@@ -150,34 +192,51 @@ button{
   color:#dc2626;
 }
 
-.grid{
+.orange{
+  color:#d97706;
+}
+
+/* ================================
+   SECCIONES PRINCIPALES
+================================ */
+
+.main-grid{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:1.35fr .85fr;
   gap:20px;
 }
 
 .section-title{
-  font-size:22px;
+  font-size:21px;
   font-weight:800;
   margin:0 0 18px;
 }
 
-table{
-  width:100%;
-  border-collapse:collapse;
+/* ================================
+   TABLA DE VENTAS
+================================ */
+
+.sales-list{
+  display:grid;
+  gap:10px;
 }
 
-th{
-  text-align:left;
-  color:#6b7280;
-  font-size:13px;
-  padding:10px 6px;
-  border-bottom:2px solid #eee;
+.sale-row{
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+  padding:14px;
+  background:#fff;
 }
 
-td{
-  padding:12px 6px;
-  border-bottom:1px solid #eee;
+.sale-main{
+  display:grid;
+  grid-template-columns:1.4fr .8fr .7fr;
+  gap:12px;
+  align-items:center;
+}
+
+.sale-customer{
+  min-width:0;
 }
 
 .customer-link{
@@ -196,12 +255,31 @@ td{
   font-weight:700;
 }
 
+.sale-date{
+  color:#6b7280;
+  font-size:13px;
+  margin-top:4px;
+}
+
+.sale-total{
+  font-weight:800;
+  font-size:17px;
+}
+
+.sale-status{
+  text-align:right;
+}
+
+/* ================================
+   ESTADOS
+================================ */
+
 .status-pill{
   display:inline-block;
-  padding:5px 9px;
+  padding:6px 10px;
   border-radius:20px;
   font-size:12px;
-  font-weight:700;
+  font-weight:800;
 }
 
 .paid{
@@ -219,25 +297,48 @@ td{
   color:#991b1b;
 }
 
+/* ================================
+   INVENTARIO
+================================ */
+
+.inventory-list{
+  display:grid;
+  gap:9px;
+}
+
 .stock-row{
-  display:flex;
-  justify-content:space-between;
+  display:grid;
+  grid-template-columns:1fr auto;
   align-items:center;
-  padding:13px 0;
-  border-bottom:1px solid #eee;
+  gap:10px;
+  padding:13px 14px;
+  border:1px solid #eee;
+  border-radius:12px;
+  background:#fafafa;
 }
 
 .stock-name{
-  font-weight:600;
+  font-weight:700;
 }
 
 .stock-number{
   font-weight:800;
+  white-space:nowrap;
 }
 
 .low{
   color:#dc2626;
 }
+
+.stock-warning{
+  font-size:11px;
+  margin-left:6px;
+  color:#dc2626;
+}
+
+/* ================================
+   VACÍO / CARGANDO
+================================ */
 
 .empty,
 .loading{
@@ -246,44 +347,122 @@ td{
   padding:30px 10px;
 }
 
-@media(max-width:800px){
+/* ================================
+   RESPONSIVE TABLET
+================================ */
 
-  .cards{
-    grid-template-columns:1fr 1fr;
+@media(max-width:900px){
+
+  .action-grid{
+    grid-template-columns:repeat(3,1fr);
   }
 
-  .grid{
+  .cards{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .main-grid{
     grid-template-columns:1fr;
   }
 
-  .history{
-    margin-left:0;
-  }
 }
 
-@media(max-width:500px){
+/* ================================
+   RESPONSIVE CELULAR
+================================ */
 
-  .metric{
-    font-size:24px;
-  }
+@media(max-width:600px){
 
-  .card{
-    padding:16px;
+  header{
+    padding:22px 17px;
   }
 
   header h1{
     font-size:25px;
   }
 
-  .business-btn,
-  .refresh,
-  .history,
-  .accounts,
-  .customers,
-  .back{
-    width:100%;
-    margin-left:0;
+  header p{
+    font-size:14px;
   }
+
+  .container{
+    padding:15px;
+  }
+
+  .control-panel{
+    padding:13px;
+    border-radius:17px;
+  }
+
+  .business-selector{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .action-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  button{
+    min-height:46px;
+    font-size:13px;
+    padding:8px;
+  }
+
+  .cards{
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+
+  .card{
+    padding:16px;
+    border-radius:16px;
+  }
+
+  .metric-icon{
+    font-size:22px;
+  }
+
+  .metric-title{
+    font-size:12px;
+  }
+
+  .metric{
+    font-size:23px;
+  }
+
+  .section-title{
+    font-size:19px;
+  }
+
+  .sale-main{
+    grid-template-columns:1fr;
+    gap:7px;
+  }
+
+  .sale-status{
+    text-align:left;
+  }
+
+}
+
+/* ================================
+   CELULAR MUY PEQUEÑO
+================================ */
+
+@media(max-width:390px){
+
+  .action-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .metric{
+    font-size:21px;
+  }
+
+  .business-btn{
+    font-size:13px;
+  }
+
 }
 </style>
 </head>
@@ -299,65 +478,86 @@ td{
 
   <div id="status" class="status"></div>
 
-  <div class="topbar">
+  <!-- ============================
+       CONTROLES
+  ============================= -->
 
-    <button
-      type="button"
-      class="business-btn active"
-      data-business="BakeQuiri">
-      BakeQuiri
-    </button>
+  <div class="control-panel">
 
-    <button
-      type="button"
-      class="business-btn"
-      data-business="SpicyRoll">
-      SpicyRoll
-    </button>
+    <div class="business-selector">
 
-    <button
-      type="button"
-      id="refresh"
-      class="refresh">
-      🔄 Actualizar
-    </button>
+      <button
+        type="button"
+        class="business-btn active"
+        data-business="BakeQuiri">
+        🧁 BakeQuiri
+      </button>
 
-    <button
-      type="button"
-      id="accounts"
-      class="accounts">
-      💰 Cuentas pendientes
-    </button>
+      <button
+        type="button"
+        class="business-btn"
+        data-business="SpicyRoll">
+        🍣 SpicyRoll
+      </button>
 
-    <button
-      type="button"
-      id="customers"
-      class="customers">
-      👥 Clientes
-    </button>
+    </div>
 
-    <button
-      type="button"
-      id="history"
-      class="history">
-      🧾 Historial
-    </button>
+    <div class="action-grid">
 
-    <button
-      type="button"
-      id="back"
-      class="back">
-      ← POS
-    </button>
+      <button
+        type="button"
+        id="refresh"
+        class="refresh">
+        🔄 Actualizar
+      </button>
+
+      <button
+        type="button"
+        id="accounts"
+        class="accounts">
+        💰 Cuentas
+      </button>
+
+      <button
+        type="button"
+        id="customers"
+        class="customers">
+        👥 Clientes
+      </button>
+
+      <button
+        type="button"
+        id="history"
+        class="history">
+        🧾 Historial
+      </button>
+
+      <button
+        type="button"
+        id="back"
+        class="back">
+        ← POS
+      </button>
+
+    </div>
 
   </div>
 
 
+  <!-- ============================
+       MÉTRICAS
+  ============================= -->
+
   <div class="cards">
 
-    <div class="card">
+    <div class="card metric-card">
+
+      <div class="metric-icon">
+        💰
+      </div>
+
       <div class="metric-title">
-        Ventas de hoy
+        VENTAS DE HOY
       </div>
 
       <div
@@ -365,12 +565,18 @@ td{
         class="metric green">
         $0.00
       </div>
+
     </div>
 
 
-    <div class="card">
+    <div class="card metric-card">
+
+      <div class="metric-icon">
+        🧾
+      </div>
+
       <div class="metric-title">
-        Número de ventas
+        NÚMERO DE VENTAS
       </div>
 
       <div
@@ -378,12 +584,18 @@ td{
         class="metric blue">
         0
       </div>
+
     </div>
 
 
-    <div class="card">
+    <div class="card metric-card">
+
+      <div class="metric-icon">
+        📦
+      </div>
+
       <div class="metric-title">
-        Productos activos
+        PRODUCTOS ACTIVOS
       </div>
 
       <div
@@ -391,12 +603,18 @@ td{
         class="metric">
         0
       </div>
+
     </div>
 
 
-    <div class="card">
+    <div class="card metric-card">
+
+      <div class="metric-icon">
+        ⚠️
+      </div>
+
       <div class="metric-title">
-        Stock bajo
+        STOCK BAJO
       </div>
 
       <div
@@ -404,12 +622,17 @@ td{
         class="metric red">
         0
       </div>
+
     </div>
 
   </div>
 
 
-  <div class="grid">
+  <!-- ============================
+       VENTAS + INVENTARIO
+  ============================= -->
+
+  <div class="main-grid">
 
     <div class="card">
 
@@ -459,8 +682,10 @@ td{
 const SUPABASE_URL =
 "https://jrxklpstlloeckihcduv.supabase.co";
 
+
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
+
 
 const supabaseClient =
 window.supabase.createClient(
@@ -532,6 +757,9 @@ async function loadDashboard(){
 
   $("inventoryContainer").innerHTML =
   '<div class="loading">Cargando inventario...</div>';
+
+  $("status").className =
+  "status";
 
 
   try{
@@ -616,7 +844,7 @@ async function loadDashboard(){
       .from("sales")
 
       .select(
-        "id,total,status,created_at,customer_id,sale_date"
+        "id,total,balance,status,created_at,customer_id,sale_date"
       )
 
       .eq(
@@ -676,7 +904,8 @@ async function loadDashboard(){
 
 
     showStatus(
-      "Dashboard actualizado correctamente.",
+      currentBusiness +
+      " actualizado correctamente.",
       "ok"
     );
 
@@ -684,14 +913,19 @@ async function loadDashboard(){
 
   catch(error){
 
-    console.error(error);
+    console.error(
+      "Error Dashboard:",
+      error
+    );
+
 
     showStatus(
       "No se pudo cargar el Dashboard: " +
       (
         error.message ||
         error
-      )
+      ),
+      "error"
     );
 
   }
@@ -715,8 +949,8 @@ function renderInventory(
 
     container.innerHTML =
     '<div class="empty">' +
-    'No hay productos activos.' +
-    '</div>';
+    "No hay productos activos." +
+    "</div>";
 
     return;
 
@@ -772,11 +1006,13 @@ function renderInventory(
       "stock-number";
 
 
-      if(
-        Number(
-          product.stock || 0
-        ) <= 5
-      ){
+      const stockValue =
+      Number(
+        product.stock || 0
+      );
+
+
+      if(stockValue <= 5){
 
         stock.classList.add(
           "low"
@@ -786,10 +1022,31 @@ function renderInventory(
 
 
       stock.textContent =
-      Number(
-        product.stock || 0
-      ) +
+      stockValue +
       " uds";
+
+
+      if(stockValue <= 5){
+
+        const warning =
+        document.createElement(
+          "span"
+        );
+
+
+        warning.className =
+        "stock-warning";
+
+
+        warning.textContent =
+        "⚠️";
+
+
+        stock.appendChild(
+          warning
+        );
+
+      }
 
 
       row.append(
@@ -824,8 +1081,8 @@ async function renderSales(
 
     container.innerHTML =
     '<div class="empty">' +
-    'No hay ventas registradas hoy.' +
-    '</div>';
+    "No hay ventas registradas hoy." +
+    "</div>";
 
     return;
 
@@ -894,42 +1151,21 @@ async function renderSales(
 
 
   /* =======================================
-     TABLA
+     LISTA
   ======================================= */
 
-  const table =
+  container.innerHTML =
+  "";
+
+
+  const list =
   document.createElement(
-    "table"
+    "div"
   );
 
 
-  table.innerHTML = `
-
-    <thead>
-
-      <tr>
-
-        <th>Cliente</th>
-
-        <th>Fecha</th>
-
-        <th>Total</th>
-
-        <th>Estado</th>
-
-      </tr>
-
-    </thead>
-
-    <tbody></tbody>
-
-  `;
-
-
-  const tbody =
-  table.querySelector(
-    "tbody"
-  );
+  list.className =
+  "sales-list";
 
 
   sales
@@ -950,15 +1186,26 @@ async function renderSales(
 
         const row =
         document.createElement(
-          "tr"
+          "div"
         );
+
+
+        row.className =
+        "sale-row";
 
 
         /* =================================
            CLIENTE
         ================================= */
 
-        let customerHTML;
+        const customerDiv =
+        document.createElement(
+          "div"
+        );
+
+
+        customerDiv.className =
+        "sale-customer";
 
 
         if(
@@ -966,37 +1213,71 @@ async function renderSales(
           customer
         ){
 
-          customerHTML = `
+          const link =
+          document.createElement(
+            "a"
+          );
 
-            <a
-              href="historial.html?customer_id=${encodeURIComponent(
-                sale.customer_id
-              )}"
-              class="customer-link"
-              title="Ver historial de ${customerName}"
-            >
-              ${customerName}
-            </a>
 
-          `;
+          link.className =
+          "customer-link";
+
+
+          /*
+            IMPORTANTE:
+
+            Ahora mandamos también
+            el negocio actual al historial.
+          */
+
+          link.href =
+          "historial.html" +
+          "?customer_id=" +
+          encodeURIComponent(
+            sale.customer_id
+          ) +
+          "&business=" +
+          encodeURIComponent(
+            currentBusiness
+          );
+
+
+          link.textContent =
+          customerName;
+
+
+          link.title =
+          "Ver historial de " +
+          customerName;
+
+
+          customerDiv.appendChild(
+            link
+          );
 
         }
         else{
 
-          customerHTML = `
+          const general =
+          document.createElement(
+            "span"
+          );
 
-            <span class="customer-general">
-              ${customerName}
-            </span>
 
-          `;
+          general.className =
+          "customer-general";
+
+
+          general.textContent =
+          customerName;
+
+
+          customerDiv.appendChild(
+            general
+          );
 
         }
 
-
-        /* =================================
-           FECHA
-        ================================= */
 
         const date =
         new Date(
@@ -1016,9 +1297,58 @@ async function renderSales(
         );
 
 
+        const dateDiv =
+        document.createElement(
+          "div"
+        );
+
+
+        dateDiv.className =
+        "sale-date";
+
+
+        dateDiv.textContent =
+        formattedDate;
+
+
+        customerDiv.appendChild(
+          dateDiv
+        );
+
+
+        /* =================================
+           TOTAL
+        ================================= */
+
+        const totalDiv =
+        document.createElement(
+          "div"
+        );
+
+
+        totalDiv.className =
+        "sale-total";
+
+
+        totalDiv.textContent =
+        money(
+          sale.total
+        );
+
+
         /* =================================
            ESTADO
         ================================= */
+
+        const statusDiv =
+        document.createElement(
+          "div"
+        );
+
+
+        statusDiv.className =
+        "sale-status";
+
 
         const paid =
         sale.status ===
@@ -1030,32 +1360,38 @@ async function renderSales(
         "cancelled";
 
 
-        const statusClass =
-        paid
-        ? "paid"
-        : cancelled
-        ? "cancelled"
-        : "open";
+        const statusPill =
+        document.createElement(
+          "span"
+        );
 
 
-        let statusText;
+        statusPill.className =
+        "status-pill " +
+        (
+          paid
+          ? "paid"
+          : cancelled
+          ? "cancelled"
+          : "open"
+        );
 
 
         if(paid){
 
-          statusText =
+          statusPill.textContent =
           "✓ Pagada";
 
         }
         else if(cancelled){
 
-          statusText =
+          statusPill.textContent =
           "Cancelada";
 
         }
         else{
 
-          statusText =
+          statusPill.textContent =
           "🔴 Debe " +
           money(
             sale.balance || 0
@@ -1064,40 +1400,38 @@ async function renderSales(
         }
 
 
+        statusDiv.appendChild(
+          statusPill
+        );
+
+
         /* =================================
-           FILA
+           CONTENEDOR
         ================================= */
 
-        row.innerHTML = `
-
-          <td>
-            ${customerHTML}
-          </td>
-
-          <td>
-            ${formattedDate}
-          </td>
-
-          <td>
-            <strong>
-              ${money(sale.total)}
-            </strong>
-          </td>
-
-          <td>
-
-            <span
-              class="status-pill ${statusClass}"
-            >
-              ${statusText}
-            </span>
-
-          </td>
-
-        `;
+        const main =
+        document.createElement(
+          "div"
+        );
 
 
-        tbody.appendChild(
+        main.className =
+        "sale-main";
+
+
+        main.append(
+          customerDiv,
+          totalDiv,
+          statusDiv
+        );
+
+
+        row.appendChild(
+          main
+        );
+
+
+        list.appendChild(
           row
         );
 
@@ -1105,12 +1439,8 @@ async function renderSales(
     );
 
 
-  container.innerHTML =
-  "";
-
-
   container.appendChild(
-    table
+    list
   );
 
 }
@@ -1131,8 +1461,22 @@ document
       "click",
       async () => {
 
-        currentBusiness =
+        const business =
         button.dataset.business;
+
+
+        if(
+          business ===
+          currentBusiness
+        ){
+
+          return;
+
+        }
+
+
+        currentBusiness =
+        business;
 
 
         document
@@ -1182,7 +1526,11 @@ $("accounts")
   () => {
 
     window.location.href =
-    "cuentas.html";
+    "cuentas.html" +
+    "?business=" +
+    encodeURIComponent(
+      currentBusiness
+    );
 
   }
 );
@@ -1198,7 +1546,11 @@ $("customers")
   () => {
 
     window.location.href =
-    "clientes.html";
+    "clientes.html" +
+    "?business=" +
+    encodeURIComponent(
+      currentBusiness
+    );
 
   }
 );
@@ -1214,7 +1566,11 @@ $("history")
   () => {
 
     window.location.href =
-    "historial.html";
+    "historial.html" +
+    "?business=" +
+    encodeURIComponent(
+      currentBusiness
+    );
 
   }
 );
