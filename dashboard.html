@@ -59,6 +59,12 @@ header p{
   color:#991b1b;
 }
 
+.status.warn{
+  display:block;
+  background:#fef3c7;
+  color:#92400e;
+}
+
 .control-panel{
   background:#fff;
   border-radius:20px;
@@ -76,7 +82,7 @@ header p{
 
 .action-grid{
   display:grid;
-  grid-template-columns:repeat(5,1fr);
+  grid-template-columns:repeat(6,1fr);
   gap:10px;
 }
 
@@ -686,6 +692,10 @@ async function loadDashboard(){
     const businessId =
     BUSINESS_IDS[currentBusiness];
 
+    /* =========================
+       PRODUCTOS
+    ========================= */
+
     const productsResult =
     await supabaseClient
 
@@ -730,6 +740,10 @@ async function loadDashboard(){
     renderInventory(
       products
     );
+
+    /* =========================
+       VENTAS
+    ========================= */
 
     const start =
     new Date();
@@ -795,15 +809,35 @@ async function loadDashboard(){
     $("salesCount").textContent =
     sales.length;
 
+    /*
+     * IMPORTANTE:
+     * Si falla customers, NO falla
+     * todo el Dashboard.
+     */
+
+    const customerLookupFailed =
     await renderSales(
       sales
     );
 
-    showStatus(
-      currentBusiness +
-      " actualizado correctamente.",
-      "ok"
-    );
+    if(customerLookupFailed){
+
+      showStatus(
+        currentBusiness +
+        " actualizado. No se pudieron cargar algunos nombres de clientes.",
+        "warn"
+      );
+
+    }
+    else{
+
+      showStatus(
+        currentBusiness +
+        " actualizado correctamente.",
+        "ok"
+      );
+
+    }
 
   }
 
@@ -826,6 +860,11 @@ async function loadDashboard(){
   }
 
 }
+
+
+/* =========================
+   INVENTARIO
+========================= */
 
 function renderInventory(
   products
@@ -935,6 +974,11 @@ function renderInventory(
 
 }
 
+
+/* =========================
+   VENTAS
+========================= */
+
 async function renderSales(
   sales
 ){
@@ -949,7 +993,7 @@ async function renderSales(
     "No hay ventas registradas hoy." +
     "</div>";
 
-    return;
+    return false;
 
   }
 
@@ -968,40 +1012,66 @@ async function renderSales(
   const customerMap =
   new Map();
 
+  let customerLookupFailed =
+  false;
+
+  /*
+   * Intentamos obtener los clientes.
+   *
+   * Si esta consulta falla,
+   * NO detenemos el Dashboard.
+   */
+
   if(customerIds.length){
 
-    const customersResult =
-    await supabaseClient
+    try{
 
-      .from("customers")
+      const customersResult =
+      await supabaseClient
 
-      .select(
-        "id,name,phone"
-      )
+        .from("customers")
 
-      .in(
-        "id",
-        customerIds
+        .select(
+          "id,name,phone"
+        )
+
+        .in(
+          "id",
+          customerIds
+        );
+
+      if(customersResult.error){
+
+        throw customersResult.error;
+
+      }
+
+      (
+        customersResult.data || []
+      ).forEach(
+        customer => {
+
+          customerMap.set(
+            customer.id,
+            customer
+          );
+
+        }
       );
-
-    if(customersResult.error){
-
-      throw customersResult.error;
 
     }
 
-    (
-      customersResult.data || []
-    ).forEach(
-      customer => {
+    catch(error){
 
-        customerMap.set(
-          customer.id,
-          customer
-        );
+      console.warn(
+        "No se pudieron cargar los clientes del Dashboard:",
+        error
+      );
 
-      }
-    );
+      customerLookupFailed =
+      true;
+
+    }
 
   }
 
@@ -1037,6 +1107,8 @@ async function renderSales(
 
         row.className =
         "sale-row";
+
+        /* CLIENTE */
 
         const customerDiv =
         document.createElement(
@@ -1082,6 +1154,7 @@ async function renderSales(
           );
 
         }
+
         else{
 
           const general =
@@ -1101,20 +1174,12 @@ async function renderSales(
 
         }
 
+        /* FECHA */
+
         const date =
         new Date(
           sale.sale_date ||
           sale.created_at
-        );
-
-        const formattedDate =
-        date.toLocaleDateString(
-          "es-MX",
-          {
-            day:"2-digit",
-            month:"2-digit",
-            year:"numeric"
-          }
         );
 
         const dateDiv =
@@ -1125,12 +1190,35 @@ async function renderSales(
         dateDiv.className =
         "sale-date";
 
-        dateDiv.textContent =
-        formattedDate;
+        if(
+          !isNaN(
+            date.getTime()
+          )
+        ){
+
+          dateDiv.textContent =
+          date.toLocaleDateString(
+            "es-MX",
+            {
+              day:"2-digit",
+              month:"2-digit",
+              year:"numeric"
+            }
+          );
+
+        }
+        else{
+
+          dateDiv.textContent =
+          "";
+
+        }
 
         customerDiv.appendChild(
           dateDiv
         );
+
+        /* TOTAL */
 
         const totalDiv =
         document.createElement(
@@ -1144,6 +1232,8 @@ async function renderSales(
         money(
           sale.total
         );
+
+        /* ESTADO */
 
         const statusDiv =
         document.createElement(
@@ -1182,12 +1272,14 @@ async function renderSales(
           "✓ Pagada";
 
         }
+
         else if(cancelled){
 
           statusPill.textContent =
           "Cancelada";
 
         }
+
         else{
 
           statusPill.textContent =
@@ -1201,6 +1293,8 @@ async function renderSales(
         statusDiv.appendChild(
           statusPill
         );
+
+        /* FILA */
 
         const main =
         document.createElement(
@@ -1231,7 +1325,14 @@ async function renderSales(
     list
   );
 
+  return customerLookupFailed;
+
 }
+
+
+/* =========================
+   CAMBIO DE NEGOCIO
+========================= */
 
 document
 .querySelectorAll(
@@ -1281,6 +1382,11 @@ document
 
   }
 );
+
+
+/* =========================
+   BOTONES
+========================= */
 
 $("refresh")
 .addEventListener(
@@ -1333,10 +1439,6 @@ $("history")
   }
 );
 
-/* =========================================
-   INVENTARIO
-========================================= */
-
 $("inventory")
 .addEventListener(
   "click",
@@ -1362,6 +1464,11 @@ $("back")
 
   }
 );
+
+
+/* =========================
+   INICIO
+========================= */
 
 loadDashboard();
 
