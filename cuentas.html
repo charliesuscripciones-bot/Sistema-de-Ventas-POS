@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Cuentas por cobrar | Sistema de Ventas POS</title>
 
 <style>
-
 *{
   box-sizing:border-box;
   margin:0;
@@ -429,15 +426,12 @@ header p{
 }
 
 @media(max-width:800px){
-
   .summary{
     grid-template-columns:1fr;
   }
-
 }
 
 @media(max-width:600px){
-
   .container{
     padding:18px 15px 35px;
   }
@@ -454,30 +448,20 @@ header p{
   .sale-top{
     flex-direction:column;
   }
-
 }
-
 </style>
-
 </head>
 
 <body>
 
 <header>
-
 <h1>💰 Cuentas por cobrar</h1>
-
-<p>
-Control de ventas pendientes y abonos
-</p>
-
+<p>Control de ventas pendientes y abonos</p>
 </header>
-
 
 <div class="container">
 
 <div id="status" class="status"></div>
-
 
 <div class="businesses">
 
@@ -488,7 +472,6 @@ data-business="BakeQuiri">
 BakeQuiri
 </button>
 
-
 <button
 type="button"
 class="business-btn"
@@ -496,14 +479,12 @@ data-business="SpicyRoll">
 SpicyRoll
 </button>
 
-
 <button
 type="button"
 class="refresh-btn"
 id="refreshButton">
 🔄 Actualizar
 </button>
-
 
 <button
 type="button"
@@ -514,61 +495,28 @@ id="dashboardButton">
 
 </div>
 
-
 <div class="summary">
 
 <div class="summary-card pending">
-
-<div class="summary-label">
-SALDO PENDIENTE
+<div class="summary-label">SALDO PENDIENTE</div>
+<div id="totalPending" class="summary-value">$0.00</div>
 </div>
-
-<div
-id="totalPending"
-class="summary-value">
-$0.00
-</div>
-
-</div>
-
 
 <div class="summary-card clients">
-
-<div class="summary-label">
-CLIENTES CON DEUDA
+<div class="summary-label">CLIENTES CON DEUDA</div>
+<div id="totalClients" class="summary-value">0</div>
 </div>
-
-<div
-id="totalClients"
-class="summary-value">
-0
-</div>
-
-</div>
-
 
 <div class="summary-card sales">
-
-<div class="summary-label">
-VENTAS PENDIENTES
-</div>
-
-<div
-id="totalSales"
-class="summary-value">
-0
+<div class="summary-label">VENTAS PENDIENTES</div>
+<div id="totalSales" class="summary-value">0</div>
 </div>
 
 </div>
-
-</div>
-
 
 <div class="card">
 
-<h2>
-📋 Cuentas pendientes
-</h2>
+<h2>📋 Cuentas pendientes</h2>
 
 <input
 id="search"
@@ -579,34 +527,22 @@ autocomplete="off"
 >
 
 <div id="accounts">
-
-<div class="empty">
-Cargando cuentas...
+<div class="empty">Cargando cuentas...</div>
 </div>
 
 </div>
 
 </div>
 
-</div>
-
-
-<div
-id="paymentModal"
-class="modal">
+<div id="paymentModal" class="modal">
 
 <div class="modal-card">
 
-<h2>
-💵 Registrar abono
-</h2>
+<h2>💵 Registrar abono</h2>
 
-<div
-id="paymentSubtitle"
-class="modal-subtitle">
+<div id="paymentSubtitle" class="modal-subtitle">
 Venta
 </div>
-
 
 <div class="field">
 
@@ -625,7 +561,6 @@ placeholder="0.00"
 
 </div>
 
-
 <div class="field">
 
 <label for="paymentMethod">
@@ -641,7 +576,6 @@ Selecciona un método
 </select>
 
 </div>
-
 
 <div class="modal-buttons">
 
@@ -662,16 +596,13 @@ Registrar abono
 </div>
 
 </div>
-
 </div>
-
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
 "use strict";
-
 
 /* =========================================
    SUPABASE
@@ -708,13 +639,9 @@ const BUSINESS_IDS = {
 let currentBusiness =
 "BakeQuiri";
 
-
 let customers = [];
-
 let sales = [];
-
 let selectedSale = null;
-
 let payments = [];
 
 
@@ -741,10 +668,8 @@ function formatDate(value){
     return "Sin fecha";
   }
 
-  const date =
-  new Date(value);
-
-  return date.toLocaleDateString(
+  return new Date(value)
+  .toLocaleDateString(
     "es-MX",
     {
       day:"2-digit",
@@ -762,10 +687,8 @@ function formatDateTime(value){
     return "Sin fecha";
   }
 
-  const date =
-  new Date(value);
-
-  return date.toLocaleString(
+  return new Date(value)
+  .toLocaleString(
     "es-MX",
     {
       day:"2-digit",
@@ -813,45 +736,26 @@ async function loadPaymentMethods(){
   const businessId =
   BUSINESS_IDS[currentBusiness];
 
-
   const result =
   await supabaseClient
-
     .from("payment_methods")
-
-    .select(
-      "id,name,provider"
-    )
-
-    .eq(
-      "business_id",
-      businessId
-    )
-
-    .eq(
-      "active",
-      true
-    )
-
+    .select("id,name,provider")
+    .eq("business_id",businessId)
+    .eq("active",true)
     .order("name");
-
 
   if(result.error){
     throw result.error;
   }
 
-
   payments =
   result.data || [];
-
 
   const select =
   $("paymentMethod");
 
-
   select.innerHTML =
   '<option value="">Selecciona un método</option>';
-
 
   payments.forEach(
     payment => {
@@ -885,10 +789,8 @@ async function loadAccounts(){
 
   clearStatus();
 
-
   $("accounts").innerHTML =
   '<div class="loading">Cargando cuentas...</div>';
-
 
   try{
 
@@ -896,22 +798,21 @@ async function loadAccounts(){
     BUSINESS_IDS[currentBusiness];
 
 
-    /* CLIENTES */
+    /* =====================================
+       CLIENTES COMPARTIDOS
+       
+       IMPORTANTE:
+       NO filtramos por business_id.
+       Los clientes son compartidos entre
+       BakeQuiri y SpicyRoll.
+    ===================================== */
 
     const customersResult =
     await supabaseClient
-
       .from("customers")
-
       .select(
         "id,business_id,name,phone"
       )
-
-      .eq(
-        "business_id",
-        businessId
-      )
-
       .order(
         "name",
         {
@@ -919,42 +820,36 @@ async function loadAccounts(){
         }
       );
 
-
     if(customersResult.error){
       throw customersResult.error;
     }
-
 
     customers =
     customersResult.data || [];
 
 
-    /* VENTAS PENDIENTES */
+    /* =====================================
+       VENTAS PENDIENTES
+    ===================================== */
 
     const salesResult =
     await supabaseClient
-
       .from("sales")
-
       .select(
         "id,business_id,customer_id,total,balance,status,created_at,sale_date"
       )
-
       .eq(
         "business_id",
         businessId
       )
-
       .eq(
         "status",
         "open"
       )
-
       .gt(
         "balance",
         0
       )
-
       .order(
         "created_at",
         {
@@ -962,11 +857,9 @@ async function loadAccounts(){
         }
       );
 
-
     if(salesResult.error){
       throw salesResult.error;
     }
-
 
     sales =
     salesResult.data || [];
@@ -984,7 +877,9 @@ async function loadAccounts(){
       sales.reduce(
         (sum,sale) =>
         sum +
-        Number(sale.balance || 0),
+        Number(
+          sale.balance || 0
+        ),
         0
       )
     );
@@ -1007,19 +902,16 @@ async function loadAccounts(){
 
     renderAccounts();
 
-
   }
 
   catch(error){
 
     console.error(error);
 
-
     $("accounts").innerHTML =
     '<div class="empty">' +
     'No se pudieron cargar las cuentas.' +
     '</div>';
-
 
     showStatus(
       "Error al cargar cuentas: " +
@@ -1044,12 +936,11 @@ function renderAccounts(){
   const container =
   $("accounts");
 
-
   const query =
-  $("search").value
+  $("search")
+    .value
     .trim()
     .toLowerCase();
-
 
   let visibleSales =
   sales;
@@ -1068,7 +959,6 @@ function renderAccounts(){
           sale.customer_id
         );
 
-
         const text =
         [
           customer?.name,
@@ -1078,8 +968,9 @@ function renderAccounts(){
         .join(" ")
         .toLowerCase();
 
-
-        return text.includes(query);
+        return text.includes(
+          query
+        );
 
       }
     );
@@ -1113,7 +1004,6 @@ function renderAccounts(){
         sale.customer_id
       );
 
-
       const key =
       sale.customer_id ||
       "sin-cliente-" +
@@ -1131,7 +1021,6 @@ function renderAccounts(){
         );
 
       }
-
 
       grouped
         .get(key)
@@ -1157,7 +1046,9 @@ function renderAccounts(){
       group.sales.reduce(
         (sum,sale) =>
         sum +
-        Number(sale.balance || 0),
+        Number(
+          sale.balance || 0
+        ),
         0
       );
 
@@ -1167,7 +1058,6 @@ function renderAccounts(){
         "div"
       );
 
-
       customerElement.className =
       "customer";
 
@@ -1176,7 +1066,6 @@ function renderAccounts(){
       document.createElement(
         "div"
       );
-
 
       header.className =
       "customer-header";
@@ -1193,10 +1082,8 @@ function renderAccounts(){
         "div"
       );
 
-
       name.className =
       "customer-name";
-
 
       name.textContent =
       customer?.name ||
@@ -1208,10 +1095,8 @@ function renderAccounts(){
         "div"
       );
 
-
       contact.className =
       "customer-contact";
-
 
       contact.textContent =
       customer?.phone ||
@@ -1229,10 +1114,8 @@ function renderAccounts(){
         "div"
       );
 
-
       balance.className =
       "customer-balance";
-
 
       balance.textContent =
       money(customerTotal);
@@ -1248,7 +1131,6 @@ function renderAccounts(){
       document.createElement(
         "div"
       );
-
 
       body.className =
       "customer-body";
@@ -1296,7 +1178,7 @@ function renderAccounts(){
 
 
 /* =========================================
-   CREAR ELEMENTO DE VENTA
+   CREAR VENTA
 ========================================= */
 
 function createSaleElement(
@@ -1473,7 +1355,6 @@ function createSaleElement(
 
       event.stopPropagation();
 
-
       history.classList.toggle(
         "visible"
       );
@@ -1489,7 +1370,6 @@ function createSaleElement(
         '<div class="loading">' +
         'Cargando historial...' +
         '</div>';
-
 
         await loadPaymentHistory(
           sale.id,
@@ -1534,29 +1414,16 @@ async function loadPaymentHistory(
 
   try{
 
-    /*
-      IMPORTANTE:
-      Aquí NO usamos .single()
-      ni limit(1).
-
-      Se solicitan TODOS los pagos
-      relacionados con esta venta.
-    */
-
     const result =
     await supabaseClient
-
       .from("payments")
-
       .select(
         "id,sale_id,business_id,payment_method_id,amount,paid_at"
       )
-
       .eq(
         "sale_id",
         saleId
       )
-
       .order(
         "paid_at",
         {
@@ -1586,15 +1453,13 @@ async function loadPaymentHistory(
     }
 
 
-    /*
-      SUMAMOS TODOS LOS ABONOS.
-    */
-
     const totalPaid =
     paymentRows.reduce(
       (sum,payment) =>
       sum +
-      Number(payment.amount || 0),
+      Number(
+        payment.amount || 0
+      ),
       0
     );
 
@@ -1662,7 +1527,6 @@ async function loadPaymentHistory(
           "strong"
         );
 
-
         right.textContent =
         money(
           payment.amount
@@ -1729,7 +1593,6 @@ async function loadPaymentHistory(
       error
     );
 
-
     container.innerHTML =
     '<div class="empty">' +
     'No se pudo cargar el historial de pagos.' +
@@ -1766,12 +1629,13 @@ function openPaymentModal(
     "Cliente"
   ) +
   " · Saldo: " +
-  money(sale.balance);
+  money(
+    sale.balance
+  );
 
 
   $("paymentAmount").value =
   "";
-
 
   $("paymentAmount").max =
   Number(
@@ -1882,7 +1746,6 @@ async function registerPayment(){
 
   button.disabled =
   true;
-
 
   button.textContent =
   "REGISTRANDO...";
