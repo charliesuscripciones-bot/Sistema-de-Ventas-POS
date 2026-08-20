@@ -915,12 +915,6 @@ async function loadPaymentMethods(){
   );
 
 
-  /*
-    Si por alguna razón no hay métodos
-    registrados para SpicyRoll,
-    mostramos un mensaje claro.
-  */
-
   if(!paymentMethods.length){
 
     console.warn(
@@ -952,40 +946,14 @@ async function loadAccounts(){
     BUSINESS_IDS[currentBusiness];
 
 
-    /* CLIENTES */
-
-    const customersResult =
-    await supabaseClient
-    .from("customers")
-    .select(
-      "id,business_id,name,phone"
-    )
-    .eq(
-      "business_id",
-      businessId
-    )
-    .order(
-      "name",
-      {
-        ascending:true
-      }
-    );
-
-
-    if(customersResult.error){
-
-      throw customersResult.error;
-
-    }
-
-
-    customers =
-    customersResult.data || [];
-
-
-    /*
-      VENTAS ABIERTAS CON SALDO
-    */
+    /* =====================================
+       VENTAS ABIERTAS CON SALDO
+       
+       IMPORTANTE:
+       Primero obtenemos las ventas.
+       El customer_id de cada venta es
+       la referencia REAL del cliente.
+    ===================================== */
 
     const salesResult =
     await supabaseClient
@@ -1024,6 +992,67 @@ async function loadAccounts(){
     salesResult.data || [];
 
 
+    /* =====================================
+       CLIENTES
+
+       CORRECCIÓN:
+
+       Ya NO filtramos customers por
+       business_id.
+
+       Buscamos exactamente los clientes
+       que aparecen en customer_id de las
+       ventas pendientes.
+
+       Esto evita que SpicyRoll muestre
+       "Cliente sin nombre" cuando el
+       registro del cliente tiene un
+       business_id diferente o vacío.
+    ===================================== */
+
+    const customerIds =
+    [
+      ...new Set(
+        sales
+        .map(
+          sale =>
+          sale.customer_id
+        )
+        .filter(Boolean)
+      )
+    ];
+
+
+    customers = [];
+
+
+    if(customerIds.length){
+
+      const customersResult =
+      await supabaseClient
+      .from("customers")
+      .select(
+        "id,business_id,name,phone"
+      )
+      .in(
+        "id",
+        customerIds
+      );
+
+
+      if(customersResult.error){
+
+        throw customersResult.error;
+
+      }
+
+
+      customers =
+      customersResult.data || [];
+
+    }
+
+
     await loadPaymentMethods();
 
 
@@ -1044,7 +1073,7 @@ async function loadAccounts(){
     );
 
 
-    const clientIds =
+    $("totalClients").textContent =
     new Set(
       sales
       .map(
@@ -1052,11 +1081,7 @@ async function loadAccounts(){
         sale.customer_id
       )
       .filter(Boolean)
-    );
-
-
-    $("totalClients").textContent =
-    clientIds.size;
+    ).size;
 
 
     renderAccounts();
@@ -1461,11 +1486,6 @@ function createSaleElement(
   paid.className =
   "sale-paid";
 
-
-  /*
-    El total abonado se calcula
-    desde total - saldo actual.
-  */
 
   const paidAmount =
   Math.max(
@@ -1923,8 +1943,6 @@ async function registerPayment(){
   );
 
 
-  /* VALIDAR MONTO */
-
   if(
     !Number.isFinite(amount) ||
     amount <= 0
@@ -1939,8 +1957,6 @@ async function registerPayment(){
 
   }
 
-
-  /* VALIDAR SALDO */
 
   if(
     amount >
@@ -1957,8 +1973,6 @@ async function registerPayment(){
 
   }
 
-
-  /* VALIDAR MÉTODO */
 
   if(!paymentMethodId){
 
@@ -2008,20 +2022,6 @@ async function registerPayment(){
 
   try{
 
-    /*
-      ========================================
-      REGISTRAR EL ABONO MEDIANTE RPC
-      ========================================
-
-      Se manda:
-      - venta
-      - cantidad
-      - método de pago
-
-      La RPC debe registrar el pago y
-      actualizar sales.balance.
-    */
-
     const rpcResult =
     await supabaseClient.rpc(
       "registrar_abono_venta",
@@ -2044,17 +2044,6 @@ async function registerPayment(){
 
     }
 
-
-    /*
-      ========================================
-      COMPROBACIÓN REAL EN SUPABASE
-      ========================================
-
-      NO confiamos solamente en lo que
-      devuelva la RPC.
-
-      Volvemos a consultar la venta.
-    */
 
     const verifyResult =
     await supabaseClient
@@ -2086,23 +2075,12 @@ async function registerPayment(){
     );
 
 
-    /*
-      ========================================
-      VERIFICAR QUE REALMENTE SE RESTÓ
-      ========================================
-    */
-
     const expectedBalance =
     Math.max(
       currentBalance - amount,
       0
     );
 
-
-    /*
-      Permitimos una pequeña diferencia
-      por redondeos decimales.
-    */
 
     if(
       Math.abs(
@@ -2125,12 +2103,6 @@ async function registerPayment(){
 
     closePaymentModal();
 
-
-    /*
-      ========================================
-      MENSAJE
-      ========================================
-    */
 
     if(
       newBalance <= 0.001
@@ -2158,12 +2130,6 @@ async function registerPayment(){
 
     }
 
-
-    /*
-      ========================================
-      RECARGAR DESDE SUPABASE
-      ========================================
-    */
 
     await loadAccounts();
 
