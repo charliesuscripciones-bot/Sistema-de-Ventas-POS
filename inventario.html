@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventario | Sistema de Ventas POS</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:#f5f6f8;
+  color:#171717;
+}
+
+header{
+  background:#111827;
+  color:#fff;
+  padding:25px 20px;
+}
+
+header h1{
+  font-size:30px;
+}
+
+header p{
+  margin-top:7px;
+  color:#d1d5db;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+
+.status{
+  display:none;
+  padding:14px 16px;
+  border-radius:12px;
+  margin-bottom:20px;
+  font-weight:700;
+}
+
+.status.ok{
+  display:block;
+  background:#dcfce7;
+  color:#166534;
+}
+
+.status.error{
+  display:block;
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.controls{
+  background:#fff;
+  padding:18px;
+  border-radius:20px;
+  box-shadow:0 5px 20px rgba(0,0,0,.06);
+  margin-bottom:20px;
+}
+
+.businesses{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.business-btn,
+.action-btn{
+  border:2px solid #ddd;
+  background:#fff;
+  padding:13px;
+  border-radius:12px;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.business-btn{
+  color:#2563eb;
+}
+
+.business-btn.active{
+  background:#111827;
+  color:#fff;
+  border-color:#111827;
+}
+
+.actions{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.refresh{
+  background:#2563eb;
+  color:#fff;
+  border-color:#2563eb;
+}
+
+.dashboard{
+  background:#fff;
+  color:#111827;
+}
+
+.summary{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.summary-card{
+  background:#fff;
+  padding:20px;
+  border-radius:18px;
+  box-shadow:0 5px 20px rgba(0,0,0,.06);
+}
+
+.summary-label{
+  color:#6b7280;
+  font-size:14px;
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+.summary-value{
+  font-size:29px;
+  font-weight:800;
+}
+
+.blue{
+  color:#2563eb;
+}
+
+.orange{
+  color:#d97706;
+}
+
+.red{
+  color:#dc2626;
+}
+
+.card{
+  background:#fff;
+  padding:22px;
+  border-radius:20px;
+  box-shadow:0 5px 20px rgba(0,0,0,.06);
+}
+
+.card h2{
+  font-size:22px;
+  margin-bottom:18px;
+}
+
+.search{
+  width:100%;
+  padding:14px;
+  border:2px solid #ddd;
+  border-radius:11px;
+  font-size:16px;
+  margin-bottom:18px;
+  outline:none;
+}
+
+.search:focus{
+  border-color:#2563eb;
+}
+
+.products{
+  display:grid;
+  gap:12px;
+}
+
+.product{
+  border:1px solid #e5e7eb;
+  border-radius:15px;
+  padding:16px;
+  background:#fff;
+}
+
+.product-main{
+  display:grid;
+  grid-template-columns:1fr auto auto;
+  gap:15px;
+  align-items:center;
+}
+
+.product-name{
+  font-size:18px;
+  font-weight:800;
+}
+
+.product-price{
+  color:#6b7280;
+  font-size:14px;
+  margin-top:5px;
+}
+
+.stock{
+  text-align:center;
+  min-width:100px;
+}
+
+.stock-number{
+  font-size:24px;
+  font-weight:800;
+}
+
+.stock-label{
+  color:#6b7280;
+  font-size:12px;
+  font-weight:700;
+}
+
+.stock.ok .stock-number{
+  color:#16a34a;
+}
+
+.stock.low .stock-number{
+  color:#dc2626;
+}
+
+.stock.zero .stock-number{
+  color:#991b1b;
+}
+
+.warning{
+  display:inline-block;
+  margin-top:5px;
+  padding:4px 8px;
+  border-radius:8px;
+  background:#fee2e2;
+  color:#991b1b;
+  font-size:11px;
+  font-weight:800;
+}
+
+.product-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.product-actions button{
+  border:0;
+  padding:10px 13px;
+  border-radius:10px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.entry{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.exit{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.edit{
+  background:#e5e7eb;
+  color:#111827;
+}
+
+.empty,
+.loading{
+  text-align:center;
+  color:#777;
+  padding:30px 10px;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  background:rgba(0,0,0,.55);
+  padding:20px;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal.open{
+  display:flex;
+}
+
+.modal-card{
+  width:100%;
+  max-width:430px;
+  background:#fff;
+  border-radius:20px;
+  padding:25px;
+}
+
+.modal-card h2{
+  margin-bottom:8px;
+}
+
+.modal-subtitle{
+  color:#6b7280;
+  margin-bottom:20px;
+}
+
+.field{
+  margin-bottom:15px;
+}
+
+.field label{
+  display:block;
+  font-weight:800;
+  margin-bottom:7px;
+}
+
+.field input,
+.field select{
+  width:100%;
+  padding:14px;
+  border:2px solid #ddd;
+  border-radius:11px;
+  font-size:16px;
+  background:#fff;
+}
+
+.field input:focus,
+.field select:focus{
+  outline:none;
+  border-color:#2563eb;
+}
+
+.modal-buttons{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.modal-buttons button{
+  flex:1;
+  border:0;
+  padding:14px;
+  border-radius:11px;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.cancel{
+  background:#e5e7eb;
+  color:#111827;
+}
+
+.confirm{
+  background:#2563eb;
+  color:#fff;
+}
+
+.confirm:disabled{
+  opacity:.6;
+  cursor:wait;
+}
+
+.current-stock{
+  background:#f3f4f6;
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:16px;
+  font-weight:700;
+}
+
+.current-stock strong{
+  color:#2563eb;
+}
+
+@media(max-width:800px){
+
+  .summary{
+    grid-template-columns:1fr;
+  }
+
+  .product-main{
+    grid-template-columns:1fr;
+  }
+
+  .stock{
+    text-align:left;
+  }
+
+}
+
+@media(max-width:600px){
+
+  header{
+    padding:22px 17px;
+  }
+
+  header h1{
+    font-size:25px;
+  }
+
+  .container{
+    padding:15px;
+  }
+
+  .actions{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .product{
+    padding:14px;
+  }
+
+  .modal-buttons{
+    flex-direction:column;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>📦 Inventario</h1>
+
+<p>
+Control de existencias · Sistema de Ventas POS
+</p>
+
+</header>
+
+
+<div class="container">
+
+<div
+id="status"
+class="status">
+</div>
+
+
+<div class="controls">
+
+<div class="businesses">
+
+<button
+type="button"
+class="business-btn active"
+data-business="BakeQuiri">
+🧁 BakeQuiri
+</button>
+
+<button
+type="button"
+class="business-btn"
+data-business="SpicyRoll">
+🍣 SpicyRoll
+</button>
+
+</div>
+
+
+<div class="actions">
+
+<button
+type="button"
+class="action-btn refresh"
+id="refreshButton">
+🔄 Actualizar
+</button>
+
+<button
+type="button"
+class="action-btn dashboard"
+id="dashboardButton">
+← Dashboard
+</button>
+
+</div>
+
+</div>
+
+
+<div class="summary">
+
+<div class="summary-card">
+
+<div class="summary-label">
+PRODUCTOS ACTIVOS
+</div>
+
+<div
+id="productCount"
+class="summary-value blue">
+0
+</div>
+
+</div>
+
+
+<div class="summary-card">
+
+<div class="summary-label">
+UNIDADES EN INVENTARIO
+</div>
+
+<div
+id="totalStock"
+class="summary-value orange">
+0
+</div>
+
+</div>
+
+
+<div class="summary-card">
+
+<div class="summary-label">
+STOCK BAJO
+</div>
+
+<div
+id="lowStock"
+class="summary-value red">
+0
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>
+📋 Productos
+</h2>
+
+
+<input
+id="search"
+class="search"
+type="search"
+placeholder="🔎 Buscar producto..."
+autocomplete="off"
+>
+
+
+<div
+id="products"
+class="products">
+
+<div class="loading">
+Cargando inventario...
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================
+     MODAL MOVIMIENTO
+===================================== -->
+
+<div
+id="movementModal"
+class="modal">
+
+<div class="modal-card">
+
+<h2 id="modalTitle">
+📦 Movimiento de inventario
+</h2>
+
+<div
+id="modalSubtitle"
+class="modal-subtitle">
+</div>
+
+
+<div class="current-stock">
+
+Existencia actual:
+
+<strong id="modalCurrentStock">
+0
+</strong>
+
+uds.
+
+</div>
+
+
+<div class="field">
+
+<label for="movementType">
+Tipo de movimiento
+</label>
+
+<select id="movementType">
+
+<option value="entry">
+➕ Entrada
+</option>
+
+<option value="exit">
+➖ Salida
+</option>
+
+<option value="adjustment">
+✏️ Ajustar existencia
+</option>
+
+</select>
+
+</div>
+
+
+<div class="field">
+
+<label for="movementQuantity">
+Cantidad
+</label>
+
+<input
+id="movementQuantity"
+type="number"
+min="0"
+step="1"
+inputmode="numeric"
+placeholder="0"
+>
+
+</div>
+
+
+<div class="field">
+
+<label for="movementNote">
+Nota
+</label>
+
+<input
+id="movementNote"
+type="text"
+maxlength="150"
+placeholder="Ej. Compra de mercancía"
+>
+
+</div>
+
+
+<div class="modal-buttons">
+
+<button
+type="button"
+class="cancel"
+id="cancelMovement">
+Cancelar
+</button>
+
+<button
+type="button"
+class="confirm"
+id="confirmMovement">
+Guardar movimiento
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+"use strict";
+
+
+/* =========================================
+   SUPABASE
+========================================= */
+
+const SUPABASE_URL =
+"https://jrxklpstlloeckihcduv.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
+
+const supabaseClient =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+
+/* =========================================
+   NEGOCIOS
+========================================= */
+
+const BUSINESS_IDS = {
+
+  BakeQuiri:
+  "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+
+  SpicyRoll:
+  "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
+
+};
+
+
+let currentBusiness =
+"BakeQuiri";
+
+let products = [];
+
+let selectedProduct = null;
+
+
+/* =========================================
+   UTILIDADES
+========================================= */
+
+const $ =
+id =>
+document.getElementById(id);
+
+
+function money(value){
+
+  return "$" +
+  Number(value || 0).toFixed(2);
+
+}
+
+
+function showStatus(
+  message,
+  type="ok"
+){
+
+  $("status").textContent =
+  message;
+
+  $("status").className =
+  "status " + type;
+
+}
+
+
+function clearStatus(){
+
+  $("status").textContent =
+  "";
+
+  $("status").className =
+  "status";
+
+}
+
+
+/* =========================================
+   CARGAR PRODUCTOS
+========================================= */
+
+async function loadProducts(){
+
+  clearStatus();
+
+
+  $("products").innerHTML =
+  '<div class="loading">' +
+  "Cargando inventario..." +
+  "</div>";
+
+
+  try{
+
+    const businessId =
+    BUSINESS_IDS[currentBusiness];
+
+
+    const result =
+    await supabaseClient
+    .from("products")
+    .select(
+      "id,business_id,name,price,stock,active"
+    )
+    .eq(
+      "business_id",
+      businessId
+    )
+    .eq(
+      "active",
+      true
+    )
+    .order(
+      "name",
+      {
+        ascending:true
+      }
+    );
+
+
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+
+    products =
+    result.data || [];
+
+
+    updateSummary();
+
+    renderProducts();
+
+
+    showStatus(
+      currentBusiness +
+      " actualizado correctamente.",
+      "ok"
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "Error inventario:",
+      error
+    );
+
+
+    $("products").innerHTML =
+    '<div class="empty">' +
+    "No se pudo cargar el inventario." +
+    "</div>";
+
+
+    showStatus(
+      "❌ No se pudo cargar el inventario: " +
+      (
+        error.message ||
+        error
+      ),
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   RESUMEN
+========================================= */
+
+function updateSummary(){
+
+  const total =
+  products.reduce(
+    (sum,product) =>
+    sum +
+    Number(
+      product.stock || 0
+    ),
+    0
+  );
+
+
+  const low =
+  products.filter(
+    product =>
+    Number(
+      product.stock || 0
+    ) <= 5
+  ).length;
+
+
+  $("productCount").textContent =
+  products.length;
+
+
+  $("totalStock").textContent =
+  total;
+
+
+  $("lowStock").textContent =
+  low;
+
+}
+
+
+/* =========================================
+   RENDER
+========================================= */
+
+function renderProducts(){
+
+  const container =
+  $("products");
+
+
+  const query =
+  $("search")
+  .value
+  .trim()
+  .toLowerCase();
+
+
+  const visible =
+  products.filter(
+    product =>
+    product.name
+    .toLowerCase()
+    .includes(query)
+  );
+
+
+  if(!visible.length){
+
+    container.innerHTML =
+    '<div class="empty">' +
+    "No se encontraron productos." +
+    "</div>";
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+  "";
+
+
+  visible.forEach(
+    product => {
+
+      const stock =
+      Number(
+        product.stock || 0
+      );
+
+
+      const element =
+      document.createElement(
+        "div"
+      );
+
+      element.className =
+      "product";
+
+
+      const main =
+      document.createElement(
+        "div"
+      );
+
+      main.className =
+      "product-main";
+
+
+      const info =
+      document.createElement(
+        "div"
+      );
+
+
+      const name =
+      document.createElement(
+        "div"
+      );
+
+      name.className =
+      "product-name";
+
+      name.textContent =
+      product.name;
+
+
+      const price =
+      document.createElement(
+        "div"
+      );
+
+      price.className =
+      "product-price";
+
+      price.textContent =
+      "Precio: " +
+      money(product.price);
+
+
+      info.append(
+        name,
+        price
+      );
+
+
+      const stockBox =
+      document.createElement(
+        "div"
+      );
+
+
+      stockBox.className =
+      "stock " +
+      (
+        stock <= 0
+        ? "zero"
+        : stock <= 5
+        ? "low"
+        : "ok"
+      );
+
+
+      const stockNumber =
+      document.createElement(
+        "div"
+      );
+
+      stockNumber.className =
+      "stock-number";
+
+      stockNumber.textContent =
+      stock;
+
+
+      const stockLabel =
+      document.createElement(
+        "div"
+      );
+
+      stockLabel.className =
+      "stock-label";
+
+      stockLabel.textContent =
+      "UNIDADES";
+
+
+      stockBox.append(
+        stockNumber,
+        stockLabel
+      );
+
+
+      if(stock <= 5){
+
+        const warning =
+        document.createElement(
+          "span"
+        );
+
+        warning.className =
+        "warning";
+
+        warning.textContent =
+        stock <= 0
+        ? "SIN EXISTENCIA"
+        : "STOCK BAJO";
+
+        stockBox.appendChild(
+          warning
+        );
+
+      }
+
+
+      const actions =
+      document.createElement(
+        "div"
+      );
+
+      actions.className =
+      "product-actions";
+
+
+      const entryButton =
+      document.createElement(
+        "button"
+      );
+
+      entryButton.type =
+      "button";
+
+      entryButton.className =
+      "entry";
+
+      entryButton.textContent =
+      "➕ Entrada";
+
+
+      entryButton.addEventListener(
+        "click",
+        () => {
+
+          openMovementModal(
+            product,
+            "entry"
+          );
+
+        }
+      );
+
+
+      const exitButton =
+      document.createElement(
+        "button"
+      );
+
+      exitButton.type =
+      "button";
+
+      exitButton.className =
+      "exit";
+
+      exitButton.textContent =
+      "➖ Salida";
+
+
+      exitButton.addEventListener(
+        "click",
+        () => {
+
+          openMovementModal(
+            product,
+            "exit"
+          );
+
+        }
+      );
+
+
+      const editButton =
+      document.createElement(
+        "button"
+      );
+
+      editButton.type =
+      "button";
+
+      editButton.className =
+      "edit";
+
+      editButton.textContent =
+      "✏️ Ajustar";
+
+
+      editButton.addEventListener(
+        "click",
+        () => {
+
+          openMovementModal(
+            product,
+            "adjustment"
+          );
+
+        }
+      );
+
+
+      actions.append(
+        entryButton,
+        exitButton,
+        editButton
+      );
+
+
+      main.append(
+        info,
+        stockBox,
+        actions
+      );
+
+
+      element.appendChild(
+        main
+      );
+
+
+      container.appendChild(
+        element
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================
+   ABRIR MODAL
+========================================= */
+
+function openMovementModal(
+  product,
+  type
+){
+
+  selectedProduct =
+  product;
+
+
+  $("movementType").value =
+  type;
+
+
+  $("movementQuantity").value =
+  "";
+
+
+  $("movementNote").value =
+  "";
+
+
+  $("modalSubtitle").textContent =
+  product.name +
+  " · " +
+  currentBusiness;
+
+
+  $("modalCurrentStock").textContent =
+  Number(
+    product.stock || 0
+  );
+
+
+  $("movementModal")
+  .classList
+  .add("open");
+
+
+  setTimeout(
+    () =>
+    $("movementQuantity").focus(),
+    100
+  );
+
+}
+
+
+/* =========================================
+   CERRAR MODAL
+========================================= */
+
+function closeMovementModal(){
+
+  selectedProduct =
+  null;
+
+
+  $("movementModal")
+  .classList
+  .remove("open");
+
+}
+
+
+/* =========================================
+   GUARDAR MOVIMIENTO
+========================================= */
+
+async function saveMovement(){
+
+  if(!selectedProduct){
+
+    return;
+
+  }
+
+
+  const type =
+  $("movementType").value;
+
+
+  const quantity =
+  Number(
+    $("movementQuantity").value
+  );
+
+
+  const note =
+  $("movementNote")
+  .value
+  .trim();
+
+
+  const currentStock =
+  Number(
+    selectedProduct.stock || 0
+  );
+
+
+  if(
+    !Number.isFinite(quantity) ||
+    quantity < 0 ||
+    (
+      type !== "adjustment" &&
+      quantity <= 0
+    )
+  ){
+
+    showStatus(
+      "❌ Ingresa una cantidad válida.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  let newStock;
+
+
+  if(type === "entry"){
+
+    newStock =
+    currentStock +
+    quantity;
+
+  }
+  else if(type === "exit"){
+
+    if(quantity > currentStock){
+
+      showStatus(
+        "❌ No puedes sacar " +
+        quantity +
+        " unidades. Solo hay " +
+        currentStock +
+        " disponibles.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    newStock =
+    currentStock -
+    quantity;
+
+  }
+  else{
+
+    newStock =
+    quantity;
+
+  }
+
+
+  if(newStock < 0){
+
+    showStatus(
+      "❌ La existencia no puede ser negativa.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const button =
+  $("confirmMovement");
+
+
+  button.disabled =
+  true;
+
+  button.textContent =
+  "GUARDANDO...";
+
+
+  try{
+
+    /*
+      Actualizamos directamente
+      la existencia del producto.
+
+      El business_id también se valida
+      para evitar modificar accidentalmente
+      un producto de otro negocio.
+    */
+
+    const updateResult =
+    await supabaseClient
+    .from("products")
+    .update({
+      stock:
+      newStock
+    })
+    .eq(
+      "id",
+      selectedProduct.id
+    )
+    .eq(
+      "business_id",
+      BUSINESS_IDS[currentBusiness]
+    );
+
+
+    if(updateResult.error){
+
+      throw updateResult.error;
+
+    }
+
+
+    /*
+      Verificación real en Supabase.
+    */
+
+    const verifyResult =
+    await supabaseClient
+    .from("products")
+    .select(
+      "id,stock"
+    )
+    .eq(
+      "id",
+      selectedProduct.id
+    )
+    .eq(
+      "business_id",
+      BUSINESS_IDS[currentBusiness]
+    )
+    .single();
+
+
+    if(verifyResult.error){
+
+      throw verifyResult.error;
+
+    }
+
+
+    const verifiedStock =
+    Number(
+      verifyResult.data.stock || 0
+    );
+
+
+    if(
+      verifiedStock !==
+      Number(newStock)
+    ){
+
+      throw new Error(
+        "La existencia no se actualizó correctamente."
+      );
+
+    }
+
+
+    /*
+      Por ahora la nota se muestra
+      en consola. En el siguiente paso
+      podemos crear una tabla de
+      historial de movimientos.
+    */
+
+    console.log(
+      "Movimiento de inventario:",
+      {
+        business:
+        currentBusiness,
+
+        product:
+        selectedProduct.name,
+
+        type,
+
+        quantity,
+
+        previousStock:
+        currentStock,
+
+        newStock:
+        verifiedStock,
+
+        note
+      }
+    );
+
+
+    closeMovementModal();
+
+
+    showStatus(
+      "✅ Inventario actualizado: " +
+      selectedProduct.name +
+      " ahora tiene " +
+      verifiedStock +
+      " unidades.",
+      "ok"
+    );
+
+
+    await loadProducts();
+
+  }
+
+  catch(error){
+
+    console.error(
+      "Error actualizando inventario:",
+      error
+    );
+
+
+    showStatus(
+      "❌ No se pudo actualizar el inventario: " +
+      (
+        error.message ||
+        error
+      ),
+      "error"
+    );
+
+  }
+
+  finally{
+
+    button.disabled =
+    false;
+
+    button.textContent =
+    "Guardar movimiento";
+
+  }
+
+}
+
+
+/* =========================================
+   BUSCADOR
+========================================= */
+
+$("search")
+.addEventListener(
+  "input",
+  renderProducts
+);
+
+
+/* =========================================
+   CAMBIO DE NEGOCIO
+========================================= */
+
+document
+.querySelectorAll(
+  ".business-btn"
+)
+.forEach(
+  button => {
+
+    button.addEventListener(
+      "click",
+      async () => {
+
+        const business =
+        button.dataset.business;
+
+
+        if(
+          business ===
+          currentBusiness
+        ){
+
+          return;
+
+        }
+
+
+        currentBusiness =
+        business;
+
+
+        document
+        .querySelectorAll(
+          ".business-btn"
+        )
+        .forEach(
+          item =>
+          item.classList.remove(
+            "active"
+          )
+        );
+
+
+        button.classList.add(
+          "active"
+        );
+
+
+        $("search").value =
+        "";
+
+
+        await loadProducts();
+
+      }
+    );
+
+  }
+);
+
+
+/* =========================================
+   ACTUALIZAR
+========================================= */
+
+$("refreshButton")
+.addEventListener(
+  "click",
+  loadProducts
+);
+
+
+/* =========================================
+   DASHBOARD
+========================================= */
+
+$("dashboardButton")
+.addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+    "dashboard.html";
+
+  }
+);
+
+
+/* =========================================
+   CANCELAR
+========================================= */
+
+$("cancelMovement")
+.addEventListener(
+  "click",
+  closeMovementModal
+);
+
+
+/* =========================================
+   CONFIRMAR
+========================================= */
+
+$("confirmMovement")
+.addEventListener(
+  "click",
+  saveMovement
+);
+
+
+/* =========================================
+   CERRAR AL TOCAR AFUERA
+========================================= */
+
+$("movementModal")
+.addEventListener(
+  "click",
+  event => {
+
+    if(
+      event.target ===
+      $("movementModal")
+    ){
+
+      closeMovementModal();
+
+    }
+
+  }
+);
+
+
+/* =========================================
+   ESC
+========================================= */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key ===
+      "Escape"
+    ){
+
+      closeMovementModal();
+
+    }
+
+  }
+);
+
+
+/* =========================================
+   INICIO
+========================================= */
+
+loadProducts();
+
+</script>
+
+</body>
+</html>
