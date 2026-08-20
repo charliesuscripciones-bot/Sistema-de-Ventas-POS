@@ -76,7 +76,8 @@ button{
 .business-btn,
 .back,
 .history,
-.accounts{
+.accounts,
+.customers{
   background:white;
   border:2px solid #ddd;
   border-radius:12px;
@@ -96,6 +97,12 @@ button{
   padding:12px 20px;
   border-radius:12px;
   font-weight:700;
+}
+
+.customers{
+  background:#eff6ff;
+  color:#1d4ed8;
+  border-color:#2563eb;
 }
 
 .history{
@@ -257,6 +264,7 @@ td{
 
   .business-btn,
   .refresh,
+  .customers,
   .history,
   .accounts,
   .back{
@@ -287,11 +295,14 @@ Sistema de Ventas POS · Administración
 <div id="status" class="status"></div>
 
 
-<!-- BOTONES -->
+<!-- =========================================
+     BOTONES
+========================================= -->
 
 <div class="topbar">
 
 <button
+type="button"
 class="business-btn active"
 data-business="BakeQuiri">
 BakeQuiri
@@ -299,6 +310,7 @@ BakeQuiri
 
 
 <button
+type="button"
 class="business-btn"
 data-business="SpicyRoll">
 SpicyRoll
@@ -306,29 +318,47 @@ SpicyRoll
 
 
 <button
+type="button"
 id="refresh"
 class="refresh">
 🔄 Actualizar
 </button>
 
 
-<!-- NUEVO BOTÓN DE CUENTAS -->
+<!-- CLIENTES -->
 
 <button
+type="button"
+id="customers"
+class="customers">
+👥 Clientes
+</button>
+
+
+<!-- CUENTAS -->
+
+<button
+type="button"
 id="accounts"
 class="accounts">
 💰 Cuentas pendientes
 </button>
 
 
+<!-- HISTORIAL -->
+
 <button
+type="button"
 id="history"
 class="history">
 🧾 Historial
 </button>
 
 
+<!-- POS -->
+
 <button
+type="button"
 id="back"
 class="back">
 ← POS
@@ -337,7 +367,9 @@ class="back">
 </div>
 
 
-<!-- TARJETAS -->
+<!-- =========================================
+     TARJETAS
+========================================= -->
 
 <div class="cards">
 
@@ -403,7 +435,9 @@ class="metric red">
 </div>
 
 
-<!-- VENTAS + INVENTARIO -->
+<!-- =========================================
+     VENTAS + INVENTARIO
+========================================= -->
 
 <div class="grid">
 
@@ -1014,6 +1048,22 @@ $("refresh")
 .addEventListener(
   "click",
   loadDashboard
+);
+
+
+/* ================================
+   CLIENTES
+================================ */
+
+$("customers")
+.addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+    "clientes.html";
+
+  }
 );
 
 
