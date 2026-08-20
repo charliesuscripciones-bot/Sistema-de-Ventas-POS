@@ -108,6 +108,23 @@ header p{
   transform:scale(.98);
 }
 
+/* HISTORIAL */
+
+.history-btn{
+  border:2px solid #2563eb;
+  padding:15px 22px;
+  border-radius:14px;
+  background:#eff6ff;
+  color:#1d4ed8;
+  font-size:18px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.history-btn:active{
+  transform:scale(.98);
+}
+
 /* =========================================
    LAYOUT
 ========================================= */
@@ -413,7 +430,8 @@ header p{
 @media(max-width:500px){
 
   .business-btn,
-  .accounts-btn{
+  .accounts-btn,
+  .history-btn{
     flex:1;
   }
 
@@ -466,7 +484,7 @@ Administración de negocios y ventas
 
 
 <!-- =========================================
-     NEGOCIOS + CUENTAS
+     NEGOCIOS + CUENTAS + HISTORIAL
 ========================================= -->
 
 <div class="businesses">
@@ -497,6 +515,16 @@ class="accounts-btn"
 id="accountsButton">
 
 💳 Cuentas pendientes
+
+</button>
+
+
+<button
+type="button"
+class="history-btn"
+id="historyButton">
+
+📊 Historial de ventas
 
 </button>
 
@@ -874,21 +902,6 @@ async function loadBusinessData(){
 
       /* CLIENTES */
 
-      /*
-        IMPORTANTE:
-        La tabla customers REAL tiene:
-
-        id
-        business_id
-        name
-        phone
-        notes
-        created_at
-
-        NO usamos email.
-        NO usamos active.
-      */
-
       supabaseClient
 
         .from("customers")
@@ -953,11 +966,6 @@ async function loadBusinessData(){
     customers =
     customersResult.data || [];
 
-
-    /*
-      Si el método de pago seleccionado
-      ya no existe, seleccionamos el primero.
-    */
 
     if(
       !payments.some(
@@ -1723,14 +1731,6 @@ isPending
   }
 
 
-  /*
-    Venta pagada:
-    requiere método de pago.
-
-    Venta pendiente:
-    NO requiere método de pago.
-  */
-
   if(
     !isPending &&
     !selectedPaymentId
@@ -1744,11 +1744,6 @@ isPending
 
   }
 
-
-  /*
-    Una cuenta pendiente
-    necesita cliente.
-  */
 
   if(
     isPending &&
@@ -1820,22 +1815,6 @@ isPending
       })
     );
 
-
-    /*
-      register_sale recibe:
-
-      p_business_id
-      p_customer_id
-      p_payment_method_id
-      p_items
-      p_is_pending
-
-      Si p_is_pending = true:
-
-      balance = total
-      status = open
-      no se registra pago.
-    */
 
     const {
       data,
@@ -2126,6 +2105,22 @@ $("accountsButton")
 
     window.location.href =
     "cuentas.html";
+
+  }
+);
+
+
+/* =========================================
+   HISTORIAL DE VENTAS
+========================================= */
+
+$("historyButton")
+.addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+    "historial.html";
 
   }
 );
