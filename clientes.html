@@ -203,6 +203,17 @@ textarea{
   line-height:1.6;
 }
 
+.customer-business{
+  display:inline-block;
+  margin-top:8px;
+  padding:5px 9px;
+  border-radius:8px;
+  background:#eef2ff;
+  color:#3730a3;
+  font-size:13px;
+  font-weight:700;
+}
+
 .customer-actions{
   display:flex;
   gap:8px;
@@ -240,6 +251,12 @@ textarea{
 
 .editing-title{
   color:#2563eb;
+}
+
+.helper{
+  margin-top:8px;
+  color:#6b7280;
+  font-size:14px;
 }
 
 @media(max-width:600px){
@@ -309,6 +326,16 @@ Sistema de Ventas POS · Administración de clientes
 <button
 type="button"
 class="business-btn active"
+data-business="Todos">
+
+👥 Todos
+
+</button>
+
+
+<button
+type="button"
+class="business-btn"
 data-business="BakeQuiri">
 
 BakeQuiri
@@ -413,6 +440,11 @@ placeholder="Notas del cliente"></textarea>
 </div>
 
 
+<div class="helper">
+Los clientes son compartidos entre BakeQuiri y SpicyRoll.
+</div>
+
+
 <button
 type="submit"
 class="save"
@@ -455,7 +487,7 @@ Cancelar edición
 id="search"
 class="search"
 type="search"
-placeholder="🔎 Buscar por nombre o teléfono">
+placeholder="🔎 Buscar por nombre, teléfono o notas">
 
 
 <div
@@ -524,8 +556,12 @@ const BUSINESS_IDS = {
 };
 
 
+/* =========================================
+   ESTADO
+========================================= */
+
 let currentBusiness =
-"BakeQuiri";
+"Todos";
 
 
 let customers = [];
@@ -563,6 +599,17 @@ function showStatus(
 }
 
 
+function clearStatus(){
+
+  $("status").textContent =
+  "";
+
+  $("status").className =
+  "status";
+
+}
+
+
 /* =========================================
    CARGAR CLIENTES
 ========================================= */
@@ -577,9 +624,17 @@ async function loadCustomers(){
 
   try{
 
-    const businessId =
-    BUSINESS_IDS[currentBusiness];
+    /*
+      IMPORTANTE:
 
+      Los clientes son compartidos.
+
+      Por eso YA NO filtramos directamente
+      por el negocio seleccionado.
+
+      Primero obtenemos todos los clientes
+      pertenecientes a nuestros negocios.
+    */
 
     const result =
     await supabaseClient
@@ -587,12 +642,12 @@ async function loadCustomers(){
       .from("customers")
 
       .select(
-        "id,business_id,name,phone,notes"
+        "id,business_id,name,phone,notes,created_at"
       )
 
-      .eq(
+      .in(
         "business_id",
-        businessId
+        Object.values(BUSINESS_IDS)
       )
 
       .order(
@@ -614,13 +669,14 @@ async function loadCustomers(){
     result.data || [];
 
 
-    renderCustomers(
-      customers
-    );
+    renderCustomers();
 
 
     showStatus(
-      "Clientes actualizados correctamente.",
+      customers.length === 1
+      ? "1 cliente cargado correctamente."
+      : customers.length +
+        " clientes cargados correctamente.",
       "ok"
     );
 
@@ -652,13 +708,117 @@ async function loadCustomers(){
 
 
 /* =========================================
+   OBTENER NEGOCIO DEL CLIENTE
+========================================= */
+
+function getBusinessName(
+  businessId
+){
+
+  if(
+    businessId ===
+    BUSINESS_IDS.BakeQuiri
+  ){
+
+    return "BakeQuiri";
+
+  }
+
+
+  if(
+    businessId ===
+    BUSINESS_IDS.SpicyRoll
+  ){
+
+    return "SpicyRoll";
+
+  }
+
+
+  return "Negocio";
+
+}
+
+
+/* =========================================
    MOSTRAR CLIENTES
 ========================================= */
 
-function renderCustomers(list){
+function renderCustomers(){
 
   const container =
   $("customersContainer");
+
+
+  const query =
+  $("search")
+    .value
+    .trim()
+    .toLowerCase();
+
+
+  let list =
+  customers;
+
+
+  /* =====================================
+     FILTRO POR NEGOCIO
+  ===================================== */
+
+  if(
+    currentBusiness !==
+    "Todos"
+  ){
+
+    const businessId =
+    BUSINESS_IDS[currentBusiness];
+
+
+    list =
+    list.filter(
+      customer =>
+      customer.business_id ===
+      businessId
+    );
+
+  }
+
+
+  /* =====================================
+     BUSCADOR
+  ===================================== */
+
+  if(query){
+
+    list =
+    list.filter(
+      customer => {
+
+        const text = [
+
+          customer.name,
+
+          customer.phone,
+
+          customer.notes
+
+        ]
+
+        .filter(Boolean)
+
+        .join(" ")
+
+        .toLowerCase();
+
+
+        return text.includes(
+          query
+        );
+
+      }
+    );
+
+  }
 
 
   $("count").textContent =
@@ -674,7 +834,11 @@ function renderCustomers(list){
 
     container.innerHTML =
     '<div class="empty">' +
-    'No hay clientes registrados.' +
+    (
+      query
+      ? "No se encontraron clientes."
+      : "No hay clientes registrados."
+    ) +
     '</div>';
 
     return;
@@ -768,13 +932,32 @@ function renderCustomers(list){
       : "Sin información adicional";
 
 
-      info.append(
-        name,
-        details
+      const business =
+      document.createElement(
+        "div"
       );
 
 
-      /* BOTONES */
+      business.className =
+      "customer-business";
+
+
+      business.textContent =
+      getBusinessName(
+        customer.business_id
+      );
+
+
+      info.append(
+        name,
+        details,
+        business
+      );
+
+
+      /* =================================
+         BOTONES
+      ================================= */
 
       const actions =
       document.createElement(
@@ -875,16 +1058,25 @@ $("customerForm")
     event.preventDefault();
 
 
+    clearStatus();
+
+
     const name =
-    $("name").value.trim();
+    $("name")
+      .value
+      .trim();
 
 
     const phone =
-    $("phone").value.trim();
+    $("phone")
+      .value
+      .trim();
 
 
     const notes =
-    $("notes").value.trim();
+    $("notes")
+      .value
+      .trim();
 
 
     if(!name){
@@ -899,10 +1091,6 @@ $("customerForm")
     }
 
 
-    const businessId =
-    BUSINESS_IDS[currentBusiness];
-
-
     const saveButton =
     $("saveButton");
 
@@ -914,7 +1102,7 @@ $("customerForm")
     try{
 
       /* =================================
-         EDITAR
+         EDITAR CLIENTE
       ================================= */
 
       if(editingId){
@@ -939,11 +1127,6 @@ $("customerForm")
           .eq(
             "id",
             editingId
-          )
-
-          .eq(
-            "business_id",
-            businessId
           );
 
 
@@ -967,6 +1150,28 @@ $("customerForm")
       ================================= */
 
       else{
+
+        /*
+          Para mantener el sistema actual:
+
+          Si estamos viendo un negocio específico,
+          el cliente se asocia a ese negocio.
+
+          Si estamos en "Todos", por seguridad
+          lo asociamos a BakeQuiri.
+        */
+
+        const businessName =
+        currentBusiness === "Todos"
+        ? "BakeQuiri"
+        : currentBusiness;
+
+
+        const businessId =
+        BUSINESS_IDS[
+          businessName
+        ];
+
 
         const result =
         await supabaseClient
@@ -1042,7 +1247,9 @@ $("customerForm")
    EDITAR CLIENTE
 ========================================= */
 
-function editCustomer(customer){
+function editCustomer(
+  customer
+){
 
   editingId =
   customer.id;
@@ -1131,7 +1338,9 @@ $("cancelButton")
    ELIMINAR CLIENTE
 ========================================= */
 
-async function deleteCustomer(customer){
+async function deleteCustomer(
+  customer
+){
 
   const confirmed =
   confirm(
@@ -1139,7 +1348,9 @@ async function deleteCustomer(customer){
     "¿Eliminar a " +
     customer.name +
     "?\n\n" +
-    "Esta acción eliminará el cliente de la base de datos."
+
+    "Esta acción eliminará el cliente " +
+    "de la base de datos."
 
   );
 
@@ -1163,11 +1374,6 @@ async function deleteCustomer(customer){
       .eq(
         "id",
         customer.id
-      )
-
-      .eq(
-        "business_id",
-        BUSINESS_IDS[currentBusiness]
       );
 
 
@@ -1224,62 +1430,12 @@ async function deleteCustomer(customer){
 $("search")
 .addEventListener(
   "input",
-  event => {
-
-    const query =
-    event.target.value
-      .trim()
-      .toLowerCase();
-
-
-    if(!query){
-
-      renderCustomers(
-        customers
-      );
-
-      return;
-
-    }
-
-
-    const filtered =
-    customers.filter(
-      customer => {
-
-        const text =
-
-          [
-            customer.name,
-            customer.phone,
-            customer.notes
-          ]
-
-          .filter(Boolean)
-
-          .join(" ")
-
-          .toLowerCase();
-
-
-        return text.includes(
-          query
-        );
-
-      }
-    );
-
-
-    renderCustomers(
-      filtered
-    );
-
-  }
+  renderCustomers
 );
 
 
 /* =========================================
-   CAMBIO DE NEGOCIO
+   CAMBIO DE FILTRO
 ========================================= */
 
 document
@@ -1291,7 +1447,7 @@ document
 
     button.addEventListener(
       "click",
-      async () => {
+      () => {
 
         currentBusiness =
         button.dataset.business;
@@ -1317,14 +1473,7 @@ document
         );
 
 
-        resetForm();
-
-
-        $("search").value =
-        "";
-
-
-        await loadCustomers();
+        renderCustomers();
 
       }
     );
