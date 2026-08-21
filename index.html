@@ -2,13 +2,9 @@
 <html lang="es">
 
 <head>
-
 <meta charset="UTF-8">
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Diagnóstico POS</title>
 
@@ -174,7 +170,6 @@ strong{
 }
 
 </style>
-
 </head>
 
 <body>
@@ -186,7 +181,6 @@ strong{
 <p>Diagnóstico de conexión</p>
 
 </header>
-
 
 <div class="container">
 
@@ -205,13 +199,9 @@ desde este teléfono.
 </div>
 
 
-<!-- 1 -->
-
 <div class="test">
 
-<div
-id="icon1"
-class="icon">
+<div id="icon1" class="icon">
 ⏳
 </div>
 
@@ -221,9 +211,7 @@ class="icon">
 1. JavaScript
 </div>
 
-<div
-id="detail1"
-class="detail">
+<div id="detail1" class="detail">
 Comprobando...
 </div>
 
@@ -232,13 +220,9 @@ Comprobando...
 </div>
 
 
-<!-- 2 -->
-
 <div class="test">
 
-<div
-id="icon2"
-class="icon">
+<div id="icon2" class="icon">
 ⏳
 </div>
 
@@ -248,9 +232,7 @@ class="icon">
 2. Internet
 </div>
 
-<div
-id="detail2"
-class="detail">
+<div id="detail2" class="detail">
 Comprobando...
 </div>
 
@@ -259,13 +241,9 @@ Comprobando...
 </div>
 
 
-<!-- 3 -->
-
 <div class="test">
 
-<div
-id="icon3"
-class="icon">
+<div id="icon3" class="icon">
 ⏳
 </div>
 
@@ -275,9 +253,7 @@ class="icon">
 3. Conexión directa con Supabase
 </div>
 
-<div
-id="detail3"
-class="detail">
+<div id="detail3" class="detail">
 Comprobando...
 </div>
 
@@ -286,13 +262,9 @@ Comprobando...
 </div>
 
 
-<!-- 4 -->
-
 <div class="test">
 
-<div
-id="icon4"
-class="icon">
+<div id="icon4" class="icon">
 ⏳
 </div>
 
@@ -302,9 +274,7 @@ class="icon">
 4. API REST de Supabase
 </div>
 
-<div
-id="detail4"
-class="detail">
+<div id="detail4" class="detail">
 Comprobando...
 </div>
 
@@ -313,13 +283,9 @@ Comprobando...
 </div>
 
 
-<!-- 5 -->
-
 <div class="test">
 
-<div
-id="icon5"
-class="icon">
+<div id="icon5" class="icon">
 ⏳
 </div>
 
@@ -329,9 +295,7 @@ class="icon">
 5. Tipo de conexión
 </div>
 
-<div
-id="detail5"
-class="detail">
+<div id="detail5" class="detail">
 Detectando...
 </div>
 
@@ -340,18 +304,11 @@ Detectando...
 </div>
 
 
-<div
-id="final"
-class="final">
-</div>
+<div id="final" class="final"></div>
 
 
-<button
-id="retry"
-onclick="diagnostico()">
-
+<button id="retry" onclick="diagnostico()">
 🔄 REPETIR DIAGNÓSTICO
-
 </button>
 
 
@@ -400,7 +357,7 @@ Detectando...
 
 
 /* =====================================
-   CONFIGURACIÓN SUPABASE
+   SUPABASE
 ===================================== */
 
 const SUPABASE_URL =
@@ -411,7 +368,7 @@ const SUPABASE_KEY =
 
 
 /* =====================================
-   ELEMENTOS
+   ELEMENTO
 ===================================== */
 
 function elemento(id){
@@ -422,10 +379,10 @@ function elemento(id){
 
 
 /* =====================================
-   CAMBIAR ESTADO
+   ESTADO
 ===================================== */
 
-function estado(numero, tipo, mensaje){
+function estado(numero,tipo,mensaje){
 
   const icon =
     elemento("icon" + numero);
@@ -439,8 +396,7 @@ function estado(numero, tipo, mensaje){
     icon.className = "icon ok";
     icon.textContent = "✓";
 
-    detail.className =
-      "detail oktext";
+    detail.className = "detail oktext";
 
   }
 
@@ -449,8 +405,7 @@ function estado(numero, tipo, mensaje){
     icon.className = "icon error";
     icon.textContent = "✕";
 
-    detail.className =
-      "detail errortext";
+    detail.className = "detail errortext";
 
   }
 
@@ -459,8 +414,7 @@ function estado(numero, tipo, mensaje){
     icon.className = "icon";
     icon.textContent = "⏳";
 
-    detail.className =
-      "detail";
+    detail.className = "detail";
 
   }
 
@@ -480,8 +434,7 @@ function informacion(){
     navigator.userAgent;
 
 
-  let conexion =
-    "No disponible";
+  let conexion = "No disponible";
 
 
   if(navigator.connection){
@@ -490,18 +443,9 @@ function informacion(){
       navigator.connection.effectiveType ||
       "desconocido";
 
-    const red =
-      navigator.connection.type ||
-      "";
-
-
-    conexion =
-      red
-      ? tipo + " · " + red
-      : tipo;
+    conexion = tipo;
 
   }
-
 
   else if(navigator.onLine){
 
@@ -555,7 +499,7 @@ async function diagnostico(){
   informacion();
 
 
-  /* =================================
+  /* ================================
      1. JAVASCRIPT
   ================================= */
 
@@ -566,7 +510,7 @@ async function diagnostico(){
   );
 
 
-  /* =================================
+  /* ================================
      2. INTERNET
   ================================= */
 
@@ -593,7 +537,7 @@ async function diagnostico(){
       "final show error";
 
     final.textContent =
-      "❌ El teléfono está reportando que no hay conexión a Internet.";
+      "❌ No hay conexión a Internet.";
 
     boton.disabled = false;
 
@@ -602,14 +546,14 @@ async function diagnostico(){
   }
 
 
-  /* =================================
+  /* ================================
      3. SUPABASE
   ================================= */
 
   estado(
     3,
     "loading",
-    "Intentando conectar directamente con Supabase..."
+    "Conectando directamente con Supabase..."
   );
 
 
@@ -621,18 +565,20 @@ async function diagnostico(){
 
     const respuesta =
       await fetch(
-        SUPABASE_URL + "/rest/v1/",
+
+        SUPABASE_URL +
+        "/rest/v1/products?select=*&limit=1",
+
         {
           method:"GET",
 
           headers:{
-            "apikey":SUPABASE_KEY,
-            "Authorization":
-              "Bearer " + SUPABASE_KEY
+            "apikey":SUPABASE_KEY
           },
 
           cache:"no-store"
         }
+
       );
 
 
@@ -645,7 +591,7 @@ async function diagnostico(){
       estado(
         3,
         "ok",
-        "Supabase respondió correctamente. Tiempo: " +
+        "Supabase respondió correctamente en " +
         tiempo +
         " ms."
       );
@@ -654,21 +600,27 @@ async function diagnostico(){
 
     else{
 
+      const texto =
+        await respuesta.text();
+
+
       estado(
         3,
         "error",
         "Supabase respondió HTTP " +
         respuesta.status +
-        " " +
-        respuesta.statusText
+        ". " +
+        texto.substring(0,250)
       );
 
 
       final.className =
         "final show error";
 
+
       final.textContent =
-        "❌ La red celular llega hasta Internet, pero la conexión con Supabase está fallando.";
+        "❌ Supabase rechazó la conexión. El código HTTP y el mensaje anterior nos indican exactamente dónde está el problema.";
+
 
       boton.disabled = false;
 
@@ -686,7 +638,7 @@ async function diagnostico(){
     estado(
       3,
       "error",
-      "No se pudo conectar con Supabase. Error: " +
+      "Error de conexión: " +
       error.message
     );
 
@@ -694,8 +646,10 @@ async function diagnostico(){
     final.className =
       "final show error";
 
+
     final.textContent =
-      "❌ La conexión celular no pudo llegar correctamente a Supabase. Este resultado es muy importante.";
+      "❌ El navegador no pudo llegar correctamente a Supabase.";
+
 
     boton.disabled = false;
 
@@ -704,14 +658,14 @@ async function diagnostico(){
   }
 
 
-  /* =================================
+  /* ================================
      4. API REST
   ================================= */
 
   estado(
     4,
     "loading",
-    "Probando la API REST..."
+    "Consultando la tabla products..."
   );
 
 
@@ -719,49 +673,46 @@ async function diagnostico(){
 
     const respuesta =
       await fetch(
+
         SUPABASE_URL +
         "/rest/v1/products?select=*&limit=1",
+
         {
           method:"GET",
 
           headers:{
-            "apikey":SUPABASE_KEY,
-            "Authorization":
-              "Bearer " + SUPABASE_KEY
+            "apikey":SUPABASE_KEY
           },
 
           cache:"no-store"
         }
+
       );
+
+
+    const texto =
+      await respuesta.text();
 
 
     if(respuesta.ok){
 
-      const datos =
-        await respuesta.json();
-
-
       estado(
         4,
         "ok",
-        "La API REST respondió correctamente. La consulta pudo llegar a Supabase."
+        "La API REST funciona correctamente. Supabase permitió consultar products."
       );
 
     }
 
     else{
 
-      const texto =
-        await respuesta.text();
-
-
       estado(
         4,
         "error",
-        "La API respondió HTTP " +
+        "API REST respondió HTTP " +
         respuesta.status +
         ". " +
-        texto.substring(0,180)
+        texto.substring(0,250)
       );
 
     }
@@ -780,7 +731,7 @@ async function diagnostico(){
   }
 
 
-  /* =================================
+  /* ================================
      5. CONEXIÓN
   ================================= */
 
@@ -817,15 +768,16 @@ async function diagnostico(){
   );
 
 
-  /* =================================
+  /* ================================
      RESULTADO
   ================================= */
 
   final.className =
     "final show ok";
 
+
   final.textContent =
-    "✅ La conexión directa con Supabase funciona. Si el POS original no funciona con datos celulares, el problema probablemente está en la forma en que carga su JavaScript o alguna dependencia externa, no en la conexión básica con Supabase.";
+    "✅ La conexión con Supabase funciona correctamente. Ya podemos pasar a corregir el POS original.";
 
 
   boton.disabled = false;
@@ -841,7 +793,6 @@ window.addEventListener(
   "load",
   diagnostico
 );
-
 
 </script>
 
