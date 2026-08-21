@@ -757,8 +757,6 @@ Cargando métodos de pago...
 
 </div>
 
-<!-- SUPABASE -->
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -801,6 +799,16 @@ let currentBusiness =
 let products = [];
 
 let payments = [];
+
+/*
+ * IMPORTANTE:
+ *
+ * Los clientes son COMPARTIDOS.
+ * Ya NO pertenecen visualmente a un solo negocio.
+ *
+ * La consulta de clientes se hace sobre ambos
+ * business_id.
+ */
 
 let customers = [];
 
@@ -894,6 +902,50 @@ function initializeSupabase(){
 }
 
 /* =========================================
+   OBTENER CLIENTES COMPARTIDOS
+========================================= */
+
+async function loadSharedCustomers(){
+
+  const result =
+    await supabaseClient
+
+      .from("customers")
+
+      .select(
+        "id,business_id,name,phone,notes"
+      )
+
+      .in(
+        "business_id",
+        [
+          BUSINESS_IDS.BakeQuiri,
+          BUSINESS_IDS.SpicyRoll
+        ]
+      )
+
+      .order(
+        "name",
+        {
+          ascending:true
+        }
+      );
+
+  if(result.error){
+
+    throw new Error(
+      "No pude cargar los clientes: " +
+      result.error.message
+    );
+
+  }
+
+  customers =
+    result.data || [];
+
+}
+
+/* =========================================
    CARGAR DATOS DEL NEGOCIO
 ========================================= */
 
@@ -922,13 +974,19 @@ async function loadBusinessData(){
 
   try{
 
+    /*
+     * Productos y métodos de pago:
+     * SOLO del negocio seleccionado.
+     *
+     * Clientes:
+     * COMPARTIDOS entre BakeQuiri y SpicyRoll.
+     */
+
     const [
 
       productsResult,
 
-      paymentsResult,
-
-      customersResult
+      paymentsResult
 
     ] = await Promise.all([
 
@@ -964,19 +1022,6 @@ async function loadBusinessData(){
         )
         .order(
           "name"
-        ),
-
-      supabaseClient
-        .from("customers")
-        .select(
-          "id,business_id,name,phone,notes"
-        )
-        .eq(
-          "business_id",
-          businessId
-        )
-        .order(
-          "name"
         )
 
     ]);
@@ -1003,16 +1048,12 @@ async function loadBusinessData(){
 
     }
 
-    if(
-      customersResult.error
-    ){
+    /*
+     * AHORA cargamos TODOS los clientes
+     * de los dos negocios.
+     */
 
-      throw new Error(
-        "No pude cargar los clientes: " +
-        customersResult.error.message
-      );
-
-    }
+    await loadSharedCustomers();
 
     products =
       productsResult.data || [];
@@ -1020,8 +1061,11 @@ async function loadBusinessData(){
     payments =
       paymentsResult.data || [];
 
-    customers =
-      customersResult.data || [];
+    /*
+     * Si cambiamos de negocio y el método de pago
+     * anterior no existe en el nuevo negocio,
+     * seleccionamos el primero disponible.
+     */
 
     if(
       !payments.some(
@@ -1036,6 +1080,11 @@ async function loadBusinessData(){
         null;
 
     }
+
+    /*
+     * El cliente seleccionado se conserva siempre
+     * que siga existiendo en el catálogo compartido.
+     */
 
     const selectedCustomer =
       customers.find(
@@ -1652,7 +1701,7 @@ function clearSelectedCustomer(){
 }
 
 /* =========================================
-   BUSCAR CLIENTES
+   BUSCAR CLIENTES COMPARTIDOS
 ========================================= */
 
 function renderCustomerResults(
@@ -1680,6 +1729,15 @@ function renderCustomerResults(
     return;
 
   }
+
+  /*
+   * IMPORTANTE:
+   *
+   * customers contiene clientes de BakeQuiri
+   * Y SpicyRoll.
+   *
+   * Por eso aquí NO filtramos por currentBusiness.
+   */
 
   const filtered =
     customers.filter(
@@ -1774,7 +1832,9 @@ function renderCustomerResults(
               ) +
               "</small>"
             : ""
-          );
+          ) +
+
+          "<small>👥 Cliente compartido</small>";
 
         button.addEventListener(
           "click",
@@ -2341,6 +2401,50 @@ document
   );
 
 /* =========================================
+   LEER NEGOCIO DESDE LA URL
+========================================= */
+
+function loadBusinessFromURL(){
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const business =
+    params.get(
+      "business"
+    );
+
+  if(
+    business === "BakeQuiri" ||
+    business === "SpicyRoll"
+  ){
+
+    currentBusiness =
+      business;
+
+    document
+      .querySelectorAll(
+        ".business-btn"
+      )
+      .forEach(
+        button => {
+
+          button.classList.toggle(
+            "active",
+            button.dataset.business ===
+            currentBusiness
+          );
+
+        }
+      );
+
+  }
+
+}
+
+/* =========================================
    INICIO
 ========================================= */
 
@@ -2349,6 +2453,17 @@ async function startApp(){
   try{
 
     initializeSupabase();
+
+    /*
+     * Si entramos desde:
+     *
+     * clientes.html?business=SpicyRoll
+     *
+     * o cualquier otra sección,
+     * mantenemos el negocio seleccionado.
+     */
+
+    loadBusinessFromURL();
 
     await loadBusinessData();
 
