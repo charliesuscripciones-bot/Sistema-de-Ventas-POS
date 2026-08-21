@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>Sistema de Ventas POS</title>
+<title>Sistema de Ventas POS - Diagnóstico</title>
 
 <style>
 
@@ -43,26 +43,166 @@ header p{
   padding:20px;
 }
 
-.status{
-  margin:0 0 15px;
-  padding:13px 15px;
-  border-radius:10px;
+.diagnostic{
+  background:#fff;
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:20px;
+  box-shadow:0 3px 14px rgba(0,0,0,.08);
+}
+
+.diagnostic h2{
+  font-size:21px;
+  margin-bottom:8px;
+}
+
+.diagnostic-subtitle{
+  color:#6b7280;
   font-size:14px;
-  display:none;
+  margin-bottom:18px;
+  line-height:1.5;
+}
+
+.test{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  padding:14px 0;
+  border-bottom:1px solid #eee;
+}
+
+.test:last-child{
+  border-bottom:none;
+}
+
+.icon{
+  width:28px;
+  min-width:28px;
+  height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:#e5e7eb;
+  font-size:15px;
+}
+
+.icon.loading{
+  background:#fef3c7;
+}
+
+.icon.ok{
+  background:#dcfce7;
+}
+
+.icon.error{
+  background:#fee2e2;
+}
+
+.test-content{
+  flex:1;
+  min-width:0;
+}
+
+.test-title{
+  font-weight:800;
+  font-size:15px;
+}
+
+.test-detail{
+  margin-top:5px;
+  color:#6b7280;
+  font-size:13px;
+  line-height:1.45;
+  word-break:break-word;
+}
+
+.test-detail.error-text{
+  color:#991b1b;
   font-weight:600;
 }
 
-.status.error{
+.test-detail.ok-text{
+  color:#166534;
+}
+
+.diagnostic-buttons{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
+
+.diagnostic-button{
+  border:none;
+  padding:13px 18px;
+  border-radius:11px;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.retry{
+  background:#2563eb;
+  color:#fff;
+}
+
+.retry:disabled{
+  opacity:.6;
+  cursor:wait;
+}
+
+.status-final{
+  margin-top:18px;
+  padding:15px;
+  border-radius:12px;
+  font-weight:800;
+  display:none;
+  line-height:1.5;
+}
+
+.status-final.visible{
   display:block;
+}
+
+.status-final.success{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.status-final.error{
   background:#fee2e2;
   color:#991b1b;
 }
 
-.status.ok{
-  display:block;
-  background:#dcfce7;
-  color:#166534;
+.status-final.warning{
+  background:#fef3c7;
+  color:#92400e;
 }
+
+.connection-info{
+  margin-top:18px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  border-radius:12px;
+  padding:14px;
+  font-size:13px;
+  color:#475569;
+  line-height:1.6;
+  word-break:break-word;
+}
+
+.connection-info strong{
+  color:#111827;
+}
+
+.hidden{
+  display:none;
+}
+
+/* =========================
+   POS
+========================= */
 
 .businesses{
   display:flex;
@@ -155,12 +295,6 @@ header p{
   cursor:pointer;
   background:#fff;
   text-align:left;
-  transition:.15s;
-}
-
-.product:hover{
-  border-color:#2563eb;
-  transform:translateY(-1px);
 }
 
 .product.disabled{
@@ -262,8 +396,6 @@ header p{
   border-color:#111827;
 }
 
-/* CLIENTES */
-
 .customer-box{
   position:relative;
 }
@@ -281,11 +413,6 @@ header p{
   font-size:15px;
   min-width:0;
   background:#fff;
-}
-
-.customer-search:focus{
-  outline:none;
-  border-color:#2563eb;
 }
 
 .add-client{
@@ -322,14 +449,6 @@ header p{
   cursor:pointer;
 }
 
-.customer-result:last-child{
-  border-bottom:none;
-}
-
-.customer-result:hover{
-  background:#f3f4f6;
-}
-
 .customer-result strong{
   display:block;
   font-size:15px;
@@ -359,7 +478,6 @@ header p{
   font-weight:700;
   cursor:pointer;
   margin-left:8px;
-  padding:0;
 }
 
 .general-customer{
@@ -372,13 +490,6 @@ header p{
   cursor:pointer;
   border:2px solid transparent;
 }
-
-.general-customer:hover{
-  background:#e5e7eb;
-  border-color:#d1d5db;
-}
-
-/* BOTONES */
 
 .charge{
   width:100%;
@@ -406,21 +517,31 @@ header p{
   cursor:pointer;
 }
 
-.charge:disabled,
-.account:disabled{
-  opacity:.6;
-  cursor:wait;
-}
-
 .empty{
   color:#777;
   text-align:center;
   padding:30px 10px;
 }
 
-.loading{
-  opacity:.65;
-  pointer-events:none;
+.status{
+  margin:0 0 15px;
+  padding:13px 15px;
+  border-radius:10px;
+  font-size:14px;
+  display:none;
+  font-weight:600;
+}
+
+.status.error{
+  display:block;
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.status.ok{
+  display:block;
+  background:#dcfce7;
+  color:#166534;
 }
 
 @media(max-width:950px){
@@ -438,10 +559,6 @@ header p{
   }
 
   .navigation{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .products{
     grid-template-columns:1fr 1fr;
   }
 
@@ -463,10 +580,6 @@ header p{
 
   .business-btn{
     flex:1;
-  }
-
-  .layout{
-    gap:15px;
   }
 
   .card{
@@ -517,9 +630,244 @@ Administración de negocios y ventas
 
 <div class="container">
 
-<div id="status" class="status"></div>
+<!-- =========================
+     DIAGNÓSTICO
+========================= -->
 
-<!-- NEGOCIOS -->
+<div
+id="diagnostic"
+class="diagnostic">
+
+<h2>
+🔧 Diagnóstico de conexión
+</h2>
+
+<div class="diagnostic-subtitle">
+
+Estamos comprobando por qué el POS puede funcionar
+con Wi-Fi pero no con datos móviles.
+<br>
+<strong>No se modifica ningún dato de ventas.</strong>
+
+</div>
+
+<div
+id="testJavascript"
+class="test">
+
+<div
+id="iconJavascript"
+class="icon loading">
+⏳
+</div>
+
+<div class="test-content">
+
+<div class="test-title">
+1. JavaScript
+</div>
+
+<div
+id="detailJavascript"
+class="test-detail">
+Comprobando...
+</div>
+
+</div>
+
+</div>
+
+
+<div
+id="testSupabaseLibrary"
+class="test">
+
+<div
+id="iconSupabaseLibrary"
+class="icon loading">
+⏳
+</div>
+
+<div class="test-content">
+
+<div class="test-title">
+2. Librería Supabase
+</div>
+
+<div
+id="detailSupabaseLibrary"
+class="test-detail">
+Comprobando si jsDelivr puede entregar la librería...
+</div>
+
+</div>
+
+</div>
+
+
+<div
+id="testSupabase"
+class="test">
+
+<div
+id="iconSupabase"
+class="icon loading">
+⏳
+</div>
+
+<div class="test-content">
+
+<div class="test-title">
+3. Conexión con Supabase
+</div>
+
+<div
+id="detailSupabase"
+class="test-detail">
+Esperando librería...
+</div>
+
+</div>
+
+</div>
+
+
+<div
+id="testProducts"
+class="test">
+
+<div
+id="iconProducts"
+class="icon loading">
+⏳
+</div>
+
+<div class="test-content">
+
+<div class="test-title">
+4. Consulta de productos
+</div>
+
+<div
+id="detailProducts"
+class="test-detail">
+Esperando conexión...
+</div>
+
+</div>
+
+</div>
+
+
+<div
+id="testPayments"
+class="test">
+
+<div
+id="iconPayments"
+class="icon loading">
+⏳
+</div>
+
+<div class="test-content">
+
+<div class="test-title">
+5. Métodos de pago
+</div>
+
+<div
+id="detailPayments"
+class="test-detail">
+Esperando conexión...
+</div>
+
+</div>
+
+</div>
+
+
+<div
+id="testCustomers"
+class="test">
+
+<div class="icon loading">
+⏳
+</div>
+
+<div class="test-content">
+
+<div class="test-title">
+6. Clientes
+</div>
+
+<div
+id="detailCustomers"
+class="test-detail">
+Esperando conexión...
+</div>
+
+</div>
+
+</div>
+
+
+<div
+id="finalStatus"
+class="status-final">
+</div>
+
+
+<div class="diagnostic-buttons">
+
+<button
+type="button"
+id="retryDiagnostic"
+class="diagnostic-button retry">
+
+🔄 Repetir diagnóstico
+
+</button>
+
+</div>
+
+
+<div class="connection-info">
+
+<strong>Información del dispositivo</strong><br>
+
+Navegador:
+<span id="browserInfo">
+detectando...
+</span>
+
+<br>
+
+Conexión:
+<span id="connectionInfo">
+detectando...
+</span>
+
+<br>
+
+URL:
+<span id="urlInfo">
+detectando...
+</span>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     POS
+========================= -->
+
+<div
+id="posContent"
+class="hidden">
+
+<div id="status" class="status"></div>
 
 <div class="businesses">
 
@@ -543,7 +891,6 @@ data-business="SpicyRoll">
 
 </div>
 
-<!-- NAVEGACIÓN -->
 
 <div class="navigation">
 
@@ -594,11 +941,8 @@ id="dashboardButton">
 
 </div>
 
-<!-- POS -->
 
 <div class="layout">
-
-<!-- PRODUCTOS -->
 
 <div class="card">
 
@@ -606,7 +950,9 @@ id="dashboardButton">
 Productos
 </h2>
 
-<div id="products" class="products">
+<div
+id="products"
+class="products">
 
 <div class="loading">
 Cargando productos...
@@ -616,7 +962,6 @@ Cargando productos...
 
 </div>
 
-<!-- CARRITO -->
 
 <div class="card">
 
@@ -632,6 +977,7 @@ El carrito está vacío
 
 </div>
 
+
 <div class="total">
 
 <span>
@@ -644,13 +990,11 @@ $0.00
 
 </div>
 
-<!-- CLIENTE -->
 
 <div class="customer-title">
-
 👤 Cliente
-
 </div>
+
 
 <div class="customer-box">
 
@@ -675,16 +1019,19 @@ class="add-client">
 
 </div>
 
+
 <div
 id="customerResults"
 class="customer-results">
 </div>
+
 
 <div
 id="selectedCustomer"
 class="selected-customer"
 style="display:none">
 </div>
+
 
 <div
 id="generalCustomer"
@@ -696,15 +1043,15 @@ class="general-customer">
 
 </div>
 
-<!-- PAGO -->
 
 <div class="payment-title">
-
 Método de pago
-
 </div>
 
-<div id="payments" class="payments">
+
+<div
+id="payments"
+class="payments">
 
 <div class="empty">
 Cargando métodos de pago...
@@ -712,7 +1059,6 @@ Cargando métodos de pago...
 
 </div>
 
-<!-- BOTONES -->
 
 <button
 type="button"
@@ -722,6 +1068,7 @@ class="charge">
 💵 COBRAR
 
 </button>
+
 
 <button
 type="button"
@@ -738,11 +1085,18 @@ class="account">
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</div>
+
+
+<script
+src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
+
 
 <script>
 
 "use strict";
+
 
 /* =========================================
    SUPABASE
@@ -754,11 +1108,6 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
-const supabaseClient =
-window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
 
 /* =========================================
    NEGOCIOS
@@ -774,9 +1123,12 @@ const BUSINESS_IDS = {
 
 };
 
+
 /* =========================================
    ESTADO
 ========================================= */
+
+let supabaseClient = null;
 
 let currentBusiness =
 "BakeQuiri";
@@ -795,21 +1147,529 @@ null;
 let selectedCustomerId =
 null;
 
+
 /* =========================================
-   UTILIDADES
+   DIAGNÓSTICO
+========================================= */
+
+function setTest(
+  iconId,
+  detailId,
+  state,
+  detail
+){
+
+  const icon =
+    document.getElementById(
+      iconId
+    );
+
+  const detail =
+    document.getElementById(
+      detailId
+    );
+
+
+  icon.className =
+    "icon " + state;
+
+
+  if(state === "ok"){
+
+    icon.textContent =
+      "✓";
+
+  }
+  else if(state === "error"){
+
+    icon.textContent =
+      "✕";
+
+  }
+  else{
+
+    icon.textContent =
+      "⏳";
+
+  }
+
+
+  detail.textContent =
+    detail;
+
+
+  detail.className =
+    "test-detail " +
+    (
+      state === "error"
+      ? "error-text"
+      : state === "ok"
+      ? "ok-text"
+      : ""
+    );
+
+}
+
+
+function setFinalStatus(
+  type,
+  message
+){
+
+  const element =
+    document.getElementById(
+      "finalStatus"
+    );
+
+  element.className =
+    "status-final visible " +
+    type;
+
+  element.textContent =
+    message;
+
+}
+
+
+/* =========================================
+   INFORMACIÓN DEL DISPOSITIVO
+========================================= */
+
+function loadDeviceInfo(){
+
+  document.getElementById(
+    "browserInfo"
+  ).textContent =
+    navigator.userAgent;
+
+
+  let connection =
+    "No disponible";
+
+
+  if(
+    navigator.connection
+  ){
+
+    connection =
+      (
+        navigator.connection.effectiveType ||
+        "desconocido"
+      );
+
+
+    if(
+      navigator.connection.type
+    ){
+
+      connection +=
+        " · " +
+        navigator.connection.type;
+
+    }
+
+  }
+
+
+  document.getElementById(
+    "connectionInfo"
+  ).textContent =
+    connection;
+
+
+  document.getElementById(
+    "urlInfo"
+  ).textContent =
+    window.location.href;
+
+}
+
+
+/* =========================================
+   DIAGNÓSTICO PRINCIPAL
+========================================= */
+
+async function runDiagnostic(){
+
+  const retry =
+    document.getElementById(
+      "retryDiagnostic"
+    );
+
+
+  retry.disabled =
+    true;
+
+
+  document.getElementById(
+    "posContent"
+  ).classList.add(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "finalStatus"
+  ).className =
+    "status-final";
+
+
+  loadDeviceInfo();
+
+
+  /* 1 */
+
+  setTest(
+    "iconJavascript",
+    "detailJavascript",
+    "ok",
+    "JavaScript está funcionando correctamente."
+  );
+
+
+  /* 2 */
+
+  if(
+    typeof window.supabase ===
+    "undefined"
+  ){
+
+    setTest(
+      "iconSupabaseLibrary",
+      "detailSupabaseLibrary",
+      "error",
+      "La librería de Supabase NO se pudo cargar desde jsDelivr."
+    );
+
+
+    setTest(
+      "iconSupabase",
+      "detailSupabase",
+      "error",
+      "No se puede crear la conexión porque la librería no está disponible."
+    );
+
+
+    setTest(
+      "iconProducts",
+      "detailProducts",
+      "error",
+      "No se puede consultar products."
+    );
+
+
+    setTest(
+      "iconPayments",
+      "detailPayments",
+      "error",
+      "No se puede consultar payment_methods."
+    );
+
+
+    setFinalStatus(
+      "error",
+      "❌ El problema está antes de Supabase. La librería externa no está cargando. Esto apunta a una restricción de red, DNS, contenido bloqueado o conexión móvil."
+    );
+
+
+    retry.disabled =
+      false;
+
+    return;
+
+  }
+
+
+  setTest(
+    "iconSupabaseLibrary",
+    "detailSupabaseLibrary",
+    "ok",
+    "La librería de Supabase cargó correctamente desde jsDelivr."
+  );
+
+
+  /* 3 */
+
+  try{
+
+    supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+      );
+
+
+    const response =
+      await fetch(
+        SUPABASE_URL +
+        "/rest/v1/",
+        {
+          method:"GET",
+          headers:{
+            "apikey":
+              SUPABASE_PUBLISHABLE_KEY
+          }
+        }
+      );
+
+
+    if(
+      !response.ok
+    ){
+
+      throw new Error(
+        "HTTP " +
+        response.status +
+        " · " +
+        response.statusText
+      );
+
+    }
+
+
+    setTest(
+      "iconSupabase",
+      "detailSupabase",
+      "ok",
+      "Supabase respondió correctamente. HTTP " +
+      response.status
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "Diagnóstico Supabase:",
+      error
+    );
+
+
+    setTest(
+      "iconSupabase",
+      "detailSupabase",
+      "error",
+      "No se pudo conectar con Supabase: " +
+      (
+        error.message ||
+        error
+      )
+    );
+
+
+    setFinalStatus(
+      "error",
+      "❌ El navegador tiene problemas para comunicarse con Supabase. Si estás usando datos móviles, este resultado es especialmente importante."
+    );
+
+
+    retry.disabled =
+      false;
+
+    return;
+
+  }
+
+
+  /* 4 PRODUCTOS */
+
+  try{
+
+    const result =
+      await supabaseClient
+        .from("products")
+        .select("id")
+        .limit(1);
+
+
+    if(result.error)
+      throw result.error;
+
+
+    setTest(
+      "iconProducts",
+      "detailProducts",
+      "ok",
+      "La tabla products respondió correctamente."
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "Diagnóstico products:",
+      error
+    );
+
+
+    setTest(
+      "iconProducts",
+      "detailProducts",
+      "error",
+      "Error al consultar products: " +
+      (
+        error.message ||
+        error
+      )
+    );
+
+  }
+
+
+  /* 5 PAYMENT METHODS */
+
+  try{
+
+    const result =
+      await supabaseClient
+        .from("payment_methods")
+        .select("id")
+        .limit(1);
+
+
+    if(result.error)
+      throw result.error;
+
+
+    setTest(
+      "iconPayments",
+      "detailPayments",
+      "ok",
+      "La tabla payment_methods respondió correctamente."
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "Diagnóstico payment_methods:",
+      error
+    );
+
+
+    setTest(
+      "iconPayments",
+      "detailPayments",
+      "error",
+      "Error al consultar payment_methods: " +
+      (
+        error.message ||
+        error
+      )
+    );
+
+  }
+
+
+  /* 6 CUSTOMERS */
+
+  try{
+
+    const result =
+      await supabaseClient
+        .from("customers")
+        .select("id")
+        .limit(1);
+
+
+    if(result.error)
+      throw result.error;
+
+
+    setTest(
+      "iconCustomers",
+      "detailCustomers",
+      "ok",
+      "La tabla customers respondió correctamente."
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "Diagnóstico customers:",
+      error
+    );
+
+
+    setTest(
+      "iconCustomers",
+      "detailCustomers",
+      "error",
+      "Error al consultar customers: " +
+      (
+        error.message ||
+        error
+      )
+    );
+
+  }
+
+
+  const errorTests =
+    document.querySelectorAll(
+      ".icon.error"
+    );
+
+
+  if(
+    errorTests.length === 0
+  ){
+
+    setFinalStatus(
+      "success",
+      "✅ Todas las pruebas de conexión fueron exitosas. La red móvil puede comunicarse con el POS."
+    );
+
+
+    await loadBusinessData();
+
+
+    document.getElementById(
+      "posContent"
+    ).classList.remove(
+      "hidden"
+    );
+
+  }
+
+  else{
+
+    setFinalStatus(
+      "warning",
+      "⚠️ Supabase es accesible, pero una o más consultas presentan errores. Revisa el detalle de cada prueba."
+    );
+
+  }
+
+
+  retry.disabled =
+    false;
+
+}
+
+
+/* =========================================
+   UTILIDADES POS
 ========================================= */
 
 const $ =
 id =>
 document.getElementById(id);
 
+
 function money(value){
 
   return "$" +
-  Number(value || 0)
-    .toFixed(2);
+    Number(
+      value || 0
+    ).toFixed(2);
 
 }
+
 
 function escapeHTML(value){
 
@@ -824,169 +1684,172 @@ function escapeHTML(value){
 
 }
 
+
 function showStatus(
   message,
   type="error"
 ){
 
   const element =
-  $("status");
+    $("status");
 
   element.textContent =
-  message;
+    message;
 
   element.className =
-  "status " + type;
+    "status " +
+    type;
 
 }
+
 
 function clearStatus(){
 
   $("status").textContent =
-  "";
+    "";
 
   $("status").className =
-  "status";
+    "status";
 
 }
 
+
 /* =========================================
-   CARGAR DATOS
+   CARGAR DATOS DEL NEGOCIO
 ========================================= */
 
 async function loadBusinessData(){
 
+  if(!supabaseClient)
+    return;
+
+
   clearStatus();
 
+
   $("products").innerHTML =
-  '<div class="empty">' +
-  'Cargando productos...' +
-  '</div>';
+    '<div class="empty">Cargando productos...</div>';
+
 
   $("payments").innerHTML =
-  '<div class="empty">' +
-  'Cargando métodos de pago...' +
-  '</div>';
+    '<div class="empty">Cargando métodos de pago...</div>';
+
 
   const businessId =
-  BUSINESS_IDS[currentBusiness];
+    BUSINESS_IDS[
+      currentBusiness
+    ];
+
 
   try{
 
     const [
 
       productsResult,
-
       paymentsResult,
-
       customersResult
 
     ] = await Promise.all([
 
       supabaseClient
-
         .from("products")
-
         .select(
           "id,name,price,cost,stock,active"
         )
-
         .eq(
           "business_id",
           businessId
         )
-
         .eq(
           "active",
           true
         )
-
         .order(
           "name"
         ),
 
       supabaseClient
-
         .from("payment_methods")
-
         .select(
           "id,name,provider,active"
         )
-
         .eq(
           "business_id",
           businessId
         )
-
         .eq(
           "active",
           true
         )
-
         .order(
           "name"
         ),
 
       supabaseClient
-
         .from("customers")
-
         .select(
           "id,business_id,name,phone,notes"
         )
-
         .in(
           "business_id",
-          Object.values(BUSINESS_IDS)
+          Object.values(
+            BUSINESS_IDS
+          )
         )
-
         .order(
           "name"
         )
 
     ]);
 
+
     if(
       productsResult.error
     ){
 
       throw new Error(
-        "No pude cargar los productos: " +
+        "No pude cargar productos: " +
         productsResult.error.message
       );
 
     }
+
 
     if(
       paymentsResult.error
     ){
 
       throw new Error(
-        "No pude cargar los métodos de pago: " +
+        "No pude cargar métodos de pago: " +
         paymentsResult.error.message
       );
 
     }
+
 
     if(
       customersResult.error
     ){
 
       throw new Error(
-        "No pude cargar los clientes compartidos: " +
+        "No pude cargar clientes: " +
         customersResult.error.message
       );
 
     }
 
+
     products =
       productsResult.data || [];
+
 
     payments =
       paymentsResult.data || [];
 
+
     customers =
       customersResult.data || [];
+
 
     if(
       !payments.some(
@@ -1002,6 +1865,7 @@ async function loadBusinessData(){
 
     }
 
+
     const selected =
       customers.find(
         customer =>
@@ -1009,12 +1873,14 @@ async function loadBusinessData(){
           selectedCustomerId
       );
 
+
     if(!selected){
 
       selectedCustomerId =
         null;
 
     }
+
 
     renderProducts();
 
@@ -1032,20 +1898,24 @@ async function loadBusinessData(){
       error
     );
 
+
     $("products").innerHTML =
-    "";
+      '<div class="empty">No se pudieron cargar los productos.</div>';
+
 
     $("payments").innerHTML =
-    "";
+      '<div class="empty">No se pudieron cargar los métodos.</div>';
+
 
     showStatus(
       error.message ||
-      "No se pudo conectar con Supabase."
+      "No se pudo cargar el POS."
     );
 
   }
 
 }
+
 
 /* =========================================
    PRODUCTOS
@@ -1054,50 +1924,56 @@ async function loadBusinessData(){
 function renderProducts(){
 
   const container =
-  $("products");
+    $("products");
+
 
   container.innerHTML =
-  "";
+    "";
 
-  if(
-    !products.length
-  ){
+
+  if(!products.length){
 
     container.innerHTML =
-    '<div class="empty">' +
-    'No hay productos activos para este negocio.' +
-    '</div>';
+      '<div class="empty">' +
+      'No hay productos activos para este negocio.' +
+      '</div>';
 
     return;
 
   }
 
+
   products.forEach(
     product => {
 
       const stock =
-      Number(
-        product.stock || 0
-      );
+        Number(
+          product.stock || 0
+        );
+
 
       const button =
-      document.createElement(
-        "button"
-      );
+        document.createElement(
+          "button"
+        );
+
 
       button.type =
-      "button";
+        "button";
+
 
       button.className =
-      "product" +
-      (
-        stock <= 0
-        ? " disabled"
-        : ""
-      );
+        "product" +
+        (
+          stock <= 0
+          ? " disabled"
+          : ""
+        );
+
 
       button.disabled =
-      stock <= 0;
+        stock <= 0;
+
 
       button.innerHTML =
 
@@ -1125,11 +2001,13 @@ function renderProducts(){
 
         '</div>';
 
+
       button.addEventListener(
         "click",
         () =>
           addToCart(product)
       );
+
 
       container.appendChild(
         button
@@ -1140,56 +2018,62 @@ function renderProducts(){
 
 }
 
+
 /* =========================================
-   MÉTODOS DE PAGO
+   PAGOS
 ========================================= */
 
 function renderPayments(){
 
   const container =
-  $("payments");
+    $("payments");
+
 
   container.innerHTML =
-  "";
+    "";
 
-  if(
-    !payments.length
-  ){
+
+  if(!payments.length){
 
     container.innerHTML =
-    '<div class="empty">' +
-    'No hay métodos de pago activos.' +
-    '</div>';
+      '<div class="empty">' +
+      'No hay métodos de pago activos.' +
+      '</div>';
 
     return;
 
   }
 
+
   payments.forEach(
     payment => {
 
       const button =
-      document.createElement(
-        "button"
-      );
+        document.createElement(
+          "button"
+        );
+
 
       button.type =
-      "button";
+        "button";
+
 
       button.className =
-      "payment" +
+        "payment" +
 
-      (
-        payment.id ===
-        selectedPaymentId
+        (
+          payment.id ===
+          selectedPaymentId
 
-        ? " active"
+          ? " active"
 
-        : ""
-      );
+          : ""
+        );
+
 
       button.textContent =
-      payment.name;
+        payment.name;
+
 
       button.addEventListener(
         "click",
@@ -1203,6 +2087,7 @@ function renderPayments(){
         }
       );
 
+
       container.appendChild(
         button
       );
@@ -1211,6 +2096,7 @@ function renderPayments(){
   );
 
 }
+
 
 /* =========================================
    CARRITO
@@ -1221,16 +2107,18 @@ function addToCart(
 ){
 
   const stock =
-  Number(
-    product.stock || 0
-  );
+    Number(
+      product.stock || 0
+    );
+
 
   const item =
-  cart.find(
-    i =>
-      i.id ===
-      product.id
-  );
+    cart.find(
+      i =>
+        i.id ===
+        product.id
+    );
+
 
   if(item){
 
@@ -1267,9 +2155,11 @@ function addToCart(
 
   }
 
+
   renderCart();
 
 }
+
 
 function changeQuantity(
   id,
@@ -1277,32 +2167,36 @@ function changeQuantity(
 ){
 
   const item =
-  cart.find(
-    i =>
-      i.id ===
-      id
-  );
+    cart.find(
+      i =>
+        i.id ===
+        id
+    );
 
-  if(!item){
+
+  if(!item)
     return;
-  }
+
 
   const product =
-  products.find(
-    p =>
-      p.id ===
-      id
-  );
+    products.find(
+      p =>
+        p.id ===
+        id
+    );
+
 
   const max =
-  Number(
-    product?.stock ??
-    item.stock ??
-    0
-  );
+    Number(
+      product?.stock ??
+      item.stock ??
+      0
+    );
+
 
   item.quantity +=
-  amount;
+    amount;
+
 
   if(
     item.quantity >
@@ -1313,6 +2207,7 @@ function changeQuantity(
       max;
 
   }
+
 
   if(
     item.quantity <= 0
@@ -1326,9 +2221,11 @@ function changeQuantity(
 
   }
 
+
   renderCart();
 
 }
+
 
 function getCartTotal(){
 
@@ -1340,8 +2237,12 @@ function getCartTotal(){
 
       sum +
       (
-        Number(item.price) *
-        Number(item.quantity)
+        Number(
+          item.price
+        ) *
+        Number(
+          item.quantity
+        )
       ),
 
     0
@@ -1350,49 +2251,61 @@ function getCartTotal(){
 
 }
 
+
 function renderCart(){
 
   const container =
-  $("cart");
+    $("cart");
+
 
   container.innerHTML =
-  "";
+    "";
 
-  if(
-    !cart.length
-  ){
+
+  if(!cart.length){
 
     container.innerHTML =
-    '<div class="empty">' +
-    'El carrito está vacío' +
-    '</div>';
+      '<div class="empty">' +
+      'El carrito está vacío' +
+      '</div>';
+
 
     $("total").textContent =
-    "$0.00";
+      "$0.00";
+
 
     return;
 
   }
 
+
   cart.forEach(
     item => {
 
       const subtotal =
-      Number(item.price) *
-      Number(item.quantity);
+        Number(
+          item.price
+        ) *
+        Number(
+          item.quantity
+        );
+
 
       const row =
-      document.createElement(
-        "div"
-      );
+        document.createElement(
+          "div"
+        );
+
 
       row.className =
-      "cart-item";
+        "cart-item";
+
 
       const info =
-      document.createElement(
-        "div"
-      );
+        document.createElement(
+          "div"
+        );
+
 
       info.innerHTML =
 
@@ -1412,24 +2325,30 @@ function renderCart(){
 
         ' c/u</div>';
 
+
       const controls =
-      document.createElement(
-        "div"
-      );
+        document.createElement(
+          "div"
+        );
+
 
       controls.className =
-      "quantity";
+        "quantity";
+
 
       const minus =
-      document.createElement(
-        "button"
-      );
+        document.createElement(
+          "button"
+        );
+
 
       minus.type =
-      "button";
+        "button";
+
 
       minus.textContent =
-      "−";
+        "−";
+
 
       minus.addEventListener(
         "click",
@@ -1440,24 +2359,30 @@ function renderCart(){
           )
       );
 
+
       const quantity =
-      document.createElement(
-        "span"
-      );
+        document.createElement(
+          "span"
+        );
+
 
       quantity.textContent =
-      item.quantity;
+        item.quantity;
+
 
       const plus =
-      document.createElement(
-        "button"
-      );
+        document.createElement(
+          "button"
+        );
+
 
       plus.type =
-      "button";
+        "button";
+
 
       plus.textContent =
-      "+";
+        "+";
+
 
       plus.addEventListener(
         "click",
@@ -1468,30 +2393,36 @@ function renderCart(){
           )
       );
 
+
       controls.append(
         minus,
         quantity,
         plus
       );
 
+
       info.appendChild(
         controls
       );
 
+
       const subtotalElement =
-      document.createElement(
-        "strong"
-      );
+        document.createElement(
+          "strong"
+        );
+
 
       subtotalElement.textContent =
-      money(
-        subtotal
-      );
+        money(
+          subtotal
+        );
+
 
       row.append(
         info,
         subtotalElement
       );
+
 
       container.appendChild(
         row
@@ -1500,58 +2431,71 @@ function renderCart(){
     }
   );
 
+
   $("total").textContent =
-  money(
-    getCartTotal()
-  );
+    money(
+      getCartTotal()
+    );
 
 }
 
+
 /* =========================================
-   CLIENTE SELECCIONADO
+   CLIENTE
 ========================================= */
 
 function renderSelectedCustomer(){
 
   const selected =
-  customers.find(
-    customer =>
-      customer.id ===
-      selectedCustomerId
-  );
+    customers.find(
+      customer =>
+        customer.id ===
+        selectedCustomerId
+    );
+
 
   const selectedElement =
-  $("selectedCustomer");
+    $("selectedCustomer");
+
 
   const general =
-  $("generalCustomer");
+    $("generalCustomer");
+
 
   if(!selected){
 
     selectedCustomerId =
       null;
 
+
     selectedElement.style.display =
       "none";
+
 
     selectedElement.innerHTML =
       "";
 
+
     general.style.display =
       "block";
 
+
     general.innerHTML =
       "👤 Consumidor general";
+
 
     return;
 
   }
 
+
   general.style.display =
     "none";
 
+
   selectedElement.style.display =
     "block";
+
 
   selectedElement.innerHTML =
 
@@ -1581,29 +2525,31 @@ function renderSelectedCustomer(){
     "Quitar" +
     "</button>";
 
+
   $("clearCustomer")
-  .addEventListener(
-    "click",
-    () => {
+    .addEventListener(
+      "click",
+      () => {
 
-      selectedCustomerId =
-        null;
+        selectedCustomerId =
+          null;
 
-      $("customerSearch").value =
-        "";
+        $("customerSearch").value =
+          "";
 
-      $("customerResults").innerHTML =
-        "";
+        $("customerResults").innerHTML =
+          "";
 
-      $("customerResults").style.display =
-        "none";
+        $("customerResults").style.display =
+          "none";
 
-      renderSelectedCustomer();
+        renderSelectedCustomer();
 
-    }
-  );
+      }
+    );
 
 }
+
 
 /* =========================================
    BUSCAR CLIENTES
@@ -1616,12 +2562,14 @@ function renderCustomerResults(
   const container =
     $("customerResults");
 
+
   const search =
     String(
       query || ""
     )
     .trim()
     .toLowerCase();
+
 
   if(!search){
 
@@ -1635,6 +2583,7 @@ function renderCustomerResults(
 
   }
 
+
   const filtered =
     customers.filter(
       customer => {
@@ -1645,17 +2594,20 @@ function renderCustomerResults(
           )
           .toLowerCase();
 
+
         const phone =
           String(
             customer.phone || ""
           )
           .toLowerCase();
 
+
         const notes =
           String(
             customer.notes || ""
           )
           .toLowerCase();
+
 
         return (
           name.includes(search) ||
@@ -1666,37 +2618,46 @@ function renderCustomerResults(
       }
     );
 
+
   container.innerHTML =
     "";
 
-  if(
-    !filtered.length
-  ){
+
+  if(!filtered.length){
 
     const empty =
       document.createElement(
         "div"
       );
 
+
     empty.className =
       "empty";
 
+
     empty.textContent =
       "No encontramos ese cliente.";
+
 
     container.appendChild(
       empty
     );
 
+
     container.style.display =
       "block";
+
 
     return;
 
   }
 
+
   filtered
-    .slice(0,10)
+    .slice(
+      0,
+      10
+    )
     .forEach(
       customer => {
 
@@ -1705,11 +2666,14 @@ function renderCustomerResults(
             "button"
           );
 
+
         button.type =
           "button";
 
+
         button.className =
           "customer-result";
+
 
         button.innerHTML =
 
@@ -1734,6 +2698,7 @@ function renderCustomerResults(
             : ""
           );
 
+
         button.addEventListener(
           "click",
           () => {
@@ -1741,19 +2706,24 @@ function renderCustomerResults(
             selectedCustomerId =
               customer.id;
 
+
             $("customerSearch").value =
               customer.name || "";
+
 
             container.innerHTML =
               "";
 
+
             container.style.display =
               "none";
+
 
             renderSelectedCustomer();
 
           }
         );
+
 
         container.appendChild(
           button
@@ -1762,90 +2732,89 @@ function renderCustomerResults(
       }
     );
 
+
   container.style.display =
     "block";
 
 }
 
+
 /* =========================================
-   BUSCADOR
+   BUSCADOR CLIENTES
 ========================================= */
 
 $("customerSearch")
-.addEventListener(
-  "input",
-  event => {
-
-    renderCustomerResults(
-      event.target.value
-    );
-
-  }
-);
-
-$("customerSearch")
-.addEventListener(
-  "focus",
-  event => {
-
-    const value =
-      event.target.value.trim();
-
-    if(value){
+  .addEventListener(
+    "input",
+    event => {
 
       renderCustomerResults(
-        value
+        event.target.value
       );
 
     }
+  );
 
-  }
-);
 
-/* =========================================
-   CONSUMIDOR GENERAL
-========================================= */
+$("customerSearch")
+  .addEventListener(
+    "focus",
+    event => {
+
+      const value =
+        event.target.value.trim();
+
+
+      if(value){
+
+        renderCustomerResults(
+          value
+        );
+
+      }
+
+    }
+  );
+
 
 $("generalCustomer")
-.addEventListener(
-  "click",
-  () => {
+  .addEventListener(
+    "click",
+    () => {
 
-    selectedCustomerId =
-      null;
+      selectedCustomerId =
+        null;
 
-    $("customerSearch").value =
-      "";
 
-    $("customerResults").innerHTML =
-      "";
+      $("customerSearch").value =
+        "";
 
-    $("customerResults").style.display =
-      "none";
 
-    renderSelectedCustomer();
+      $("customerResults").innerHTML =
+        "";
 
-  }
-);
 
-/* =========================================
-   NUEVO CLIENTE
-========================================= */
+      $("customerResults").style.display =
+        "none";
+
+
+      renderSelectedCustomer();
+
+    }
+  );
+
 
 $("addClientButton")
-.addEventListener(
-  "click",
-  () => {
+  .addEventListener(
+    "click",
+    () => {
 
-    window.location.href =
-      "clientes.html";
+      window.location.href =
+        "clientes.html";
 
-  }
-);
+    }
+  );
 
-/* =========================================
-   CERRAR RESULTADOS
-========================================= */
 
 document.addEventListener(
   "click",
@@ -1855,6 +2824,7 @@ document.addEventListener(
       document.querySelector(
         ".customer-box"
       );
+
 
     if(
       box &&
@@ -1872,6 +2842,7 @@ document.addEventListener(
   }
 );
 
+
 /* =========================================
    CAMBIAR NEGOCIO
 ========================================= */
@@ -1884,32 +2855,37 @@ async function changeBusiness(
   if(
     name ===
     currentBusiness
-  ){
-
+  )
     return;
 
-  }
 
   currentBusiness =
     name;
 
+
   cart =
     [];
+
 
   selectedPaymentId =
     null;
 
+
   selectedCustomerId =
     null;
+
 
   $("customerSearch").value =
     "";
 
+
   $("customerResults").innerHTML =
     "";
 
+
   $("customerResults").style.display =
     "none";
+
 
   document
     .querySelectorAll(
@@ -1922,13 +2898,16 @@ async function changeBusiness(
         )
     );
 
+
   button.classList.add(
     "active"
   );
 
+
   await loadBusinessData();
 
 }
+
 
 /* =========================================
    REGISTRAR VENTA
@@ -1940,9 +2919,8 @@ async function registerSale(
 
   clearStatus();
 
-  if(
-    !cart.length
-  ){
+
+  if(!cart.length){
 
     showStatus(
       "Agrega al menos un producto."
@@ -1951,6 +2929,7 @@ async function registerSale(
     return;
 
   }
+
 
   if(
     !isPending &&
@@ -1965,6 +2944,7 @@ async function registerSale(
 
   }
 
+
   if(
     isPending &&
     !selectedCustomerId
@@ -1978,21 +2958,26 @@ async function registerSale(
 
   }
 
+
   const button =
     isPending
     ? $("accountButton")
     : $("chargeButton");
 
+
   const originalText =
     button.textContent;
 
+
   button.disabled =
     true;
+
 
   button.textContent =
     isPending
     ? "GUARDANDO..."
     : "REGISTRANDO...";
+
 
   try{
 
@@ -2027,6 +3012,7 @@ async function registerSale(
         })
       );
 
+
     const total =
       items.reduce(
         (
@@ -2039,6 +3025,7 @@ async function registerSale(
 
         0
       );
+
 
     const result =
       await supabaseClient
@@ -2069,6 +3056,7 @@ async function registerSale(
           }
         );
 
+
     if(
       result.error
     ){
@@ -2077,12 +3065,14 @@ async function registerSale(
 
     }
 
+
     const customer =
       customers.find(
         c =>
           c.id ===
           selectedCustomerId
       );
+
 
     const paymentName =
       payments.find(
@@ -2092,7 +3082,9 @@ async function registerSale(
       )?.name ||
       "Pago";
 
+
     let message;
+
 
     if(isPending){
 
@@ -2138,39 +3130,43 @@ async function registerSale(
 
     }
 
+
     alert(
       message
     );
 
+
     cart =
       [];
+
 
     selectedCustomerId =
       null;
 
+
     $("customerSearch").value =
       "";
+
 
     $("customerResults").innerHTML =
       "";
 
+
     $("customerResults").style.display =
       "none";
 
+
     renderSelectedCustomer();
 
+
     await loadBusinessData();
+
 
     showStatus(
       isPending
       ? "Cuenta guardada correctamente."
       : "Venta guardada correctamente.",
       "ok"
-    );
-
-    console.log(
-      "register_sale response:",
-      result.data
     );
 
   }
@@ -2180,6 +3176,7 @@ async function registerSale(
     console.error(
       error
     );
+
 
     showStatus(
       "No se pudo registrar la operación: " +
@@ -2196,6 +3193,7 @@ async function registerSale(
     button.disabled =
       false;
 
+
     button.textContent =
       originalText;
 
@@ -2203,121 +3201,117 @@ async function registerSale(
 
 }
 
+
 /* =========================================
-   COBRAR
+   BOTONES COBRAR
 ========================================= */
 
 $("chargeButton")
-.addEventListener(
-  "click",
-  () =>
-    registerSale(
-      false
-    )
-);
+  .addEventListener(
+    "click",
+    () =>
+      registerSale(
+        false
+      )
+  );
 
-/* =========================================
-   DEJAR A CUENTA
-========================================= */
 
 $("accountButton")
-.addEventListener(
-  "click",
-  () =>
-    registerSale(
-      true
-    )
-);
+  .addEventListener(
+    "click",
+    () =>
+      registerSale(
+        true
+      )
+  );
+
 
 /* =========================================
    NAVEGACIÓN
 ========================================= */
 
 $("accountsButton")
-.addEventListener(
-  "click",
-  () => {
+  .addEventListener(
+    "click",
+    () => {
 
-    window.location.href =
-      "cuentas.html" +
-      "?business=" +
-      encodeURIComponent(
-        currentBusiness
-      );
+      window.location.href =
+        "cuentas.html" +
+        "?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
 
-  }
-);
+    }
+  );
+
 
 $("clientsButton")
-.addEventListener(
-  "click",
-  () => {
+  .addEventListener(
+    "click",
+    () => {
 
-    window.location.href =
-      "clientes.html" +
-      "?business=" +
-      encodeURIComponent(
-        currentBusiness
-      );
+      window.location.href =
+        "clientes.html" +
+        "?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
 
-  }
-);
+    }
+  );
+
 
 $("historyButton")
-.addEventListener(
-  "click",
-  () => {
+  .addEventListener(
+    "click",
+    () => {
 
-    window.location.href =
-      "historial.html" +
-      "?business=" +
-      encodeURIComponent(
-        currentBusiness
-      );
+      window.location.href =
+        "historial.html" +
+        "?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
 
-  }
-);
+    }
+  );
 
-/* =========================================
-   INVENTARIO
-========================================= */
 
 $("inventoryButton")
-.addEventListener(
-  "click",
-  () => {
+  .addEventListener(
+    "click",
+    () => {
 
-    window.location.href =
-      "inventario.html" +
-      "?business=" +
-      encodeURIComponent(
-        currentBusiness
-      );
+      window.location.href =
+        "inventario.html" +
+        "?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
 
-  }
-);
+    }
+  );
 
-/* =========================================
-   DASHBOARD
-========================================= */
 
 $("dashboardButton")
-.addEventListener(
-  "click",
-  () => {
+  .addEventListener(
+    "click",
+    () => {
 
-    window.location.href =
-      "dashboard.html" +
-      "?business=" +
-      encodeURIComponent(
-        currentBusiness
-      );
+      window.location.href =
+        "dashboard.html" +
+        "?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
 
-  }
-);
+    }
+  );
+
 
 /* =========================================
-   NEGOCIOS
+   CAMBIO DE NEGOCIO
 ========================================= */
 
 document
@@ -2341,11 +3335,23 @@ document
     }
   );
 
+
 /* =========================================
-   INICIAR
+   REPETIR DIAGNÓSTICO
 ========================================= */
 
-loadBusinessData();
+$("retryDiagnostic")
+  .addEventListener(
+    "click",
+    runDiagnostic
+  );
+
+
+/* =========================================
+   INICIO
+========================================= */
+
+runDiagnostic();
 
 </script>
 
