@@ -2,174 +2,521 @@
 <html lang="es">
 
 <head>
+
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1.0"
+>
 
-<title>Diagnóstico POS</title>
+<title>Sistema de Ventas POS</title>
 
 <style>
 
 *{
   box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
 
 body{
-  margin:0;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:#f3f4f6;
-  color:#111827;
+  background:#f5f5f5;
+  color:#222;
 }
 
 header{
   background:#111827;
-  color:white;
-  padding:28px 22px;
+  color:#fff;
+  padding:22px 20px;
 }
 
 header h1{
-  margin:0;
-  font-size:30px;
+  font-size:28px;
 }
 
 header p{
-  margin:8px 0 0;
-  font-size:17px;
-  color:#d1d5db;
+  font-size:15px;
+  opacity:.75;
+  margin-top:6px;
 }
 
 .container{
-  max-width:700px;
+  max-width:1100px;
   margin:auto;
   padding:20px;
 }
 
-.card{
-  background:white;
-  border-radius:20px;
-  padding:22px;
-  box-shadow:0 5px 25px rgba(0,0,0,.08);
+.status{
+  margin:0 0 15px;
+  padding:13px 15px;
+  border-radius:10px;
+  font-size:14px;
+  display:none;
+  font-weight:600;
+  white-space:pre-line;
 }
 
-h2{
-  margin-top:0;
-  font-size:25px;
+.status.error{
+  display:block;
+  background:#fee2e2;
+  color:#991b1b;
 }
 
-.subtitle{
-  color:#6b7280;
-  line-height:1.5;
+.status.ok{
+  display:block;
+  background:#dcfce7;
+  color:#166534;
+}
+
+.businesses{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+
+.business-btn,
+.nav-btn{
+  border:none;
+  padding:13px 20px;
+  border-radius:12px;
+  background:#fff;
+  border:2px solid #ddd;
+  font-weight:700;
+  cursor:pointer;
+  font-size:16px;
+}
+
+.business-btn.active{
+  background:#111827;
+  color:#fff;
+  border-color:#111827;
+}
+
+.navigation{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
   margin-bottom:20px;
 }
 
-.test{
-  display:flex;
-  gap:14px;
-  padding:17px 0;
-  border-bottom:1px solid #e5e7eb;
+.nav-btn{
+  color:#2563eb;
 }
 
-.icon{
-  width:34px;
-  height:34px;
-  min-width:34px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#fef3c7;
-  font-size:18px;
+.nav-btn.accounts{
+  background:#fff7ed;
+  border-color:#f59e0b;
+  color:#b45309;
 }
 
-.icon.ok{
-  background:#dcfce7;
+.nav-btn.clients{
+  background:#ecfdf5;
+  border-color:#10b981;
+  color:#047857;
 }
 
-.icon.error{
-  background:#fee2e2;
+.nav-btn.history{
+  background:#f5f3ff;
+  border-color:#7c3aed;
+  color:#6d28d9;
 }
 
-.content{
-  flex:1;
+.nav-btn.inventory{
+  background:#eff6ff;
+  border-color:#2563eb;
+  color:#1d4ed8;
 }
 
-.title{
+.layout{
+  display:grid;
+  grid-template-columns:1fr 390px;
+  gap:20px;
+}
+
+.card{
+  background:#fff;
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 3px 14px rgba(0,0,0,.06);
+}
+
+.card h2{
+  font-size:21px;
+  margin-bottom:16px;
+}
+
+.products{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.product{
+  border:2px solid #ddd;
+  border-radius:14px;
+  padding:18px 14px;
+  cursor:pointer;
+  background:#fff;
+  text-align:left;
+  transition:.15s;
+}
+
+.product:hover{
+  border-color:#2563eb;
+  transform:translateY(-1px);
+}
+
+.product:active{
+  transform:scale(.98);
+}
+
+.product.disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.product-name{
+  font-weight:700;
   font-size:17px;
+  margin-bottom:9px;
+}
+
+.price{
+  font-size:23px;
   font-weight:800;
+  color:#2563eb;
 }
 
-.detail{
-  margin-top:5px;
-  color:#6b7280;
-  line-height:1.45;
-  word-break:break-word;
+.stock{
+  font-size:14px;
+  color:#666;
+  margin-top:7px;
 }
 
-.oktext{
-  color:#166534;
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:13px 0;
+  border-bottom:1px solid #eee;
+  gap:12px;
 }
 
-.errortext{
-  color:#991b1b;
+.cart-name{
   font-weight:700;
 }
 
-button{
+.cart-price{
+  font-size:13px;
+  color:#666;
+  margin-top:4px;
+}
+
+.quantity{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:8px;
+}
+
+.quantity button{
+  width:32px;
+  height:32px;
+  border:none;
+  border-radius:7px;
+  background:#eee;
+  cursor:pointer;
+  font-size:18px;
+}
+
+.quantity button:active{
+  transform:scale(.95);
+}
+
+.total{
+  display:flex;
+  justify-content:space-between;
+  font-size:25px;
+  font-weight:800;
+  margin-top:20px;
+  padding-top:18px;
+  border-top:2px solid #eee;
+}
+
+.payment-title,
+.customer-title{
+  margin-top:20px;
+  margin-bottom:10px;
+  font-weight:800;
+  font-size:17px;
+}
+
+.payments{
+  display:grid;
+  gap:9px;
+}
+
+.payment{
+  padding:14px;
+  border:2px solid #ddd;
+  border-radius:11px;
+  background:#fff;
+  cursor:pointer;
+  text-align:left;
+  font-size:16px;
+  font-weight:700;
+}
+
+.payment.active{
+  background:#111827;
+  color:#fff;
+  border-color:#111827;
+}
+
+/* CLIENTES */
+
+.customer-box{
+  position:relative;
+}
+
+.customer-row{
+  display:flex;
+  gap:8px;
+}
+
+.customer-search{
+  flex:1;
+  padding:13px;
+  border:2px solid #ddd;
+  border-radius:11px;
+  font-size:15px;
+  min-width:0;
+  background:#fff;
+}
+
+.customer-search:focus{
+  outline:none;
+  border-color:#2563eb;
+}
+
+.add-client{
+  border:none;
+  background:#2563eb;
+  color:#fff;
+  padding:0 14px;
+  border-radius:11px;
+  font-weight:800;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.customer-results{
+  margin-top:8px;
+  display:none;
+  border:2px solid #ddd;
+  border-radius:11px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:0 8px 25px rgba(0,0,0,.12);
+  position:absolute;
+  left:0;
+  right:0;
+  z-index:100;
+}
+
+.customer-result{
+  display:block;
   width:100%;
   border:none;
-  border-radius:13px;
-  padding:16px;
-  margin-top:20px;
-  background:#2563eb;
-  color:white;
-  font-size:17px;
-  font-weight:800;
+  border-bottom:1px solid #eee;
+  background:#fff;
+  padding:13px;
+  text-align:left;
+  cursor:pointer;
 }
 
-button:disabled{
-  opacity:.6;
+.customer-result:last-child{
+  border-bottom:none;
 }
 
-.final{
-  margin-top:20px;
-  padding:16px;
-  border-radius:13px;
-  font-weight:800;
-  line-height:1.5;
-  display:none;
+.customer-result:hover{
+  background:#f3f4f6;
 }
 
-.final.show{
+.customer-result strong{
   display:block;
+  font-size:15px;
 }
 
-.final.ok{
-  background:#dcfce7;
-  color:#166534;
+.customer-result small{
+  display:block;
+  color:#6b7280;
+  margin-top:4px;
 }
 
-.final.error{
-  background:#fee2e2;
-  color:#991b1b;
-}
-
-.info{
-  margin-top:20px;
-  padding:16px;
-  background:#f8fafc;
-  border:1px solid #e2e8f0;
-  border-radius:13px;
-  color:#475569;
+.selected-customer{
+  margin-top:8px;
+  padding:12px;
+  border-radius:9px;
+  background:#eff6ff;
+  border:2px solid #bfdbfe;
+  color:#1d4ed8;
   font-size:14px;
-  line-height:1.7;
-  word-break:break-word;
+  font-weight:600;
 }
 
-strong{
-  color:#111827;
+.clear-customer{
+  border:none;
+  background:none;
+  color:#dc2626;
+  font-weight:700;
+  cursor:pointer;
+  margin-left:8px;
+  padding:0;
+}
+
+.general-customer{
+  margin-top:8px;
+  padding:13px;
+  border-radius:9px;
+  background:#f3f4f6;
+  color:#555;
+  font-weight:700;
+  cursor:pointer;
+  border:2px solid transparent;
+}
+
+.general-customer:hover{
+  background:#e5e7eb;
+  border-color:#d1d5db;
+}
+
+/* BOTONES */
+
+.charge,
+.account{
+  width:100%;
+  margin-top:15px;
+  padding:16px;
+  border:none;
+  border-radius:12px;
+  color:#fff;
+  font-size:18px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.charge{
+  background:#16a34a;
+}
+
+.account{
+  margin-top:10px;
+  background:#f59e0b;
+}
+
+.charge:disabled,
+.account:disabled{
+  opacity:.6;
+  cursor:wait;
+}
+
+.empty{
+  color:#777;
+  text-align:center;
+  padding:30px 10px;
+}
+
+.loading{
+  opacity:.65;
+  pointer-events:none;
+}
+
+button{
+  -webkit-tap-highlight-color:transparent;
+}
+
+@media(max-width:950px){
+
+  .navigation{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+}
+
+@media(max-width:850px){
+
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .navigation{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .products{
+    grid-template-columns:1fr 1fr;
+  }
+
+}
+
+@media(max-width:500px){
+
+  .container{
+    padding:15px;
+  }
+
+  header h1{
+    font-size:25px;
+  }
+
+  .navigation{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .business-btn{
+    flex:1;
+  }
+
+  .layout{
+    gap:15px;
+  }
+
+  .card{
+    padding:16px;
+  }
+
+  .products{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .product{
+    padding:15px 12px;
+  }
+
+  .product-name{
+    font-size:15px;
+  }
+
+  .price{
+    font-size:20px;
+  }
+
+  .customer-row{
+    flex-direction:column;
+  }
+
+  .add-client{
+    padding:12px;
+  }
+
 }
 
 </style>
+
 </head>
 
 <body>
@@ -178,171 +525,231 @@ strong{
 
 <h1>🧾 Sistema de Ventas POS</h1>
 
-<p>Diagnóstico de conexión</p>
+<p>
+Administración de negocios y ventas
+</p>
 
 </header>
 
 <div class="container">
 
-<div class="card">
+<div id="status" class="status"></div>
 
-<h2>🔧 Prueba de conexión</h2>
+<!-- ================================
+     NEGOCIOS
+================================ -->
 
-<div class="subtitle">
+<div class="businesses">
 
-Esta prueba NO modifica ventas, productos,
-clientes ni ningún otro dato.
-
-Vamos a comprobar directamente la conexión
-desde este teléfono.
-
-</div>
-
-
-<div class="test">
-
-<div id="icon1" class="icon">
-⏳
-</div>
-
-<div class="content">
-
-<div class="title">
-1. JavaScript
-</div>
-
-<div id="detail1" class="detail">
-Comprobando...
-</div>
-
-</div>
-
-</div>
-
-
-<div class="test">
-
-<div id="icon2" class="icon">
-⏳
-</div>
-
-<div class="content">
-
-<div class="title">
-2. Internet
-</div>
-
-<div id="detail2" class="detail">
-Comprobando...
-</div>
-
-</div>
-
-</div>
-
-
-<div class="test">
-
-<div id="icon3" class="icon">
-⏳
-</div>
-
-<div class="content">
-
-<div class="title">
-3. Conexión directa con Supabase
-</div>
-
-<div id="detail3" class="detail">
-Comprobando...
-</div>
-
-</div>
-
-</div>
-
-
-<div class="test">
-
-<div id="icon4" class="icon">
-⏳
-</div>
-
-<div class="content">
-
-<div class="title">
-4. API REST de Supabase
-</div>
-
-<div id="detail4" class="detail">
-Comprobando...
-</div>
-
-</div>
-
-</div>
-
-
-<div class="test">
-
-<div id="icon5" class="icon">
-⏳
-</div>
-
-<div class="content">
-
-<div class="title">
-5. Tipo de conexión
-</div>
-
-<div id="detail5" class="detail">
-Detectando...
-</div>
-
-</div>
-
-</div>
-
-
-<div id="final" class="final"></div>
-
-
-<button id="retry" onclick="diagnostico()">
-🔄 REPETIR DIAGNÓSTICO
+<button
+  type="button"
+  class="business-btn active"
+  data-business="BakeQuiri"
+>
+🧁 BakeQuiri
 </button>
 
+<button
+  type="button"
+  class="business-btn"
+  data-business="SpicyRoll"
+>
+🍣 SpicyRoll
+</button>
 
-<div class="info">
+</div>
 
-<strong>Información del dispositivo</strong>
+<!-- ================================
+     NAVEGACIÓN
+================================ -->
 
-<br>
+<div class="navigation">
 
-Navegador:
-<span id="browser">
-Detectando...
+<button
+  type="button"
+  class="nav-btn accounts"
+  id="accountsButton"
+>
+💰 Cuentas pendientes
+</button>
+
+<button
+  type="button"
+  class="nav-btn clients"
+  id="clientsButton"
+>
+👥 Clientes
+</button>
+
+<button
+  type="button"
+  class="nav-btn history"
+  id="historyButton"
+>
+🧾 Historial
+</button>
+
+<button
+  type="button"
+  class="nav-btn inventory"
+  id="inventoryButton"
+>
+📦 Inventario
+</button>
+
+<button
+  type="button"
+  class="nav-btn"
+  id="dashboardButton"
+>
+📊 Dashboard
+</button>
+
+</div>
+
+<!-- ================================
+     POS
+================================ -->
+
+<div class="layout">
+
+<div class="card">
+
+<h2>
+Productos
+</h2>
+
+<div
+  id="products"
+  class="products"
+>
+
+<div class="loading">
+Cargando productos...
+</div>
+
+</div>
+
+</div>
+
+<!-- ================================
+     CARRITO
+================================ -->
+
+<div class="card">
+
+<h2>
+🛒 Carrito
+</h2>
+
+<div id="cart">
+
+<div class="empty">
+El carrito está vacío
+</div>
+
+</div>
+
+<div class="total">
+
+<span>
+Total
 </span>
 
-<br>
-
-Conexión:
-<span id="connection">
-Detectando...
+<span id="total">
+$0.00
 </span>
 
-<br>
+</div>
 
-URL:
-<span id="url">
-Detectando...
-</span>
+<!-- ================================
+     CLIENTE
+================================ -->
 
-<br>
+<div class="customer-title">
+👤 Cliente
+</div>
 
-Hora:
-<span id="time">
-Detectando...
-</span>
+<div class="customer-box">
+
+<div class="customer-row">
+
+<input
+  type="search"
+  id="customerSearch"
+  class="customer-search"
+  placeholder="🔎 Buscar cliente por nombre o teléfono"
+  autocomplete="off"
+>
+
+<button
+  type="button"
+  id="addClientButton"
+  class="add-client"
+>
++ Cliente
+</button>
+
+</div>
+
+<div
+  id="customerResults"
+  class="customer-results"
+></div>
+
+<div
+  id="selectedCustomer"
+  class="selected-customer"
+  style="display:none"
+></div>
+
+<div
+  id="generalCustomer"
+  class="general-customer"
+>
+👤 Consumidor general
+</div>
+
+</div>
+
+<!-- ================================
+     PAGO
+================================ -->
+
+<div class="payment-title">
+Método de pago
+</div>
+
+<div
+  id="payments"
+  class="payments"
+>
+
+<div class="empty">
+Cargando métodos de pago...
+</div>
+
+</div>
+
+<!-- ================================
+     ACCIONES
+================================ -->
+
+<button
+  type="button"
+  id="chargeButton"
+  class="charge"
+>
+💵 COBRAR
+</button>
+
+<button
+  type="button"
+  id="accountButton"
+  class="account"
+>
+🟠 DEJAR A CUENTA
+</button>
 
 </div>
 
@@ -350,449 +757,1620 @@ Detectando...
 
 </div>
 
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
 "use strict";
 
-
-/* =====================================
+/* =========================================
    SUPABASE
-===================================== */
+========================================= */
 
 const SUPABASE_URL =
 "https://jrxklpstlloeckihcduv.supabase.co";
 
-const SUPABASE_KEY =
+const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
+let supabaseClient = null;
 
-/* =====================================
-   ELEMENTO
-===================================== */
+/* =========================================
+   NEGOCIOS
+========================================= */
 
-function elemento(id){
+const BUSINESS_IDS = {
+
+  BakeQuiri:
+  "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+
+  SpicyRoll:
+  "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
+
+};
+
+/* =========================================
+   ESTADO
+========================================= */
+
+let currentBusiness =
+"BakeQuiri";
+
+let products = [];
+
+let payments = [];
+
+let customers = [];
+
+let cart = [];
+
+let selectedPaymentId =
+null;
+
+let selectedCustomerId =
+null;
+
+/* =========================================
+   UTILIDADES
+========================================= */
+
+function $(id){
 
   return document.getElementById(id);
 
 }
 
+function money(value){
 
-/* =====================================
-   ESTADO
-===================================== */
-
-function estado(numero,tipo,mensaje){
-
-  const icon =
-    elemento("icon" + numero);
-
-  const detail =
-    elemento("detail" + numero);
-
-
-  if(tipo === "ok"){
-
-    icon.className = "icon ok";
-    icon.textContent = "✓";
-
-    detail.className = "detail oktext";
-
-  }
-
-  else if(tipo === "error"){
-
-    icon.className = "icon error";
-    icon.textContent = "✕";
-
-    detail.className = "detail errortext";
-
-  }
-
-  else{
-
-    icon.className = "icon";
-    icon.textContent = "⏳";
-
-    detail.className = "detail";
-
-  }
-
-
-  detail.textContent = mensaje;
+  return "$" +
+    Number(value || 0)
+      .toFixed(2);
 
 }
 
+function escapeHTML(value){
 
-/* =====================================
-   INFORMACIÓN
-===================================== */
-
-function informacion(){
-
-  elemento("browser").textContent =
-    navigator.userAgent;
-
-
-  let conexion = "No disponible";
-
-
-  if(navigator.connection){
-
-    const tipo =
-      navigator.connection.effectiveType ||
-      "desconocido";
-
-    conexion = tipo;
-
-  }
-
-  else if(navigator.onLine){
-
-    conexion =
-      "Navegador indica conexión a Internet";
-
-  }
-
-  else{
-
-    conexion =
-      "SIN CONEXIÓN";
-
-  }
-
-
-  elemento("connection").textContent =
-    conexion;
-
-
-  elemento("url").textContent =
-    window.location.href;
-
-
-  elemento("time").textContent =
-    new Date().toLocaleString("es-MX");
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 
 }
 
+function showStatus(
+  message,
+  type="error"
+){
 
-/* =====================================
-   DIAGNÓSTICO
-===================================== */
+  const element =
+    $("status");
 
-async function diagnostico(){
+  element.textContent =
+    message;
 
-  const boton =
-    elemento("retry");
+  element.className =
+    "status " + type;
 
-  boton.disabled = true;
+}
 
+function clearStatus(){
 
-  const final =
-    elemento("final");
+  $("status").textContent =
+    "";
 
+  $("status").className =
+    "status";
 
-  final.className = "final";
-  final.textContent = "";
+}
 
+/* =========================================
+   INICIALIZAR SUPABASE
+========================================= */
 
-  informacion();
+function initializeSupabase(){
 
+  if(
+    !window.supabase ||
+    typeof window.supabase.createClient !==
+    "function"
+  ){
 
-  /* ================================
-     1. JAVASCRIPT
-  ================================= */
-
-  estado(
-    1,
-    "ok",
-    "JavaScript está funcionando correctamente."
-  );
-
-
-  /* ================================
-     2. INTERNET
-  ================================= */
-
-  if(navigator.onLine){
-
-    estado(
-      2,
-      "ok",
-      "El navegador indica que existe conexión a Internet."
+    throw new Error(
+      "No se pudo cargar la librería de Supabase. Revisa tu conexión a Internet."
     );
 
   }
 
-  else{
-
-    estado(
-      2,
-      "error",
-      "El navegador indica que NO hay conexión a Internet."
+  supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
     );
 
+}
 
-    final.className =
-      "final show error";
+/* =========================================
+   CARGAR DATOS DEL NEGOCIO
+========================================= */
 
-    final.textContent =
-      "❌ No hay conexión a Internet.";
+async function loadBusinessData(){
 
-    boton.disabled = false;
+  clearStatus();
+
+  $("products").innerHTML =
+    '<div class="empty">Cargando productos...</div>';
+
+  $("payments").innerHTML =
+    '<div class="empty">Cargando métodos de pago...</div>';
+
+  const businessId =
+    BUSINESS_IDS[currentBusiness];
+
+  if(!businessId){
+
+    showStatus(
+      "No existe la configuración del negocio seleccionado."
+    );
 
     return;
 
   }
 
-
-  /* ================================
-     3. SUPABASE
-  ================================= */
-
-  estado(
-    3,
-    "loading",
-    "Conectando directamente con Supabase..."
-  );
-
-
-  const inicio =
-    Date.now();
-
-
   try{
 
-    const respuesta =
-      await fetch(
+    const [
 
-        SUPABASE_URL +
-        "/rest/v1/products?select=*&limit=1",
+      productsResult,
 
-        {
-          method:"GET",
+      paymentsResult,
 
-          headers:{
-            "apikey":SUPABASE_KEY
-          },
+      customersResult
 
-          cache:"no-store"
-        }
+    ] = await Promise.all([
 
-      );
+      supabaseClient
+        .from("products")
+        .select(
+          "id,name,price,cost,stock,active,business_id"
+        )
+        .eq(
+          "business_id",
+          businessId
+        )
+        .eq(
+          "active",
+          true
+        )
+        .order(
+          "name"
+        ),
 
+      supabaseClient
+        .from("payment_methods")
+        .select(
+          "id,name,provider,active,business_id"
+        )
+        .eq(
+          "business_id",
+          businessId
+        )
+        .eq(
+          "active",
+          true
+        )
+        .order(
+          "name"
+        ),
 
-    const tiempo =
-      Date.now() - inicio;
+      supabaseClient
+        .from("customers")
+        .select(
+          "id,business_id,name,phone,notes"
+        )
+        .eq(
+          "business_id",
+          businessId
+        )
+        .order(
+          "name"
+        )
 
+    ]);
 
-    if(respuesta.ok){
+    if(
+      productsResult.error
+    ){
 
-      estado(
-        3,
-        "ok",
-        "Supabase respondió correctamente en " +
-        tiempo +
-        " ms."
+      throw new Error(
+        "No pude cargar los productos: " +
+        productsResult.error.message
       );
 
     }
 
-    else{
+    if(
+      paymentsResult.error
+    ){
 
-      const texto =
-        await respuesta.text();
-
-
-      estado(
-        3,
-        "error",
-        "Supabase respondió HTTP " +
-        respuesta.status +
-        ". " +
-        texto.substring(0,250)
+      throw new Error(
+        "No pude cargar los métodos de pago: " +
+        paymentsResult.error.message
       );
 
+    }
 
-      final.className =
-        "final show error";
+    if(
+      customersResult.error
+    ){
 
-
-      final.textContent =
-        "❌ Supabase rechazó la conexión. El código HTTP y el mensaje anterior nos indican exactamente dónde está el problema.";
-
-
-      boton.disabled = false;
-
-      return;
+      throw new Error(
+        "No pude cargar los clientes: " +
+        customersResult.error.message
+      );
 
     }
+
+    products =
+      productsResult.data || [];
+
+    payments =
+      paymentsResult.data || [];
+
+    customers =
+      customersResult.data || [];
+
+    if(
+      !payments.some(
+        payment =>
+          payment.id ===
+          selectedPaymentId
+      )
+    ){
+
+      selectedPaymentId =
+        payments[0]?.id ||
+        null;
+
+    }
+
+    const selectedCustomer =
+      customers.find(
+        customer =>
+          customer.id ===
+          selectedCustomerId
+      );
+
+    if(!selectedCustomer){
+
+      selectedCustomerId =
+        null;
+
+    }
+
+    renderProducts();
+
+    renderPayments();
+
+    renderCart();
+
+    renderSelectedCustomer();
 
   }
 
   catch(error){
 
-    console.error(error);
-
-
-    estado(
-      3,
-      "error",
-      "Error de conexión: " +
-      error.message
+    console.error(
+      "loadBusinessData:",
+      error
     );
 
+    products = [];
 
-    final.className =
-      "final show error";
+    payments = [];
 
+    customers = [];
 
-    final.textContent =
-      "❌ El navegador no pudo llegar correctamente a Supabase.";
+    $("products").innerHTML =
+      '<div class="empty">No se pudieron cargar los productos.</div>';
 
+    $("payments").innerHTML =
+      '<div class="empty">No se pudieron cargar los métodos de pago.</div>';
 
-    boton.disabled = false;
+    showStatus(
+      error?.message ||
+      "No se pudo conectar con Supabase."
+    );
+
+  }
+
+}
+
+/* =========================================
+   PRODUCTOS
+========================================= */
+
+function renderProducts(){
+
+  const container =
+    $("products");
+
+  container.innerHTML =
+    "";
+
+  if(!products.length){
+
+    container.innerHTML =
+      '<div class="empty">' +
+      'No hay productos activos para este negocio.' +
+      '</div>';
 
     return;
 
   }
 
+  products.forEach(
+    product => {
 
-  /* ================================
-     4. API REST
-  ================================= */
+      const stock =
+        Number(
+          product.stock || 0
+        );
 
-  estado(
-    4,
-    "loading",
-    "Consultando la tabla products..."
+      const button =
+        document.createElement(
+          "button"
+        );
+
+      button.type =
+        "button";
+
+      button.className =
+        "product" +
+        (
+          stock <= 0
+          ? " disabled"
+          : ""
+        );
+
+      button.disabled =
+        stock <= 0;
+
+      button.innerHTML =
+
+        '<div class="product-name">' +
+
+        escapeHTML(
+          product.name
+        ) +
+
+        '</div>' +
+
+        '<div class="price">' +
+
+        money(
+          product.price
+        ) +
+
+        '</div>' +
+
+        '<div class="stock">' +
+
+        (
+          stock > 0
+          ? "Existencia: " + stock
+          : "Agotado"
+        ) +
+
+        '</div>';
+
+      button.addEventListener(
+        "click",
+        () =>
+          addToCart(product)
+      );
+
+      container.appendChild(
+        button
+      );
+
+    }
   );
 
+}
 
-  try{
+/* =========================================
+   MÉTODOS DE PAGO
+========================================= */
 
-    const respuesta =
-      await fetch(
+function renderPayments(){
 
-        SUPABASE_URL +
-        "/rest/v1/products?select=*&limit=1",
+  const container =
+    $("payments");
 
-        {
-          method:"GET",
+  container.innerHTML =
+    "";
 
-          headers:{
-            "apikey":SUPABASE_KEY
-          },
+  if(!payments.length){
 
-          cache:"no-store"
-        }
+    container.innerHTML =
+      '<div class="empty">' +
+      'No hay métodos de pago activos.' +
+      '</div>';
 
-      );
-
-
-    const texto =
-      await respuesta.text();
-
-
-    if(respuesta.ok){
-
-      estado(
-        4,
-        "ok",
-        "La API REST funciona correctamente. Supabase permitió consultar products."
-      );
-
-    }
-
-    else{
-
-      estado(
-        4,
-        "error",
-        "API REST respondió HTTP " +
-        respuesta.status +
-        ". " +
-        texto.substring(0,250)
-      );
-
-    }
+    return;
 
   }
 
-  catch(error){
+  payments.forEach(
+    payment => {
 
-    estado(
-      4,
-      "error",
-      "Error al consultar la API REST: " +
-      error.message
+      const button =
+        document.createElement(
+          "button"
+        );
+
+      button.type =
+        "button";
+
+      button.className =
+        "payment" +
+        (
+          payment.id ===
+          selectedPaymentId
+          ? " active"
+          : ""
+        );
+
+      button.textContent =
+        payment.name;
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          selectedPaymentId =
+            payment.id;
+
+          renderPayments();
+
+        }
+      );
+
+      container.appendChild(
+        button
+      );
+
+    }
+  );
+
+}
+
+/* =========================================
+   CARRITO
+========================================= */
+
+function addToCart(product){
+
+  const stock =
+    Number(
+      product.stock || 0
     );
 
+  if(stock <= 0){
+
+    showStatus(
+      "Este producto está agotado."
+    );
+
+    return;
+
   }
 
+  const item =
+    cart.find(
+      i =>
+        i.id ===
+        product.id
+    );
 
-  /* ================================
-     5. CONEXIÓN
-  ================================= */
+  if(item){
 
-  let descripcion =
-    "Conexión detectada";
+    if(
+      item.quantity <
+      stock
+    ){
 
+      item.quantity++;
 
-  if(navigator.connection){
+    }
+    else{
 
-    descripcion =
-      "Tipo efectivo: " +
+      showStatus(
+        "No puedes agregar más unidades que la existencia disponible."
+      );
+
+    }
+
+  }
+  else{
+
+    cart.push({
+
+      ...product,
+
+      quantity:1
+
+    });
+
+  }
+
+  renderCart();
+
+}
+
+function changeQuantity(
+  id,
+  amount
+){
+
+  const item =
+    cart.find(
+      i =>
+        i.id ===
+        id
+    );
+
+  if(!item){
+    return;
+  }
+
+  const product =
+    products.find(
+      p =>
+        p.id ===
+        id
+    );
+
+  const max =
+    Number(
+      product?.stock ??
+      item.stock ??
+      0
+    );
+
+  const newQuantity =
+    item.quantity +
+    amount;
+
+  if(
+    newQuantity >
+    max
+  ){
+
+    showStatus(
+      "No hay suficiente existencia disponible."
+    );
+
+    return;
+
+  }
+
+  item.quantity =
+    newQuantity;
+
+  if(
+    item.quantity <= 0
+  ){
+
+    cart =
+      cart.filter(
+        i =>
+          i.id !== id
+      );
+
+  }
+
+  renderCart();
+
+}
+
+function getCartTotal(){
+
+  return cart.reduce(
+    (
+      sum,
+      item
+    ) =>
+
+      sum +
       (
-        navigator.connection.effectiveType ||
-        "desconocido"
+        Number(item.price) *
+        Number(item.quantity)
+      ),
+
+    0
+
+  );
+
+}
+
+function renderCart(){
+
+  const container =
+    $("cart");
+
+  container.innerHTML =
+    "";
+
+  if(!cart.length){
+
+    container.innerHTML =
+      '<div class="empty">' +
+      'El carrito está vacío' +
+      '</div>';
+
+    $("total").textContent =
+      "$0.00";
+
+    return;
+
+  }
+
+  cart.forEach(
+    item => {
+
+      const subtotal =
+        Number(item.price) *
+        Number(item.quantity);
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+      row.className =
+        "cart-item";
+
+      const info =
+        document.createElement(
+          "div"
+        );
+
+      info.innerHTML =
+
+        '<div class="cart-name">' +
+
+        escapeHTML(
+          item.name
+        ) +
+
+        '</div>' +
+
+        '<div class="cart-price">' +
+
+        money(
+          item.price
+        ) +
+
+        ' c/u</div>';
+
+      const controls =
+        document.createElement(
+          "div"
+        );
+
+      controls.className =
+        "quantity";
+
+      const minus =
+        document.createElement(
+          "button"
+        );
+
+      minus.type =
+        "button";
+
+      minus.textContent =
+        "−";
+
+      minus.addEventListener(
+        "click",
+        () =>
+          changeQuantity(
+            item.id,
+            -1
+          )
       );
 
+      const quantity =
+        document.createElement(
+          "span"
+        );
 
-    if(navigator.connection.downlink){
+      quantity.textContent =
+        item.quantity;
 
-      descripcion +=
-        " · Velocidad estimada: " +
-        navigator.connection.downlink +
-        " Mbps";
+      const plus =
+        document.createElement(
+          "button"
+        );
+
+      plus.type =
+        "button";
+
+      plus.textContent =
+        "+";
+
+      plus.addEventListener(
+        "click",
+        () =>
+          changeQuantity(
+            item.id,
+            1
+          )
+      );
+
+      controls.append(
+        minus,
+        quantity,
+        plus
+      );
+
+      info.appendChild(
+        controls
+      );
+
+      const subtotalElement =
+        document.createElement(
+          "strong"
+        );
+
+      subtotalElement.textContent =
+        money(
+          subtotal
+        );
+
+      row.append(
+        info,
+        subtotalElement
+      );
+
+      container.appendChild(
+        row
+      );
+
+    }
+  );
+
+  $("total").textContent =
+    money(
+      getCartTotal()
+    );
+
+}
+
+/* =========================================
+   CLIENTE SELECCIONADO
+========================================= */
+
+function renderSelectedCustomer(){
+
+  const selected =
+    customers.find(
+      customer =>
+        customer.id ===
+        selectedCustomerId
+    );
+
+  const selectedElement =
+    $("selectedCustomer");
+
+  const general =
+    $("generalCustomer");
+
+  if(!selected){
+
+    selectedCustomerId =
+      null;
+
+    selectedElement.style.display =
+      "none";
+
+    selectedElement.innerHTML =
+      "";
+
+    general.style.display =
+      "block";
+
+    general.innerHTML =
+      "👤 Consumidor general";
+
+    return;
+
+  }
+
+  general.style.display =
+    "none";
+
+  selectedElement.style.display =
+    "block";
+
+  selectedElement.innerHTML =
+
+    "👤 <strong>" +
+
+    escapeHTML(
+      selected.name ||
+      "Cliente"
+    ) +
+
+    "</strong>" +
+
+    (
+      selected.phone
+      ? " · 📱 " +
+        escapeHTML(
+          selected.phone
+        )
+      : ""
+    ) +
+
+    '<button type="button" ' +
+    'class="clear-customer" ' +
+    'id="clearCustomer">' +
+    "Quitar" +
+    "</button>";
+
+  $("clearCustomer")
+    .addEventListener(
+      "click",
+      clearSelectedCustomer
+    );
+
+}
+
+function clearSelectedCustomer(){
+
+  selectedCustomerId =
+    null;
+
+  $("customerSearch").value =
+    "";
+
+  $("customerResults").innerHTML =
+    "";
+
+  $("customerResults").style.display =
+    "none";
+
+  renderSelectedCustomer();
+
+}
+
+/* =========================================
+   BUSCAR CLIENTES
+========================================= */
+
+function renderCustomerResults(
+  query
+){
+
+  const container =
+    $("customerResults");
+
+  const search =
+    String(
+      query || ""
+    )
+    .trim()
+    .toLowerCase();
+
+  if(!search){
+
+    container.innerHTML =
+      "";
+
+    container.style.display =
+      "none";
+
+    return;
+
+  }
+
+  const filtered =
+    customers.filter(
+      customer => {
+
+        const name =
+          String(
+            customer.name || ""
+          )
+          .toLowerCase();
+
+        const phone =
+          String(
+            customer.phone || ""
+          )
+          .toLowerCase();
+
+        const notes =
+          String(
+            customer.notes || ""
+          )
+          .toLowerCase();
+
+        return (
+          name.includes(search) ||
+          phone.includes(search) ||
+          notes.includes(search)
+        );
+
+      }
+    );
+
+  container.innerHTML =
+    "";
+
+  if(!filtered.length){
+
+    const empty =
+      document.createElement(
+        "div"
+      );
+
+    empty.className =
+      "empty";
+
+    empty.textContent =
+      "No encontramos ese cliente.";
+
+    container.appendChild(
+      empty
+    );
+
+    container.style.display =
+      "block";
+
+    return;
+
+  }
+
+  filtered
+    .slice(0,10)
+    .forEach(
+      customer => {
+
+        const button =
+          document.createElement(
+            "button"
+          );
+
+        button.type =
+          "button";
+
+        button.className =
+          "customer-result";
+
+        button.innerHTML =
+
+          "<strong>" +
+
+          escapeHTML(
+            customer.name ||
+            "Cliente sin nombre"
+          ) +
+
+          "</strong>" +
+
+          (
+            customer.phone
+            ? "<small>📱 " +
+              escapeHTML(
+                customer.phone
+              ) +
+              "</small>"
+            : ""
+          );
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            selectedCustomerId =
+              customer.id;
+
+            $("customerSearch").value =
+              customer.name || "";
+
+            container.innerHTML =
+              "";
+
+            container.style.display =
+              "none";
+
+            renderSelectedCustomer();
+
+          }
+        );
+
+        container.appendChild(
+          button
+        );
+
+      }
+    );
+
+  container.style.display =
+    "block";
+
+}
+
+/* =========================================
+   EVENTOS CLIENTES
+========================================= */
+
+$("customerSearch")
+  .addEventListener(
+    "input",
+    event => {
+
+      renderCustomerResults(
+        event.target.value
+      );
+
+    }
+  );
+
+$("customerSearch")
+  .addEventListener(
+    "focus",
+    event => {
+
+      const value =
+        event.target.value.trim();
+
+      if(value){
+
+        renderCustomerResults(
+          value
+        );
+
+      }
+
+    }
+  );
+
+$("generalCustomer")
+  .addEventListener(
+    "click",
+    clearSelectedCustomer
+  );
+
+$("addClientButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "clientes.html?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+/* =========================================
+   CERRAR RESULTADOS
+========================================= */
+
+document.addEventListener(
+  "click",
+  event => {
+
+    const box =
+      document.querySelector(
+        ".customer-box"
+      );
+
+    if(
+      box &&
+      !box.contains(
+        event.target
+      )
+    ){
+
+      $("customerResults")
+        .style.display =
+        "none";
 
     }
 
   }
+);
 
+/* =========================================
+   CAMBIAR NEGOCIO
+========================================= */
 
-  estado(
-    5,
-    "ok",
-    descripcion
+async function changeBusiness(
+  name,
+  button
+){
+
+  if(
+    name ===
+    currentBusiness
+  ){
+
+    return;
+
+  }
+
+  currentBusiness =
+    name;
+
+  cart =
+    [];
+
+  selectedPaymentId =
+    null;
+
+  selectedCustomerId =
+    null;
+
+  $("customerSearch").value =
+    "";
+
+  $("customerResults").innerHTML =
+    "";
+
+  $("customerResults").style.display =
+    "none";
+
+  document
+    .querySelectorAll(
+      ".business-btn"
+    )
+    .forEach(
+      b =>
+        b.classList.remove(
+          "active"
+        )
+    );
+
+  button.classList.add(
+    "active"
   );
 
-
-  /* ================================
-     RESULTADO
-  ================================= */
-
-  final.className =
-    "final show ok";
-
-
-  final.textContent =
-    "✅ La conexión con Supabase funciona correctamente. Ya podemos pasar a corregir el POS original.";
-
-
-  boton.disabled = false;
+  await loadBusinessData();
 
 }
 
+/* =========================================
+   REGISTRAR VENTA
+========================================= */
 
-/* =====================================
+async function registerSale(
+  isPending
+){
+
+  clearStatus();
+
+  if(!cart.length){
+
+    showStatus(
+      "Agrega al menos un producto."
+    );
+
+    return;
+
+  }
+
+  if(
+    !isPending &&
+    !selectedPaymentId
+  ){
+
+    showStatus(
+      "Selecciona un método de pago."
+    );
+
+    return;
+
+  }
+
+  if(
+    isPending &&
+    !selectedCustomerId
+  ){
+
+    showStatus(
+      "Para dejar una venta a cuenta debes seleccionar un cliente."
+    );
+
+    return;
+
+  }
+
+  const button =
+    isPending
+    ? $("accountButton")
+    : $("chargeButton");
+
+  const originalText =
+    button.textContent;
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    isPending
+    ? "GUARDANDO..."
+    : "REGISTRANDO...";
+
+  try{
+
+    const items =
+      cart.map(
+        item => ({
+
+          product_id:
+            item.id,
+
+          description:
+            item.name,
+
+          quantity:
+            Number(
+              item.quantity
+            ),
+
+          unit_price:
+            Number(
+              item.price
+            ),
+
+          subtotal:
+            Number(
+              item.price
+            ) *
+            Number(
+              item.quantity
+            )
+
+        })
+      );
+
+    const total =
+      items.reduce(
+        (
+          sum,
+          item
+        ) =>
+          sum +
+          item.subtotal,
+        0
+      );
+
+    const businessId =
+      BUSINESS_IDS[
+        currentBusiness
+      ];
+
+    const result =
+      await supabaseClient
+        .rpc(
+          "register_sale",
+          {
+
+            p_business_id:
+              businessId,
+
+            p_customer_id:
+              selectedCustomerId ||
+              null,
+
+            p_payment_method_id:
+              isPending
+              ? null
+              : selectedPaymentId,
+
+            p_items:
+              items,
+
+            p_is_pending:
+              isPending
+
+          }
+        );
+
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+    const customer =
+      customers.find(
+        c =>
+          c.id ===
+          selectedCustomerId
+      );
+
+    const paymentName =
+      payments.find(
+        p =>
+          p.id ===
+          selectedPaymentId
+      )?.name ||
+      "Pago";
+
+    let message;
+
+    if(isPending){
+
+      message =
+        "Cuenta registrada\n\n" +
+
+        currentBusiness +
+
+        "\nCliente: " +
+
+        (
+          customer?.name ||
+          "Cliente"
+        ) +
+
+        "\nTotal: " +
+
+        money(total);
+
+    }
+    else{
+
+      message =
+        "Venta registrada\n\n" +
+
+        currentBusiness +
+
+        "\nCliente: " +
+
+        (
+          customer?.name ||
+          "Consumidor general"
+        ) +
+
+        "\nTotal: " +
+
+        money(total) +
+
+        "\nPago: " +
+
+        paymentName;
+
+    }
+
+    alert(message);
+
+    cart = [];
+
+    selectedCustomerId =
+      null;
+
+    $("customerSearch").value =
+      "";
+
+    $("customerResults").innerHTML =
+      "";
+
+    $("customerResults").style.display =
+      "none";
+
+    renderSelectedCustomer();
+
+    await loadBusinessData();
+
+    showStatus(
+      isPending
+      ? "Cuenta guardada correctamente."
+      : "Venta guardada correctamente.",
+      "ok"
+    );
+
+    console.log(
+      "register_sale response:",
+      result.data
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "registerSale:",
+      error
+    );
+
+    showStatus(
+      "No se pudo registrar la operación:\n" +
+      (
+        error?.message ||
+        String(error)
+      )
+    );
+
+  }
+
+  finally{
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      originalText;
+
+  }
+
+}
+
+/* =========================================
+   COBRAR
+========================================= */
+
+$("chargeButton")
+  .addEventListener(
+    "click",
+    () =>
+      registerSale(false)
+  );
+
+/* =========================================
+   DEJAR A CUENTA
+========================================= */
+
+$("accountButton")
+  .addEventListener(
+    "click",
+    () =>
+      registerSale(true)
+  );
+
+/* =========================================
+   NAVEGACIÓN
+========================================= */
+
+$("accountsButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "cuentas.html?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+$("clientsButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "clientes.html?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+$("historyButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "historial.html?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+$("inventoryButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "inventario.html?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+$("dashboardButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "dashboard.html?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+/* =========================================
+   NEGOCIOS
+========================================= */
+
+document
+  .querySelectorAll(
+    ".business-btn"
+  )
+  .forEach(
+    button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          changeBusiness(
+            button.dataset.business,
+            button
+          );
+
+        }
+      );
+
+    }
+  );
+
+/* =========================================
    INICIO
-===================================== */
+========================================= */
 
-window.addEventListener(
-  "load",
-  diagnostico
-);
+async function startApp(){
+
+  try{
+
+    initializeSupabase();
+
+    await loadBusinessData();
+
+  }
+
+  catch(error){
+
+    console.error(
+      "startApp:",
+      error
+    );
+
+    showStatus(
+      error?.message ||
+      "No se pudo iniciar el sistema."
+    );
+
+  }
+
+}
+
+startApp();
 
 </script>
 
