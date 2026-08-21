@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 
 <meta charset="UTF-8">
@@ -214,6 +215,11 @@ textarea{
   font-weight:700;
 }
 
+.shared{
+  background:#dcfce7;
+  color:#166534;
+}
+
 .customer-actions{
   display:flex;
   gap:8px;
@@ -249,14 +255,11 @@ textarea{
   font-weight:600;
 }
 
-.editing-title{
-  color:#2563eb;
-}
-
 .helper{
   margin-top:8px;
   color:#6b7280;
   font-size:14px;
+  line-height:1.5;
 }
 
 @media(max-width:600px){
@@ -306,7 +309,7 @@ textarea{
 <h1>👥 Clientes</h1>
 
 <p>
-Sistema de Ventas POS · Administración de clientes
+Sistema de Ventas POS · Clientes compartidos
 </p>
 
 </header>
@@ -338,7 +341,7 @@ type="button"
 class="business-btn"
 data-business="BakeQuiri">
 
-BakeQuiri
+🧁 BakeQuiri
 
 </button>
 
@@ -348,7 +351,7 @@ type="button"
 class="business-btn"
 data-business="SpicyRoll">
 
-SpicyRoll
+🍣 SpicyRoll
 
 </button>
 
@@ -368,7 +371,7 @@ type="button"
 id="dashboard"
 class="dashboard">
 
-← Dashboard
+← POS
 
 </button>
 
@@ -441,7 +444,12 @@ placeholder="Notas del cliente"></textarea>
 
 
 <div class="helper">
-Los clientes son compartidos entre BakeQuiri y SpicyRoll.
+
+<strong>👥 Clientes compartidos</strong><br>
+
+Los clientes aparecen en BakeQuiri y SpicyRoll.
+No necesitas crear el mismo cliente dos veces.
+
 </div>
 
 
@@ -471,7 +479,7 @@ Cancelar edición
 
 
 <!-- =========================================
-     LISTA DE CLIENTES
+     LISTA
 ========================================= -->
 
 <div class="card">
@@ -487,7 +495,8 @@ Cancelar edición
 id="search"
 class="search"
 type="search"
-placeholder="🔎 Buscar por nombre, teléfono o notas">
+placeholder="🔎 Buscar por nombre, teléfono o notas"
+autocomplete="off">
 
 
 <div
@@ -563,18 +572,18 @@ const BUSINESS_IDS = {
 let currentBusiness =
 "Todos";
 
-
 let customers = [];
 
-
-let editingId = null;
+let editingId =
+null;
 
 
 /* =========================================
    ELEMENTOS
 ========================================= */
 
-const $ = id =>
+const $ =
+id =>
 document.getElementById(id);
 
 
@@ -611,15 +620,48 @@ function clearStatus(){
 
 
 /* =========================================
-   CARGAR CLIENTES
+   NEGOCIO
+========================================= */
+
+function getBusinessName(
+  businessId
+){
+
+  if(
+    businessId ===
+    BUSINESS_IDS.BakeQuiri
+  ){
+
+    return "BakeQuiri";
+
+  }
+
+  if(
+    businessId ===
+    BUSINESS_IDS.SpicyRoll
+  ){
+
+    return "SpicyRoll";
+
+  }
+
+  return "Negocio";
+
+}
+
+
+/* =========================================
+   CARGAR TODOS LOS CLIENTES
 ========================================= */
 
 async function loadCustomers(){
 
   $("customersContainer").innerHTML =
   '<div class="loading">' +
-  'Cargando clientes...' +
+  'Cargando clientes compartidos...' +
   '</div>';
+
+  clearStatus();
 
 
   try{
@@ -627,13 +669,9 @@ async function loadCustomers(){
     /*
       IMPORTANTE:
 
-      Los clientes son compartidos.
+      Aquí NO filtramos por el negocio actual.
 
-      Por eso YA NO filtramos directamente
-      por el negocio seleccionado.
-
-      Primero obtenemos todos los clientes
-      pertenecientes a nuestros negocios.
+      Siempre pedimos clientes de AMBOS negocios.
     */
 
     const result =
@@ -647,7 +685,10 @@ async function loadCustomers(){
 
       .in(
         "business_id",
-        Object.values(BUSINESS_IDS)
+        [
+          BUSINESS_IDS.BakeQuiri,
+          BUSINESS_IDS.SpicyRoll
+        ]
       )
 
       .order(
@@ -674,9 +715,9 @@ async function loadCustomers(){
 
     showStatus(
       customers.length === 1
-      ? "1 cliente cargado correctamente."
+      ? "1 cliente cargado."
       : customers.length +
-        " clientes cargados correctamente.",
+        " clientes compartidos cargados.",
       "ok"
     );
 
@@ -684,7 +725,10 @@ async function loadCustomers(){
 
   catch(error){
 
-    console.error(error);
+    console.error(
+      "Error cargando clientes:",
+      error
+    );
 
 
     $("customersContainer").innerHTML =
@@ -708,39 +752,6 @@ async function loadCustomers(){
 
 
 /* =========================================
-   OBTENER NEGOCIO DEL CLIENTE
-========================================= */
-
-function getBusinessName(
-  businessId
-){
-
-  if(
-    businessId ===
-    BUSINESS_IDS.BakeQuiri
-  ){
-
-    return "BakeQuiri";
-
-  }
-
-
-  if(
-    businessId ===
-    BUSINESS_IDS.SpicyRoll
-  ){
-
-    return "SpicyRoll";
-
-  }
-
-
-  return "Negocio";
-
-}
-
-
-/* =========================================
    MOSTRAR CLIENTES
 ========================================= */
 
@@ -757,13 +768,23 @@ function renderCustomers(){
     .toLowerCase();
 
 
+  /*
+    TODOS los clientes son cargados primero.
+  */
+
   let list =
-  customers;
+  [...customers];
 
 
-  /* =====================================
-     FILTRO POR NEGOCIO
-  ===================================== */
+  /*
+    FILTRO VISUAL.
+
+    Esto NO cambia los datos.
+    Solo permite ver:
+    - Todos
+    - BakeQuiri
+    - SpicyRoll
+  */
 
   if(
     currentBusiness !==
@@ -771,22 +792,24 @@ function renderCustomers(){
   ){
 
     const businessId =
-    BUSINESS_IDS[currentBusiness];
+    BUSINESS_IDS[
+      currentBusiness
+    ];
 
 
     list =
     list.filter(
       customer =>
-      customer.business_id ===
-      businessId
+        customer.business_id ===
+        businessId
     );
 
   }
 
 
-  /* =====================================
-     BUSCADOR
-  ===================================== */
+  /*
+    BUSCADOR
+  */
 
   if(query){
 
@@ -797,9 +820,7 @@ function renderCustomers(){
         const text = [
 
           customer.name,
-
           customer.phone,
-
           customer.notes
 
         ]
@@ -834,11 +855,13 @@ function renderCustomers(){
 
     container.innerHTML =
     '<div class="empty">' +
+
     (
       query
       ? "No se encontraron clientes."
       : "No hay clientes registrados."
     ) +
+
     '</div>';
 
     return;
@@ -858,7 +881,6 @@ function renderCustomers(){
         "div"
       );
 
-
       item.className =
       "customer";
 
@@ -867,7 +889,6 @@ function renderCustomers(){
       document.createElement(
         "div"
       );
-
 
       top.className =
       "customer-top";
@@ -884,20 +905,18 @@ function renderCustomers(){
         "div"
       );
 
-
       name.className =
       "customer-name";
 
-
       name.textContent =
-      customer.name;
+      customer.name ||
+      "Cliente sin nombre";
 
 
       const details =
       document.createElement(
         "div"
       );
-
 
       details.className =
       "customer-info";
@@ -927,43 +946,42 @@ function renderCustomers(){
 
 
       details.textContent =
-      parts.length
-      ? parts.join(" · ")
-      : "Sin información adicional";
+      parts.join(" · ");
 
 
-      const business =
+      /*
+        Mostramos claramente dónde está guardado,
+        pero indicamos que puede utilizarse desde
+        ambos negocios.
+      */
+
+      const badge =
       document.createElement(
-        "div"
+        "span"
       );
 
+      badge.className =
+      "customer-business shared";
 
-      business.className =
-      "customer-business";
-
-
-      business.textContent =
-      getBusinessName(
-        customer.business_id
-      );
+      badge.textContent =
+      "👥 Disponible en BakeQuiri + SpicyRoll";
 
 
       info.append(
         name,
         details,
-        business
+        badge
       );
 
 
-      /* =================================
-         BOTONES
-      ================================= */
+      /*
+        ACCIONES
+      */
 
       const actions =
       document.createElement(
         "div"
       );
-
 
       actions.className =
       "customer-actions";
@@ -974,23 +992,22 @@ function renderCustomers(){
         "button"
       );
 
-
       edit.type =
       "button";
-
 
       edit.className =
       "edit";
 
-
       edit.textContent =
-      "✏️ Editar";
+      "Editar";
 
 
       edit.addEventListener(
         "click",
         () =>
-        editCustomer(customer)
+          editCustomer(
+            customer
+          )
       );
 
 
@@ -999,23 +1016,22 @@ function renderCustomers(){
         "button"
       );
 
-
       del.type =
       "button";
-
 
       del.className =
       "delete";
 
-
       del.textContent =
-      "🗑️ Eliminar";
+      "Eliminar";
 
 
       del.addEventListener(
         "click",
         () =>
-        deleteCustomer(customer)
+          deleteCustomer(
+            customer
+          )
       );
 
 
@@ -1031,7 +1047,7 @@ function renderCustomers(){
       );
 
 
-      item.append(
+      item.appendChild(
         top
       );
 
@@ -1047,200 +1063,139 @@ function renderCustomers(){
 
 
 /* =========================================
-   CREAR / EDITAR CLIENTE
+   NUEVO CLIENTE
 ========================================= */
 
-$("customerForm")
-.addEventListener(
-  "submit",
-  async event => {
+async function createCustomer(){
 
-    event.preventDefault();
+  const name =
+  $("name")
+    .value
+    .trim();
 
 
-    clearStatus();
+  const phone =
+  $("phone")
+    .value
+    .trim();
 
 
-    const name =
-    $("name")
-      .value
-      .trim();
+  const notes =
+  $("notes")
+    .value
+    .trim();
 
 
-    const phone =
-    $("phone")
-      .value
-      .trim();
+  if(!name){
 
+    showStatus(
+      "El nombre del cliente es obligatorio.",
+      "error"
+    );
 
-    const notes =
-    $("notes")
-      .value
-      .trim();
-
-
-    if(!name){
-
-      showStatus(
-        "El nombre es obligatorio.",
-        "error"
-      );
-
-      return;
-
-    }
-
-
-    const saveButton =
-    $("saveButton");
-
-
-    saveButton.disabled =
-    true;
-
-
-    try{
-
-      /* =================================
-         EDITAR CLIENTE
-      ================================= */
-
-      if(editingId){
-
-        const result =
-        await supabaseClient
-
-          .from("customers")
-
-          .update({
-
-            name:name,
-
-            phone:
-            phone || null,
-
-            notes:
-            notes || null
-
-          })
-
-          .eq(
-            "id",
-            editingId
-          );
-
-
-        if(result.error){
-
-          throw result.error;
-
-        }
-
-
-        showStatus(
-          "Cliente actualizado correctamente.",
-          "ok"
-        );
-
-      }
-
-
-      /* =================================
-         NUEVO CLIENTE
-      ================================= */
-
-      else{
-
-        /*
-          Para mantener el sistema actual:
-
-          Si estamos viendo un negocio específico,
-          el cliente se asocia a ese negocio.
-
-          Si estamos en "Todos", por seguridad
-          lo asociamos a BakeQuiri.
-        */
-
-        const businessName =
-        currentBusiness === "Todos"
-        ? "BakeQuiri"
-        : currentBusiness;
-
-
-        const businessId =
-        BUSINESS_IDS[
-          businessName
-        ];
-
-
-        const result =
-        await supabaseClient
-
-          .from("customers")
-
-          .insert({
-
-            business_id:
-            businessId,
-
-            name:name,
-
-            phone:
-            phone || null,
-
-            notes:
-            notes || null
-
-          });
-
-
-        if(result.error){
-
-          throw result.error;
-
-        }
-
-
-        showStatus(
-          "Cliente guardado correctamente.",
-          "ok"
-        );
-
-      }
-
-
-      resetForm();
-
-
-      await loadCustomers();
-
-    }
-
-    catch(error){
-
-      console.error(error);
-
-
-      showStatus(
-        "No se pudo guardar el cliente: " +
-        (
-          error.message ||
-          error
-        ),
-        "error"
-      );
-
-    }
-
-    finally{
-
-      saveButton.disabled =
-      false;
-
-    }
+    return;
 
   }
-);
+
+
+  const saveButton =
+  $("saveButton");
+
+
+  saveButton.disabled =
+  true;
+
+  saveButton.textContent =
+  "GUARDANDO...";
+
+
+  try{
+
+    /*
+      El registro necesita business_id.
+
+      Guardamos el cliente en el negocio seleccionado.
+      Posteriormente la aplicación carga los clientes
+      de AMBOS negocios, por lo que estará disponible
+      en el POS de los dos.
+    */
+
+    const businessId =
+      currentBusiness === "SpicyRoll"
+      ? BUSINESS_IDS.SpicyRoll
+      : BUSINESS_IDS.BakeQuiri;
+
+
+    const result =
+    await supabaseClient
+
+      .from("customers")
+
+      .insert({
+
+        business_id:
+        businessId,
+
+        name:
+        name,
+
+        phone:
+        phone || null,
+
+        notes:
+        notes || null
+
+      });
+
+
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+
+    showStatus(
+      "✅ Cliente creado correctamente y disponible para ambos negocios.",
+      "ok"
+    );
+
+
+    resetForm();
+
+    await loadCustomers();
+
+  }
+
+  catch(error){
+
+    console.error(
+      error
+    );
+
+
+    showStatus(
+      "No se pudo guardar el cliente: " +
+      (
+        error.message ||
+        error
+      ),
+      "error"
+    );
+
+  }
+
+  finally{
+
+    saveButton.disabled =
+    false;
+
+    saveButton.textContent =
+    "Guardar cliente";
+
+  }
+
+}
 
 
 /* =========================================
@@ -1255,25 +1210,23 @@ function editCustomer(
   customer.id;
 
 
+  $("formTitle").textContent =
+  "✏️ Editar cliente";
+
+
   $("name").value =
-  customer.name || "";
+  customer.name ||
+  "";
 
 
   $("phone").value =
-  customer.phone || "";
+  customer.phone ||
+  "";
 
 
   $("notes").value =
-  customer.notes || "";
-
-
-  $("formTitle").textContent =
-  "✏️ Editando cliente";
-
-
-  $("formTitle").classList.add(
-    "editing-title"
-  );
+  customer.notes ||
+  "";
 
 
   $("saveButton").textContent =
@@ -1285,53 +1238,131 @@ function editCustomer(
 
 
   window.scrollTo({
-
     top:0,
-
     behavior:"smooth"
-
   });
 
 }
 
 
 /* =========================================
-   CANCELAR EDICIÓN
+   ACTUALIZAR CLIENTE
 ========================================= */
 
-function resetForm(){
+async function updateCustomer(){
 
-  editingId =
-  null;
-
-
-  $("customerForm").reset();
-
-
-  $("formTitle").textContent =
-  "➕ Nuevo cliente";
+  const name =
+  $("name")
+    .value
+    .trim();
 
 
-  $("formTitle").classList.remove(
-    "editing-title"
-  );
+  const phone =
+  $("phone")
+    .value
+    .trim();
 
 
-  $("saveButton").textContent =
-  "Guardar cliente";
+  const notes =
+  $("notes")
+    .value
+    .trim();
 
 
-  $("cancelButton").style.display =
-  "none";
+  if(!name){
+
+    showStatus(
+      "El nombre del cliente es obligatorio.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const saveButton =
+  $("saveButton");
+
+
+  saveButton.disabled =
+  true;
+
+  saveButton.textContent =
+  "GUARDANDO...";
+
+
+  try{
+
+    const result =
+    await supabaseClient
+
+      .from("customers")
+
+      .update({
+
+        name:
+        name,
+
+        phone:
+        phone || null,
+
+        notes:
+        notes || null
+
+      })
+
+      .eq(
+        "id",
+        editingId
+      );
+
+
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+
+    showStatus(
+      "✅ Cliente actualizado correctamente.",
+      "ok"
+    );
+
+
+    resetForm();
+
+    await loadCustomers();
+
+  }
+
+  catch(error){
+
+    console.error(
+      error
+    );
+
+
+    showStatus(
+      "No se pudo actualizar el cliente: " +
+      (
+        error.message ||
+        error
+      ),
+      "error"
+    );
+
+  }
+
+  finally{
+
+    saveButton.disabled =
+    false;
+
+  }
 
 }
-
-
-$("cancelButton")
-.addEventListener(
-  "click",
-  resetForm
-);
 
 
 /* =========================================
@@ -1344,14 +1375,10 @@ async function deleteCustomer(
 
   const confirmed =
   confirm(
-
     "¿Eliminar a " +
     customer.name +
     "?\n\n" +
-
-    "Esta acción eliminará el cliente " +
-    "de la base de datos."
-
+    "Esta acción eliminará el cliente del catálogo."
   );
 
 
@@ -1390,23 +1417,15 @@ async function deleteCustomer(
     );
 
 
-    if(
-      editingId ===
-      customer.id
-    ){
-
-      resetForm();
-
-    }
-
-
     await loadCustomers();
 
   }
 
   catch(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
 
 
     showStatus(
@@ -1424,18 +1443,100 @@ async function deleteCustomer(
 
 
 /* =========================================
+   RESET FORMULARIO
+========================================= */
+
+function resetForm(){
+
+  editingId =
+  null;
+
+
+  $("customerForm")
+    .reset();
+
+
+  $("formTitle").textContent =
+  "➕ Nuevo cliente";
+
+
+  $("saveButton").textContent =
+  "Guardar cliente";
+
+
+  $("cancelButton").style.display =
+  "none";
+
+}
+
+
+/* =========================================
+   FORMULARIO
+========================================= */
+
+$("customerForm")
+.addEventListener(
+  "submit",
+  event => {
+
+    event.preventDefault();
+
+
+    if(editingId){
+
+      updateCustomer();
+
+    }
+
+    else{
+
+      createCustomer();
+
+    }
+
+  }
+);
+
+
+/* =========================================
+   CANCELAR EDICIÓN
+========================================= */
+
+$("cancelButton")
+.addEventListener(
+  "click",
+  () => {
+
+    resetForm();
+
+    clearStatus();
+
+  }
+);
+
+
+/* =========================================
    BUSCADOR
 ========================================= */
 
 $("search")
 .addEventListener(
   "input",
-  renderCustomers
+  () => {
+
+    /*
+      La búsqueda se hace sobre TODOS
+      los clientes que ya cargamos.
+    */
+
+    renderCustomers();
+
+  }
 );
 
 
 /* =========================================
-   CAMBIO DE FILTRO
+   CAMBIAR FILTRO
 ========================================= */
 
 document
@@ -1458,13 +1559,10 @@ document
           ".business-btn"
         )
         .forEach(
-          btn => {
-
-            btn.classList.remove(
+          item =>
+            item.classList.remove(
               "active"
-            );
-
-          }
+            )
         );
 
 
@@ -1472,6 +1570,15 @@ document
           "active"
         );
 
+
+        /*
+          IMPORTANTE:
+
+          NO volvemos a consultar Supabase
+          al cambiar de negocio.
+
+          Solo cambiamos el filtro visual.
+        */
 
         renderCustomers();
 
@@ -1489,12 +1596,16 @@ document
 $("refresh")
 .addEventListener(
   "click",
-  loadCustomers
+  () => {
+
+    loadCustomers();
+
+  }
 );
 
 
 /* =========================================
-   DASHBOARD
+   VOLVER AL POS
 ========================================= */
 
 $("dashboard")
@@ -1502,8 +1613,17 @@ $("dashboard")
   "click",
   () => {
 
+    const business =
+      currentBusiness === "Todos"
+      ? "BakeQuiri"
+      : currentBusiness;
+
+
     window.location.href =
-    "dashboard.html";
+      "index.html?business=" +
+      encodeURIComponent(
+        business
+      );
 
   }
 );
@@ -1518,4 +1638,5 @@ loadCustomers();
 </script>
 
 </body>
+
 </html>
