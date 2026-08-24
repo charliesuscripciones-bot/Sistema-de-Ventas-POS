@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>Sistema de Ventas POS</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -20,8 +28,15 @@ header{
   padding:22px 20px;
 }
 
-header h1{font-size:28px}
-header p{font-size:15px;opacity:.75;margin-top:6px}
+header h1{
+  font-size:28px;
+}
+
+header p{
+  font-size:15px;
+  opacity:.75;
+  margin-top:6px;
+}
 
 .container{
   max-width:1100px;
@@ -89,7 +104,9 @@ header p{font-size:15px;opacity:.75;margin-top:6px}
   margin-bottom:20px;
 }
 
-.nav-btn{color:#2563eb}
+.nav-btn{
+  color:#2563eb;
+}
 
 .nav-btn.accounts{
   background:#fff7ed;
@@ -184,7 +201,9 @@ header p{font-size:15px;opacity:.75;margin-top:6px}
   gap:12px;
 }
 
-.cart-name{font-weight:700}
+.cart-name{
+  font-weight:700;
+}
 
 .cart-price{
   font-size:13px;
@@ -249,7 +268,9 @@ header p{font-size:15px;opacity:.75;margin-top:6px}
   border-color:#111827;
 }
 
-.customer-box{position:relative}
+.customer-box{
+  position:relative;
+}
 
 .customer-row{
   display:flex;
@@ -307,7 +328,9 @@ header p{font-size:15px;opacity:.75;margin-top:6px}
   cursor:pointer;
 }
 
-.customer-result:hover{background:#f3f4f6}
+.customer-result:hover{
+  background:#f3f4f6;
+}
 
 .customer-result strong{
   display:block;
@@ -363,7 +386,10 @@ header p{font-size:15px;opacity:.75;margin-top:6px}
   cursor:pointer;
 }
 
-.charge{background:#16a34a}
+.charge{
+  background:#16a34a;
+}
+
 .account{
   margin-top:10px;
   background:#f59e0b;
@@ -395,37 +421,95 @@ button{
 }
 
 @media(max-width:950px){
-  .navigation{grid-template-columns:repeat(3,1fr)}
+
+  .navigation{
+    grid-template-columns:repeat(3,1fr);
+  }
+
 }
 
 @media(max-width:850px){
-  .layout{grid-template-columns:1fr}
-  .navigation{grid-template-columns:1fr 1fr}
-  .products{grid-template-columns:1fr 1fr}
+
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .navigation{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .products{
+    grid-template-columns:1fr 1fr;
+  }
+
 }
 
 @media(max-width:500px){
-  .container{padding:15px}
-  header h1{font-size:25px}
-  .navigation{grid-template-columns:1fr 1fr}
-  .business-btn{flex:1}
-  .layout{gap:15px}
-  .card{padding:16px}
-  .products{grid-template-columns:1fr 1fr}
-  .product{padding:15px 12px}
-  .product-name{font-size:15px}
-  .price{font-size:20px}
-  .customer-row{flex-direction:column}
-  .add-client{padding:12px}
+
+  .container{
+    padding:15px;
+  }
+
+  header h1{
+    font-size:25px;
+  }
+
+  .navigation{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .business-btn{
+    flex:1;
+  }
+
+  .layout{
+    gap:15px;
+  }
+
+  .card{
+    padding:16px;
+  }
+
+  .products{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .product{
+    padding:15px 12px;
+  }
+
+  .product-name{
+    font-size:15px;
+  }
+
+  .price{
+    font-size:20px;
+  }
+
+  .customer-row{
+    flex-direction:column;
+  }
+
+  .add-client{
+    padding:12px;
+  }
+
 }
+
 </style>
+
 </head>
 
 <body>
 
 <header>
+
 <h1>🧾 Sistema de Ventas POS</h1>
-<p>Administración de negocios y ventas</p>
+
+<p>
+Administración de negocios y ventas
+</p>
+
 </header>
 
 <div class="container">
@@ -434,36 +518,71 @@ button{
 
 <div class="businesses">
 
-<button type="button" class="business-btn active" data-business="BakeQuiri">
+<button
+type="button"
+class="business-btn active"
+data-business="BakeQuiri">
+
 🧁 BakeQuiri
+
 </button>
 
-<button type="button" class="business-btn" data-business="SpicyRoll">
+<button
+type="button"
+class="business-btn"
+data-business="SpicyRoll">
+
 🍣 SpicyRoll
+
 </button>
 
 </div>
 
 <div class="navigation">
 
-<button type="button" class="nav-btn accounts" id="accountsButton">
+<button
+type="button"
+class="nav-btn accounts"
+id="accountsButton">
+
 💰 Cuentas pendientes
+
 </button>
 
-<button type="button" class="nav-btn clients" id="clientsButton">
+<button
+type="button"
+class="nav-btn clients"
+id="clientsButton">
+
 👥 Clientes
+
 </button>
 
-<button type="button" class="nav-btn history" id="historyButton">
+<button
+type="button"
+class="nav-btn history"
+id="historyButton">
+
 🧾 Historial
+
 </button>
 
-<button type="button" class="nav-btn inventory" id="inventoryButton">
+<button
+type="button"
+class="nav-btn inventory"
+id="inventoryButton">
+
 📦 Inventario
+
 </button>
 
-<button type="button" class="nav-btn" id="dashboardButton">
+<button
+type="button"
+class="nav-btn"
+id="dashboardButton">
+
 📊 Dashboard
+
 </button>
 
 </div>
@@ -472,29 +591,46 @@ button{
 
 <div class="card">
 
-<h2>Productos</h2>
+<h2>
+Productos
+</h2>
 
-<div id="products" class="products">
+<div
+id="products"
+class="products">
+
 <div class="loading">
 Cargando productos...
 </div>
+
 </div>
 
 </div>
 
 <div class="card">
 
-<h2>🛒 Carrito</h2>
+<h2>
+🛒 Carrito
+</h2>
 
 <div id="cart">
+
 <div class="empty">
 El carrito está vacío
 </div>
+
 </div>
 
 <div class="total">
-<span>Total</span>
-<span id="total">$0.00</span>
+
+<span>
+Total
+</span>
+
+<span id="total">
+$0.00
+</span>
+
 </div>
 
 <div class="customer-title">
@@ -516,17 +652,30 @@ autocomplete="off">
 type="button"
 id="addClientButton"
 class="add-client">
+
 + Cliente
+
 </button>
 
 </div>
 
-<div id="customerResults" class="customer-results"></div>
+<div
+id="customerResults"
+class="customer-results">
+</div>
 
-<div id="selectedCustomer" class="selected-customer" style="display:none"></div>
+<div
+id="selectedCustomer"
+class="selected-customer"
+style="display:none">
+</div>
 
-<div id="generalCustomer" class="general-customer">
+<div
+id="generalCustomer"
+class="general-customer">
+
 👤 Consumidor general
+
 </div>
 
 </div>
@@ -535,27 +684,44 @@ class="add-client">
 Método de pago
 </div>
 
-<div id="payments" class="payments">
+<div
+id="payments"
+class="payments">
+
 <div class="empty">
 Cargando métodos de pago...
 </div>
+
 </div>
 
-<button type="button" id="chargeButton" class="charge">
+<button
+type="button"
+id="chargeButton"
+class="charge">
+
 💵 COBRAR
+
 </button>
 
-<button type="button" id="accountButton" class="account">
+<button
+type="button"
+id="accountButton"
+class="account">
+
 🟠 DEJAR A CUENTA
+
 </button>
 
 </div>
+
 </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
+
 "use strict";
 
 /* =====================================================
@@ -569,42 +735,62 @@ const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
 const BUSINESS_IDS = {
-  BakeQuiri:"c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
-  SpicyRoll:"ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
+
+  BakeQuiri:
+  "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+
+  SpicyRoll:
+  "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
+
 };
 
 /* =====================================================
    ESTADO
 ===================================================== */
 
-let supabaseClient=null;
+let supabaseClient = null;
 
-let currentBusiness="BakeQuiri";
+let currentBusiness =
+"BakeQuiri";
 
-let products=[];
-let payments=[];
-let customers=[];
-let cart=[];
+let products = [];
 
-let selectedPaymentId=null;
-let selectedCustomerId=null;
+let payments = [];
+
+let customers = [];
+
+let cart = [];
+
+let selectedPaymentId =
+null;
+
+let selectedCustomerId =
+null;
 
 /* =====================================================
    CACHE OFFLINE
 ===================================================== */
 
-const CACHE_KEY="POS_OFFLINE_CACHE_V1";
+const CACHE_KEY =
+"POS_OFFLINE_CACHE_V1";
 
 function saveOfflineCache(){
 
   try{
 
-    const data={
+    const data = {
+
       products,
+
       payments,
+
       customers,
+
       currentBusiness,
-      savedAt:new Date().toISOString()
+
+      savedAt:
+      new Date().toISOString()
+
     };
 
     localStorage.setItem(
@@ -613,6 +799,7 @@ function saveOfflineCache(){
     );
 
   }
+
   catch(error){
 
     console.warn(
@@ -628,31 +815,37 @@ function loadOfflineCache(){
 
   try{
 
-    const raw=
-      localStorage.getItem(CACHE_KEY);
+    const raw =
+      localStorage.getItem(
+        CACHE_KEY
+      );
 
     if(!raw){
+
       return false;
+
     }
 
-    const data=
+    const data =
       JSON.parse(raw);
 
     if(!data){
+
       return false;
+
     }
 
-    products=
+    products =
       Array.isArray(data.products)
       ? data.products
       : [];
 
-    payments=
+    payments =
       Array.isArray(data.payments)
       ? data.payments
       : [];
 
-    customers=
+    customers =
       Array.isArray(data.customers)
       ? data.customers
       : [];
@@ -660,6 +853,7 @@ function loadOfflineCache(){
     return true;
 
   }
+
   catch(error){
 
     console.warn(
@@ -678,43 +872,70 @@ function loadOfflineCache(){
 ===================================================== */
 
 function $(id){
+
   return document.getElementById(id);
+
 }
 
 function money(value){
 
-  return "$"+
-    Number(value||0).toFixed(2);
+  return "$" +
+    Number(value || 0)
+      .toFixed(2);
 
 }
 
 function escapeHTML(value){
 
-  return String(value??"")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+  return String(
+    value ?? ""
+  )
+  .replaceAll(
+    "&",
+    "&amp;"
+  )
+  .replaceAll(
+    "<",
+    "&lt;"
+  )
+  .replaceAll(
+    ">",
+    "&gt;"
+  )
+  .replaceAll(
+    '"',
+    "&quot;"
+  )
+  .replaceAll(
+    "'",
+    "&#039;"
+  );
 
 }
 
-function showStatus(message,type="error"){
+function showStatus(
+  message,
+  type="error"
+){
 
-  const element=$("status");
+  const element =
+    $("status");
 
-  element.textContent=message;
+  element.textContent =
+    message;
 
-  element.className=
-    "status "+type;
+  element.className =
+    "status " + type;
 
 }
 
 function clearStatus(){
 
-  $("status").textContent="";
+  $("status").textContent =
+    "";
 
-  $("status").className="status";
+  $("status").className =
+    "status";
 
 }
 
@@ -725,10 +946,15 @@ function clearStatus(){
 function showOfflineStatus(){
 
   showStatus(
-    "📴 Modo offline\n"+
-    "El POS está usando los datos guardados en este dispositivo. "+
+
+    "📴 Modo offline\n" +
+
+    "El POS está usando los datos guardados en este dispositivo. " +
+
     "Las operaciones que necesiten Supabase no podrán sincronizarse hasta recuperar Internet.",
+
     "offline"
+
   );
 
 }
@@ -747,7 +973,8 @@ function initializeSupabase(){
 
   if(
     !window.supabase ||
-    typeof window.supabase.createClient!=="function"
+    typeof window.supabase.createClient !==
+    "function"
   ){
 
     throw new Error(
@@ -756,10 +983,13 @@ function initializeSupabase(){
 
   }
 
-  supabaseClient=
+  supabaseClient =
     window.supabase.createClient(
+
       SUPABASE_URL,
+
       SUPABASE_PUBLISHABLE_KEY
+
     );
 
 }
@@ -770,14 +1000,20 @@ function initializeSupabase(){
 
 async function loadBusinessData(){
 
-  $("products").innerHTML=
-    '<div class="empty">Cargando productos...</div>';
+  $("products").innerHTML =
+    '<div class="empty">' +
+    'Cargando productos...' +
+    '</div>';
 
-  $("payments").innerHTML=
-    '<div class="empty">Cargando métodos de pago...</div>';
+  $("payments").innerHTML =
+    '<div class="empty">' +
+    'Cargando métodos de pago...' +
+    '</div>';
 
-  const businessId=
-    BUSINESS_IDS[currentBusiness];
+  const businessId =
+    BUSINESS_IDS[
+      currentBusiness
+    ];
 
   try{
 
@@ -790,107 +1026,147 @@ async function loadBusinessData(){
     }
 
     const [
+
       productsResult,
+
       paymentsResult,
+
       customersResult
-    ]=await Promise.all([
+
+    ] = await Promise.all([
 
       supabaseClient
+
         .from("products")
+
         .select(
           "id,name,price,cost,stock,active,business_id"
         )
+
         .eq(
           "business_id",
           businessId
         )
+
         .eq(
           "active",
           true
         )
+
         .order("name"),
 
       supabaseClient
+
         .from("payment_methods")
+
         .select(
           "id,name,provider,active,business_id"
         )
+
         .eq(
           "business_id",
           businessId
         )
+
         .eq(
           "active",
           true
         )
+
         .order("name"),
 
       /*
-        IMPORTANTE:
-        NO filtramos clientes por business_id.
+        CORRECCIÓN:
+
+        customers NO tiene business_id.
+
+        Los clientes son compartidos entre
+        BakeQuiri y SpicyRoll.
+
+        Por eso solamente seleccionamos
+        las columnas que realmente existen.
       */
 
       supabaseClient
+
         .from("customers")
+
         .select(
-          "id,business_id,name,phone,notes"
+          "id,name,phone,notes"
         )
+
         .order("name")
 
     ]);
 
     if(productsResult.error){
+
       throw productsResult.error;
+
     }
 
     if(paymentsResult.error){
+
       throw paymentsResult.error;
+
     }
 
     if(customersResult.error){
+
       throw customersResult.error;
+
     }
 
-    products=
-      productsResult.data||[];
+    products =
+      productsResult.data || [];
 
-    payments=
-      paymentsResult.data||[];
+    payments =
+      paymentsResult.data || [];
 
-    customers=
-      customersResult.data||[];
+    customers =
+      customersResult.data || [];
 
     saveOfflineCache();
 
     if(
       !payments.some(
-        p=>p.id===selectedPaymentId
+        p =>
+          p.id ===
+          selectedPaymentId
       )
     ){
 
-      selectedPaymentId=
-        payments[0]?.id||null;
+      selectedPaymentId =
+        payments[0]?.id ||
+        null;
 
     }
 
     if(
       !customers.some(
-        c=>c.id===selectedCustomerId
+        c =>
+          c.id ===
+          selectedCustomerId
       )
     ){
 
-      selectedCustomerId=null;
+      selectedCustomerId =
+        null;
 
     }
 
     renderProducts();
+
     renderPayments();
+
     renderCart();
+
     renderSelectedCustomer();
 
     showOnlineStatus();
 
   }
+
   catch(error){
 
     console.warn(
@@ -904,37 +1180,46 @@ async function loadBusinessData(){
 
       if(
         !payments.some(
-          p=>p.id===selectedPaymentId
+          p =>
+            p.id ===
+            selectedPaymentId
         )
       ){
 
-        selectedPaymentId=
-          payments[0]?.id||null;
+        selectedPaymentId =
+          payments[0]?.id ||
+          null;
 
       }
 
       renderProducts();
+
       renderPayments();
+
       renderCart();
+
       renderSelectedCustomer();
 
       showOfflineStatus();
 
     }
+
     else{
 
-      products=[];
-      payments=[];
-      customers=[];
+      products = [];
 
-      $("products").innerHTML=
-        '<div class="empty">'+
-        'No hay datos guardados para trabajar offline.'+
+      payments = [];
+
+      customers = [];
+
+      $("products").innerHTML =
+        '<div class="empty">' +
+        'No hay datos guardados para trabajar offline.' +
         '</div>';
 
-      $("payments").innerHTML=
-        '<div class="empty">'+
-        'No hay métodos de pago guardados.'+
+      $("payments").innerHTML =
+        '<div class="empty">' +
+        'No hay métodos de pago guardados.' +
         '</div>';
 
       showStatus(
@@ -954,65 +1239,90 @@ async function loadBusinessData(){
 
 function renderProducts(){
 
-  const container=$("products");
+  const container =
+    $("products");
 
-  container.innerHTML="";
+  container.innerHTML =
+    "";
 
   if(!products.length){
 
-    container.innerHTML=
-      '<div class="empty">'+
-      'No hay productos disponibles.'+
+    container.innerHTML =
+      '<div class="empty">' +
+      'No hay productos disponibles.' +
       '</div>';
 
     return;
 
   }
 
-  products.forEach(product=>{
+  products.forEach(
+    product => {
 
-    const stock=
-      Number(product.stock||0);
+      const stock =
+        Number(
+          product.stock || 0
+        );
 
-    const button=
-      document.createElement("button");
+      const button =
+        document.createElement(
+          "button"
+        );
 
-    button.type="button";
+      button.type =
+        "button";
 
-    button.className=
-      "product"+
-      (
-        stock<=0
-        ?" disabled"
-        :""
+      button.className =
+        "product" +
+        (
+          stock <= 0
+          ? " disabled"
+          : ""
+        );
+
+      button.disabled =
+        stock <= 0;
+
+      button.innerHTML =
+
+        '<div class="product-name">' +
+
+        escapeHTML(
+          product.name
+        ) +
+
+        '</div>' +
+
+        '<div class="price">' +
+
+        money(
+          product.price
+        ) +
+
+        '</div>' +
+
+        '<div class="stock">' +
+
+        (
+          stock > 0
+          ? "Existencia: " + stock
+          : "Agotado"
+        ) +
+
+        '</div>';
+
+      button.addEventListener(
+        "click",
+        () =>
+          addToCart(product)
       );
 
-    button.disabled=
-      stock<=0;
+      container.appendChild(
+        button
+      );
 
-    button.innerHTML=
-      '<div class="product-name">'+
-      escapeHTML(product.name)+
-      '</div>'+
-      '<div class="price">'+
-      money(product.price)+
-      '</div>'+
-      '<div class="stock">'+
-      (
-        stock>0
-        ?"Existencia: "+stock
-        :"Agotado"
-      )+
-      '</div>';
-
-    button.addEventListener(
-      "click",
-      ()=>addToCart(product)
-    );
-
-    container.appendChild(button);
-
-  });
+    }
+  );
 
 }
 
@@ -1022,54 +1332,65 @@ function renderProducts(){
 
 function renderPayments(){
 
-  const container=$("payments");
+  const container =
+    $("payments");
 
-  container.innerHTML="";
+  container.innerHTML =
+    "";
 
   if(!payments.length){
 
-    container.innerHTML=
-      '<div class="empty">'+
-      'No hay métodos de pago disponibles.'+
+    container.innerHTML =
+      '<div class="empty">' +
+      'No hay métodos de pago disponibles.' +
       '</div>';
 
     return;
 
   }
 
-  payments.forEach(payment=>{
+  payments.forEach(
+    payment => {
 
-    const button=
-      document.createElement("button");
+      const button =
+        document.createElement(
+          "button"
+        );
 
-    button.type="button";
+      button.type =
+        "button";
 
-    button.className=
-      "payment"+
-      (
-        payment.id===selectedPaymentId
-        ?" active"
-        :""
+      button.className =
+        "payment" +
+
+        (
+          payment.id ===
+          selectedPaymentId
+          ? " active"
+          : ""
+        );
+
+      button.textContent =
+        payment.name;
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          selectedPaymentId =
+            payment.id;
+
+          renderPayments();
+
+        }
       );
 
-    button.textContent=
-      payment.name;
+      container.appendChild(
+        button
+      );
 
-    button.addEventListener(
-      "click",
-      ()=>{
-
-        selectedPaymentId=
-          payment.id;
-
-        renderPayments();
-
-      }
-    );
-
-    container.appendChild(button);
-
-  });
+    }
+  );
 
 }
 
@@ -1079,10 +1400,12 @@ function renderPayments(){
 
 function addToCart(product){
 
-  const stock=
-    Number(product.stock||0);
+  const stock =
+    Number(
+      product.stock || 0
+    );
 
-  if(stock<=0){
+  if(stock <= 0){
 
     showStatus(
       "Este producto está agotado.",
@@ -1093,18 +1416,24 @@ function addToCart(product){
 
   }
 
-  const item=
+  const item =
     cart.find(
-      i=>i.id===product.id
+      i =>
+        i.id ===
+        product.id
     );
 
   if(item){
 
-    if(item.quantity<stock){
+    if(
+      item.quantity <
+      stock
+    ){
 
       item.quantity++;
 
     }
+
     else{
 
       showStatus(
@@ -1115,11 +1444,15 @@ function addToCart(product){
     }
 
   }
+
   else{
 
     cart.push({
+
       ...product,
+
       quantity:1
+
     });
 
   }
@@ -1128,33 +1461,41 @@ function addToCart(product){
 
 }
 
-function changeQuantity(id,amount){
+function changeQuantity(
+  id,
+  amount
+){
 
-  const item=
+  const item =
     cart.find(
-      i=>i.id===id
+      i =>
+        i.id === id
     );
 
   if(!item){
+
     return;
+
   }
 
-  const product=
+  const product =
     products.find(
-      p=>p.id===id
+      p =>
+        p.id === id
     );
 
-  const max=
+  const max =
     Number(
       product?.stock ??
       item.stock ??
       0
     );
 
-  const newQuantity=
-    item.quantity+amount;
+  const newQuantity =
+    item.quantity +
+    amount;
 
-  if(newQuantity>max){
+  if(newQuantity > max){
 
     showStatus(
       "No hay suficiente existencia disponible.",
@@ -1165,14 +1506,17 @@ function changeQuantity(id,amount){
 
   }
 
-  item.quantity=
+  item.quantity =
     newQuantity;
 
-  if(item.quantity<=0){
+  if(
+    item.quantity <= 0
+  ){
 
-    cart=
+    cart =
       cart.filter(
-        i=>i.id!==id
+        i =>
+          i.id !== id
       );
 
   }
@@ -1184,114 +1528,183 @@ function changeQuantity(id,amount){
 function getCartTotal(){
 
   return cart.reduce(
-    (sum,item)=>
-      sum+
-      Number(item.price)*
-      Number(item.quantity),
+
+    (sum,item) =>
+
+      sum +
+
+      Number(
+        item.price
+      ) *
+
+      Number(
+        item.quantity
+      ),
+
     0
+
   );
 
 }
 
 function renderCart(){
 
-  const container=$("cart");
+  const container =
+    $("cart");
 
-  container.innerHTML="";
+  container.innerHTML =
+    "";
 
   if(!cart.length){
 
-    container.innerHTML=
-      '<div class="empty">'+
-      'El carrito está vacío'+
+    container.innerHTML =
+      '<div class="empty">' +
+      'El carrito está vacío' +
       '</div>';
 
-    $("total").textContent="$0.00";
+    $("total").textContent =
+      "$0.00";
 
     return;
 
   }
 
-  cart.forEach(item=>{
+  cart.forEach(
+    item => {
 
-    const subtotal=
-      Number(item.price)*
-      Number(item.quantity);
+      const subtotal =
 
-    const row=
-      document.createElement("div");
+        Number(
+          item.price
+        ) *
 
-    row.className="cart-item";
+        Number(
+          item.quantity
+        );
 
-    const info=
-      document.createElement("div");
+      const row =
+        document.createElement(
+          "div"
+        );
 
-    info.innerHTML=
-      '<div class="cart-name">'+
-      escapeHTML(item.name)+
-      '</div>'+
-      '<div class="cart-price">'+
-      money(item.price)+
-      ' c/u</div>';
+      row.className =
+        "cart-item";
 
-    const controls=
-      document.createElement("div");
+      const info =
+        document.createElement(
+          "div"
+        );
 
-    controls.className="quantity";
+      info.innerHTML =
 
-    const minus=
-      document.createElement("button");
+        '<div class="cart-name">' +
 
-    minus.type="button";
-    minus.textContent="−";
+        escapeHTML(
+          item.name
+        ) +
 
-    minus.addEventListener(
-      "click",
-      ()=>changeQuantity(item.id,-1)
+        '</div>' +
+
+        '<div class="cart-price">' +
+
+        money(
+          item.price
+        ) +
+
+        ' c/u</div>';
+
+      const controls =
+        document.createElement(
+          "div"
+        );
+
+      controls.className =
+        "quantity";
+
+      const minus =
+        document.createElement(
+          "button"
+        );
+
+      minus.type =
+        "button";
+
+      minus.textContent =
+        "−";
+
+      minus.addEventListener(
+        "click",
+        () =>
+          changeQuantity(
+            item.id,
+            -1
+          )
+      );
+
+      const quantity =
+        document.createElement(
+          "span"
+        );
+
+      quantity.textContent =
+        item.quantity;
+
+      const plus =
+        document.createElement(
+          "button"
+        );
+
+      plus.type =
+        "button";
+
+      plus.textContent =
+        "+";
+
+      plus.addEventListener(
+        "click",
+        () =>
+          changeQuantity(
+            item.id,
+            1
+          )
+      );
+
+      controls.append(
+        minus,
+        quantity,
+        plus
+      );
+
+      info.appendChild(
+        controls
+      );
+
+      const subtotalElement =
+        document.createElement(
+          "strong"
+        );
+
+      subtotalElement.textContent =
+        money(
+          subtotal
+        );
+
+      row.append(
+        info,
+        subtotalElement
+      );
+
+      container.appendChild(
+        row
+      );
+
+    }
+  );
+
+  $("total").textContent =
+    money(
+      getCartTotal()
     );
-
-    const quantity=
-      document.createElement("span");
-
-    quantity.textContent=
-      item.quantity;
-
-    const plus=
-      document.createElement("button");
-
-    plus.type="button";
-    plus.textContent="+";
-
-    plus.addEventListener(
-      "click",
-      ()=>changeQuantity(item.id,1)
-    );
-
-    controls.append(
-      minus,
-      quantity,
-      plus
-    );
-
-    info.appendChild(controls);
-
-    const subtotalElement=
-      document.createElement("strong");
-
-    subtotalElement.textContent=
-      money(subtotal);
-
-    row.append(
-      info,
-      subtotalElement
-    );
-
-    container.appendChild(row);
-
-  });
-
-  $("total").textContent=
-    money(getCartTotal());
 
 }
 
@@ -1301,228 +1714,327 @@ function renderCart(){
 
 function renderSelectedCustomer(){
 
-  const selected=
+  const selected =
     customers.find(
-      c=>c.id===selectedCustomerId
+      c =>
+        c.id ===
+        selectedCustomerId
     );
 
-  const element=$("selectedCustomer");
-  const general=$("generalCustomer");
+  const element =
+    $("selectedCustomer");
+
+  const general =
+    $("generalCustomer");
 
   if(!selected){
 
-    selectedCustomerId=null;
+    selectedCustomerId =
+      null;
 
-    element.style.display="none";
-    element.innerHTML="";
+    element.style.display =
+      "none";
 
-    general.style.display="block";
+    element.innerHTML =
+      "";
+
+    general.style.display =
+      "block";
 
     return;
 
   }
 
-  general.style.display="none";
-  element.style.display="block";
+  general.style.display =
+    "none";
 
-  element.innerHTML=
-    "👤 <strong>"+
-    escapeHTML(selected.name||"Cliente")+
-    "</strong>"+
+  element.style.display =
+    "block";
+
+  element.innerHTML =
+
+    "👤 <strong>" +
+
+    escapeHTML(
+      selected.name ||
+      "Cliente"
+    ) +
+
+    "</strong>" +
+
     (
       selected.phone
-      ?" · 📱 "+escapeHTML(selected.phone)
-      :""
-    )+
-    '<button type="button" class="clear-customer" id="clearCustomer">'+
-    "Quitar"+
+      ? " · 📱 " +
+        escapeHTML(
+          selected.phone
+        )
+      : ""
+    ) +
+
+    '<button type="button" class="clear-customer" id="clearCustomer">' +
+
+    "Quitar" +
+
     "</button>";
 
-  $("clearCustomer").addEventListener(
-    "click",
-    clearSelectedCustomer
-  );
+  $("clearCustomer")
+    .addEventListener(
+      "click",
+      clearSelectedCustomer
+    );
 
 }
 
 function clearSelectedCustomer(){
 
-  selectedCustomerId=null;
+  selectedCustomerId =
+    null;
 
-  $("customerSearch").value="";
+  $("customerSearch").value =
+    "";
 
-  $("customerResults").innerHTML="";
+  $("customerResults").innerHTML =
+    "";
 
-  $("customerResults").style.display="none";
+  $("customerResults").style.display =
+    "none";
 
   renderSelectedCustomer();
 
 }
 
-function renderCustomerResults(query){
+function renderCustomerResults(
+  query
+){
 
-  const container=
+  const container =
     $("customerResults");
 
-  const search=
-    String(query||"")
-      .trim()
-      .toLowerCase();
+  const search =
+    String(
+      query || ""
+    )
+    .trim()
+    .toLowerCase();
 
   if(!search){
 
-    container.innerHTML="";
-    container.style.display="none";
+    container.innerHTML =
+      "";
+
+    container.style.display =
+      "none";
 
     return;
 
   }
 
-  const filtered=
-    customers.filter(customer=>{
+  const filtered =
+    customers.filter(
+      customer => {
 
-      const name=
-        String(customer.name||"")
+        const name =
+          String(
+            customer.name || ""
+          )
           .toLowerCase();
 
-      const phone=
-        String(customer.phone||"")
+        const phone =
+          String(
+            customer.phone || ""
+          )
           .toLowerCase();
 
-      const notes=
-        String(customer.notes||"")
+        const notes =
+          String(
+            customer.notes || ""
+          )
           .toLowerCase();
 
-      return(
-        name.includes(search)||
-        phone.includes(search)||
-        notes.includes(search)
-      );
+        return(
 
-    });
+          name.includes(
+            search
+          ) ||
 
-  container.innerHTML="";
+          phone.includes(
+            search
+          ) ||
 
-  if(!filtered.length){
+          notes.includes(
+            search
+          )
 
-    const empty=
-      document.createElement("div");
-
-    empty.className="empty";
-
-    empty.textContent=
-      "No encontramos ese cliente.";
-
-    container.appendChild(empty);
-
-    container.style.display="block";
-
-    return;
-
-  }
-
-  filtered.slice(0,10).forEach(customer=>{
-
-    const button=
-      document.createElement("button");
-
-    button.type="button";
-    button.className="customer-result";
-
-    button.innerHTML=
-      "<strong>"+
-      escapeHTML(
-        customer.name||
-        "Cliente sin nombre"
-      )+
-      "</strong>"+
-      (
-        customer.phone
-        ?"<small>📱 "+
-        escapeHTML(customer.phone)+
-        "</small>"
-        :""
-      );
-
-    button.addEventListener(
-      "click",
-      ()=>{
-
-        selectedCustomerId=
-          customer.id;
-
-        $("customerSearch").value=
-          customer.name||"";
-
-        container.innerHTML="";
-        container.style.display="none";
-
-        renderSelectedCustomer();
+        );
 
       }
     );
 
-    container.appendChild(button);
+  container.innerHTML =
+    "";
 
-  });
+  if(!filtered.length){
 
-  container.style.display="block";
+    const empty =
+      document.createElement(
+        "div"
+      );
+
+    empty.className =
+      "empty";
+
+    empty.textContent =
+      "No encontramos ese cliente.";
+
+    container.appendChild(
+      empty
+    );
+
+    container.style.display =
+      "block";
+
+    return;
+
+  }
+
+  filtered
+    .slice(0,10)
+    .forEach(
+      customer => {
+
+        const button =
+          document.createElement(
+            "button"
+          );
+
+        button.type =
+          "button";
+
+        button.className =
+          "customer-result";
+
+        button.innerHTML =
+
+          "<strong>" +
+
+          escapeHTML(
+            customer.name ||
+            "Cliente sin nombre"
+          ) +
+
+          "</strong>" +
+
+          (
+            customer.phone
+
+            ? "<small>📱 " +
+              escapeHTML(
+                customer.phone
+              ) +
+              "</small>"
+
+            : ""
+          );
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            selectedCustomerId =
+              customer.id;
+
+            $("customerSearch").value =
+              customer.name || "";
+
+            container.innerHTML =
+              "";
+
+            container.style.display =
+              "none";
+
+            renderSelectedCustomer();
+
+          }
+        );
+
+        container.appendChild(
+          button
+        );
+
+      }
+    );
+
+  container.style.display =
+    "block";
 
 }
 
-$("customerSearch").addEventListener(
+$("customerSearch")
+.addEventListener(
   "input",
-  event=>
+  event =>
     renderCustomerResults(
       event.target.value
     )
 );
 
-$("customerSearch").addEventListener(
+$("customerSearch")
+.addEventListener(
   "focus",
-  event=>{
+  event => {
 
-    const value=
+    const value =
       event.target.value.trim();
 
     if(value){
 
-      renderCustomerResults(value);
+      renderCustomerResults(
+        value
+      );
 
     }
 
   }
 );
 
-$("generalCustomer").addEventListener(
+$("generalCustomer")
+.addEventListener(
   "click",
   clearSelectedCustomer
 );
 
-$("addClientButton").addEventListener(
+$("addClientButton")
+.addEventListener(
   "click",
-  ()=>{
+  () => {
 
-    window.location.href=
-      "clientes.html?business="+
-      encodeURIComponent(currentBusiness);
+    window.location.href =
+      "clientes.html?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
 
   }
 );
 
 document.addEventListener(
   "click",
-  event=>{
+  event => {
 
-    const box=
-      document.querySelector(".customer-box");
+    const box =
+      document.querySelector(
+        ".customer-box"
+      );
 
     if(
       box &&
-      !box.contains(event.target)
+      !box.contains(
+        event.target
+      )
     ){
 
-      $("customerResults").style.display=
+      $("customerResults")
+        .style.display =
         "none";
 
     }
@@ -1534,29 +2046,54 @@ document.addEventListener(
    CAMBIAR NEGOCIO
 ===================================================== */
 
-async function changeBusiness(name,button){
+async function changeBusiness(
+  name,
+  button
+){
 
-  if(name===currentBusiness){
+  if(
+    name ===
+    currentBusiness
+  ){
+
     return;
+
   }
 
-  currentBusiness=name;
+  currentBusiness =
+    name;
 
-  cart=[];
-  selectedPaymentId=null;
-  selectedCustomerId=null;
+  cart = [];
 
-  $("customerSearch").value="";
-  $("customerResults").innerHTML="";
-  $("customerResults").style.display="none";
+  selectedPaymentId =
+    null;
+
+  selectedCustomerId =
+    null;
+
+  $("customerSearch").value =
+    "";
+
+  $("customerResults").innerHTML =
+    "";
+
+  $("customerResults").style.display =
+    "none";
 
   document
-    .querySelectorAll(".business-btn")
+    .querySelectorAll(
+      ".business-btn"
+    )
     .forEach(
-      b=>b.classList.remove("active")
+      b =>
+        b.classList.remove(
+          "active"
+        )
     );
 
-  button.classList.add("active");
+  button.classList.add(
+    "active"
+  );
 
   await loadBusinessData();
 
@@ -1566,7 +2103,9 @@ async function changeBusiness(name,button){
    REGISTRAR VENTA
 ===================================================== */
 
-async function registerSale(isPending){
+async function registerSale(
+  isPending
+){
 
   clearStatus();
 
@@ -1581,7 +2120,10 @@ async function registerSale(isPending){
 
   }
 
-  if(!isPending && !selectedPaymentId){
+  if(
+    !isPending &&
+    !selectedPaymentId
+  ){
 
     showStatus(
       "Selecciona un método de pago.",
@@ -1592,7 +2134,10 @@ async function registerSale(isPending){
 
   }
 
-  if(isPending && !selectedCustomerId){
+  if(
+    isPending &&
+    !selectedCustomerId
+  ){
 
     showStatus(
       "Para dejar una venta a cuenta debes seleccionar un cliente.",
@@ -1603,64 +2148,81 @@ async function registerSale(isPending){
 
   }
 
-  /*
-    En modo offline no intentamos registrar
-    una venta contra Supabase.
-  */
-
   if(!navigator.onLine){
 
     showOfflineStatus();
 
     alert(
-      "📴 Estás trabajando sin Internet.\n\n"+
-      "La venta NO se ha enviado a Supabase.\n\n"+
-      "Cuando recuperemos conexión podremos implementar "+
+
+      "📴 Estás trabajando sin Internet.\n\n" +
+
+      "La venta NO se ha enviado a Supabase.\n\n" +
+
+      "Cuando recuperemos conexión podremos implementar " +
+
       "la cola de sincronización de ventas."
+
     );
 
     return;
 
   }
 
-  const button=
+  const button =
     isPending
-    ?$("accountButton")
-    :$("chargeButton");
+    ? $("accountButton")
+    : $("chargeButton");
 
-  const originalText=
+  const originalText =
     button.textContent;
 
-  button.disabled=true;
+  button.disabled =
+    true;
 
-  button.textContent=
+  button.textContent =
     isPending
-    ?"GUARDANDO..."
-    :"REGISTRANDO...";
+    ? "GUARDANDO..."
+    : "REGISTRANDO...";
 
   try{
 
-    const items=
-      cart.map(item=>({
+    const items =
+      cart.map(
+        item => ({
 
-        product_id:item.id,
+          product_id:
+            item.id,
 
-        description:item.name,
+          description:
+            item.name,
 
-        quantity:Number(item.quantity),
+          quantity:
+            Number(
+              item.quantity
+            ),
 
-        unit_price:Number(item.price),
+          unit_price:
+            Number(
+              item.price
+            ),
 
-        subtotal:
-          Number(item.price)*
-          Number(item.quantity)
+          subtotal:
+            Number(
+              item.price
+            ) *
+            Number(
+              item.quantity
+            )
 
-      }));
+        })
+      );
 
-    const businessId=
-      BUSINESS_IDS[currentBusiness];
+    const businessId =
+      BUSINESS_IDS[
+        currentBusiness
+      ];
 
-    const result=
+    const result =
       await supabaseClient.rpc(
         "register_sale",
         {
@@ -1669,12 +2231,13 @@ async function registerSale(isPending){
             businessId,
 
           p_customer_id:
-            selectedCustomerId||null,
+            selectedCustomerId ||
+            null,
 
           p_payment_method_id:
             isPending
-            ?null
-            :selectedPaymentId,
+            ? null
+            : selectedPaymentId,
 
           p_items:
             items,
@@ -1691,61 +2254,94 @@ async function registerSale(isPending){
 
     }
 
-    const total=
+    const total =
       getCartTotal();
 
-    const customer=
+    const customer =
       customers.find(
-        c=>c.id===selectedCustomerId
+        c =>
+          c.id ===
+          selectedCustomerId
       );
 
-    const paymentName=
+    const paymentName =
       payments.find(
-        p=>p.id===selectedPaymentId
-      )?.name||
+        p =>
+          p.id ===
+          selectedPaymentId
+      )?.name ||
       "Pago";
 
     alert(
+
       (
+
         isPending
-        ?"Cuenta registrada"
-        :"Venta registrada"
-      )+
-      "\n\n"+
-      currentBusiness+
-      "\nCliente: "+
+        ? "Cuenta registrada"
+        : "Venta registrada"
+
+      ) +
+
+      "\n" +
+
+      currentBusiness +
+
+      "\nCliente: " +
+
       (
-        customer?.name||
+        customer?.name ||
         "Consumidor general"
-      )+
-      "\nTotal: "+
-      money(total)+
+      ) +
+
+      "\nTotal: " +
+
+      money(
+        total
+      ) +
+
       (
+
         isPending
-        ?""
-        :"\nPago: "+paymentName
+        ? ""
+        : "\nPago: " +
+          paymentName
+
       )
+
     );
 
-    cart=[];
-    selectedCustomerId=null;
+    cart = [];
 
-    $("customerSearch").value="";
-    $("customerResults").innerHTML="";
-    $("customerResults").style.display="none";
+    selectedCustomerId =
+      null;
+
+    $("customerSearch").value =
+      "";
+
+    $("customerResults").innerHTML =
+      "";
+
+    $("customerResults").style.display =
+      "none";
 
     renderSelectedCustomer();
 
     await loadBusinessData();
 
     showStatus(
+
       isPending
-      ?"Cuenta guardada correctamente."
-      :"Venta guardada correctamente.",
+
+      ? "Cuenta guardada correctamente."
+
+      : "Venta guardada correctamente.",
+
       "ok"
+
     );
 
   }
+
   catch(error){
 
     console.error(
@@ -1754,19 +2350,27 @@ async function registerSale(isPending){
     );
 
     showStatus(
-      "No se pudo registrar la operación:\n"+
+
+      "No se pudo registrar la operación:\n" +
+
       (
-        error?.message||
+        error?.message ||
         String(error)
       ),
+
       "error"
+
     );
 
   }
+
   finally{
 
-    button.disabled=false;
-    button.textContent=originalText;
+    button.disabled =
+      false;
+
+    button.textContent =
+      originalText;
 
   }
 
@@ -1776,67 +2380,86 @@ async function registerSale(isPending){
    BOTONES
 ===================================================== */
 
-$("chargeButton").addEventListener(
+$("chargeButton")
+.addEventListener(
   "click",
-  ()=>registerSale(false)
+  () =>
+    registerSale(false)
 );
 
-$("accountButton").addEventListener(
+$("accountButton")
+.addEventListener(
   "click",
-  ()=>registerSale(true)
+  () =>
+    registerSale(true)
 );
 
-$("accountsButton").addEventListener(
+$("accountsButton")
+.addEventListener(
   "click",
-  ()=>{
+  () => {
 
-    window.location.href=
-      "cuentas.html?business="+
-      encodeURIComponent(currentBusiness);
+    window.location.href =
+      "cuentas.html?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
 
   }
 );
 
-$("clientsButton").addEventListener(
+$("clientsButton")
+.addEventListener(
   "click",
-  ()=>{
+  () => {
 
-    window.location.href=
-      "clientes.html?business="+
-      encodeURIComponent(currentBusiness);
+    window.location.href =
+      "clientes.html?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
 
   }
 );
 
-$("historyButton").addEventListener(
+$("historyButton")
+.addEventListener(
   "click",
-  ()=>{
+  () => {
 
-    window.location.href=
-      "historial.html?business="+
-      encodeURIComponent(currentBusiness);
+    window.location.href =
+      "historial.html?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
 
   }
 );
 
-$("inventoryButton").addEventListener(
+$("inventoryButton")
+.addEventListener(
   "click",
-  ()=>{
+  () => {
 
-    window.location.href=
-      "inventario.html?business="+
-      encodeURIComponent(currentBusiness);
+    window.location.href =
+      "inventario.html?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
 
   }
 );
 
-$("dashboardButton").addEventListener(
+$("dashboardButton")
+.addEventListener(
   "click",
-  ()=>{
+  () => {
 
-    window.location.href=
-      "dashboard.html?business="+
-      encodeURIComponent(currentBusiness);
+    window.location.href =
+      "dashboard.html?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
 
   }
 );
@@ -1846,30 +2469,34 @@ $("dashboardButton").addEventListener(
 ===================================================== */
 
 document
-  .querySelectorAll(".business-btn")
-  .forEach(button=>{
+  .querySelectorAll(
+    ".business-btn"
+  )
+  .forEach(
+    button => {
 
-    button.addEventListener(
-      "click",
-      ()=>{
+      button.addEventListener(
+        "click",
+        () => {
 
-        changeBusiness(
-          button.dataset.business,
-          button
-        );
+          changeBusiness(
+            button.dataset.business,
+            button
+          );
 
-      }
-    );
+        }
+      );
 
-  });
+    }
+  );
 
 /* =====================================================
-   INTERNET: RECUPERACIÓN
+   INTERNET
 ===================================================== */
 
 window.addEventListener(
   "offline",
-  ()=>{
+  () => {
 
     showOfflineStatus();
 
@@ -1878,7 +2505,7 @@ window.addEventListener(
 
 window.addEventListener(
   "online",
-  async ()=>{
+  async () => {
 
     showStatus(
       "🌐 Internet recuperado. Actualizando datos...",
@@ -1903,6 +2530,7 @@ async function startApp(){
     await loadBusinessData();
 
   }
+
   catch(error){
 
     console.error(
@@ -1910,22 +2538,31 @@ async function startApp(){
       error
     );
 
-    if(loadOfflineCache()){
+    if(
+      loadOfflineCache()
+    ){
 
       renderProducts();
+
       renderPayments();
+
       renderCart();
+
       renderSelectedCustomer();
 
       showOfflineStatus();
 
     }
+
     else{
 
       showStatus(
-        error?.message||
+
+        error?.message ||
         "No se pudo iniciar el sistema.",
+
         "error"
+
       );
 
     }
@@ -1939,4 +2576,5 @@ startApp();
 </script>
 
 </body>
+
 </html>
