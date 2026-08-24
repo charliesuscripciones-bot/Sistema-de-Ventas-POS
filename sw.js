@@ -1,65 +1,1378 @@
 "use strict";
 
-/*
-=====================================================
-SERVICE WORKER DEL SISTEMA DE VENTAS POS
-=====================================================
-
-Objetivos:
-
-1. Permitir abrir el POS después de haberlo
-   visitado al menos una vez con Internet.
-
-2. Cuando HAY Internet:
-   - Preferir la versión actual de la página.
-   - Actualizar el caché automáticamente.
-
-3. Cuando NO HAY Internet:
-   - Usar la copia guardada.
-   - Permitir que index.html abra normalmente.
-
-4. Mantener disponibles:
-   - index.html
-   - páginas del sistema
-   - Supabase JS
-
-5. NO interceptar las consultas de datos
-   de Supabase.
-
-=====================================================
-*/
-
-const CACHE_NAME =
-  "pos-offline-v6";
+const CACHE_NAME = "pos-offline-v7";
 
 const SUPABASE_SCRIPT =
   "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
 
 const APP_FILES = [
-
   "./",
-
   "./index.html",
-
   "./clientes.html",
-
   "./cuentas.html",
-
   "./historial.html",
-
   "./inventario.html",
-
   "./dashboard.html",
-
   "./sw.js"
-
 ];
 
-/*
-=====================================================
-INSTALACIÓN
-=====================================================
-*/
+const OFFLINE_CLIENT_SCRIPT = `
+(function(){
+  "use strict";
+
+  const QUEUE_KEY = "POS_PENDING_CUSTOMERS_V1";
+  const CACHE_KEY = "POS_BUSINESS_CACHE_V4";
+
+  const BUSINESSES = [
+    "BakeQuiri",
+    "SpicyRoll"
+  ];
+
+  const SUPABASE_URL =
+    "https://jrxklpstlloeckihcduv.supabase.co";
+
+  const SUPABASE_KEY =
+    "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
+
+  let modal;
+  let nameInput;
+  let phoneInput;
+  let notesInput;
+  let saving = false;
+
+  const $ = id =>
+    document.getElementById(id);
+
+
+  /* =====================================================
+     ID LOCAL
+  ===================================================== */
+
+  function makeId(){
+
+    if(
+      crypto &&
+      typeof crypto.randomUUID === "function"
+    ){
+      return crypto.randomUUID();
+    }
+
+    return (
+      "offline-customer-" +
+      Date.now() +
+      "-" +
+      Math.random()
+        .toString(36)
+        .slice(2)
+    );
+
+  }
+
+
+  /* =====================================================
+     CACHE DE NEGOCIOS
+  ===================================================== */
+
+  function readCache(){
+
+    try{
+
+      return JSON.parse(
+        localStorage.getItem(
+          CACHE_KEY
+        ) || "{}"
+      );
+
+    }
+
+    catch{
+
+      return {};
+
+    }
+
+  }
+
+
+  function writeCache(value){
+
+    localStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify(value)
+    );
+
+  }
+
+
+  /* =====================================================
+     COLA DE CLIENTES PENDIENTES
+  ===================================================== */
+
+  function readQueue(){
+
+    try{
+
+      const value =
+        JSON.parse(
+          localStorage.getItem(
+            QUEUE_KEY
+          ) || "[]"
+        );
+
+      return Array.isArray(value)
+        ? value
+        : [];
+
+    }
+
+    catch{
+
+      return [];
+
+    }
+
+  }
+
+
+  function writeQueue(value){
+
+    localStorage.setItem(
+      QUEUE_KEY,
+      JSON.stringify(value)
+    );
+
+  }
+
+
+  /* =====================================================
+     GUARDAR CLIENTE LOCALMENTE
+  ===================================================== */
+
+  function addLocal(customer){
+
+    const data =
+      readCache();
+
+    BUSINESSES.forEach(
+      business => {
+
+        if(!data[business]){
+
+          data[business] = {
+
+            products: [],
+            payments: [],
+            customers: []
+
+          };
+
+        }
+
+        if(
+          !Array.isArray(
+            data[business].customers
+          )
+        ){
+
+          data[business].customers = [];
+
+        }
+
+        const exists =
+          data[business]
+            .customers
+            .some(
+              item =>
+                String(item.id) ===
+                String(customer.id)
+            );
+
+        if(!exists){
+
+          data[business]
+            .customers
+            .push(customer);
+
+        }
+
+        data[business].savedAt =
+          new Date().toISOString();
+
+      }
+    );
+
+    writeCache(data);
+
+  }
+
+
+  /* =====================================================
+     REEMPLAZAR ID LOCAL POR ID DE SUPABASE
+  ===================================================== */
+
+  function replaceLocal(
+    localId,
+    customer
+  ){
+
+    const data =
+      readCache();
+
+    BUSINESSES.forEach(
+      business => {
+
+        if(
+          !data[business] ||
+          !Array.isArray(
+            data[business].customers
+          )
+        ){
+
+          return;
+
+        }
+
+        data[business].customers =
+          data[business]
+            .customers
+            .map(
+              item =>
+                String(item.id) ===
+                String(localId)
+                ? customer
+                : item
+            );
+
+      }
+    );
+
+    writeCache(data);
+
+  }
+
+
+  /* =====================================================
+     ACTUALIZAR ESTADO DEL POS
+  ===================================================== */
+
+  function updatePOS(customer){
+
+    try{
+
+      const data =
+        readCache();
+
+      const all = [];
+
+      BUSINESSES.forEach(
+        business => {
+
+          const list =
+            data[business]?.customers ||
+            [];
+
+          list.forEach(
+            customerItem => {
+
+              const exists =
+                all.some(
+                  item =>
+                    String(item.id) ===
+                    String(customerItem.id)
+                );
+
+              if(!exists){
+
+                all.push(
+                  customerItem
+                );
+
+              }
+
+            }
+          );
+
+        }
+      );
+
+      const currentExists =
+        all.some(
+          item =>
+            String(item.id) ===
+            String(customer.id)
+        );
+
+      if(!currentExists){
+
+        all.push(customer);
+
+      }
+
+      window.eval(
+
+        "customers=" +
+        JSON.stringify(all) +
+        ";" +
+
+        "selectedCustomerId=" +
+        JSON.stringify(customer.id) +
+        ";" +
+
+        "if(typeof renderSelectedCustomer==='function')" +
+        "renderSelectedCustomer();" +
+
+        "if(typeof renderCustomerResults==='function')" +
+        "renderCustomerResults('');"
+
+      );
+
+    }
+
+    catch(error){
+
+      console.warn(
+        "POS customer state:",
+        error
+      );
+
+    }
+
+  }
+
+
+  /* =====================================================
+     MENSAJE EN EL POS
+  ===================================================== */
+
+  function showMessage(
+    text,
+    type
+  ){
+
+    try{
+
+      window.eval(
+
+        "if(typeof showStatus==='function')" +
+
+        "showStatus(" +
+
+        JSON.stringify(text) +
+
+        "," +
+
+        JSON.stringify(
+          type || "ok"
+        ) +
+
+        ");"
+
+      );
+
+    }
+
+    catch{
+
+    }
+
+  }
+
+
+  /* =====================================================
+     INSERTAR EN SUPABASE
+  ===================================================== */
+
+  async function insertOnline(
+    customer
+  ){
+
+    try{
+
+      if(
+        !window.supabase ||
+        typeof window.supabase.createClient !==
+        "function"
+      ){
+
+        return null;
+
+      }
+
+      const client =
+        window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_KEY
+        );
+
+      const result =
+        await client
+          .from("customers")
+          .insert({
+
+            name:
+              customer.name,
+
+            phone:
+              customer.phone ||
+              null,
+
+            notes:
+              customer.notes ||
+              null
+
+          })
+          .select(
+            "id,name,phone,notes"
+          )
+          .single();
+
+      if(result.error){
+
+        throw result.error;
+
+      }
+
+      return (
+        result.data ||
+        null
+      );
+
+    }
+
+    catch(error){
+
+      console.warn(
+        "Customer sync:",
+        error
+      );
+
+      return null;
+
+    }
+
+  }
+
+
+  /* =====================================================
+     SINCRONIZAR CLIENTES
+  ===================================================== */
+
+  async function syncQueue(){
+
+    if(!navigator.onLine){
+
+      return;
+
+    }
+
+    const pending =
+      readQueue();
+
+    if(!pending.length){
+
+      return;
+
+    }
+
+    const remaining = [];
+
+    for(
+      const customer of pending
+    ){
+
+      const saved =
+        await insertOnline(
+          customer
+        );
+
+      if(saved){
+
+        replaceLocal(
+          customer.id,
+          saved
+        );
+
+        try{
+
+          const selected =
+            window.eval(
+              "typeof selectedCustomerId!=='undefined'" +
+              "?selectedCustomerId:null"
+            );
+
+          if(
+            String(selected) ===
+            String(customer.id)
+          ){
+
+            updatePOS(
+              saved
+            );
+
+          }
+
+        }
+
+        catch{
+
+        }
+
+      }
+
+      else{
+
+        remaining.push(
+          customer
+        );
+
+      }
+
+    }
+
+    writeQueue(
+      remaining
+    );
+
+  }
+
+
+  /* =====================================================
+     CERRAR MODAL
+  ===================================================== */
+
+  function close(){
+
+    if(modal){
+
+      modal.classList.remove(
+        "show"
+      );
+
+    }
+
+  }
+
+
+  /* =====================================================
+     ABRIR MODAL
+  ===================================================== */
+
+  function open(){
+
+    if(!modal){
+
+      build();
+
+    }
+
+    nameInput.value = "";
+    phoneInput.value = "";
+    notesInput.value = "";
+
+    modal.classList.add(
+      "show"
+    );
+
+    setTimeout(
+      () => {
+
+        nameInput.focus();
+
+      },
+      50
+    );
+
+  }
+
+
+  /* =====================================================
+     GUARDAR CLIENTE
+  ===================================================== */
+
+  async function save(){
+
+    if(saving){
+
+      return;
+
+    }
+
+    const name =
+      nameInput.value.trim();
+
+    const phone =
+      phoneInput.value.trim();
+
+    const notes =
+      notesInput.value.trim();
+
+    if(!name){
+
+      alert(
+        "Escribe el nombre del cliente."
+      );
+
+      nameInput.focus();
+
+      return;
+
+    }
+
+    saving = true;
+
+    const button =
+      $("ocmSave");
+
+    button.disabled = true;
+
+    button.textContent =
+      "Guardando...";
+
+    const localCustomer = {
+
+      id:
+        makeId(),
+
+      name:
+        name,
+
+      phone:
+        phone || null,
+
+      notes:
+        notes || null
+
+    };
+
+
+    try{
+
+      let customer =
+        localCustomer;
+
+
+      /* ================================================
+         CON INTERNET
+      ================================================= */
+
+      if(navigator.onLine){
+
+        const onlineCustomer =
+          await insertOnline(
+            localCustomer
+          );
+
+        if(onlineCustomer){
+
+          customer =
+            onlineCustomer;
+
+        }
+
+        else{
+
+          const pending =
+            readQueue();
+
+          pending.push(
+            localCustomer
+          );
+
+          writeQueue(
+            pending
+          );
+
+        }
+
+      }
+
+
+      /* ================================================
+         SIN INTERNET
+      ================================================= */
+
+      else{
+
+        const pending =
+          readQueue();
+
+        pending.push(
+          localCustomer
+        );
+
+        writeQueue(
+          pending
+        );
+
+      }
+
+
+      /* ================================================
+         GUARDAR LOCALMENTE
+      ================================================= */
+
+      addLocal(
+        customer
+      );
+
+
+      /* ================================================
+         SELECCIONAR AUTOMÁTICAMENTE
+      ================================================= */
+
+      updatePOS(
+        customer
+      );
+
+
+      close();
+
+
+      /* ================================================
+         MENSAJE
+      ================================================= */
+
+      if(
+        customer.id ===
+        localCustomer.id
+      ){
+
+        showMessage(
+
+          "📴 Cliente guardado localmente y seleccionado. " +
+          "Se sincronizará cuando vuelva Internet.",
+
+          "offline"
+
+        );
+
+      }
+
+      else{
+
+        showMessage(
+
+          "✅ Cliente guardado en Supabase y seleccionado.",
+
+          "ok"
+
+        );
+
+      }
+
+    }
+
+    finally{
+
+      saving =
+        false;
+
+      button.disabled =
+        false;
+
+      button.textContent =
+        "Guardar cliente";
+
+    }
+
+  }
+
+
+  /* =====================================================
+     CONSTRUIR MODAL
+  ===================================================== */
+
+  function build(){
+
+    const style =
+      document.createElement(
+        "style"
+      );
+
+
+    style.textContent =
+      ".ocm-backdrop{" +
+      "position:fixed;" +
+      "inset:0;" +
+      "background:rgba(0,0,0,.58);" +
+      "z-index:99999;" +
+      "display:none;" +
+      "align-items:center;" +
+      "justify-content:center;" +
+      "padding:18px" +
+      "}" +
+
+      ".ocm-backdrop.show{" +
+      "display:flex" +
+      "}" +
+
+      ".ocm-modal{" +
+      "width:min(520px,100%);" +
+      "max-height:92vh;" +
+      "overflow:auto;" +
+      "background:#fff;" +
+      "border-radius:24px;" +
+      "padding:24px;" +
+      "box-shadow:0 20px 60px rgba(0,0,0,.3)" +
+      "}" +
+
+      ".ocm-title{" +
+      "font-size:27px;" +
+      "font-weight:900;" +
+      "color:#111827;" +
+      "margin-bottom:7px" +
+      "}" +
+
+      ".ocm-subtitle{" +
+      "color:#6b7280;" +
+      "font-size:16px;" +
+      "margin-bottom:20px" +
+      "}" +
+
+      ".ocm-label{" +
+      "display:block;" +
+      "font-size:15px;" +
+      "font-weight:800;" +
+      "color:#374151;" +
+      "margin:14px 0 7px" +
+      "}" +
+
+      ".ocm-input{" +
+      "width:100%;" +
+      "padding:15px;" +
+      "border:3px solid #ddd;" +
+      "border-radius:13px;" +
+      "font-size:17px;" +
+      "background:#fff;" +
+      "box-sizing:border-box" +
+      "}" +
+
+      ".ocm-input:focus{" +
+      "outline:none;" +
+      "border-color:#2563eb" +
+      "}" +
+
+      ".ocm-actions{" +
+      "display:grid;" +
+      "grid-template-columns:1fr 1fr;" +
+      "gap:10px;" +
+      "margin-top:20px" +
+      "}" +
+
+      ".ocm-btn{" +
+      "min-height:54px;" +
+      "border:0;" +
+      "border-radius:14px;" +
+      "font-size:17px;" +
+      "font-weight:900;" +
+      "cursor:pointer" +
+      "}" +
+
+      ".ocm-cancel{" +
+      "background:#f3f4f6;" +
+      "color:#374151" +
+      "}" +
+
+      ".ocm-save{" +
+      "background:#2563eb;" +
+      "color:#fff" +
+      "}" +
+
+      ".ocm-btn:disabled{" +
+      "opacity:.6;" +
+      "cursor:wait" +
+      "}" +
+
+      ".ocm-note{" +
+      "margin-top:14px;" +
+      "padding:12px;" +
+      "border-radius:12px;" +
+      "background:#fef3c7;" +
+      "color:#92400e;" +
+      "font-size:14px;" +
+      "font-weight:700" +
+      "}" +
+
+      "@media(max-width:500px){" +
+      ".ocm-actions{grid-template-columns:1fr}" +
+      ".ocm-modal{padding:20px}" +
+      "}";
+
+
+    document.head.appendChild(
+      style
+    );
+
+
+    modal =
+      document.createElement(
+        "div"
+      );
+
+    modal.id =
+      "offlineClientModal";
+
+    modal.className =
+      "ocm-backdrop";
+
+
+    modal.innerHTML =
+
+      "<div " +
+      "class=\"ocm-modal\" " +
+      "role=\"dialog\" " +
+      "aria-modal=\"true\">" +
+
+      "<div class=\"ocm-title\">" +
+      "👤 Nuevo cliente" +
+      "</div>" +
+
+      "<div class=\"ocm-subtitle\">" +
+      "El cliente quedará disponible para " +
+      "BakeQuiri y SpicyRoll." +
+      "</div>" +
+
+      "<label class=\"ocm-label\">" +
+      "Nombre *" +
+      "</label>" +
+
+      "<input " +
+      "id=\"ocmName\" " +
+      "class=\"ocm-input\" " +
+      "type=\"text\" " +
+      "autocomplete=\"name\" " +
+      "placeholder=\"Nombre del cliente\">" +
+
+      "<label class=\"ocm-label\">" +
+      "Teléfono" +
+      "</label>" +
+
+      "<input " +
+      "id=\"ocmPhone\" " +
+      "class=\"ocm-input\" " +
+      "type=\"tel\" " +
+      "autocomplete=\"tel\" " +
+      "placeholder=\"Número de teléfono\">" +
+
+      "<label class=\"ocm-label\">" +
+      "Notas" +
+      "</label>" +
+
+      "<textarea " +
+      "id=\"ocmNotes\" " +
+      "class=\"ocm-input\" " +
+      "rows=\"3\" " +
+      "placeholder=\"Notas opcionales\">" +
+      "</textarea>" +
+
+      "<div class=\"ocm-note\">" +
+      "🟢 Con Internet se guardará en Supabase. " +
+      "📴 Sin Internet se guardará en este dispositivo " +
+      "y se sincronizará después." +
+      "</div>" +
+
+      "<div class=\"ocm-actions\">" +
+
+      "<button " +
+      "id=\"ocmCancel\" " +
+      "class=\"ocm-btn ocm-cancel\" " +
+      "type=\"button\">" +
+      "Cancelar" +
+      "</button>" +
+
+      "<button " +
+      "id=\"ocmSave\" " +
+      "class=\"ocm-btn ocm-save\" " +
+      "type=\"button\">" +
+      "Guardar cliente" +
+      "</button>" +
+
+      "</div>" +
+
+      "</div>";
+
+
+    document.body.appendChild(
+      modal
+    );
+
+
+    nameInput =
+      $("ocmName");
+
+    phoneInput =
+      $("ocmPhone");
+
+    notesInput =
+      $("ocmNotes");
+
+
+    $("ocmCancel").onclick =
+      close;
+
+    $("ocmSave").onclick =
+      save;
+
+
+    modal.onclick =
+      event => {
+
+        if(
+          event.target ===
+          modal
+        ){
+
+          close();
+
+        }
+
+      };
+
+  }
+
+
+  /* =====================================================
+     INTERCEPTAR + CLIENTE
+  ===================================================== */
+
+  function hook(){
+
+    const button =
+      $("addClientButton");
+
+    if(
+      !button ||
+      button.dataset.ocmHooked ===
+      "1"
+    ){
+
+      return;
+
+    }
+
+
+    button.dataset.ocmHooked =
+      "1";
+
+
+    button.addEventListener(
+
+      "click",
+
+      event => {
+
+        event.preventDefault();
+
+        event.stopImmediatePropagation();
+
+        open();
+
+      },
+
+      true
+
+    );
+
+  }
+
+
+  /* =====================================================
+     INICIO
+  ===================================================== */
+
+  function init(){
+
+    build();
+
+    hook();
+
+    syncQueue();
+
+
+    window.addEventListener(
+      "online",
+      syncQueue
+    );
+
+
+    new MutationObserver(
+      hook
+    )
+    .observe(
+      document.body,
+      {
+        childList:true,
+        subtree:true
+      }
+    );
+
+  }
+
+
+  if(
+    document.readyState ===
+    "loading"
+  ){
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      init,
+      {
+        once:true
+      }
+    );
+
+  }
+
+  else{
+
+    init();
+
+  }
+
+})();
+`;
+
+
+function isIndex(url){
+
+  return (
+    url.pathname === "/" ||
+    url.pathname.endsWith(
+      "/index.html"
+    )
+  );
+
+}
+
+
+/* =====================================================
+   CACHEAR ARCHIVOS
+===================================================== */
+
+async function cacheAppFiles(){
+
+  const cache =
+    await caches.open(
+      CACHE_NAME
+    );
+
+
+  for(
+    const file of APP_FILES
+  ){
+
+    try{
+
+      await cache.add(
+        file
+      );
+
+    }
+
+    catch(error){
+
+      console.warn(
+        "No se pudo cachear:",
+        file,
+        error
+      );
+
+    }
+
+  }
+
+
+  try{
+
+    const response =
+      await fetch(
+        SUPABASE_SCRIPT,
+        {
+          mode:"no-cors",
+          cache:"no-store"
+        }
+      );
+
+
+    await cache.put(
+      SUPABASE_SCRIPT,
+      response
+    );
+
+  }
+
+  catch(error){
+
+    console.warn(
+      "No se pudo cachear Supabase:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   INYECTAR FUNCIONES DE CLIENTES
+===================================================== */
+
+async function injectClientScript(
+  response
+){
+
+  try{
+
+    const type =
+      response.headers.get(
+        "content-type"
+      ) || "";
+
+
+    if(
+      !type.includes(
+        "text/html"
+      )
+    ){
+
+      return response;
+
+    }
+
+
+    const text =
+      await response.text();
+
+
+    if(
+      text.includes(
+        "data-offline-client-injected"
+      )
+    ){
+
+      return new Response(
+        text,
+        {
+          status:
+            response.status,
+
+          statusText:
+            response.statusText,
+
+          headers:
+            response.headers
+
+        }
+      );
+
+    }
+
+
+    const url =
+      new URL(
+        response.url ||
+        self.location.href
+      );
+
+
+    if(
+      !isIndex(url)
+    ){
+
+      return new Response(
+        text,
+        {
+          status:
+            response.status,
+
+          statusText:
+            response.statusText,
+
+          headers:
+            response.headers
+
+        }
+      );
+
+    }
+
+
+    const injection =
+
+      '<script data-offline-client-injected>' +
+
+      "\\n" +
+
+      OFFLINE_CLIENT_SCRIPT
+        .replace(
+          /<\/script/gi,
+          "<\\/script"
+        ) +
+
+      "\\n</script>";
+
+
+    const body =
+      text.includes(
+        "</body>"
+      )
+
+      ? text.replace(
+          "</body>",
+          injection +
+          "</body>"
+        )
+
+      : text +
+        injection;
+
+
+    const headers =
+      new Headers(
+        response.headers
+      );
+
+
+    headers.set(
+      "content-type",
+      "text/html; charset=utf-8"
+    );
+
+
+    return new Response(
+      body,
+      {
+        status:
+          response.status,
+
+        statusText:
+          response.statusText,
+
+        headers
+
+      }
+    );
+
+  }
+
+  catch(error){
+
+    console.warn(
+      "No se pudo inyectar módulo offline:",
+      error
+    );
+
+    return response;
+
+  }
+
+}
+
+
+/* =====================================================
+   INSTALL
+===================================================== */
 
 self.addEventListener(
   "install",
@@ -69,80 +1382,7 @@ self.addEventListener(
 
       (async () => {
 
-        const cache =
-          await caches.open(
-            CACHE_NAME
-          );
-
-        /*
-          Guardamos los archivos principales.
-        */
-
-        for(
-          const file of APP_FILES
-        ){
-
-          try{
-
-            await cache.add(
-              file
-            );
-
-          }
-
-          catch(error){
-
-            console.warn(
-              "No se pudo guardar:",
-              file,
-              error
-            );
-
-          }
-
-        }
-
-        /*
-          Guardamos la librería de Supabase.
-
-          Se utiliza no-cors porque viene de
-          jsDelivr.
-        */
-
-        try{
-
-          const response =
-            await fetch(
-              SUPABASE_SCRIPT,
-              {
-                mode:"no-cors",
-                cache:"no-store"
-              }
-            );
-
-          if(response){
-
-            await cache.put(
-              SUPABASE_SCRIPT,
-              response
-            );
-
-          }
-
-        }
-
-        catch(error){
-
-          console.warn(
-            "No se pudo guardar Supabase:",
-            error
-          );
-
-        }
-
-        /*
-          Activamos inmediatamente.
-        */
+        await cacheAppFiles();
 
         await self.skipWaiting();
 
@@ -153,11 +1393,10 @@ self.addEventListener(
   }
 );
 
-/*
-=====================================================
-ACTIVACIÓN
-=====================================================
-*/
+
+/* =====================================================
+   ACTIVATE
+===================================================== */
 
 self.addEventListener(
   "activate",
@@ -170,14 +1409,17 @@ self.addEventListener(
         const names =
           await caches.keys();
 
+
         await Promise.all(
 
           names
+
             .filter(
               name =>
                 name !==
                 CACHE_NAME
             )
+
             .map(
               name =>
                 caches.delete(
@@ -186,6 +1428,7 @@ self.addEventListener(
             )
 
         );
+
 
         await self.clients.claim();
 
@@ -196,19 +1439,17 @@ self.addEventListener(
   }
 );
 
-/*
-=====================================================
-MENSAJES
-=====================================================
-*/
+
+/* =====================================================
+   MENSAJES
+===================================================== */
 
 self.addEventListener(
   "message",
   event => {
 
     if(
-      event.data &&
-      event.data.type ===
+      event.data?.type ===
       "SKIP_WAITING"
     ){
 
@@ -219,11 +1460,10 @@ self.addEventListener(
   }
 );
 
-/*
-=====================================================
-FETCH
-=====================================================
-*/
+
+/* =====================================================
+   FETCH
+===================================================== */
 
 self.addEventListener(
   "fetch",
@@ -232,9 +1472,6 @@ self.addEventListener(
     const request =
       event.request;
 
-    /*
-      Solo GET.
-    */
 
     if(
       request.method !==
@@ -245,22 +1482,17 @@ self.addEventListener(
 
     }
 
+
     const url =
       new URL(
         request.url
       );
 
-    /*
-    =================================================
-    SUPABASE API
-    =================================================
 
-    No interceptamos las consultas a Supabase.
-
-    Esto es MUY importante porque las consultas
-    deben ir directamente a Supabase cuando
-    existe Internet.
-    */
+    /* ================================================
+       SUPABASE API
+       NO INTERCEPTAR
+    ================================================= */
 
     if(
       url.hostname.endsWith(
@@ -272,11 +1504,10 @@ self.addEventListener(
 
     }
 
-    /*
-    =================================================
-    SUPABASE JS
-    =================================================
-    */
+
+    /* ================================================
+       LIBRERÍA SUPABASE
+    ================================================= */
 
     if(
       url.href.startsWith(
@@ -288,70 +1519,53 @@ self.addEventListener(
 
         (async () => {
 
-          /*
-            Primero intentamos Internet.
-          */
-
           try{
 
-            const networkResponse =
+            const network =
               await fetch(
                 request
               );
 
-            if(
-              networkResponse &&
-              networkResponse.ok
-            ){
 
-              const clone =
-                networkResponse.clone();
-
-              const cache =
-                await caches.open(
-                  CACHE_NAME
-                );
-
-              await cache.put(
-                request,
-                clone
+            const cache =
+              await caches.open(
+                CACHE_NAME
               );
 
-            }
 
-            return networkResponse;
+            cache
+              .put(
+                request,
+                network.clone()
+              )
+              .catch(
+                () => {}
+              );
+
+
+            return network;
 
           }
 
-          catch(error){
+          catch{
 
-            /*
-              Sin Internet usamos la copia.
-            */
+            return (
 
-            const cached =
               await caches.match(
                 request
-              );
+              )
 
-            if(cached){
+            ) ||
 
-              return cached;
+            (
 
-            }
-
-            const cachedScript =
               await caches.match(
                 SUPABASE_SCRIPT
-              );
+              )
 
-            if(cachedScript){
+            ) ||
 
-              return cachedScript;
-
-            }
-
-            throw error;
+            Response.error();
 
           }
 
@@ -363,19 +1577,10 @@ self.addEventListener(
 
     }
 
-    /*
-    =================================================
-    NAVEGACIÓN
-    =================================================
 
-    Cuando el usuario abre o recarga el POS:
-
-    1. Internet:
-       obtener versión actual.
-
-    2. Sin Internet:
-       utilizar caché.
-    */
+    /* ================================================
+       NAVEGACIONES
+    ================================================= */
 
     if(
       request.mode ===
@@ -388,147 +1593,114 @@ self.addEventListener(
 
           try{
 
-            const networkResponse =
+            const network =
               await fetch(
                 request,
                 {
-                  cache:"no-store"
+                  cache:
+                    "no-store"
                 }
               );
 
-            if(
-              networkResponse &&
-              networkResponse.ok
-            ){
 
-              const cache =
-                await caches.open(
-                  CACHE_NAME
-                );
-
-              /*
-                Guardamos la navegación actual.
-              */
-
-              await cache.put(
-                request,
-                networkResponse.clone()
+            const finalResponse =
+              await injectClientScript(
+                network.clone()
               );
 
-              /*
-                Si estamos en index,
-                actualizamos también la copia
-                principal.
-              */
 
-              if(
-                url.pathname === "/" ||
-                url.pathname.endsWith(
-                  "/index.html"
-                )
-              ){
+            const cache =
+              await caches.open(
+                CACHE_NAME
+              );
 
-                await cache.put(
+
+            cache
+              .put(
+                request,
+                finalResponse.clone()
+              )
+              .catch(
+                () => {}
+              );
+
+
+            if(
+              isIndex(url)
+            ){
+
+              cache
+                .put(
                   "./index.html",
-                  networkResponse.clone()
+                  finalResponse.clone()
+                )
+                .catch(
+                  () => {}
                 );
-
-              }
 
             }
 
-            return networkResponse;
+
+            return finalResponse;
 
           }
 
-          catch(error){
+          catch{
 
-            /*
-              Sin Internet.
-
-              Primero buscamos exactamente
-              la URL solicitada.
-            */
-
-            const cachedPage =
+            let cached =
               await caches.match(
                 request
               );
 
-            if(cachedPage){
 
-              return cachedPage;
+            if(
+              !cached &&
+              isIndex(url)
+            ){
+
+              cached =
+                await caches.match(
+                  "./index.html"
+                );
 
             }
 
-            /*
-              Después intentamos index.html.
-            */
 
-            const cachedIndex =
+            if(cached){
+
+              return injectClientScript(
+                cached.clone()
+              );
+
+            }
+
+
+            const fallback =
               await caches.match(
                 "./index.html"
               );
 
-            if(cachedIndex){
 
-              return cachedIndex;
+            if(fallback){
+
+              return injectClientScript(
+                fallback.clone()
+              );
 
             }
 
-            /*
-              Último recurso.
-            */
 
             return new Response(
 
-              `
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1"
->
-
-<title>POS Offline</title>
-
-</head>
-
-<body
-style="
-font-family:Arial,sans-serif;
-padding:30px;
-">
-
-<h1>
-📴 POS sin conexión
-</h1>
-
-<p>
-No se encontró una copia offline de la aplicación.
-</p>
-
-<p>
-Abre el POS al menos una vez con Internet para
-prepararlo para trabajar sin conexión.
-</p>
-
-</body>
-
-</html>
-              `,
+              "POS offline: esta página todavía no ha sido guardada en el dispositivo.",
 
               {
-                status:200,
+                status:
+                  503,
 
                 headers:{
                   "Content-Type":
-                    "text/html;charset=UTF-8"
+                    "text/plain;charset=utf-8"
                 }
 
               }
@@ -545,100 +1717,67 @@ prepararlo para trabajar sin conexión.
 
     }
 
-    /*
-    =================================================
-    RECURSOS LOCALES
-    =================================================
 
-    CSS, JS, imágenes, HTML, etc.
+    /* ================================================
+       OTROS RECURSOS
+    ================================================= */
 
-    Estrategia:
+    event.respondWith(
 
-    1. Si existe Internet:
-       usar la versión nueva y actualizar caché.
+      (async () => {
 
-    2. Si falla:
-       usar caché.
-    */
+        const cached =
+          await caches.match(
+            request
+          );
 
-    if(
-      url.origin ===
-      self.location.origin
-    ){
 
-      event.respondWith(
+        try{
 
-        (async () => {
+          const network =
+            await fetch(
+              request
+            );
 
-          try{
 
-            const networkResponse =
-              await fetch(
-                request
+          if(
+            network.ok
+          ){
+
+            const cache =
+              await caches.open(
+                CACHE_NAME
               );
 
-            if(
-              networkResponse &&
-              networkResponse.ok
-            ){
 
-              const cache =
-                await caches.open(
-                  CACHE_NAME
-                );
-
-              await cache.put(
+            cache
+              .put(
                 request,
-                networkResponse.clone()
+                network.clone()
+              )
+              .catch(
+                () => {}
               );
-
-            }
-
-            return networkResponse;
 
           }
 
-          catch(error){
 
-            const cached =
-              await caches.match(
-                request
-              );
+          return network;
 
-            if(cached){
+        }
 
-              return cached;
+        catch{
 
-            }
+          return (
+            cached ||
+            Response.error()
+          );
 
-            /*
-              Para recursos que no existen
-              en caché no devolvemos index.html,
-              porque eso puede provocar errores
-              en JavaScript/CSS.
-            */
+        }
 
-            throw error;
+      })()
 
-          }
-
-        })()
-
-      );
-
-      return;
-
-    }
-
-    /*
-    =================================================
-    OTROS RECURSOS EXTERNOS
-    =================================================
-
-    Se dejan pasar normalmente.
-    */
-
-    return;
+    );
 
   }
 );
