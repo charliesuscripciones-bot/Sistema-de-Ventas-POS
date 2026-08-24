@@ -7,7 +7,12 @@
 
 <meta
   name="viewport"
-  content="width=device-width, initial-scale=1, viewport-fit=cover"
+  content="width=device-width,initial-scale=1.0"
+>
+
+<meta
+  name="theme-color"
+  content="#111827"
 >
 
 <title>Sistema de Ventas POS</title>
@@ -16,71 +21,46 @@
 
 *{
   box-sizing:border-box;
-}
-
-html{
   margin:0;
   padding:0;
-  width:100%;
-  min-height:100%;
 }
 
 body{
-  margin:0;
-  padding:0;
-  width:100%;
-  min-height:100vh;
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Arial,
-    sans-serif;
-  background:#f5f6f8;
-  color:#171717;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#f5f5f5;
+  color:#222;
 }
 
 header{
   background:#111827;
-  color:white;
-  padding-top:calc(25px + env(safe-area-inset-top));
-  padding-right:20px;
-  padding-bottom:25px;
-  padding-left:20px;
-  position:relative;
-  z-index:2;
+  color:#fff;
+  padding:22px 20px;
 }
 
 header h1{
-  margin:0;
-  font-size:30px;
-  line-height:1.15;
+  font-size:28px;
 }
 
 header p{
-  margin:8px 0 0;
-  color:#d1d5db;
+  font-size:15px;
+  opacity:.75;
+  margin-top:6px;
 }
 
 .container{
-  width:100%;
   max-width:1100px;
-  margin:0 auto;
+  margin:auto;
   padding:20px;
 }
 
 .status{
-  display:none;
+  margin:0 0 15px;
   padding:13px 15px;
-  border-radius:12px;
-  margin-bottom:20px;
-  font-weight:700;
-}
-
-.status.ok{
-  display:block;
-  background:#dcfce7;
-  color:#166534;
+  border-radius:10px;
+  font-size:14px;
+  display:none;
+  font-weight:600;
+  white-space:pre-line;
 }
 
 .status.error{
@@ -89,51 +69,29 @@ header p{
   color:#991b1b;
 }
 
-.status.warn{
+.status.ok{
   display:block;
-  background:#fef3c7;
-  color:#92400e;
+  background:#dcfce7;
+  color:#166534;
 }
 
-.business-selector{
-  display:grid;
-  grid-template-columns:1fr 1fr;
+.businesses{
+  display:flex;
   gap:10px;
-  margin-bottom:14px;
-}
-
-.control-panel{
-  background:#fff;
-  border-radius:20px;
-  padding:18px;
   margin-bottom:20px;
-  box-shadow:0 4px 18px rgba(0,0,0,.06);
+  flex-wrap:wrap;
 }
 
-.action-grid{
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  gap:10px;
-}
-
-button{
-  border:0;
-  cursor:pointer;
-  font-size:15px;
-  font-weight:800;
-  min-height:48px;
+.business-btn,
+.nav-btn{
+  border:none;
+  padding:13px 20px;
   border-radius:12px;
-  transition:.15s ease;
-}
-
-button:active{
-  transform:scale(.98);
-}
-
-.business-btn{
   background:#fff;
-  color:#2680eb;
   border:2px solid #ddd;
+  font-weight:700;
+  cursor:pointer;
+  font-size:16px;
 }
 
 .business-btn.active{
@@ -142,366 +100,422 @@ button:active{
   border-color:#111827;
 }
 
-.refresh{
-  background:#2563eb;
-  color:white;
-}
-
-.accounts{
-  background:#f59e0b;
-  color:white;
-}
-
-.customers{
-  background:#10b981;
-  color:white;
-}
-
-.history{
-  background:#7c3aed;
-  color:white;
-}
-
-.inventory-btn{
-  background:#0891b2;
-  color:white;
-}
-
-.dashboard-btn{
-  background:#fff;
-  color:#2563eb;
-  border:2px solid #ddd;
-}
-
-.cards{
+.navigation{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
   margin-bottom:20px;
 }
 
-.card{
-  background:white;
-  border-radius:18px;
-  padding:22px;
-  box-shadow:0 4px 18px rgba(0,0,0,.06);
-}
-
-.metric-card{
-  position:relative;
-  overflow:hidden;
-  min-width:0;
-}
-
-.metric-icon{
-  font-size:27px;
-  margin-bottom:12px;
-}
-
-.metric-title{
-  color:#6b7280;
-  font-size:14px;
-  font-weight:700;
-  margin-bottom:8px;
-  line-height:1.25;
-  overflow-wrap:anywhere;
-}
-
-.metric{
-  font-size:30px;
-  font-weight:800;
-  line-height:1.1;
-}
-
-.green{
-  color:#16a34a;
-}
-
-.blue{
+.nav-btn{
   color:#2563eb;
 }
 
-.red{
-  color:#dc2626;
+.nav-btn.accounts{
+  background:#fff7ed;
+  border-color:#f59e0b;
+  color:#b45309;
 }
 
-.main-grid{
+.nav-btn.clients{
+  background:#ecfdf5;
+  border-color:#10b981;
+  color:#047857;
+}
+
+.nav-btn.history{
+  background:#f5f3ff;
+  border-color:#7c3aed;
+  color:#6d28d9;
+}
+
+.nav-btn.inventory{
+  background:#eff6ff;
+  border-color:#2563eb;
+  color:#1d4ed8;
+}
+
+.layout{
   display:grid;
-  grid-template-columns:1.35fr .85fr;
+  grid-template-columns:1fr 390px;
   gap:20px;
 }
 
-.section-title{
-  font-size:21px;
-  font-weight:800;
-  margin:0 0 18px;
-}
-
-.sales-list{
-  display:grid;
-  gap:10px;
-}
-
-.sale-row{
-  border:1px solid #e5e7eb;
-  border-radius:14px;
-  padding:14px;
+.card{
   background:#fff;
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 3px 14px rgba(0,0,0,.06);
 }
 
-.sale-main{
+.card h2{
+  font-size:21px;
+  margin-bottom:16px;
+}
+
+.products{
   display:grid;
-  grid-template-columns:1.4fr .8fr .7fr;
+  grid-template-columns:repeat(2,1fr);
   gap:12px;
-  align-items:center;
 }
 
-.sale-customer{
-  min-width:0;
-}
-
-.customer-link{
-  color:#2563eb;
-  font-weight:800;
+.product{
+  border:2px solid #ddd;
+  border-radius:14px;
+  padding:18px 14px;
   cursor:pointer;
-  text-decoration:none;
-  word-break:break-word;
+  background:#fff;
+  text-align:left;
+  transition:.15s;
 }
 
-.customer-link:hover{
-  text-decoration:underline;
+.product:hover{
+  border-color:#2563eb;
+  transform:translateY(-1px);
 }
 
-.customer-general{
-  color:#222;
+.product:active{
+  transform:scale(.98);
+}
+
+.product.disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.product-name{
   font-weight:700;
-  word-break:break-word;
+  font-size:17px;
+  margin-bottom:9px;
 }
 
-.sale-date{
-  color:#6b7280;
+.price{
+  font-size:23px;
+  font-weight:800;
+  color:#2563eb;
+}
+
+.stock{
+  font-size:14px;
+  color:#666;
+  margin-top:7px;
+}
+
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:13px 0;
+  border-bottom:1px solid #eee;
+  gap:12px;
+}
+
+.cart-name{
+  font-weight:700;
+}
+
+.cart-price{
   font-size:13px;
-  margin-top:5px;
-  line-height:1.35;
+  color:#666;
+  margin-top:4px;
 }
 
-.sale-total{
+.quantity{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:8px;
+}
+
+.quantity button{
+  width:32px;
+  height:32px;
+  border:none;
+  border-radius:7px;
+  background:#eee;
+  cursor:pointer;
+  font-size:18px;
+}
+
+.quantity button:active{
+  transform:scale(.95);
+}
+
+.total{
+  display:flex;
+  justify-content:space-between;
+  font-size:25px;
+  font-weight:800;
+  margin-top:20px;
+  padding-top:18px;
+  border-top:2px solid #eee;
+}
+
+.payment-title,
+.customer-title{
+  margin-top:20px;
+  margin-bottom:10px;
   font-weight:800;
   font-size:17px;
 }
 
-.sale-status{
-  text-align:right;
-}
-
-.status-pill{
-  display:inline-block;
-  padding:6px 10px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:800;
-}
-
-.paid{
-  background:#dcfce7;
-  color:#166534;
-}
-
-.open{
-  background:#fef3c7;
-  color:#92400e;
-}
-
-.cancelled{
-  background:#fee2e2;
-  color:#991b1b;
-}
-
-.inventory-list{
+.payments{
   display:grid;
   gap:9px;
 }
 
-.stock-row{
-  display:grid;
-  grid-template-columns:1fr auto;
-  align-items:center;
-  gap:10px;
-  padding:13px 14px;
-  border:1px solid #eee;
-  border-radius:12px;
-  background:#fafafa;
-}
-
-.stock-name{
+.payment{
+  padding:14px;
+  border:2px solid #ddd;
+  border-radius:11px;
+  background:#fff;
+  cursor:pointer;
+  text-align:left;
+  font-size:16px;
   font-weight:700;
-  min-width:0;
-  word-break:break-word;
 }
 
-.stock-number{
+.payment.active{
+  background:#111827;
+  color:#fff;
+  border-color:#111827;
+}
+
+/* CLIENTES */
+
+.customer-box{
+  position:relative;
+}
+
+.customer-row{
+  display:flex;
+  gap:8px;
+}
+
+.customer-search{
+  flex:1;
+  padding:13px;
+  border:2px solid #ddd;
+  border-radius:11px;
+  font-size:15px;
+  min-width:0;
+  background:#fff;
+}
+
+.customer-search:focus{
+  outline:none;
+  border-color:#2563eb;
+}
+
+.add-client{
+  border:none;
+  background:#2563eb;
+  color:#fff;
+  padding:0 14px;
+  border-radius:11px;
   font-weight:800;
+  cursor:pointer;
   white-space:nowrap;
 }
 
-.low{
-  color:#dc2626;
+.customer-results{
+  margin-top:8px;
+  display:none;
+  border:2px solid #ddd;
+  border-radius:11px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:0 8px 25px rgba(0,0,0,.12);
+  position:absolute;
+  left:0;
+  right:0;
+  z-index:100;
 }
 
-.stock-warning{
-  font-size:11px;
-  margin-left:6px;
-  color:#dc2626;
+.customer-result{
+  display:block;
+  width:100%;
+  border:none;
+  border-bottom:1px solid #eee;
+  background:#fff;
+  padding:13px;
+  text-align:left;
+  cursor:pointer;
 }
 
-.empty,
-.loading{
-  text-align:center;
+.customer-result:last-child{
+  border-bottom:none;
+}
+
+.customer-result:hover{
+  background:#f3f4f6;
+}
+
+.customer-result strong{
+  display:block;
+  font-size:15px;
+}
+
+.customer-result small{
+  display:block;
+  color:#6b7280;
+  margin-top:4px;
+}
+
+.selected-customer{
+  margin-top:8px;
+  padding:12px;
+  border-radius:9px;
+  background:#eff6ff;
+  border:2px solid #bfdbfe;
+  color:#1d4ed8;
+  font-size:14px;
+  font-weight:600;
+}
+
+.clear-customer{
+  border:none;
+  background:none;
+  color:#dc2626;
+  font-weight:700;
+  cursor:pointer;
+  margin-left:8px;
+  padding:0;
+}
+
+.general-customer{
+  margin-top:8px;
+  padding:13px;
+  border-radius:9px;
+  background:#f3f4f6;
+  color:#555;
+  font-weight:700;
+  cursor:pointer;
+  border:2px solid transparent;
+}
+
+.general-customer:hover{
+  background:#e5e7eb;
+  border-color:#d1d5db;
+}
+
+/* BOTONES */
+
+.charge,
+.account{
+  width:100%;
+  margin-top:15px;
+  padding:16px;
+  border:none;
+  border-radius:12px;
+  color:#fff;
+  font-size:18px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.charge{
+  background:#16a34a;
+}
+
+.account{
+  margin-top:10px;
+  background:#f59e0b;
+}
+
+.charge:disabled,
+.account:disabled{
+  opacity:.6;
+  cursor:wait;
+}
+
+.empty{
   color:#777;
+  text-align:center;
   padding:30px 10px;
 }
 
-@media(max-width:900px){
+.loading{
+  opacity:.65;
+  pointer-events:none;
+}
 
-  .action-grid{
+button{
+  -webkit-tap-highlight-color:transparent;
+}
+
+@media(max-width:950px){
+
+  .navigation{
     grid-template-columns:repeat(3,1fr);
-  }
-
-  .cards{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .main-grid{
-    grid-template-columns:1fr;
   }
 
 }
 
-@media(max-width:600px){
+@media(max-width:850px){
 
-  header{
-    padding-top:calc(22px + env(safe-area-inset-top));
-    padding-right:17px;
-    padding-bottom:22px;
-    padding-left:17px;
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .navigation{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .products{
+    grid-template-columns:1fr 1fr;
+  }
+
+}
+
+@media(max-width:500px){
+
+  .container{
+    padding:15px;
   }
 
   header h1{
     font-size:25px;
   }
 
-  header p{
-    font-size:14px;
-  }
-
-  .container{
-    width:100%;
-    padding:15px;
-  }
-
-  .control-panel{
-    padding:13px;
-    border-radius:17px;
-  }
-
-  .business-selector{
+  .navigation{
     grid-template-columns:1fr 1fr;
   }
 
-  .action-grid{
-    grid-template-columns:repeat(2,1fr);
+  .business-btn{
+    flex:1;
   }
 
-  button{
-    min-height:46px;
-    font-size:13px;
-    padding:8px;
-  }
-
-  .cards{
-    grid-template-columns:1fr 1fr;
-    gap:10px;
+  .layout{
+    gap:15px;
   }
 
   .card{
     padding:16px;
-    border-radius:16px;
-    min-width:0;
   }
 
-  .metric-card{
-    min-height:150px;
-  }
-
-  .metric-icon{
-    font-size:22px;
-    margin-bottom:10px;
-  }
-
-  .metric-title{
-    font-size:12px;
-    line-height:1.25;
-  }
-
-  .metric{
-    font-size:23px;
-  }
-
-  .section-title{
-    font-size:19px;
-  }
-
-  .sale-main{
-    grid-template-columns:1fr;
-    gap:7px;
-  }
-
-  .sale-status{
-    text-align:left;
-  }
-
-  .sale-total{
-    font-size:20px;
-  }
-
-  .sale-row{
-    padding:16px;
-  }
-
-  .sale-date{
-    font-size:14px;
-  }
-
-}
-
-@media(max-width:390px){
-
-  .action-grid{
+  .products{
     grid-template-columns:1fr 1fr;
   }
 
-  .metric{
-    font-size:21px;
+  .product{
+    padding:15px 12px;
   }
 
-  .metric-title{
-    font-size:11px;
+  .product-name{
+    font-size:15px;
   }
 
-  .business-btn{
-    font-size:13px;
+  .price{
+    font-size:20px;
   }
 
-  .metric-card{
-    min-height:145px;
+  .customer-row{
+    flex-direction:column;
   }
 
-}
-
-@supports (-webkit-touch-callout:none){
-
-  header{
-    padding-top:calc(22px + env(safe-area-inset-top));
+  .add-client{
+    padding:12px;
   }
 
 }
@@ -514,213 +528,237 @@ button:active{
 
 <header>
 
-  <h1>🧾 Sistema de Ventas POS</h1>
+<h1>🧾 Sistema de Ventas POS</h1>
 
-  <p>
-    Administración de negocios y ventas
-  </p>
+<p>
+Administración de negocios y ventas
+</p>
 
 </header>
 
 <div class="container">
 
-  <div id="status" class="status"></div>
+<div id="status" class="status"></div>
+
+<!-- ================================
+     NEGOCIOS
+================================ -->
+
+<div class="businesses">
+
+<button
+  type="button"
+  class="business-btn active"
+  data-business="BakeQuiri"
+>
+🧁 BakeQuiri
+</button>
+
+<button
+  type="button"
+  class="business-btn"
+  data-business="SpicyRoll"
+>
+🍣 SpicyRoll
+</button>
+
+</div>
+
+<!-- ================================
+     NAVEGACIÓN
+================================ -->
+
+<div class="navigation">
+
+<button
+  type="button"
+  class="nav-btn accounts"
+  id="accountsButton"
+>
+💰 Cuentas pendientes
+</button>
 
-  <div class="control-panel">
+<button
+  type="button"
+  class="nav-btn clients"
+  id="clientsButton"
+>
+👥 Clientes
+</button>
+
+<button
+  type="button"
+  class="nav-btn history"
+  id="historyButton"
+>
+🧾 Historial
+</button>
+
+<button
+  type="button"
+  class="nav-btn inventory"
+  id="inventoryButton"
+>
+📦 Inventario
+</button>
+
+<button
+  type="button"
+  class="nav-btn"
+  id="dashboardButton"
+>
+📊 Dashboard
+</button>
+
+</div>
+
+<!-- ================================
+     POS
+================================ -->
+
+<div class="layout">
+
+<div class="card">
+
+<h2>
+Productos
+</h2>
+
+<div
+  id="products"
+  class="products"
+>
+
+<div class="loading">
+Cargando productos...
+</div>
+
+</div>
+
+</div>
+
+<!-- ================================
+     CARRITO
+================================ -->
 
-    <div class="business-selector">
+<div class="card">
 
-      <button
-        type="button"
-        class="business-btn active"
-        data-business="BakeQuiri">
+<h2>
+🛒 Carrito
+</h2>
 
-        🧁 BakeQuiri
+<div id="cart">
 
-      </button>
-
-      <button
-        type="button"
-        class="business-btn"
-        data-business="SpicyRoll">
-
-        🍣 SpicyRoll
-
-      </button>
-
-    </div>
-
-    <div class="action-grid">
-
-      <button
-        type="button"
-        id="refresh"
-        class="refresh">
-
-        🔄 Actualizar
-
-      </button>
-
-      <button
-        type="button"
-        id="accounts"
-        class="accounts">
-
-        💰 Cuentas
-
-      </button>
-
-      <button
-        type="button"
-        id="customers"
-        class="customers">
-
-        👥 Clientes
-
-      </button>
-
-      <button
-        type="button"
-        id="history"
-        class="history">
-
-        🧾 Historial
-
-      </button>
-
-      <button
-        type="button"
-        id="inventory"
-        class="inventory-btn">
-
-        📦 Inventario
-
-      </button>
-
-      <button
-        type="button"
-        id="dashboard"
-        class="dashboard-btn">
-
-        📊 Dashboard
-
-      </button>
-
-    </div>
-
-  </div>
-
-  <div class="cards">
-
-    <div class="card metric-card">
-
-      <div class="metric-icon">💰</div>
-
-      <div class="metric-title">
-        VENTAS DE HOY
-      </div>
-
-      <div
-        id="todaySales"
-        class="metric green">
-
-        $0.00
-
-      </div>
-
-    </div>
-
-    <div class="card metric-card">
-
-      <div class="metric-icon">🧾</div>
-
-      <div class="metric-title">
-        NÚMERO DE VENTAS
-      </div>
-
-      <div
-        id="salesCount"
-        class="metric blue">
-
-        0
-
-      </div>
-
-    </div>
-
-    <div class="card metric-card">
-
-      <div class="metric-icon">📦</div>
-
-      <div class="metric-title">
-        PRODUCTOS ACTIVOS
-      </div>
-
-      <div
-        id="productCount"
-        class="metric">
-
-        0
-
-      </div>
-
-    </div>
-
-    <div class="card metric-card">
-
-      <div class="metric-icon">⚠️</div>
-
-      <div class="metric-title">
-        STOCK BAJO
-      </div>
-
-      <div
-        id="lowStock"
-        class="metric red">
-
-        0
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <div class="main-grid">
-
-    <div class="card">
-
-      <h2 class="section-title">
-        🧾 Ventas de hoy
-      </h2>
-
-      <div id="salesContainer">
-
-        <div class="loading">
-          Cargando ventas...
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class="card">
-
-      <h2 class="section-title">
-        📦 Inventario
-      </h2>
-
-      <div id="inventoryContainer">
-
-        <div class="loading">
-          Cargando inventario...
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
+<div class="empty">
+El carrito está vacío
+</div>
+
+</div>
+
+<div class="total">
+
+<span>
+Total
+</span>
+
+<span id="total">
+$0.00
+</span>
+
+</div>
+
+<!-- ================================
+     CLIENTE
+================================ -->
+
+<div class="customer-title">
+👤 Cliente
+</div>
+
+<div class="customer-box">
+
+<div class="customer-row">
+
+<input
+  type="search"
+  id="customerSearch"
+  class="customer-search"
+  placeholder="🔎 Buscar cliente por nombre o teléfono"
+  autocomplete="off"
+>
+
+<button
+  type="button"
+  id="addClientButton"
+  class="add-client"
+>
++ Cliente
+</button>
+
+</div>
+
+<div
+  id="customerResults"
+  class="customer-results"
+></div>
+
+<div
+  id="selectedCustomer"
+  class="selected-customer"
+  style="display:none"
+></div>
+
+<div
+  id="generalCustomer"
+  class="general-customer"
+>
+👤 Consumidor general
+</div>
+
+</div>
+
+<!-- ================================
+     PAGO
+================================ -->
+
+<div class="payment-title">
+Método de pago
+</div>
+
+<div
+  id="payments"
+  class="payments"
+>
+
+<div class="empty">
+Cargando métodos de pago...
+</div>
+
+</div>
+
+<!-- ================================
+     ACCIONES
+================================ -->
+
+<button
+  type="button"
+  id="chargeButton"
+  class="charge"
+>
+💵 COBRAR
+</button>
+
+<button
+  type="button"
+  id="accountButton"
+  class="account"
+>
+🟠 DEJAR A CUENTA
+</button>
+
+</div>
+
+</div>
 
 </div>
 
@@ -730,10 +768,9 @@ button:active{
 
 "use strict";
 
-
-/* =========================================================
+/* =========================================
    SUPABASE
-========================================================= */
+========================================= */
 
 const SUPABASE_URL =
 "https://jrxklpstlloeckihcduv.supabase.co";
@@ -741,16 +778,11 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
-const supabaseClient =
-window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
+let supabaseClient = null;
 
-
-/* =========================================================
+/* =========================================
    NEGOCIOS
-========================================================= */
+========================================= */
 
 const BUSINESS_IDS = {
 
@@ -762,394 +794,744 @@ const BUSINESS_IDS = {
 
 };
 
+/* =========================================
+   ESTADO
+========================================= */
+
 let currentBusiness =
 "BakeQuiri";
 
+let products = [];
 
-/* =========================================================
-   HELPERS
-========================================================= */
+let payments = [];
 
-const $ =
-id =>
-document.getElementById(id);
+let customers = [];
 
-const money =
-value =>
-"$" +
-Number(value || 0).toFixed(2);
+let cart = [];
 
+let selectedPaymentId =
+null;
 
-/* =========================================================
-   FECHA
-========================================================= */
+let selectedCustomerId =
+null;
 
-function formatSaleDateTime(
-  createdAt
-){
+/* =========================================
+   UTILIDADES
+========================================= */
 
-  if(!createdAt){
-    return "";
-  }
+function $(id){
 
-  const date =
-  new Date(createdAt);
-
-  if(isNaN(date.getTime())){
-    return "";
-  }
-
-  const dateText =
-  date.toLocaleDateString(
-    "es-MX",
-    {
-      day:"2-digit",
-      month:"2-digit",
-      year:"numeric"
-    }
-  );
-
-  const timeText =
-  date.toLocaleTimeString(
-    "es-MX",
-    {
-      hour:"numeric",
-      minute:"2-digit",
-      hour12:true
-    }
-  );
-
-  return (
-    dateText +
-    " · " +
-    timeText
-  );
+  return document.getElementById(id);
 
 }
 
+function money(value){
 
-/* =========================================================
-   STATUS
-========================================================= */
+  return "$" +
+    Number(value || 0)
+      .toFixed(2);
+
+}
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
 
 function showStatus(
   message,
-  type = "error"
+  type="error"
 ){
 
-  $("status").textContent =
-  message;
+  const element =
+    $("status");
 
-  $("status").className =
-  "status " + type;
+  element.textContent =
+    message;
+
+  element.className =
+    "status " + type;
 
 }
 
+function clearStatus(){
 
-/* =========================================================
-   DASHBOARD / DATOS
-========================================================= */
-
-async function loadDashboard(){
-
-  $("salesContainer").innerHTML =
-  '<div class="loading">Cargando ventas...</div>';
-
-  $("inventoryContainer").innerHTML =
-  '<div class="loading">Cargando inventario...</div>';
+  $("status").textContent =
+    "";
 
   $("status").className =
-  "status";
+    "status";
+
+}
+
+/* =========================================
+   INICIALIZAR SUPABASE
+========================================= */
+
+function initializeSupabase(){
+
+  if(
+    !window.supabase ||
+    typeof window.supabase.createClient !==
+    "function"
+  ){
+
+    throw new Error(
+      "No se pudo cargar la librería de Supabase. Revisa tu conexión a Internet."
+    );
+
+  }
+
+  supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+}
+
+/* =========================================
+   CARGAR DATOS
+========================================= */
+
+async function loadBusinessData(){
+
+  clearStatus();
+
+  $("products").innerHTML =
+    '<div class="empty">Cargando productos...</div>';
+
+  $("payments").innerHTML =
+    '<div class="empty">Cargando métodos de pago...</div>';
 
   const businessId =
-  BUSINESS_IDS[currentBusiness];
+    BUSINESS_IDS[currentBusiness];
 
   if(!businessId){
 
     showStatus(
-      "No se encontró el negocio seleccionado.",
-      "error"
+      "No existe la configuración del negocio seleccionado."
     );
 
     return;
 
   }
 
-
-  /* =======================================================
-     PRODUCTOS
-  ======================================================= */
-
-  let products = [];
-
   try{
 
-    const productsResult =
-    await supabaseClient
-      .from("products")
-      .select(
-        "id,name,price,stock,active"
-      )
-      .eq(
-        "business_id",
-        businessId
-      )
-      .eq(
-        "active",
-        true
-      )
-      .order("name");
+    const [
+      productsResult,
+      paymentsResult,
+      customersResult
+    ] = await Promise.all([
 
-    if(productsResult.error){
-      throw productsResult.error;
+      supabaseClient
+        .from("products")
+        .select(
+          "id,name,price,cost,stock,active,business_id"
+        )
+        .eq(
+          "business_id",
+          businessId
+        )
+        .eq(
+          "active",
+          true
+        )
+        .order(
+          "name"
+        ),
+
+      supabaseClient
+        .from("payment_methods")
+        .select(
+          "id,name,provider,active,business_id"
+        )
+        .eq(
+          "business_id",
+          businessId
+        )
+        .eq(
+          "active",
+          true
+        )
+        .order(
+          "name"
+        ),
+
+      supabaseClient
+        .from("customers")
+        .select(
+          "id,business_id,name,phone,notes"
+        )
+        .order(
+          "name"
+        )
+
+    ]);
+
+    if(
+      productsResult.error
+    ){
+
+      throw new Error(
+        "No pude cargar los productos: " +
+        productsResult.error.message
+      );
+
+    }
+
+    if(
+      paymentsResult.error
+    ){
+
+      throw new Error(
+        "No pude cargar los métodos de pago: " +
+        paymentsResult.error.message
+      );
+
+    }
+
+    if(
+      customersResult.error
+    ){
+
+      throw new Error(
+        "No pude cargar los clientes compartidos: " +
+        customersResult.error.message
+      );
+
     }
 
     products =
-    productsResult.data || [];
+      productsResult.data || [];
 
-    $("productCount").textContent =
-    products.length;
+    payments =
+      paymentsResult.data || [];
 
-    $("lowStock").textContent =
-    products.filter(
-      product =>
-      Number(product.stock || 0) <= 5
-    ).length;
+    customers =
+      customersResult.data || [];
 
-    renderInventory(products);
-
-  }
-
-  catch(error){
-
-    console.error(
-      "Error cargando productos:",
-      error
-    );
-
-    $("productCount").textContent =
-    "0";
-
-    $("lowStock").textContent =
-    "0";
-
-    $("inventoryContainer").innerHTML =
-    '<div class="empty">' +
-    "No se pudieron cargar los productos." +
-    "</div>";
-
-  }
-
-
-  /* =======================================================
-     VENTAS
-  ======================================================= */
-
-  let sales = [];
-
-  try{
-
-    const start =
-    new Date();
-
-    start.setHours(
-      0,
-      0,
-      0,
-      0
-    );
-
-    const salesResult =
-    await supabaseClient
-      .from("sales")
-      .select(
-        "id,total,balance,status,created_at,customer_id,sale_date"
+    if(
+      !payments.some(
+        payment =>
+          payment.id ===
+          selectedPaymentId
       )
-      .eq(
-        "business_id",
-        businessId
-      )
-      .gte(
-        "created_at",
-        start.toISOString()
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
+    ){
 
-    if(salesResult.error){
-      throw salesResult.error;
+      selectedPaymentId =
+        payments[0]?.id ||
+        null;
+
     }
 
-    sales =
-    salesResult.data || [];
+    const selectedCustomer =
+      customers.find(
+        customer =>
+          customer.id ===
+          selectedCustomerId
+      );
 
+    if(!selectedCustomer){
 
-    const total =
-    sales.reduce(
-      (sum,sale) => {
+      selectedCustomerId =
+        null;
 
-        if(
-          sale.status ===
-          "cancelled"
-        ){
-          return sum;
-        }
+    }
 
-        return (
-          sum +
-          Number(
-            sale.total || 0
-          )
-        );
+    renderProducts();
 
-      },
-      0
-    );
+    renderPayments();
 
-    $("todaySales").textContent =
-    money(total);
+    renderCart();
 
-    $("salesCount").textContent =
-    sales.filter(
-      sale =>
-      sale.status !==
-      "cancelled"
-    ).length;
-
-
-    await renderSales(
-      sales
-    );
+    renderSelectedCustomer();
 
   }
 
   catch(error){
 
     console.error(
-      "Error cargando ventas:",
+      "loadBusinessData:",
       error
     );
 
-    $("todaySales").textContent =
-    "$0.00";
+    products = [];
 
-    $("salesCount").textContent =
-    "0";
+    payments = [];
 
-    $("salesContainer").innerHTML =
-    '<div class="empty">' +
-    "No se pudieron cargar las ventas." +
-    "</div>";
+    customers = [];
+
+    $("products").innerHTML =
+      '<div class="empty">No se pudieron cargar los productos.</div>';
+
+    $("payments").innerHTML =
+      '<div class="empty">No se pudieron cargar los métodos de pago.</div>';
+
+    showStatus(
+      error?.message ||
+      "No se pudo conectar con Supabase."
+    );
 
   }
-
-
-  showStatus(
-    currentBusiness +
-    " actualizado correctamente.",
-    "ok"
-  );
 
 }
 
+/* =========================================
+   PRODUCTOS
+========================================= */
 
-/* =========================================================
-   INVENTARIO
-========================================================= */
-
-function renderInventory(
-  products
-){
+function renderProducts(){
 
   const container =
-  $("inventoryContainer");
+    $("products");
+
+  container.innerHTML =
+    "";
 
   if(!products.length){
 
     container.innerHTML =
-    '<div class="empty">' +
-    "No hay productos activos." +
-    "</div>";
+      '<div class="empty">' +
+      'No hay productos activos para este negocio.' +
+      '</div>';
 
     return;
 
   }
 
-  container.innerHTML =
-  "";
-
-  const sortedProducts =
-  [...products].sort(
-    (a,b) =>
-    Number(a.stock || 0) -
-    Number(b.stock || 0)
-  );
-
-  sortedProducts.forEach(
+  products.forEach(
     product => {
 
-      const row =
-      document.createElement("div");
-
-      row.className =
-      "stock-row";
-
-      const name =
-      document.createElement("div");
-
-      name.className =
-      "stock-name";
-
-      name.textContent =
-      product.name;
-
       const stock =
-      document.createElement("div");
+        Number(
+          product.stock || 0
+        );
 
-      stock.className =
-      "stock-number";
+      const button =
+        document.createElement(
+          "button"
+        );
 
-      const stockValue =
-      Number(
-        product.stock || 0
+      button.type =
+        "button";
+
+      button.className =
+        "product" +
+        (
+          stock <= 0
+          ? " disabled"
+          : ""
+        );
+
+      button.disabled =
+        stock <= 0;
+
+      button.innerHTML =
+
+        '<div class="product-name">' +
+
+        escapeHTML(
+          product.name
+        ) +
+
+        '</div>' +
+
+        '<div class="price">' +
+
+        money(
+          product.price
+        ) +
+
+        '</div>' +
+
+        '<div class="stock">' +
+
+        (
+          stock > 0
+          ? "Existencia: " + stock
+          : "Agotado"
+        ) +
+
+        '</div>';
+
+      button.addEventListener(
+        "click",
+        () =>
+          addToCart(product)
       );
 
-      if(stockValue <= 5){
+      container.appendChild(
+        button
+      );
 
-        stock.classList.add(
-          "low"
+    }
+  );
+
+}
+
+/* =========================================
+   MÉTODOS DE PAGO
+========================================= */
+
+function renderPayments(){
+
+  const container =
+    $("payments");
+
+  container.innerHTML =
+    "";
+
+  if(!payments.length){
+
+    container.innerHTML =
+      '<div class="empty">' +
+      'No hay métodos de pago activos.' +
+      '</div>';
+
+    return;
+
+  }
+
+  payments.forEach(
+    payment => {
+
+      const button =
+        document.createElement(
+          "button"
         );
 
-      }
+      button.type =
+        "button";
 
-      stock.textContent =
-      stockValue +
-      " uds";
-
-      if(stockValue <= 5){
-
-        const warning =
-        document.createElement("span");
-
-        warning.className =
-        "stock-warning";
-
-        warning.textContent =
-        "⚠️";
-
-        stock.appendChild(
-          warning
+      button.className =
+        "payment" +
+        (
+          payment.id ===
+          selectedPaymentId
+          ? " active"
+          : ""
         );
 
-      }
+      button.textContent =
+        payment.name;
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          selectedPaymentId =
+            payment.id;
+
+          renderPayments();
+
+        }
+      );
+
+      container.appendChild(
+        button
+      );
+
+    }
+  );
+
+}
+
+/* =========================================
+   CARRITO
+========================================= */
+
+function addToCart(product){
+
+  const stock =
+    Number(
+      product.stock || 0
+    );
+
+  if(stock <= 0){
+
+    showStatus(
+      "Este producto está agotado."
+    );
+
+    return;
+
+  }
+
+  const item =
+    cart.find(
+      i =>
+        i.id ===
+        product.id
+    );
+
+  if(item){
+
+    if(
+      item.quantity <
+      stock
+    ){
+
+      item.quantity++;
+
+    }
+    else{
+
+      showStatus(
+        "No puedes agregar más unidades que la existencia disponible."
+      );
+
+    }
+
+  }
+  else{
+
+    cart.push({
+
+      ...product,
+
+      quantity:1
+
+    });
+
+  }
+
+  renderCart();
+
+}
+
+function changeQuantity(
+  id,
+  amount
+){
+
+  const item =
+    cart.find(
+      i =>
+        i.id ===
+        id
+    );
+
+  if(!item){
+    return;
+  }
+
+  const product =
+    products.find(
+      p =>
+        p.id ===
+        id
+    );
+
+  const max =
+    Number(
+      product?.stock ??
+      item.stock ??
+      0
+    );
+
+  const newQuantity =
+    item.quantity +
+    amount;
+
+  if(
+    newQuantity >
+    max
+  ){
+
+    showStatus(
+      "No hay suficiente existencia disponible."
+    );
+
+    return;
+
+  }
+
+  item.quantity =
+    newQuantity;
+
+  if(
+    item.quantity <= 0
+  ){
+
+    cart =
+      cart.filter(
+        i =>
+          i.id !== id
+      );
+
+  }
+
+  renderCart();
+
+}
+
+function getCartTotal(){
+
+  return cart.reduce(
+    (
+      sum,
+      item
+    ) =>
+
+      sum +
+      (
+        Number(item.price) *
+        Number(item.quantity)
+      ),
+
+    0
+
+  );
+
+}
+
+function renderCart(){
+
+  const container =
+    $("cart");
+
+  container.innerHTML =
+    "";
+
+  if(!cart.length){
+
+    container.innerHTML =
+      '<div class="empty">' +
+      'El carrito está vacío' +
+      '</div>';
+
+    $("total").textContent =
+      "$0.00";
+
+    return;
+
+  }
+
+  cart.forEach(
+    item => {
+
+      const subtotal =
+        Number(item.price) *
+        Number(item.quantity);
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+      row.className =
+        "cart-item";
+
+      const info =
+        document.createElement(
+          "div"
+        );
+
+      info.innerHTML =
+
+        '<div class="cart-name">' +
+
+        escapeHTML(
+          item.name
+        ) +
+
+        '</div>' +
+
+        '<div class="cart-price">' +
+
+        money(
+          item.price
+        ) +
+
+        ' c/u</div>';
+
+      const controls =
+        document.createElement(
+          "div"
+        );
+
+      controls.className =
+        "quantity";
+
+      const minus =
+        document.createElement(
+          "button"
+        );
+
+      minus.type =
+        "button";
+
+      minus.textContent =
+        "−";
+
+      minus.addEventListener(
+        "click",
+        () =>
+          changeQuantity(
+            item.id,
+            -1
+          )
+      );
+
+      const quantity =
+        document.createElement(
+          "span"
+        );
+
+      quantity.textContent =
+        item.quantity;
+
+      const plus =
+        document.createElement(
+          "button"
+        );
+
+      plus.type =
+        "button";
+
+      plus.textContent =
+        "+";
+
+      plus.addEventListener(
+        "click",
+        () =>
+          changeQuantity(
+            item.id,
+            1
+          )
+      );
+
+      controls.append(
+        minus,
+        quantity,
+        plus
+      );
+
+      info.appendChild(
+        controls
+      );
+
+      const subtotalElement =
+        document.createElement(
+          "strong"
+        );
+
+      subtotalElement.textContent =
+        money(
+          subtotal
+        );
 
       row.append(
-        name,
-        stock
+        info,
+        subtotalElement
       );
 
       container.appendChild(
@@ -1159,485 +1541,831 @@ function renderInventory(
     }
   );
 
+  $("total").textContent =
+    money(
+      getCartTotal()
+    );
+
 }
 
+/* =========================================
+   CLIENTE SELECCIONADO
+========================================= */
 
-/* =========================================================
-   VENTAS
-========================================================= */
+function renderSelectedCustomer(){
 
-async function renderSales(
-  sales
-){
+  const selected =
+    customers.find(
+      customer =>
+        customer.id ===
+        selectedCustomerId
+    );
 
-  const container =
-  $("salesContainer");
+  const selectedElement =
+    $("selectedCustomer");
 
-  if(!sales.length){
+  const general =
+    $("generalCustomer");
 
-    container.innerHTML =
-    '<div class="empty">' +
-    "No hay ventas registradas hoy." +
-    "</div>";
+  if(!selected){
+
+    selectedCustomerId =
+      null;
+
+    selectedElement.style.display =
+      "none";
+
+    selectedElement.innerHTML =
+      "";
+
+    general.style.display =
+      "block";
+
+    general.innerHTML =
+      "👤 Consumidor general";
 
     return;
 
   }
 
+  general.style.display =
+    "none";
 
-  const customerIds =
-  [
-    ...new Set(
-      sales
-        .map(
-          sale =>
-          sale.customer_id
+  selectedElement.style.display =
+    "block";
+
+  selectedElement.innerHTML =
+
+    "👤 <strong>" +
+
+    escapeHTML(
+      selected.name ||
+      "Cliente"
+    ) +
+
+    "</strong>" +
+
+    (
+      selected.phone
+      ? " · 📱 " +
+        escapeHTML(
+          selected.phone
         )
-        .filter(Boolean)
+      : ""
+    ) +
+
+    '<button type="button" ' +
+    'class="clear-customer" ' +
+    'id="clearCustomer">' +
+    "Quitar" +
+    "</button>";
+
+  $("clearCustomer")
+    .addEventListener(
+      "click",
+      clearSelectedCustomer
+    );
+
+}
+
+function clearSelectedCustomer(){
+
+  selectedCustomerId =
+    null;
+
+  $("customerSearch").value =
+    "";
+
+  $("customerResults").innerHTML =
+    "";
+
+  $("customerResults").style.display =
+    "none";
+
+  renderSelectedCustomer();
+
+}
+
+/* =========================================
+   BUSCAR CLIENTES
+========================================= */
+
+function renderCustomerResults(
+  query
+){
+
+  const container =
+    $("customerResults");
+
+  const search =
+    String(
+      query || ""
     )
-  ];
+    .trim()
+    .toLowerCase();
 
+  if(!search){
 
-  const customerMap =
-  new Map();
+    container.innerHTML =
+      "";
 
+    container.style.display =
+      "none";
 
-  /*
-   * IMPORTANTE:
-   *
-   * NO usamos business_id aquí.
-   *
-   * La tabla customers de tu base de datos
-   * no tiene esa columna.
-   */
+    return;
 
-  if(customerIds.length){
+  }
 
-    try{
+  const filtered =
+    customers.filter(
+      customer => {
 
-      const customersResult =
-      await supabaseClient
-        .from("customers")
-        .select(
-          "id,name,phone"
-        )
-        .in(
-          "id",
-          customerIds
-        );
+        const name =
+          String(
+            customer.name || ""
+          )
+          .toLowerCase();
 
+        const phone =
+          String(
+            customer.phone || ""
+          )
+          .toLowerCase();
 
-      /*
-       * Si la consulta de clientes falla,
-       * NO detenemos el Dashboard.
-       */
+        const notes =
+          String(
+            customer.notes || ""
+          )
+          .toLowerCase();
 
-      if(customersResult.error){
-
-        console.warn(
-          "No se pudieron cargar los clientes:",
-          customersResult.error
+        return (
+          name.includes(search) ||
+          phone.includes(search) ||
+          notes.includes(search)
         );
 
       }
+    );
 
-      else{
+  container.innerHTML =
+    "";
 
-        (
-          customersResult.data || []
-        ).forEach(
-          customer => {
+  if(!filtered.length){
 
-            customerMap.set(
-              customer.id,
-              customer
-            );
+    const empty =
+      document.createElement(
+        "div"
+      );
+
+    empty.className =
+      "empty";
+
+    empty.textContent =
+      "No encontramos ese cliente.";
+
+    container.appendChild(
+      empty
+    );
+
+    container.style.display =
+      "block";
+
+    return;
+
+  }
+
+  filtered
+    .slice(0,10)
+    .forEach(
+      customer => {
+
+        const button =
+          document.createElement(
+            "button"
+          );
+
+        button.type =
+          "button";
+
+        button.className =
+          "customer-result";
+
+        button.innerHTML =
+
+          "<strong>" +
+
+          escapeHTML(
+            customer.name ||
+            "Cliente sin nombre"
+          ) +
+
+          "</strong>" +
+
+          (
+            customer.phone
+            ? "<small>📱 " +
+              escapeHTML(
+                customer.phone
+              ) +
+              "</small>"
+            : ""
+          );
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            selectedCustomerId =
+              customer.id;
+
+            $("customerSearch").value =
+              customer.name || "";
+
+            container.innerHTML =
+              "";
+
+            container.style.display =
+              "none";
+
+            renderSelectedCustomer();
 
           }
         );
 
-      }
-
-    }
-
-    catch(error){
-
-      console.warn(
-        "Error opcional cargando clientes:",
-        error
-      );
-
-    }
-
-  }
-
-
-  container.innerHTML =
-  "";
-
-  const list =
-  document.createElement("div");
-
-  list.className =
-  "sales-list";
-
-
-  sales
-    .slice(0,20)
-    .forEach(
-      sale => {
-
-        const customer =
-        customerMap.get(
-          sale.customer_id
-        );
-
-        const customerName =
-        customer?.name ||
-        "Consumidor general";
-
-
-        const row =
-        document.createElement("div");
-
-        row.className =
-        "sale-row";
-
-
-        const customerDiv =
-        document.createElement("div");
-
-        customerDiv.className =
-        "sale-customer";
-
-
-        if(
-          sale.customer_id &&
-          customer
-        ){
-
-          const link =
-          document.createElement("a");
-
-          link.className =
-          "customer-link";
-
-          link.href =
-          "historial.html" +
-          "?customer_id=" +
-          encodeURIComponent(
-            sale.customer_id
-          ) +
-          "&business=" +
-          encodeURIComponent(
-            currentBusiness
-          );
-
-          link.textContent =
-          customerName;
-
-          link.title =
-          "Ver historial de " +
-          customerName;
-
-          customerDiv.appendChild(
-            link
-          );
-
-        }
-
-        else{
-
-          const general =
-          document.createElement("span");
-
-          general.className =
-          "customer-general";
-
-          general.textContent =
-          customerName;
-
-          customerDiv.appendChild(
-            general
-          );
-
-        }
-
-
-        const dateDiv =
-        document.createElement("div");
-
-        dateDiv.className =
-        "sale-date";
-
-        dateDiv.textContent =
-        formatSaleDateTime(
-          sale.created_at
-        );
-
-        customerDiv.appendChild(
-          dateDiv
-        );
-
-
-        const totalDiv =
-        document.createElement("div");
-
-        totalDiv.className =
-        "sale-total";
-
-        totalDiv.textContent =
-        money(
-          sale.total
-        );
-
-
-        const statusDiv =
-        document.createElement("div");
-
-        statusDiv.className =
-        "sale-status";
-
-
-        const paid =
-        sale.status ===
-        "paid";
-
-        const cancelled =
-        sale.status ===
-        "cancelled";
-
-
-        const statusPill =
-        document.createElement("span");
-
-        statusPill.className =
-        "status-pill " +
-        (
-          paid
-          ? "paid"
-          : cancelled
-          ? "cancelled"
-          : "open"
-        );
-
-
-        if(paid){
-
-          statusPill.textContent =
-          "✓ Pagada";
-
-        }
-
-        else if(cancelled){
-
-          statusPill.textContent =
-          "Cancelada";
-
-        }
-
-        else{
-
-          statusPill.textContent =
-          "🔴 Debe " +
-          money(
-            sale.balance || 0
-          );
-
-        }
-
-
-        statusDiv.appendChild(
-          statusPill
-        );
-
-
-        const main =
-        document.createElement("div");
-
-        main.className =
-        "sale-main";
-
-        main.append(
-          customerDiv,
-          totalDiv,
-          statusDiv
-        );
-
-        row.appendChild(
-          main
-        );
-
-        list.appendChild(
-          row
+        container.appendChild(
+          button
         );
 
       }
     );
 
-
-  container.appendChild(
-    list
-  );
+  container.style.display =
+    "block";
 
 }
 
+/* =========================================
+   EVENTOS CLIENTES
+========================================= */
 
-/* =========================================================
-   CAMBIO DE NEGOCIO
-========================================================= */
+$("customerSearch")
+  .addEventListener(
+    "input",
+    event => {
 
-document
-.querySelectorAll(
-  ".business-btn"
-)
-.forEach(
-  button => {
+      renderCustomerResults(
+        event.target.value
+      );
 
-    button.addEventListener(
-      "click",
-      async () => {
+    }
+  );
 
-        const business =
-        button.dataset.business;
+$("customerSearch")
+  .addEventListener(
+    "focus",
+    event => {
 
-        if(
-          business ===
-          currentBusiness
-        ){
-          return;
-        }
+      const value =
+        event.target.value.trim();
 
-        currentBusiness =
-        business;
+      if(value){
 
-        document
-        .querySelectorAll(
-          ".business-btn"
-        )
-        .forEach(
-          b =>
-          b.classList.remove(
-            "active"
-          )
+        renderCustomerResults(
+          value
         );
-
-        button.classList.add(
-          "active"
-        );
-
-        await loadDashboard();
 
       }
-    );
 
-  }
-);
+    }
+  );
 
+$("generalCustomer")
+  .addEventListener(
+    "click",
+    clearSelectedCustomer
+  );
 
-/* =========================================================
-   BOTONES
-========================================================= */
+$("addClientButton")
+  .addEventListener(
+    "click",
+    () => {
 
-$("refresh")
-.addEventListener(
-  "click",
-  loadDashboard
-);
+      window.location.href =
+        "clientes.html?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
 
+    }
+  );
 
-$("accounts")
-.addEventListener(
-  "click",
-  () => {
-
-    window.location.href =
-    "cuentas.html" +
-    "?business=" +
-    encodeURIComponent(
-      currentBusiness
-    );
-
-  }
-);
-
-
-$("customers")
-.addEventListener(
-  "click",
-  () => {
-
-    window.location.href =
-    "clientes.html" +
-    "?business=" +
-    encodeURIComponent(
-      currentBusiness
-    );
-
-  }
-);
-
-
-$("history")
-.addEventListener(
-  "click",
-  () => {
-
-    window.location.href =
-    "historial.html" +
-    "?business=" +
-    encodeURIComponent(
-      currentBusiness
-    );
-
-  }
-);
-
-
-$("inventory")
-.addEventListener(
-  "click",
-  () => {
-
-    window.location.href =
-    "inventario.html" +
-    "?business=" +
-    encodeURIComponent(
-      currentBusiness
-    );
-
-  }
-);
-
-
-$("dashboard")
-.addEventListener(
-  "click",
-  () => {
-
-    window.location.href =
-    "dashboard.html" +
-    "?business=" +
-    encodeURIComponent(
-      currentBusiness
-    );
-
-  }
-);
-
-
-/* =========================================================
-   INICIO
-========================================================= */
+/* =========================================
+   CERRAR RESULTADOS
+========================================= */
 
 document.addEventListener(
-  "DOMContentLoaded",
-  () => {
+  "click",
+  event => {
 
-    loadDashboard();
+    const box =
+      document.querySelector(
+        ".customer-box"
+      );
+
+    if(
+      box &&
+      !box.contains(
+        event.target
+      )
+    ){
+
+      $("customerResults")
+        .style.display =
+        "none";
+
+    }
 
   }
 );
+
+/* =========================================
+   CAMBIAR NEGOCIO
+========================================= */
+
+async function changeBusiness(
+  name,
+  button
+){
+
+  if(
+    name ===
+    currentBusiness
+  ){
+
+    return;
+
+  }
+
+  currentBusiness =
+    name;
+
+  cart =
+    [];
+
+  selectedPaymentId =
+    null;
+
+  selectedCustomerId =
+    null;
+
+  $("customerSearch").value =
+    "";
+
+  $("customerResults").innerHTML =
+    "";
+
+  $("customerResults").style.display =
+    "none";
+
+  document
+    .querySelectorAll(
+      ".business-btn"
+    )
+    .forEach(
+      b =>
+        b.classList.remove(
+          "active"
+        )
+    );
+
+  button.classList.add(
+    "active"
+  );
+
+  await loadBusinessData();
+
+}
+
+/* =========================================
+   REGISTRAR VENTA
+========================================= */
+
+async function registerSale(
+  isPending
+){
+
+  clearStatus();
+
+  if(!cart.length){
+
+    showStatus(
+      "Agrega al menos un producto."
+    );
+
+    return;
+
+  }
+
+  if(
+    !isPending &&
+    !selectedPaymentId
+  ){
+
+    showStatus(
+      "Selecciona un método de pago."
+    );
+
+    return;
+
+  }
+
+  if(
+    isPending &&
+    !selectedCustomerId
+  ){
+
+    showStatus(
+      "Para dejar una venta a cuenta debes seleccionar un cliente."
+    );
+
+    return;
+
+  }
+
+  const button =
+    isPending
+    ? $("accountButton")
+    : $("chargeButton");
+
+  const originalText =
+    button.textContent;
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    isPending
+    ? "GUARDANDO..."
+    : "REGISTRANDO...";
+
+  try{
+
+    const items =
+      cart.map(
+        item => ({
+
+          product_id:
+            item.id,
+
+          description:
+            item.name,
+
+          quantity:
+            Number(
+              item.quantity
+            ),
+
+          unit_price:
+            Number(
+              item.price
+            ),
+
+          subtotal:
+            Number(
+              item.price
+            ) *
+            Number(
+              item.quantity
+            )
+
+        })
+      );
+
+    const total =
+      items.reduce(
+        (
+          sum,
+          item
+        ) =>
+          sum +
+          item.subtotal,
+        0
+      );
+
+    const businessId =
+      BUSINESS_IDS[
+        currentBusiness
+      ];
+
+    const result =
+      await supabaseClient
+        .rpc(
+          "register_sale",
+          {
+
+            p_business_id:
+              businessId,
+
+            p_customer_id:
+              selectedCustomerId ||
+              null,
+
+            p_payment_method_id:
+              isPending
+              ? null
+              : selectedPaymentId,
+
+            p_items:
+              items,
+
+            p_is_pending:
+              isPending
+
+          }
+        );
+
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+    const customer =
+      customers.find(
+        c =>
+          c.id ===
+          selectedCustomerId
+      );
+
+    const paymentName =
+      payments.find(
+        p =>
+          p.id ===
+          selectedPaymentId
+      )?.name ||
+      "Pago";
+
+    let message;
+
+    if(isPending){
+
+      message =
+        "Cuenta registrada\n\n" +
+
+        currentBusiness +
+
+        "\nCliente: " +
+
+        (
+          customer?.name ||
+          "Cliente"
+        ) +
+
+        "\nTotal: " +
+
+        money(total);
+
+    }
+    else{
+
+      message =
+        "Venta registrada\n\n" +
+
+        currentBusiness +
+
+        "\nCliente: " +
+
+        (
+          customer?.name ||
+          "Consumidor general"
+        ) +
+
+        "\nTotal: " +
+
+        money(total) +
+
+        "\nPago: " +
+
+        paymentName;
+
+    }
+
+    alert(message);
+
+    cart = [];
+
+    selectedCustomerId =
+      null;
+
+    $("customerSearch").value =
+      "";
+
+    $("customerResults").innerHTML =
+      "";
+
+    $("customerResults").style.display =
+      "none";
+
+    renderSelectedCustomer();
+
+    await loadBusinessData();
+
+    showStatus(
+      isPending
+      ? "Cuenta guardada correctamente."
+      : "Venta guardada correctamente.",
+      "ok"
+    );
+
+    console.log(
+      "register_sale response:",
+      result.data
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "registerSale:",
+      error
+    );
+
+    showStatus(
+      "No se pudo registrar la operación:\n" +
+      (
+        error?.message ||
+        String(error)
+      )
+    );
+
+  }
+
+  finally{
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      originalText;
+
+  }
+
+}
+
+/* =========================================
+   COBRAR
+========================================= */
+
+$("chargeButton")
+  .addEventListener(
+    "click",
+    () =>
+      registerSale(false)
+  );
+
+/* =========================================
+   DEJAR A CUENTA
+========================================= */
+
+$("accountButton")
+  .addEventListener(
+    "click",
+    () =>
+      registerSale(true)
+  );
+
+/* =========================================
+   NAVEGACIÓN
+========================================= */
+
+$("accountsButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "cuentas.html?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+$("clientsButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "clientes.html?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+$("historyButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "historial.html?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+$("inventoryButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "inventario.html?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+$("dashboardButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "dashboard.html?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+/* =========================================
+   NEGOCIOS
+========================================= */
+
+document
+  .querySelectorAll(
+    ".business-btn"
+  )
+  .forEach(
+    button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          changeBusiness(
+            button.dataset.business,
+            button
+          );
+
+        }
+      );
+
+    }
+  );
+
+/* =========================================
+   INICIO
+========================================= */
+
+async function startApp(){
+
+  try{
+
+    initializeSupabase();
+
+    await loadBusinessData();
+
+  }
+
+  catch(error){
+
+    console.error(
+      "startApp:",
+      error
+    );
+
+    showStatus(
+      error?.message ||
+      "No se pudo iniciar el sistema."
+    );
+
+  }
+
+}
+
+startApp();
 
 </script>
 
