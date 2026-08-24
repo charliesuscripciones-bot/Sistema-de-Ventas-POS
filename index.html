@@ -7,12 +7,27 @@
 
 <meta
   name="viewport"
-  content="width=device-width,initial-scale=1.0"
+  content="width=device-width,initial-scale=1.0,viewport-fit=cover"
 >
 
 <meta
   name="theme-color"
   content="#111827"
+>
+
+<meta
+  name="apple-mobile-web-app-capable"
+  content="yes"
+>
+
+<meta
+  name="apple-mobile-web-app-status-bar-style"
+  content="black-translucent"
+>
+
+<meta
+  name="apple-mobile-web-app-title"
+  content="Sistema POS"
 >
 
 <title>Sistema de Ventas POS</title>
@@ -25,29 +40,48 @@
   padding:0;
 }
 
+html{
+  width:100%;
+  min-height:100%;
+}
+
 body{
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
   background:#f5f5f5;
   color:#222;
+  min-height:100vh;
 }
 
 header{
   background:#111827;
   color:#fff;
-  padding:22px 20px;
+
+  padding-top:
+    calc(22px + env(safe-area-inset-top));
+
+  padding-right:20px;
+  padding-bottom:22px;
+  padding-left:20px;
 }
 
 header h1{
   font-size:28px;
+  line-height:1.15;
 }
 
 header p{
   font-size:15px;
   opacity:.75;
-  margin-top:6px;
+  margin-top:8px;
 }
 
 .container{
+  width:100%;
   max-width:1100px;
   margin:auto;
   padding:20px;
@@ -55,11 +89,11 @@ header p{
 
 .status{
   margin:0 0 15px;
-  padding:13px 15px;
-  border-radius:10px;
+  padding:14px 16px;
+  border-radius:12px;
   font-size:14px;
   display:none;
-  font-weight:600;
+  font-weight:700;
   white-space:pre-line;
 }
 
@@ -73,6 +107,12 @@ header p{
   display:block;
   background:#dcfce7;
   color:#166534;
+}
+
+.status.warn{
+  display:block;
+  background:#fef3c7;
+  color:#92400e;
 }
 
 .businesses{
@@ -92,6 +132,10 @@ header p{
   font-weight:700;
   cursor:pointer;
   font-size:16px;
+}
+
+.business-btn{
+  flex:1;
 }
 
 .business-btn.active{
@@ -478,12 +522,17 @@ button{
     font-size:25px;
   }
 
+  header p{
+    font-size:14px;
+  }
+
   .navigation{
     grid-template-columns:1fr 1fr;
   }
 
   .business-btn{
     flex:1;
+    min-width:0;
   }
 
   .layout{
@@ -520,6 +569,15 @@ button{
 
 }
 
+@supports (-webkit-touch-callout:none){
+
+  header{
+    padding-top:
+      calc(22px + env(safe-area-inset-top));
+  }
+
+}
+
 </style>
 
 </head>
@@ -538,11 +596,14 @@ Administración de negocios y ventas
 
 <div class="container">
 
-<div id="status" class="status"></div>
+<div
+  id="status"
+  class="status"
+></div>
 
-<!-- ================================
+<!-- =====================================================
      NEGOCIOS
-================================ -->
+====================================================== -->
 
 <div class="businesses">
 
@@ -564,9 +625,9 @@ Administración de negocios y ventas
 
 </div>
 
-<!-- ================================
+<!-- =====================================================
      NAVEGACIÓN
-================================ -->
+====================================================== -->
 
 <div class="navigation">
 
@@ -612,9 +673,9 @@ Administración de negocios y ventas
 
 </div>
 
-<!-- ================================
+<!-- =====================================================
      POS
-================================ -->
+====================================================== -->
 
 <div class="layout">
 
@@ -637,9 +698,9 @@ Cargando productos...
 
 </div>
 
-<!-- ================================
+<!-- =====================================================
      CARRITO
-================================ -->
+====================================================== -->
 
 <div class="card">
 
@@ -667,9 +728,9 @@ $0.00
 
 </div>
 
-<!-- ================================
+<!-- =====================================================
      CLIENTE
-================================ -->
+====================================================== -->
 
 <div class="customer-title">
 👤 Cliente
@@ -717,9 +778,9 @@ $0.00
 
 </div>
 
-<!-- ================================
+<!-- =====================================================
      PAGO
-================================ -->
+====================================================== -->
 
 <div class="payment-title">
 Método de pago
@@ -736,9 +797,9 @@ Cargando métodos de pago...
 
 </div>
 
-<!-- ================================
+<!-- =====================================================
      ACCIONES
-================================ -->
+====================================================== -->
 
 <button
   type="button"
@@ -762,15 +823,188 @@ Cargando métodos de pago...
 
 </div>
 
+<!-- =====================================================
+     SUPABASE
+====================================================== -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
 "use strict";
 
-/* =========================================
+/* =========================================================
+   SERVICE WORKER
+========================================================= */
+
+async function registerServiceWorker(){
+
+  if(
+    !("serviceWorker" in navigator)
+  ){
+
+    console.warn(
+      "[POS] Service Worker no disponible en este navegador."
+    );
+
+    return;
+
+  }
+
+  try{
+
+    const registration =
+      await navigator.serviceWorker.register(
+        "./sw.js",
+        {
+          scope:"./",
+          updateViaCache:"none"
+        }
+      );
+
+    console.log(
+      "[POS] Service Worker registrado:",
+      registration.scope
+    );
+
+    /*
+     * Buscar actualizaciones inmediatamente.
+     */
+    try{
+
+      await registration.update();
+
+    }
+
+    catch(error){
+
+      console.warn(
+        "[POS] No se pudo comprobar actualización del SW:",
+        error
+      );
+
+    }
+
+    /*
+     * Si existe una versión nueva esperando,
+     * pedirle que tome el control.
+     */
+    if(
+      registration.waiting
+    ){
+
+      registration.waiting.postMessage(
+        "SKIP_WAITING"
+      );
+
+    }
+
+    registration.addEventListener(
+      "updatefound",
+      () => {
+
+        const newWorker =
+          registration.installing;
+
+        if(!newWorker){
+
+          return;
+
+        }
+
+        newWorker.addEventListener(
+          "statechange",
+          () => {
+
+            if(
+              newWorker.state ===
+              "installed" &&
+              navigator.serviceWorker.controller
+            ){
+
+              newWorker.postMessage(
+                "SKIP_WAITING"
+              );
+
+            }
+
+          }
+        );
+
+      }
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "[POS] Error registrando Service Worker:",
+      error
+    );
+
+  }
+
+}
+
+
+/*
+ * Mostrar estado de conexión.
+ */
+function updateConnectionStatus(){
+
+  if(
+    navigator.onLine
+  ){
+
+    console.log(
+      "[POS] Conectado a Internet."
+    );
+
+  }
+
+  else{
+
+    showStatus(
+      "Estás sin Internet. El POS continuará disponible con los recursos guardados en el dispositivo.",
+      "warn"
+    );
+
+  }
+
+}
+
+
+window.addEventListener(
+  "online",
+  () => {
+
+    console.log(
+      "[POS] Conexión restaurada."
+    );
+
+    loadBusinessData();
+
+  }
+);
+
+
+window.addEventListener(
+  "offline",
+  () => {
+
+    showStatus(
+      "Sin Internet. El sistema está trabajando en modo offline.",
+      "warn"
+    );
+
+  }
+);
+
+
+/* =========================================================
    SUPABASE
-========================================= */
+========================================================= */
 
 const SUPABASE_URL =
 "https://jrxklpstlloeckihcduv.supabase.co";
@@ -781,9 +1015,9 @@ const SUPABASE_PUBLISHABLE_KEY =
 let supabaseClient = null;
 
 
-/* =========================================
+/* =========================================================
    NEGOCIOS
-========================================= */
+========================================================= */
 
 const BUSINESS_IDS = {
 
@@ -796,9 +1030,9 @@ const BUSINESS_IDS = {
 };
 
 
-/* =========================================
+/* =========================================================
    ESTADO
-========================================= */
+========================================================= */
 
 let currentBusiness =
 "BakeQuiri";
@@ -809,8 +1043,13 @@ let payments = [];
 
 /*
  * IMPORTANTE:
- * Los clientes son COMPARTIDOS entre los negocios.
- * La tabla customers NO tiene business_id.
+ * customers es una tabla compartida.
+ *
+ * NO tiene business_id.
+ *
+ * Por eso:
+ * - no se selecciona business_id
+ * - no se filtra por business_id
  */
 let customers = [];
 
@@ -823,9 +1062,9 @@ let selectedCustomerId =
 null;
 
 
-/* =========================================
+/* =========================================================
    UTILIDADES
-========================================= */
+========================================================= */
 
 function $(id){
 
@@ -883,9 +1122,9 @@ function clearStatus(){
 }
 
 
-/* =========================================
+/* =========================================================
    INICIALIZAR SUPABASE
-========================================= */
+========================================================= */
 
 function initializeSupabase(){
 
@@ -896,7 +1135,7 @@ function initializeSupabase(){
   ){
 
     throw new Error(
-      "No se pudo cargar la librería de Supabase. Revisa tu conexión a Internet."
+      "No se pudo cargar la librería de Supabase. Revisa tu conexión a Internet o abre nuevamente la aplicación con Internet."
     );
 
   }
@@ -910,9 +1149,9 @@ function initializeSupabase(){
 }
 
 
-/* =========================================
+/* =========================================================
    CARGAR DATOS
-========================================= */
+========================================================= */
 
 async function loadBusinessData(){
 
@@ -940,8 +1179,9 @@ async function loadBusinessData(){
   try{
 
     /*
-     * PRODUCTOS:
-     * Sí pertenecen a un negocio.
+     * PRODUCTOS
+     *
+     * Los productos sí pertenecen a un negocio.
      */
 
     const productsResult =
@@ -964,8 +1204,9 @@ async function loadBusinessData(){
 
 
     /*
-     * MÉTODOS DE PAGO:
-     * Sí pertenecen a un negocio.
+     * MÉTODOS DE PAGO
+     *
+     * También pertenecen al negocio.
      */
 
     const paymentsResult =
@@ -988,22 +1229,19 @@ async function loadBusinessData(){
 
 
     /*
-     * CLIENTES:
+     * CLIENTES
      *
-     * CORRECCIÓN IMPORTANTE:
+     * CORRECCIÓN DEFINITIVA:
+     *
      * customers NO tiene business_id.
      *
-     * Por eso NO usamos:
+     * NO usar:
      *
-     *   business_id
+     * .select("...,business_id")
      *
-     * dentro del select.
+     * ni:
      *
-     * Tampoco filtramos:
-     *
-     *   .eq("business_id", ...)
-     *
-     * Los clientes son compartidos.
+     * .eq("business_id",businessId)
      */
 
     const customersResult =
@@ -1065,7 +1303,7 @@ async function loadBusinessData(){
 
     /*
      * Mantener método de pago seleccionado
-     * solamente si existe en el negocio actual.
+     * únicamente si existe en el negocio actual.
      */
 
     if(
@@ -1112,6 +1350,19 @@ async function loadBusinessData(){
 
     renderSelectedCustomer();
 
+
+    if(
+      navigator.onLine
+    ){
+
+      showStatus(
+        currentBusiness +
+        " actualizado correctamente.",
+        "ok"
+      );
+
+    }
+
   }
 
   catch(error){
@@ -1135,7 +1386,10 @@ async function loadBusinessData(){
 
     showStatus(
       error?.message ||
-      "No se pudo conectar con Supabase."
+      "No se pudo conectar con Supabase.",
+      navigator.onLine
+      ? "error"
+      : "warn"
     );
 
   }
@@ -1143,9 +1397,9 @@ async function loadBusinessData(){
 }
 
 
-/* =========================================
+/* =========================================================
    PRODUCTOS
-========================================= */
+========================================================= */
 
 function renderProducts(){
 
@@ -1159,8 +1413,8 @@ function renderProducts(){
 
     container.innerHTML =
       '<div class="empty">' +
-      'No hay productos activos para este negocio.' +
-      '</div>';
+      "No hay productos activos para este negocio." +
+      "</div>";
 
     return;
 
@@ -1207,7 +1461,7 @@ function renderProducts(){
           product.name
         ) +
 
-        '</div>' +
+        "</div>" +
 
         '<div class="price">' +
 
@@ -1215,7 +1469,7 @@ function renderProducts(){
           product.price
         ) +
 
-        '</div>' +
+        "</div>" +
 
         '<div class="stock">' +
 
@@ -1225,7 +1479,7 @@ function renderProducts(){
           : "Agotado"
         ) +
 
-        '</div>';
+        "</div>";
 
 
       button.addEventListener(
@@ -1245,9 +1499,9 @@ function renderProducts(){
 }
 
 
-/* =========================================
+/* =========================================================
    MÉTODOS DE PAGO
-========================================= */
+========================================================= */
 
 function renderPayments(){
 
@@ -1261,8 +1515,8 @@ function renderPayments(){
 
     container.innerHTML =
       '<div class="empty">' +
-      'No hay métodos de pago activos.' +
-      '</div>';
+      "No hay métodos de pago activos." +
+      "</div>";
 
     return;
 
@@ -1319,9 +1573,9 @@ function renderPayments(){
 }
 
 
-/* =========================================
+/* =========================================================
    CARRITO
-========================================= */
+========================================================= */
 
 function addToCart(product){
 
@@ -1500,8 +1754,8 @@ function renderCart(){
 
     container.innerHTML =
       '<div class="empty">' +
-      'El carrito está vacío' +
-      '</div>';
+      "El carrito está vacío" +
+      "</div>";
 
 
     $("total").textContent =
@@ -1545,7 +1799,7 @@ function renderCart(){
           item.name
         ) +
 
-        '</div>' +
+        "</div>" +
 
         '<div class="cart-price">' +
 
@@ -1553,7 +1807,7 @@ function renderCart(){
           item.price
         ) +
 
-        ' c/u</div>';
+        " c/u</div>";
 
 
       const controls =
@@ -1670,9 +1924,9 @@ function renderCart(){
 }
 
 
-/* =========================================
+/* =========================================================
    CLIENTE SELECCIONADO
-========================================= */
+========================================================= */
 
 function renderSelectedCustomer(){
 
@@ -1786,9 +2040,9 @@ function clearSelectedCustomer(){
 }
 
 
-/* =========================================
+/* =========================================================
    BUSCAR CLIENTES
-========================================= */
+========================================================= */
 
 function renderCustomerResults(
   query
@@ -1969,9 +2223,9 @@ function renderCustomerResults(
 }
 
 
-/* =========================================
+/* =========================================================
    EVENTOS CLIENTES
-========================================= */
+========================================================= */
 
 $("customerSearch")
   .addEventListener(
@@ -2029,9 +2283,9 @@ $("addClientButton")
   );
 
 
-/* =========================================
+/* =========================================================
    CERRAR RESULTADOS
-========================================= */
+========================================================= */
 
 document.addEventListener(
   "click",
@@ -2060,9 +2314,9 @@ document.addEventListener(
 );
 
 
-/* =========================================
+/* =========================================================
    CAMBIAR NEGOCIO
-========================================= */
+========================================================= */
 
 async function changeBusiness(
   name,
@@ -2129,9 +2383,9 @@ async function changeBusiness(
 }
 
 
-/* =========================================
+/* =========================================================
    REGISTRAR VENTA
-========================================= */
+========================================================= */
 
 async function registerSale(
   isPending
@@ -2172,6 +2426,25 @@ async function registerSale(
 
     showStatus(
       "Para dejar una venta a cuenta debes seleccionar un cliente."
+    );
+
+    return;
+
+  }
+
+
+  /*
+   * En modo offline no intentamos llamar a Supabase
+   * porque register_sale es una función remota.
+   */
+
+  if(
+    !navigator.onLine
+  ){
+
+    showStatus(
+      "No hay Internet. La venta no se envió todavía. Conéctate a Internet para registrar la operación.",
+      "warn"
     );
 
     return;
@@ -2426,9 +2699,9 @@ async function registerSale(
 }
 
 
-/* =========================================
+/* =========================================================
    COBRAR
-========================================= */
+========================================================= */
 
 $("chargeButton")
   .addEventListener(
@@ -2438,9 +2711,9 @@ $("chargeButton")
   );
 
 
-/* =========================================
+/* =========================================================
    DEJAR A CUENTA
-========================================= */
+========================================================= */
 
 $("accountButton")
   .addEventListener(
@@ -2450,9 +2723,9 @@ $("accountButton")
   );
 
 
-/* =========================================
+/* =========================================================
    NAVEGACIÓN
-========================================= */
+========================================================= */
 
 $("accountsButton")
   .addEventListener(
@@ -2529,9 +2802,9 @@ $("dashboardButton")
   );
 
 
-/* =========================================
+/* =========================================================
    NEGOCIOS
-========================================= */
+========================================================= */
 
 document
   .querySelectorAll(
@@ -2556,11 +2829,22 @@ document
   );
 
 
-/* =========================================
+/* =========================================================
    INICIO
-========================================= */
+========================================================= */
 
 async function startApp(){
+
+  /*
+   * Registrar primero el Service Worker.
+   *
+   * No bloqueamos el POS si el SW falla.
+   */
+
+  registerServiceWorker();
+
+  updateConnectionStatus();
+
 
   try{
 
