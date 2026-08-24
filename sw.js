@@ -1,9 +1,22 @@
-const CACHE_NAME = "POS-SISTEMA-VENTAS-V6";
+const CACHE_NAME = "POS-SISTEMA-VENTAS-V7";
+
+/* =====================================================
+   ARCHIVOS PRINCIPALES DE LA APLICACIÓN
+===================================================== */
 
 const APP_SHELL = [
   "./",
   "./index.html",
   "./sw.js",
+
+  /* Páginas del POS */
+  "./dashboard.html",
+  "./clientes.html",
+  "./historial.html",
+  "./inventario.html",
+  "./cuentas.html",
+
+  /* Archivos PWA, si existen */
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png"
@@ -18,23 +31,44 @@ self.addEventListener("install", event => {
   event.waitUntil(
 
     caches.open(CACHE_NAME)
-      .then(cache => {
+      .then(async cache => {
 
-        return cache.addAll(
-          APP_SHELL.filter(Boolean)
-        );
+        /*
+          Guardamos cada archivo individualmente.
 
-      })
-      .catch(error => {
+          Esto evita que si uno de los archivos todavía
+          no existe en GitHub, falle todo el proceso de
+          instalación del Service Worker.
+        */
 
-        console.warn(
-          "No se pudo guardar todo el App Shell:",
-          error
-        );
+        for (const file of APP_SHELL) {
+
+          try {
+
+            await cache.add(file);
+
+          }
+
+          catch (error) {
+
+            console.warn(
+              "No se pudo guardar en cache:",
+              file,
+              error
+            );
+
+          }
+
+        }
 
       })
 
   );
+
+  /*
+    Hace que la nueva versión del Service Worker
+    quede disponible inmediatamente.
+  */
 
   self.skipWaiting();
 
@@ -54,24 +88,45 @@ self.addEventListener("activate", event => {
         return Promise.all(
 
           cacheNames
-            .filter(
-              cacheName =>
+            .filter(cacheName => {
+
+              return (
+
                 cacheName.startsWith(
                   "POS-SISTEMA-VENTAS-"
-                ) &&
-                cacheName !== CACHE_NAME
-            )
-            .map(
-              cacheName =>
-                caches.delete(cacheName)
-            )
+                )
+
+                &&
+
+                cacheName !==
+                CACHE_NAME
+
+              );
+
+            })
+
+            .map(cacheName => {
+
+              return caches.delete(
+                cacheName
+              );
+
+            })
 
         );
 
       })
-      .then(() =>
-        self.clients.claim()
-      )
+
+      .then(() => {
+
+        /*
+          Controlamos inmediatamente todas las páginas
+          abiertas de la aplicación.
+        */
+
+        return self.clients.claim();
+
+      })
 
   );
 
@@ -81,155 +136,272 @@ self.addEventListener("activate", event => {
    FETCH
 ===================================================== */
 
-self.addEventListener("fetch", event => {
+self.addEventListener(
+  "fetch",
+  event => {
 
-  const request =
-    event.request;
+    const request =
+      event.request;
 
-  /*
-    Solo manejamos solicitudes GET.
-  */
+    /*
+      Solo interceptamos GET.
 
-  if(
-    request.method !== "GET"
-  ){
+      Las operaciones POST/PUT/PATCH/DELETE de Supabase
+      deben seguir manejándose desde index.html.
+    */
 
-    return;
+    if(
+      request.method !== "GET"
+    ){
 
-  }
+      return;
 
-  const url =
-    new URL(
-      request.url
-    );
+    }
 
-  /*
-    Supabase, APIs y otras solicitudes externas
-    NO se almacenan en el Service Worker.
+    const url =
+      new URL(
+        request.url
+      );
 
-    Esto es importante porque los datos de productos,
-    clientes, ventas, etc. los maneja index.html
-    mediante localStorage + Supabase.
-  */
+    /*
+      Solo manejamos archivos de nuestra propia aplicación.
 
-  if(
-    url.origin !==
-    self.location.origin
-  ){
+      Supabase y otros dominios externos NO se interceptan.
+    */
 
-    return;
+    if(
+      url.origin !==
+      self.location.origin
+    ){
 
-  }
+      return;
 
-  /*
-    Para archivos de la aplicación:
+    }
 
-    1. Intentar red.
-    2. Guardar la versión nueva en cache.
-    3. Si no hay Internet, usar cache.
-  */
+    /*
+      Estrategia:
 
-  event.respondWith(
+      ONLINE
+      ↓
+      Intentar red
+      ↓
+      Actualizar cache
+      ↓
+      Entregar archivo
 
-    fetch(request)
+      OFFLINE
+      ↓
+      Usar cache
+    */
 
-      .then(response => {
+    event.respondWith(
 
-        /*
-          Solo guardamos respuestas válidas.
-        */
+      fetch(request)
 
-        if(
-          response &&
-          response.status === 200 &&
-          response.type === "basic"
-        ){
-
-          const copy =
-            response.clone();
-
-          caches.open(
-            CACHE_NAME
-          )
-          .then(cache => {
-
-            cache.put(
-              request,
-              copy
-            );
-
-          });
-
-        }
-
-        return response;
-
-      })
-
-      .catch(() => {
-
-        /*
-          OFFLINE:
-          Primero intentamos encontrar exactamente
-          la solicitud solicitada.
-        */
-
-        return caches.match(
-          request
-        )
-        .then(cachedResponse => {
-
-          if(cachedResponse){
-
-            return cachedResponse;
-
-          }
+        .then(response => {
 
           /*
-            Si no existe exactamente,
-            para navegación regresamos index.html.
+            Guardamos únicamente respuestas válidas.
           */
 
           if(
-            request.mode === "navigate"
+            response &&
+            response.status === 200 &&
+            response.type === "basic"
           ){
 
-            return caches.match(
-              "./index.html"
-            );
+            const responseClone =
+              response.clone();
+
+            caches.open(
+              CACHE_NAME
+            )
+            .then(cache => {
+
+              cache.put(
+                request,
+                responseClone
+              );
+
+            })
+            .catch(error => {
+
+              console.warn(
+                "No se pudo actualizar cache:",
+                error
+              );
+
+            });
 
           }
 
+          return response;
+
+        })
+
+        .catch(() => {
+
           /*
-            Si tampoco existe,
-            devolvemos una respuesta offline.
+            =============================================
+            MODO OFFLINE
+            =============================================
           */
 
-          return new Response(
+          return caches.match(
+            request
+          )
+          .then(cachedResponse => {
 
-            "Sin conexión a Internet.",
+            if(
+              cachedResponse
+            ){
 
-            {
-              status:503,
-              statusText:"Offline",
-              headers:{
-                "Content-Type":
-                  "text/plain; charset=utf-8"
-              }
+              return cachedResponse;
+
             }
 
-          );
+            /*
+              Si la solicitud era una navegación y
+              no encontramos exactamente la página,
+              intentamos devolver index.html.
+            */
 
-        });
+            if(
+              request.mode ===
+              "navigate"
+            ){
 
-      })
+              return caches.match(
+                "./index.html"
+              )
+              .then(indexResponse => {
+
+                if(
+                  indexResponse
+                ){
+
+                  return indexResponse;
+
+                }
+
+                return offlineResponse();
+
+              });
+
+            }
+
+            return offlineResponse();
+
+          });
+
+        })
+
+    );
+
+  }
+);
+
+/* =====================================================
+   RESPUESTA OFFLINE
+===================================================== */
+
+function offlineResponse(){
+
+  return new Response(
+
+    `
+      <!DOCTYPE html>
+
+      <html lang="es">
+
+      <head>
+
+        <meta charset="UTF-8">
+
+        <meta
+          name="viewport"
+          content="width=device-width,initial-scale=1.0"
+        >
+
+        <title>POS Offline</title>
+
+        <style>
+
+          body{
+            margin:0;
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+            background:#f5f5f5;
+            color:#222;
+            text-align:center;
+            padding:25px;
+          }
+
+          .box{
+            background:white;
+            padding:30px;
+            border-radius:20px;
+            box-shadow:0 5px 25px rgba(0,0,0,.1);
+            max-width:400px;
+          }
+
+          h1{
+            font-size:28px;
+            margin-bottom:15px;
+          }
+
+          p{
+            font-size:17px;
+            line-height:1.5;
+            color:#666;
+          }
+
+        </style>
+
+      </head>
+
+      <body>
+
+        <div class="box">
+
+          <h1>
+            📴 Sin conexión
+          </h1>
+
+          <p>
+            Esta sección todavía no está disponible
+            offline.
+          </p>
+
+          <p>
+            Regresa al inicio del POS.
+          </p>
+
+        </div>
+
+      </body>
+
+      </html>
+    `,
+
+    {
+      status:503,
+      statusText:"Offline",
+      headers:{
+        "Content-Type":
+          "text/html; charset=utf-8"
+      }
+    }
 
   );
 
-});
+}
 
 /* =====================================================
-   MENSAJES DESDE index.html
+   MENSAJES DESDE LA APLICACIÓN
 ===================================================== */
 
 self.addEventListener(
@@ -245,8 +417,7 @@ self.addEventListener(
     }
 
     /*
-      Permite que index.html solicite
-      una actualización inmediata.
+      Actualizar Service Worker inmediatamente.
     */
 
     if(
@@ -259,8 +430,7 @@ self.addEventListener(
     }
 
     /*
-      Permite limpiar completamente
-      el cache de la aplicación si fuese necesario.
+      Limpiar cache de la aplicación.
     */
 
     if(
@@ -276,16 +446,20 @@ self.addEventListener(
             return Promise.all(
 
               cacheNames
-                .filter(
-                  name =>
-                    name.startsWith(
-                      "POS-SISTEMA-VENTAS-"
-                    )
-                )
-                .map(
-                  name =>
-                    caches.delete(name)
-                )
+                .filter(name => {
+
+                  return name.startsWith(
+                    "POS-SISTEMA-VENTAS-"
+                  );
+
+                })
+                .map(name => {
+
+                  return caches.delete(
+                    name
+                  );
+
+                })
 
             );
 
@@ -294,6 +468,83 @@ self.addEventListener(
       );
 
     }
+
+    /*
+      Forzar actualización de todos los archivos
+      del App Shell.
+    */
+
+    if(
+      event.data.type ===
+      "UPDATE_APP_CACHE"
+    ){
+
+      event.waitUntil(
+
+        caches.open(
+          CACHE_NAME
+        )
+        .then(async cache => {
+
+          for(
+            const file of APP_SHELL
+          ){
+
+            try{
+
+              const response =
+                await fetch(
+                  file,
+                  {
+                    cache:"no-store"
+                  }
+                );
+
+              if(
+                response.ok
+              ){
+
+                await cache.put(
+                  file,
+                  response
+                );
+
+              }
+
+            }
+
+            catch(error){
+
+              console.warn(
+                "No se pudo actualizar:",
+                file,
+                error
+              );
+
+            }
+
+          }
+
+        })
+
+      );
+
+    }
+
+  }
+);
+
+/* =====================================================
+   CONTROLAR NUEVAS PESTAÑAS / PÁGINAS
+===================================================== */
+
+self.addEventListener(
+  "controllerchange",
+  () => {
+
+    console.log(
+      "POS: nuevo Service Worker activo."
+    );
 
   }
 );
