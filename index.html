@@ -6,8 +6,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<meta name="theme-color" content="#111827">
-
 <title>Sistema de Ventas POS</title>
 
 <style>
@@ -48,13 +46,12 @@ header p{
 
 .status{
   margin:0 0 15px;
-  padding:15px 17px;
-  border-radius:12px;
-  font-size:15px;
+  padding:13px 15px;
+  border-radius:10px;
+  font-size:14px;
   display:none;
   font-weight:600;
   white-space:pre-line;
-  line-height:1.5;
 }
 
 .status.error{
@@ -75,39 +72,35 @@ header p{
   color:#92400e;
 }
 
-.status.sync{
-  display:block;
+.pending-sync{
+  margin:0 0 20px;
+  padding:18px;
+  border-radius:16px;
   background:#eff6ff;
+  border:3px solid #bfdbfe;
   color:#1d4ed8;
-}
-
-.sync-box{
+  font-size:18px;
+  font-weight:800;
   display:none;
-  margin-bottom:20px;
-  padding:15px;
-  border-radius:14px;
-  border:2px solid #bfdbfe;
-  background:#eff6ff;
-  color:#1d4ed8;
-  font-weight:700;
-  font-size:16px;
-}
-
-.sync-box.visible{
-  display:block;
-}
-
-.sync-number{
-  display:inline-flex;
   align-items:center;
-  justify-content:center;
-  min-width:38px;
-  height:38px;
-  padding:0 10px;
-  border-radius:20px;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.pending-sync.show{
+  display:flex;
+}
+
+.pending-count{
+  min-width:55px;
+  height:55px;
+  border-radius:50%;
   background:#2563eb;
   color:#fff;
-  margin-left:6px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
 }
 
 .businesses{
@@ -450,10 +443,6 @@ header p{
   pointer-events:none;
 }
 
-.offline-mode{
-  border:2px solid #f59e0b;
-}
-
 button{
   -webkit-tap-highlight-color:transparent;
 }
@@ -532,6 +521,10 @@ button{
     padding:12px;
   }
 
+  .pending-sync{
+    font-size:15px;
+  }
+
 }
 
 </style>
@@ -554,11 +547,17 @@ Administración de negocios y ventas
 
 <div id="status" class="status"></div>
 
-<div id="syncBox" class="sync-box">
+<div id="pendingSync" class="pending-sync">
 
+<div>
 🔄 Ventas pendientes de sincronizar:
+</div>
 
-<span id="syncNumber" class="sync-number">0</span>
+<div
+id="pendingCount"
+class="pending-count">
+0
+</div>
 
 </div>
 
@@ -791,13 +790,28 @@ const BUSINESS_IDS = {
 };
 
 /* =====================================================
+   CLAVES DE ALMACENAMIENTO OFFLINE
+===================================================== */
+
+const BUSINESS_CACHE_KEY =
+"POS_BUSINESS_CACHE_V3";
+
+const PENDING_SALES_KEY =
+"POS_PENDING_SALES_V3";
+
+const LAST_BUSINESS_KEY =
+"POS_LAST_BUSINESS_V3";
+
+/* =====================================================
    ESTADO
 ===================================================== */
 
 let supabaseClient = null;
 
 let currentBusiness =
-"BakeQuiri";
+localStorage.getItem(
+  LAST_BUSINESS_KEY
+) || "BakeQuiri";
 
 let products = [];
 
@@ -813,253 +827,11 @@ null;
 let selectedCustomerId =
 null;
 
-/* =====================================================
-   CACHE OFFLINE
-===================================================== */
-
-const CACHE_KEY =
-"POS_OFFLINE_CACHE_V2";
-
-const QUEUE_KEY =
-"POS_OFFLINE_QUEUE_V2";
-
-/* =====================================================
-   COLA OFFLINE
-===================================================== */
-
-function getOfflineQueue(){
-
-  try{
-
-    const raw =
-      localStorage.getItem(
-        QUEUE_KEY
-      );
-
-    if(!raw){
-
-      return [];
-
-    }
-
-    const data =
-      JSON.parse(raw);
-
-    return Array.isArray(data)
-      ? data
-      : [];
-
-  }
-
-  catch(error){
-
-    console.warn(
-      "Cola offline inválida:",
-      error
-    );
-
-    return [];
-
-  }
-
-}
-
-function saveOfflineQueue(
-  queue
-){
-
-  try{
-
-    localStorage.setItem(
-      QUEUE_KEY,
-      JSON.stringify(queue)
-    );
-
-    updateSyncBox();
-
-  }
-
-  catch(error){
-
-    console.error(
-      "No se pudo guardar la cola offline:",
-      error
-    );
-
-    showStatus(
-      "No se pudo guardar la venta en este dispositivo.",
-      "error"
-    );
-
-  }
-
-}
-
-function addToOfflineQueue(
-  sale
-){
-
-  const queue =
-    getOfflineQueue();
-
-  queue.push({
-
-    id:
-      crypto.randomUUID
-      ? crypto.randomUUID()
-      : (
-        Date.now() +
-        "-" +
-        Math.random()
-      ),
-
-    createdAt:
-      new Date().toISOString(),
-
-    ...sale
-
-  });
-
-  saveOfflineQueue(
-    queue
-  );
-
-}
-
-function updateSyncBox(){
-
-  const queue =
-    getOfflineQueue();
-
-  const box =
-    $("syncBox");
-
-  const number =
-    $("syncNumber");
-
-  if(!box || !number){
-
-    return;
-
-  }
-
-  number.textContent =
-    queue.length;
-
-  if(queue.length > 0){
-
-    box.classList.add(
-      "visible"
-    );
-
-  }
-
-  else{
-
-    box.classList.remove(
-      "visible"
-    );
-
-  }
-
-}
-
-/* =====================================================
-   CACHE
-===================================================== */
-
-function saveOfflineCache(){
-
-  try{
-
-    const data = {
-
-      products,
-
-      payments,
-
-      customers,
-
-      currentBusiness,
-
-      savedAt:
-        new Date().toISOString()
-
-    };
-
-    localStorage.setItem(
-      CACHE_KEY,
-      JSON.stringify(data)
-    );
-
-  }
-
-  catch(error){
-
-    console.warn(
-      "No se pudo guardar cache:",
-      error
-    );
-
-  }
-
-}
-
-function loadOfflineCache(){
-
-  try{
-
-    const raw =
-      localStorage.getItem(
-        CACHE_KEY
-      );
-
-    if(!raw){
-
-      return false;
-
-    }
-
-    const data =
-      JSON.parse(raw);
-
-    if(!data){
-
-      return false;
-
-    }
-
-    products =
-      Array.isArray(data.products)
-      ? data.products
-      : [];
-
-    payments =
-      Array.isArray(data.payments)
-      ? data.payments
-      : [];
-
-    customers =
-      Array.isArray(data.customers)
-      ? data.customers
-      : [];
-
-    return true;
-
-  }
-
-  catch(error){
-
-    console.warn(
-      "Cache offline inválido:",
-      error
-    );
-
-    return false;
-
-  }
-
-}
+let isLoadingBusiness =
+false;
+
+let isSyncing =
+false;
 
 /* =====================================================
    UTILIDADES
@@ -1084,25 +856,33 @@ function escapeHTML(value){
   return String(
     value ?? ""
   )
-  .replaceAll(
-    "&",
-    "&amp;"
-  )
-  .replaceAll(
-    "<",
-    "&lt;"
-  )
-  .replaceAll(
-    ">",
-    "&gt;"
-  )
-  .replaceAll(
-    '"',
-    "&quot;"
-  )
-  .replaceAll(
-    "'",
-    "&#039;"
+  .replaceAll("&","&amp;")
+  .replaceAll("<","&lt;")
+  .replaceAll(">","&gt;")
+  .replaceAll('"',"&quot;")
+  .replaceAll("'","&#039;");
+
+}
+
+function generateLocalId(){
+
+  if(
+    window.crypto &&
+    typeof window.crypto.randomUUID ===
+    "function"
+  ){
+
+    return window.crypto.randomUUID();
+
+  }
+
+  return(
+    "offline-" +
+    Date.now() +
+    "-" +
+    Math.random()
+      .toString(36)
+      .slice(2)
   );
 
 }
@@ -1134,102 +914,284 @@ function clearStatus(){
 }
 
 /* =====================================================
-   ESTADO DE CONEXIÓN
+   NEGOCIO ACTUAL
 ===================================================== */
 
-function showOfflineStatus(){
+function saveCurrentBusiness(){
 
-  showStatus(
-
-    "📴 Modo offline\n\n" +
-
-    "El POS está funcionando con los datos guardados en este dispositivo. " +
-
-    "Las ventas nuevas se guardarán localmente y se sincronizarán cuando sea posible.",
-
-    "offline"
-
+  localStorage.setItem(
+    LAST_BUSINESS_KEY,
+    currentBusiness
   );
 
 }
 
-function showSupabaseProblemStatus(
-  error
-){
+function updateBusinessButtons(){
 
-  const message =
-    error?.message ||
-    String(error || "");
+  document
+    .querySelectorAll(
+      ".business-btn"
+    )
+    .forEach(
+      button => {
 
-  showStatus(
+        button.classList.toggle(
+          "active",
+          button.dataset.business ===
+          currentBusiness
+        );
 
-    "⚠️ No fue posible actualizar los datos desde Supabase.\n\n" +
-
-    "El POS seguirá utilizando la información guardada localmente.\n\n" +
-
-    "Detalle: " +
-    message,
-
-    "offline"
-
-  );
-
-}
-
-function showOnlineStatus(){
-
-  clearStatus();
+      }
+    );
 
 }
 
 /* =====================================================
-   DETECTAR ERRORES DE RED
+   CACHE POR NEGOCIO
 ===================================================== */
 
-function isNetworkError(
-  error
+function getBusinessCaches(){
+
+  try{
+
+    const raw =
+      localStorage.getItem(
+        BUSINESS_CACHE_KEY
+      );
+
+    if(!raw){
+
+      return {};
+
+    }
+
+    const data =
+      JSON.parse(raw);
+
+    if(
+      !data ||
+      typeof data !== "object"
+    ){
+
+      return {};
+
+    }
+
+    return data;
+
+  }
+
+  catch(error){
+
+    console.warn(
+      "Error leyendo cache:",
+      error
+    );
+
+    return {};
+
+  }
+
+}
+
+function saveBusinessCache(
+  businessName,
+  businessProducts,
+  businessPayments,
+  businessCustomers
 ){
 
-  if(!navigator.onLine){
+  try{
+
+    const caches =
+      getBusinessCaches();
+
+    caches[businessName] = {
+
+      products:
+        Array.isArray(
+          businessProducts
+        )
+        ? businessProducts
+        : [],
+
+      payments:
+        Array.isArray(
+          businessPayments
+        )
+        ? businessPayments
+        : [],
+
+      customers:
+        Array.isArray(
+          businessCustomers
+        )
+        ? businessCustomers
+        : [],
+
+      savedAt:
+        new Date().toISOString()
+
+    };
+
+    localStorage.setItem(
+      BUSINESS_CACHE_KEY,
+      JSON.stringify(caches)
+    );
+
+  }
+
+  catch(error){
+
+    console.warn(
+      "No se pudo guardar cache:",
+      error
+    );
+
+  }
+
+}
+
+function loadBusinessCache(
+  businessName
+){
+
+  try{
+
+    const caches =
+      getBusinessCaches();
+
+    const cache =
+      caches[businessName];
+
+    if(!cache){
+
+      return false;
+
+    }
+
+    products =
+      Array.isArray(cache.products)
+      ? cache.products
+      : [];
+
+    payments =
+      Array.isArray(cache.payments)
+      ? cache.payments
+      : [];
+
+    customers =
+      Array.isArray(cache.customers)
+      ? cache.customers
+      : [];
 
     return true;
 
   }
 
-  const message =
-    String(
-      error?.message ||
-      error ||
-      ""
-    ).toLowerCase();
+  catch(error){
 
-  return(
+    console.warn(
+      "No se pudo cargar cache:",
+      error
+    );
 
-    message.includes(
-      "failed to fetch"
-    ) ||
+    return false;
 
-    message.includes(
-      "networkerror"
-    ) ||
+  }
 
-    message.includes(
-      "network error"
-    ) ||
+}
 
-    message.includes(
-      "fetch failed"
-    ) ||
+/* =====================================================
+   COLA DE VENTAS OFFLINE
+===================================================== */
 
-    message.includes(
-      "load failed"
-    ) ||
+function getPendingSales(){
 
-    message.includes(
-      "offline"
-    )
+  try{
 
-  );
+    const raw =
+      localStorage.getItem(
+        PENDING_SALES_KEY
+      );
+
+    if(!raw){
+
+      return [];
+
+    }
+
+    const data =
+      JSON.parse(raw);
+
+    return Array.isArray(data)
+      ? data
+      : [];
+
+  }
+
+  catch(error){
+
+    console.warn(
+      "Cola offline inválida:",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+function savePendingSales(
+  sales
+){
+
+  try{
+
+    localStorage.setItem(
+      PENDING_SALES_KEY,
+      JSON.stringify(
+        Array.isArray(sales)
+        ? sales
+        : []
+      )
+    );
+
+    renderPendingSales();
+
+  }
+
+  catch(error){
+
+    console.error(
+      "No se pudo guardar la cola:",
+      error
+    );
+
+    showStatus(
+      "No se pudo guardar la venta en este dispositivo.",
+      "error"
+    );
+
+  }
+
+}
+
+function renderPendingSales(){
+
+  const count =
+    getPendingSales().length;
+
+  $("pendingCount")
+    .textContent =
+    count;
+
+  $("pendingSync")
+    .classList.toggle(
+      "show",
+      count > 0
+    );
 
 }
 
@@ -1263,37 +1225,153 @@ function initializeSupabase(){
 }
 
 /* =====================================================
-   CARGAR DATOS
+   ESTADO OFFLINE
+===================================================== */
+
+function showOfflineStatus(){
+
+  showStatus(
+
+    "📴 Modo offline\n\n" +
+
+    "El POS está usando los datos guardados en este dispositivo. " +
+
+    "Las ventas nuevas se guardarán localmente y se sincronizarán cuando sea posible.",
+
+    "offline"
+
+  );
+
+}
+
+function showOnlineStatus(){
+
+  clearStatus();
+
+}
+
+/* =====================================================
+   CARGAR DATOS DEL NEGOCIO
 ===================================================== */
 
 async function loadBusinessData(){
 
+  if(isLoadingBusiness){
+
+    return;
+
+  }
+
+  isLoadingBusiness =
+    true;
+
+  const businessToLoad =
+    currentBusiness;
+
   $("products").innerHTML =
-    '<div class="empty">' +
-    'Cargando productos...' +
-    '</div>';
+    '<div class="empty">Cargando productos...</div>';
 
   $("payments").innerHTML =
-    '<div class="empty">' +
-    'Cargando métodos de pago...' +
-    '</div>';
-
-  const businessId =
-    BUSINESS_IDS[
-      currentBusiness
-    ];
+    '<div class="empty">Cargando métodos de pago...</div>';
 
   try{
 
     /*
       IMPORTANTE:
 
-      navigator.onLine NO garantiza que Supabase
-      esté disponible.
+      Nunca utilizamos el cache de otro negocio.
 
-      Por eso primero intentamos realmente
-      consultar Supabase.
+      BakeQuiri y SpicyRoll tienen caches
+      completamente independientes.
     */
+
+    if(!navigator.onLine){
+
+      const loaded =
+        loadBusinessCache(
+          businessToLoad
+        );
+
+      if(!loaded){
+
+        products = [];
+        payments = [];
+        customers = [];
+
+        $("products").innerHTML =
+          '<div class="empty">' +
+          'No hay productos guardados offline para ' +
+          escapeHTML(
+            businessToLoad
+          ) +
+          '.' +
+          '</div>';
+
+        $("payments").innerHTML =
+          '<div class="empty">' +
+          'No hay métodos de pago guardados offline para este negocio.' +
+          '</div>';
+
+      }
+
+      else{
+
+        if(
+          !payments.some(
+            p =>
+              p.id ===
+              selectedPaymentId
+          )
+        ){
+
+          selectedPaymentId =
+            payments[0]?.id ||
+            null;
+
+        }
+
+        if(
+          !customers.some(
+            c =>
+              c.id ===
+              selectedCustomerId
+          )
+        ){
+
+          selectedCustomerId =
+            null;
+
+        }
+
+        renderProducts();
+
+        renderPayments();
+
+        renderCart();
+
+        renderSelectedCustomer();
+
+      }
+
+      showOfflineStatus();
+
+      return;
+
+    }
+
+    const businessId =
+      BUSINESS_IDS[
+        businessToLoad
+      ];
+
+    if(!businessId){
+
+      throw new Error(
+        "No existe el ID configurado para " +
+        businessToLoad
+      );
+
+    }
 
     const [
 
@@ -1375,16 +1453,48 @@ async function loadBusinessData(){
 
     }
 
+    /*
+      Protección adicional:
+
+      Solamente aceptamos productos pertenecientes
+      al negocio que estamos cargando.
+    */
+
     products =
-      productsResult.data || [];
+      (productsResult.data || [])
+      .filter(
+        product =>
+          product.business_id ===
+          businessId
+      );
 
     payments =
-      paymentsResult.data || [];
+      (paymentsResult.data || [])
+      .filter(
+        payment =>
+          payment.business_id ===
+          businessId
+      );
 
     customers =
       customersResult.data || [];
 
-    saveOfflineCache();
+    /*
+      Guardamos el cache usando el nombre del negocio
+      como llave independiente.
+    */
+
+    saveBusinessCache(
+
+      businessToLoad,
+
+      products,
+
+      payments,
+
+      customers
+
+    );
 
     if(
       !payments.some(
@@ -1421,14 +1531,19 @@ async function loadBusinessData(){
 
     renderSelectedCustomer();
 
-    showOnlineStatus();
-
     /*
-      Después de actualizar datos intentamos
-      sincronizar las ventas pendientes.
+      Solo quitamos el mensaje offline si seguimos
+      en el mismo negocio y realmente cargamos datos.
     */
 
-    await syncOfflineQueue();
+    if(
+      currentBusiness ===
+      businessToLoad
+    ){
+
+      showOnlineStatus();
+
+    }
 
   }
 
@@ -1440,16 +1555,18 @@ async function loadBusinessData(){
     );
 
     /*
-      Si realmente estamos offline:
-      usamos cache silenciosamente.
+      Si falla Internet/Supabase:
 
-      Si sí hay Internet pero Supabase responde
-      con un error, NO decimos que no hay Internet.
+      Cargamos EXCLUSIVAMENTE el cache
+      del negocio actual.
     */
 
-    if(
-      loadOfflineCache()
-    ){
+    const loaded =
+      loadBusinessCache(
+        businessToLoad
+      );
+
+    if(loaded){
 
       if(
         !payments.some(
@@ -1465,6 +1582,19 @@ async function loadBusinessData(){
 
       }
 
+      if(
+        !customers.some(
+          c =>
+            c.id ===
+            selectedCustomerId
+        )
+      ){
+
+        selectedCustomerId =
+          null;
+
+      }
+
       renderProducts();
 
       renderPayments();
@@ -1473,27 +1603,21 @@ async function loadBusinessData(){
 
       renderSelectedCustomer();
 
-      if(
-        isNetworkError(error)
-      ){
-
-        showOfflineStatus();
-
-      }
-
-      else{
-
-        showSupabaseProblemStatus(
-          error
-        );
-
-      }
-
-      updateSyncBox();
+      showOfflineStatus();
 
     }
 
     else{
+
+      /*
+        MUY IMPORTANTE:
+
+        No mostramos productos de BakeQuiri
+        cuando estamos en SpicyRoll.
+
+        Si SpicyRoll no tiene cache, mostramos
+        que no existe información offline.
+      */
 
       products = [];
 
@@ -1503,46 +1627,40 @@ async function loadBusinessData(){
 
       $("products").innerHTML =
         '<div class="empty">' +
-        'No hay datos guardados para trabajar offline.' +
+
+        'No hay datos guardados offline para ' +
+
+        escapeHTML(
+          businessToLoad
+        ) +
+
+        '. Conecta Internet una vez para descargar sus productos.' +
+
         '</div>';
 
       $("payments").innerHTML =
         '<div class="empty">' +
-        'No hay métodos de pago guardados.' +
+
+        'No hay métodos de pago guardados offline para ' +
+
+        escapeHTML(
+          businessToLoad
+        ) +
+
+        '.' +
+
         '</div>';
 
-      if(
-        isNetworkError(error)
-      ){
-
-        showStatus(
-
-          "📴 No hay conexión disponible y todavía no existe información guardada offline.",
-
-          "offline"
-
-        );
-
-      }
-
-      else{
-
-        showStatus(
-
-          "⚠️ Supabase respondió con un error.\n\n" +
-
-          (
-            error?.message ||
-            String(error)
-          ),
-
-          "error"
-
-        );
-
-      }
+      showOfflineStatus();
 
     }
+
+  }
+
+  finally{
+
+    isLoadingBusiness =
+      false;
 
   }
 
@@ -1564,7 +1682,11 @@ function renderProducts(){
 
     container.innerHTML =
       '<div class="empty">' +
-      'No hay productos disponibles.' +
+      'No hay productos disponibles para ' +
+      escapeHTML(
+        currentBusiness
+      ) +
+      '.' +
       '</div>';
 
     return;
@@ -1573,6 +1695,26 @@ function renderProducts(){
 
   products.forEach(
     product => {
+
+      /*
+        Protección visual adicional:
+        solo mostramos productos del negocio actual.
+      */
+
+      const expectedBusinessId =
+        BUSINESS_IDS[
+          currentBusiness
+        ];
+
+      if(
+        product.business_id &&
+        product.business_id !==
+        expectedBusinessId
+      ){
+
+        return;
+
+      }
 
       const stock =
         Number(
@@ -1639,6 +1781,21 @@ function renderProducts(){
     }
   );
 
+  if(
+    !container.children.length
+  ){
+
+    container.innerHTML =
+      '<div class="empty">' +
+      'No hay productos disponibles para ' +
+      escapeHTML(
+        currentBusiness
+      ) +
+      '.' +
+      '</div>';
+
+  }
+
 }
 
 /* =====================================================
@@ -1664,48 +1821,60 @@ function renderPayments(){
 
   }
 
-  payments.forEach(
-    payment => {
+  const expectedBusinessId =
+    BUSINESS_IDS[
+      currentBusiness
+    ];
 
-      const button =
-        document.createElement(
-          "button"
+  payments
+    .filter(
+      payment =>
+        !payment.business_id ||
+        payment.business_id ===
+        expectedBusinessId
+    )
+    .forEach(
+      payment => {
+
+        const button =
+          document.createElement(
+            "button"
+          );
+
+        button.type =
+          "button";
+
+        button.className =
+          "payment" +
+
+          (
+            payment.id ===
+            selectedPaymentId
+            ? " active"
+            : ""
+          );
+
+        button.textContent =
+          payment.name;
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            selectedPaymentId =
+              payment.id;
+
+            renderPayments();
+
+          }
         );
 
-      button.type =
-        "button";
-
-      button.className =
-        "payment" +
-
-        (
-          payment.id ===
-          selectedPaymentId
-          ? " active"
-          : ""
+        container.appendChild(
+          button
         );
 
-      button.textContent =
-        payment.name;
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          selectedPaymentId =
-            payment.id;
-
-          renderPayments();
-
-        }
-      );
-
-      container.appendChild(
-        button
-      );
-
-    }
-  );
+      }
+    );
 
 }
 
@@ -2168,17 +2337,11 @@ function renderCustomerResults(
 
         return(
 
-          name.includes(
-            search
-          ) ||
+          name.includes(search) ||
 
-          phone.includes(
-            search
-          ) ||
+          phone.includes(search) ||
 
-          notes.includes(
-            search
-          )
+          notes.includes(search)
 
         );
 
@@ -2243,9 +2406,11 @@ function renderCustomerResults(
             customer.phone
 
             ? "<small>📱 " +
+
               escapeHTML(
                 customer.phone
               ) +
+
               "</small>"
 
             : ""
@@ -2375,13 +2540,262 @@ async function changeBusiness(
 
   }
 
+  /*
+    Primero cambiamos el negocio.
+    Nunca reutilizamos productos del anterior.
+  */
+
   currentBusiness =
     name;
+
+  saveCurrentBusiness();
 
   cart = [];
 
   selectedPaymentId =
     null;
+
+  selectedCustomerId =
+    null;
+
+  /*
+    Limpiamos inmediatamente los datos visibles
+    para evitar que BakeQuiri aparezca dentro
+    de SpicyRoll mientras carga.
+  */
+
+  products = [];
+
+  payments = [];
+
+  customers = [];
+
+  $("products").innerHTML =
+    '<div class="empty">' +
+    'Cargando ' +
+    escapeHTML(
+      currentBusiness
+    ) +
+    '...' +
+    '</div>';
+
+  $("payments").innerHTML =
+    '<div class="empty">' +
+    'Cargando métodos de pago...' +
+    '</div>';
+
+  $("customerSearch").value =
+    "";
+
+  $("customerResults").innerHTML =
+    "";
+
+  $("customerResults").style.display =
+    "none";
+
+  renderSelectedCustomer();
+
+  updateBusinessButtons();
+
+  await loadBusinessData();
+
+}
+
+/* =====================================================
+   CONSTRUIR VENTA
+===================================================== */
+
+function buildSaleItems(){
+
+  return cart.map(
+    item => ({
+
+      product_id:
+        item.id,
+
+      description:
+        item.name,
+
+      quantity:
+        Number(
+          item.quantity
+        ),
+
+      unit_price:
+        Number(
+          item.price
+        ),
+
+      subtotal:
+        Number(
+          item.price
+        ) *
+        Number(
+          item.quantity
+        )
+
+    })
+  );
+
+}
+
+/* =====================================================
+   ACTUALIZAR STOCK LOCAL
+===================================================== */
+
+function applyLocalStockReduction(
+  saleItems
+){
+
+  saleItems.forEach(
+    saleItem => {
+
+      const product =
+        products.find(
+          p =>
+            p.id ===
+            saleItem.product_id
+        );
+
+      if(!product){
+
+        return;
+
+      }
+
+      const currentStock =
+        Number(
+          product.stock || 0
+        );
+
+      const quantity =
+        Number(
+          saleItem.quantity || 0
+        );
+
+      product.stock =
+        Math.max(
+          0,
+          currentStock -
+          quantity
+        );
+
+    }
+  );
+
+  saveBusinessCache(
+
+    currentBusiness,
+
+    products,
+
+    payments,
+
+    customers
+
+  );
+
+  renderProducts();
+
+}
+
+/* =====================================================
+   GUARDAR VENTA OFFLINE
+===================================================== */
+
+function saveSaleOffline(
+  isPending
+){
+
+  const total =
+    getCartTotal();
+
+  const items =
+    buildSaleItems();
+
+  const customer =
+    customers.find(
+      c =>
+        c.id ===
+        selectedCustomerId
+    );
+
+  const payment =
+    payments.find(
+      p =>
+        p.id ===
+        selectedPaymentId
+    );
+
+  const sale = {
+
+    local_id:
+      generateLocalId(),
+
+    created_at:
+      new Date().toISOString(),
+
+    business_name:
+      currentBusiness,
+
+    business_id:
+      BUSINESS_IDS[
+        currentBusiness
+      ],
+
+    customer_id:
+      selectedCustomerId ||
+      null,
+
+    customer_name:
+      customer?.name ||
+      "Consumidor general",
+
+    payment_method_id:
+      isPending
+      ? null
+      : selectedPaymentId,
+
+    payment_method_name:
+      isPending
+      ? "Cuenta pendiente"
+      : (
+          payment?.name ||
+          "Pago"
+        ),
+
+    is_pending:
+      isPending,
+
+    total:
+      total,
+
+    items:
+      items
+
+  };
+
+  const pending =
+    getPendingSales();
+
+  pending.push(
+    sale
+  );
+
+  savePendingSales(
+    pending
+  );
+
+  /*
+    Descontamos inmediatamente el stock local.
+    Así el POS funciona como un POS real aun sin Internet.
+  */
+
+  applyLocalStockReduction(
+    items
+  );
+
+  cart = [];
 
   selectedCustomerId =
     null;
@@ -2395,147 +2809,34 @@ async function changeBusiness(
   $("customerResults").style.display =
     "none";
 
-  document
-    .querySelectorAll(
-      ".business-btn"
-    )
-    .forEach(
-      b =>
-        b.classList.remove(
-          "active"
-        )
-    );
+  renderSelectedCustomer();
 
-  button.classList.add(
-    "active"
+  renderCart();
+
+  alert(
+
+    "📴 Venta guardada en este dispositivo.\n\n" +
+
+    "Total: " +
+    money(total) +
+
+    "\n\n" +
+
+    "Se sincronizará automáticamente cuando vuelva Internet."
+
   );
 
-  /*
-    Primero intentamos cargar desde Supabase.
-    Si falla, loadBusinessData usará cache.
-  */
-
-  await loadBusinessData();
+  showOfflineStatus();
 
 }
 
 /* =====================================================
-   CREAR OBJETO DE VENTA
+   SINCRONIZAR VENTAS
 ===================================================== */
 
-function buildSalePayload(
-  isPending
-){
+async function syncPendingSales(){
 
-  const items =
-    cart.map(
-      item => ({
-
-        product_id:
-          item.id,
-
-        description:
-          item.name,
-
-        quantity:
-          Number(
-            item.quantity
-          ),
-
-        unit_price:
-          Number(
-            item.price
-          ),
-
-        subtotal:
-          Number(
-            item.price
-          ) *
-          Number(
-            item.quantity
-          )
-
-      })
-    );
-
-  return {
-
-    businessId:
-      BUSINESS_IDS[
-        currentBusiness
-      ],
-
-    customerId:
-      selectedCustomerId ||
-      null,
-
-    paymentMethodId:
-      isPending
-      ? null
-      : selectedPaymentId,
-
-    items,
-
-    isPending,
-
-    businessName:
-      currentBusiness
-
-  };
-
-}
-
-/* =====================================================
-   ENVIAR VENTA A SUPABASE
-===================================================== */
-
-async function sendSaleToSupabase(
-  sale
-){
-
-  const result =
-    await supabaseClient.rpc(
-      "register_sale",
-      {
-
-        p_business_id:
-          sale.businessId,
-
-        p_customer_id:
-          sale.customerId,
-
-        p_payment_method_id:
-          sale.paymentMethodId,
-
-        p_items:
-          sale.items,
-
-        p_is_pending:
-          sale.isPending
-
-      }
-    );
-
-  if(result.error){
-
-    throw result.error;
-
-  }
-
-  return result;
-
-}
-
-/* =====================================================
-   SINCRONIZAR COLA OFFLINE
-===================================================== */
-
-let syncingQueue =
-false;
-
-async function syncOfflineQueue(){
-
-  if(syncingQueue){
+  if(isSyncing){
 
     return;
 
@@ -2543,263 +2844,135 @@ async function syncOfflineQueue(){
 
   if(!navigator.onLine){
 
-    updateSyncBox();
-
     return;
 
   }
 
-  const queue =
-    getOfflineQueue();
-
-  if(!queue.length){
-
-    updateSyncBox();
-
-    return;
-
-  }
-
-  if(!supabaseClient){
-
-    return;
-
-  }
-
-  syncingQueue =
-    true;
-
-  showStatus(
-
-    "🔄 Hay " +
-    queue.length +
-    " venta(s) pendiente(s).\n\n" +
-    "Intentando sincronizar...",
-
-    "sync"
-
-  );
-
-  const remaining = [];
-
-  for(
-    const sale of queue
+  if(
+    !supabaseClient
   ){
 
-    try{
-
-      await sendSaleToSupabase(
-        sale
-      );
-
-      /*
-        Venta sincronizada correctamente.
-        No se agrega a remaining.
-      */
-
-    }
-
-    catch(error){
-
-      console.warn(
-        "No se pudo sincronizar venta:",
-        error
-      );
-
-      /*
-        Si todavía falla, permanece en cola.
-      */
-
-      remaining.push(
-        sale
-      );
-
-    }
+    return;
 
   }
 
-  saveOfflineQueue(
-    remaining
-  );
+  let pending =
+    getPendingSales();
 
-  syncingQueue =
-    false;
+  if(!pending.length){
 
-  if(!remaining.length){
+    renderPendingSales();
 
-    showStatus(
-
-      "✅ Todas las ventas pendientes fueron sincronizadas correctamente.",
-
-      "ok"
-
-    );
-
-    /*
-      Actualizamos inventario y datos desde Supabase.
-    */
-
-    setTimeout(
-      async () => {
-
-        await refreshDataSilently();
-
-      },
-      500
-    );
+    return;
 
   }
 
-  else{
-
-    if(
-      isNetworkError(
-        new Error(
-          "sync"
-        )
-      )
-    ){
-
-      showOfflineStatus();
-
-    }
-
-    else{
-
-      showStatus(
-
-        "⚠️ Algunas ventas todavía no pudieron sincronizarse.\n\n" +
-
-        "Permanecen guardadas en este dispositivo y se volverán a intentar automáticamente.",
-
-        "offline"
-
-      );
-
-    }
-
-  }
-
-}
-
-/* =====================================================
-   ACTUALIZAR DATOS SIN MOLESTAR AL USUARIO
-===================================================== */
-
-async function refreshDataSilently(){
+  isSyncing =
+    true;
 
   try{
 
-    const businessId =
-      BUSINESS_IDS[
-        currentBusiness
-      ];
+    let changed =
+      false;
 
-    const [
+    for(
+      let index = 0;
+      index < pending.length;
+      index++
+    ){
 
-      productsResult,
+      const sale =
+        pending[index];
 
-      paymentsResult,
+      try{
 
-      customersResult
+        const result =
+          await supabaseClient.rpc(
+            "register_sale",
+            {
 
-    ] = await Promise.all([
+              p_business_id:
+                sale.business_id,
 
-      supabaseClient
+              p_customer_id:
+                sale.customer_id ||
+                null,
 
-        .from("products")
+              p_payment_method_id:
+                sale.is_pending
+                ? null
+                : sale.payment_method_id,
 
-        .select(
-          "id,name,price,cost,stock,active,business_id"
-        )
+              p_items:
+                sale.items,
 
-        .eq(
-          "business_id",
-          businessId
-        )
+              p_is_pending:
+                sale.is_pending
 
-        .eq(
-          "active",
-          true
-        )
+            }
+          );
 
-        .order("name"),
+        if(result.error){
 
-      supabaseClient
+          throw result.error;
 
-        .from("payment_methods")
+        }
 
-        .select(
-          "id,name,provider,active,business_id"
-        )
+        /*
+          Venta sincronizada correctamente.
+        */
 
-        .eq(
-          "business_id",
-          businessId
-        )
+        pending.splice(
+          index,
+          1
+        );
 
-        .eq(
-          "active",
-          true
-        )
+        index--;
 
-        .order("name"),
+        changed =
+          true;
 
-      supabaseClient
+        renderPendingSales();
 
-        .from("customers")
+      }
 
-        .select(
-          "id,name,phone,notes"
-        )
+      catch(error){
 
-        .order("name")
+        console.warn(
+          "No se pudo sincronizar venta offline:",
+          error
+        );
 
-    ]);
+        /*
+          Dejamos las ventas que no pudieron
+          sincronizarse en la cola.
 
-    if(productsResult.error){
+          Si el problema fue temporal,
+          se volverán a intentar.
+        */
 
-      throw productsResult.error;
+        continue;
+
+      }
 
     }
 
-    if(paymentsResult.error){
+    if(changed){
 
-      throw paymentsResult.error;
-
-    }
-
-    if(customersResult.error){
-
-      throw customersResult.error;
+      savePendingSales(
+        pending
+      );
 
     }
 
-    products =
-      productsResult.data || [];
-
-    payments =
-      paymentsResult.data || [];
-
-    customers =
-      customersResult.data || [];
-
-    saveOfflineCache();
-
-    renderProducts();
-
-    renderPayments();
-
-    renderSelectedCustomer();
+    renderPendingSales();
 
   }
 
-  catch(error){
+  finally{
 
-    console.warn(
-      "No se pudieron actualizar datos:",
-      error
-    );
+    isSyncing =
+      false;
 
   }
 
@@ -2854,28 +3027,21 @@ async function registerSale(
 
   }
 
-  const sale =
-    buildSalePayload(
+  /*
+    OFFLINE:
+
+    Guardamos la venta localmente.
+  */
+
+  if(!navigator.onLine){
+
+    saveSaleOffline(
       isPending
     );
 
-  const total =
-    getCartTotal();
+    return;
 
-  const customer =
-    customers.find(
-      c =>
-        c.id ===
-        selectedCustomerId
-    );
-
-  const paymentName =
-    payments.find(
-      p =>
-        p.id ===
-        selectedPaymentId
-    )?.name ||
-    "Pago";
+  }
 
   const button =
     isPending
@@ -2895,145 +3061,63 @@ async function registerSale(
 
   try{
 
-    /*
-      Si no hay Internet:
-      guardar directamente en la cola.
-    */
+    const items =
+      buildSaleItems();
 
-    if(!navigator.onLine){
+    const businessId =
+      BUSINESS_IDS[
+        currentBusiness
+      ];
 
-      addToOfflineQueue(
-        sale
+    const result =
+      await supabaseClient.rpc(
+        "register_sale",
+        {
+
+          p_business_id:
+            businessId,
+
+          p_customer_id:
+            selectedCustomerId ||
+            null,
+
+          p_payment_method_id:
+            isPending
+            ? null
+            : selectedPaymentId,
+
+          p_items:
+            items,
+
+          p_is_pending:
+            isPending
+
+        }
       );
 
-      updateLocalStock();
+    if(result.error){
 
-      cart = [];
-
-      selectedCustomerId =
-        null;
-
-      $("customerSearch").value =
-        "";
-
-      $("customerResults").innerHTML =
-        "";
-
-      $("customerResults").style.display =
-        "none";
-
-      renderSelectedCustomer();
-
-      renderCart();
-
-      showOfflineStatus();
-
-      alert(
-
-        "📴 Venta guardada en este dispositivo.\n\n" +
-
-        "Total: " +
-        money(total) +
-
-        "\n\n" +
-
-        "Se sincronizará automáticamente cuando vuelva Internet."
-
-      );
-
-      return;
+      throw result.error;
 
     }
 
-    /*
-      Con Internet intentamos enviarla inmediatamente.
-    */
+    const total =
+      getCartTotal();
 
-    try{
-
-      await sendSaleToSupabase(
-        sale
+    const customer =
+      customers.find(
+        c =>
+          c.id ===
+          selectedCustomerId
       );
 
-    }
-
-    catch(error){
-
-      /*
-        Aquí está una de las correcciones importantes.
-
-        Si Supabase falla aunque el teléfono tenga Internet,
-        NO vamos a decir "no tienes Internet".
-
-        La venta queda guardada localmente.
-      */
-
-      console.warn(
-        "No se pudo enviar la venta:",
-        error
-      );
-
-      addToOfflineQueue(
-        sale
-      );
-
-      updateLocalStock();
-
-      cart = [];
-
-      selectedCustomerId =
-        null;
-
-      $("customerSearch").value =
-        "";
-
-      $("customerResults").innerHTML =
-        "";
-
-      $("customerResults").style.display =
-        "none";
-
-      renderSelectedCustomer();
-
-      renderCart();
-
-      showStatus(
-
-        "⚠️ No fue posible enviar la operación a Supabase.\n\n" +
-
-        "La venta quedó guardada localmente y se intentará sincronizar automáticamente.\n\n" +
-
-        "Internet detectado: " +
-
-        (
-          navigator.onLine
-          ? "SÍ"
-          : "NO"
-        ),
-
-        "offline"
-
-      );
-
-      alert(
-
-        "⚠️ La venta quedó guardada localmente.\n\n" +
-
-        "No se perdió la venta.\n\n" +
-
-        "El sistema intentará sincronizarla automáticamente."
-
-      );
-
-      return;
-
-    }
-
-    /*
-      Venta enviada correctamente.
-    */
-
-    updateLocalStock();
+    const paymentName =
+      payments.find(
+        p =>
+          p.id ===
+          selectedPaymentId
+      )?.name ||
+      "Pago";
 
     alert(
 
@@ -3045,7 +3129,7 @@ async function registerSale(
 
       ) +
 
-      "\n\n" +
+      "\n" +
 
       currentBusiness +
 
@@ -3089,17 +3173,17 @@ async function registerSale(
 
     renderSelectedCustomer();
 
-    renderCart();
+    await loadBusinessData();
 
-    await refreshDataSilently();
+    await syncPendingSales();
 
     showStatus(
 
       isPending
 
-      ? "✅ Cuenta guardada correctamente."
+      ? "Cuenta guardada correctamente."
 
-      : "✅ Venta guardada correctamente.",
+      : "Venta guardada correctamente.",
 
       "ok"
 
@@ -3114,18 +3198,53 @@ async function registerSale(
       error
     );
 
-    showStatus(
+    /*
+      Si Internet falló justo al intentar registrar,
+      guardamos la venta localmente.
 
-      "No se pudo completar la operación.\n\n" +
+      Esto evita perder la venta por una mala señal.
+    */
 
-      (
+    if(
+      !navigator.onLine ||
+      /network|fetch|failed|timeout|offline/i.test(
         error?.message ||
-        String(error)
-      ),
+        ""
+      )
+    ){
 
-      "error"
+      saveSaleOffline(
+        isPending
+      );
 
-    );
+      showStatus(
+
+        "⚠️ No fue posible enviar la operación a Supabase.\n\n" +
+
+        "La venta quedó guardada localmente y se intentará sincronizar automáticamente.",
+
+        "offline"
+
+      );
+
+    }
+
+    else{
+
+      showStatus(
+
+        "No se pudo registrar la operación:\n" +
+
+        (
+          error?.message ||
+          String(error)
+        ),
+
+        "error"
+
+      );
+
+    }
 
   }
 
@@ -3137,57 +3256,7 @@ async function registerSale(
     button.textContent =
       originalText;
 
-    updateSyncBox();
-
   }
-
-}
-
-/* =====================================================
-   ACTUALIZAR STOCK LOCALMENTE
-===================================================== */
-
-function updateLocalStock(){
-
-  cart.forEach(
-    item => {
-
-      const product =
-        products.find(
-          p =>
-            p.id ===
-            item.id
-        );
-
-      if(!product){
-
-        return;
-
-      }
-
-      const currentStock =
-        Number(
-          product.stock || 0
-        );
-
-      const quantity =
-        Number(
-          item.quantity || 0
-        );
-
-      product.stock =
-        Math.max(
-          0,
-          currentStock -
-          quantity
-        );
-
-    }
-  );
-
-  saveOfflineCache();
-
-  renderProducts();
 
 }
 
@@ -3315,7 +3384,7 @@ window.addEventListener(
 
     showOfflineStatus();
 
-    updateSyncBox();
+    renderPendingSales();
 
   }
 );
@@ -3325,100 +3394,32 @@ window.addEventListener(
   async () => {
 
     showStatus(
-
-      "🌐 Internet recuperado.\n\n" +
-
-      "Comprobando conexión con Supabase...",
-
-      "sync"
-
+      "🌐 Internet recuperado.\n\nSincronizando ventas pendientes y actualizando " +
+      currentBusiness +
+      "...",
+      "ok"
     );
 
     /*
-      Primero intentamos sincronizar ventas.
+      Primero sincronizamos las ventas offline.
+      Después descargamos nuevamente el stock real
+      de Supabase.
     */
 
-    await syncOfflineQueue();
-
-    /*
-      Después actualizamos productos,
-      clientes y métodos de pago.
-    */
+    await syncPendingSales();
 
     await loadBusinessData();
 
+    renderPendingSales();
+
   }
 );
-
-/* =====================================================
-   COMPROBAR CONEXIÓN PERIÓDICAMENTE
-===================================================== */
-
-setInterval(
-  async () => {
-
-    if(
-      navigator.onLine &&
-      getOfflineQueue().length > 0
-    ){
-
-      await syncOfflineQueue();
-
-    }
-
-  },
-  30000
-);
-
-/* =====================================================
-   SERVICE WORKER
-===================================================== */
-
-if(
-  "serviceWorker" in navigator
-){
-
-  window.addEventListener(
-    "load",
-    () => {
-
-      navigator.serviceWorker
-        .register(
-          "./sw.js"
-        )
-        .then(
-          registration => {
-
-            console.log(
-              "Service Worker registrado:",
-              registration.scope
-            );
-
-          }
-        )
-        .catch(
-          error => {
-
-            console.warn(
-              "No se pudo registrar Service Worker:",
-              error
-            );
-
-          }
-        );
-
-    }
-  );
-
-}
 
 /* =====================================================
    INICIO
 ===================================================== */
 
 async function startApp(){
-
-  updateSyncBox();
 
   try{
 
@@ -3435,41 +3436,92 @@ async function startApp(){
 
   }
 
+  updateBusinessButtons();
+
+  renderPendingSales();
+
   /*
-    Si tenemos cache, podemos mostrarla
-    inmediatamente mientras intentamos
-    actualizar desde Internet.
+    Si hay Internet:
+
+    1. sincronizamos ventas pendientes
+    2. cargamos exclusivamente el negocio actual
   */
 
-  const hasCache =
-    loadOfflineCache();
+  if(navigator.onLine){
 
-  if(hasCache){
+    await syncPendingSales();
 
-    renderProducts();
-
-    renderPayments();
-
-    renderCart();
-
-    renderSelectedCustomer();
+    await loadBusinessData();
 
   }
 
-  /*
-    Intentamos cargar datos reales.
-  */
+  else{
 
-  await loadBusinessData();
+    /*
+      Sin Internet:
 
-  /*
-    Si quedaron ventas pendientes,
-    intentamos sincronizarlas.
-  */
+      cargamos exclusivamente el cache
+      del negocio actual.
+    */
 
-  await syncOfflineQueue();
+    const loaded =
+      loadBusinessCache(
+        currentBusiness
+      );
 
-  updateSyncBox();
+    if(loaded){
+
+      selectedPaymentId =
+        payments[0]?.id ||
+        null;
+
+      renderProducts();
+
+      renderPayments();
+
+      renderCart();
+
+      renderSelectedCustomer();
+
+      showOfflineStatus();
+
+    }
+
+    else{
+
+      products = [];
+
+      payments = [];
+
+      customers = [];
+
+      $("products").innerHTML =
+        '<div class="empty">' +
+
+        'No hay datos guardados offline para ' +
+
+        escapeHTML(
+          currentBusiness
+        ) +
+
+        '. Conecta Internet una vez para descargar los productos.' +
+
+        '</div>';
+
+      $("payments").innerHTML =
+        '<div class="empty">' +
+
+        'No hay métodos de pago guardados offline.' +
+
+        '</div>';
+
+      showOfflineStatus();
+
+    }
+
+  }
+
+  renderPendingSales();
 
 }
 
