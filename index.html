@@ -10,6 +10,11 @@
   content="width=device-width,initial-scale=1.0"
 >
 
+<meta
+  name="theme-color"
+  content="#111827"
+>
+
 <title>Sistema de Ventas POS</title>
 
 <style>
@@ -801,14 +806,8 @@ let products = [];
 let payments = [];
 
 /*
- * IMPORTANTE:
- *
- * Los clientes son COMPARTIDOS.
- * Ya NO pertenecen visualmente a un solo negocio.
- *
- * La consulta de clientes se hace sobre ambos
- * business_id.
- */
+  CLIENTES COMPARTIDOS
+*/
 
 let customers = [];
 
@@ -902,51 +901,7 @@ function initializeSupabase(){
 }
 
 /* =========================================
-   OBTENER CLIENTES COMPARTIDOS
-========================================= */
-
-async function loadSharedCustomers(){
-
-  const result =
-    await supabaseClient
-
-      .from("customers")
-
-      .select(
-        "id,business_id,name,phone,notes"
-      )
-
-      .in(
-        "business_id",
-        [
-          BUSINESS_IDS.BakeQuiri,
-          BUSINESS_IDS.SpicyRoll
-        ]
-      )
-
-      .order(
-        "name",
-        {
-          ascending:true
-        }
-      );
-
-  if(result.error){
-
-    throw new Error(
-      "No pude cargar los clientes: " +
-      result.error.message
-    );
-
-  }
-
-  customers =
-    result.data || [];
-
-}
-
-/* =========================================
-   CARGAR DATOS DEL NEGOCIO
+   CARGAR DATOS
 ========================================= */
 
 async function loadBusinessData(){
@@ -974,21 +929,17 @@ async function loadBusinessData(){
 
   try{
 
-    /*
-     * Productos y métodos de pago:
-     * SOLO del negocio seleccionado.
-     *
-     * Clientes:
-     * COMPARTIDOS entre BakeQuiri y SpicyRoll.
-     */
-
     const [
 
       productsResult,
 
-      paymentsResult
+      paymentsResult,
+
+      customersResult
 
     ] = await Promise.all([
+
+      /* PRODUCTOS */
 
       supabaseClient
         .from("products")
@@ -1007,6 +958,8 @@ async function loadBusinessData(){
           "name"
         ),
 
+      /* MÉTODOS DE PAGO */
+
       supabaseClient
         .from("payment_methods")
         .select(
@@ -1019,6 +972,17 @@ async function loadBusinessData(){
         .eq(
           "active",
           true
+        )
+        .order(
+          "name"
+        ),
+
+      /* CLIENTES COMPARTIDOS */
+
+      supabaseClient
+        .from("customers")
+        .select(
+          "id,business_id,name,phone,notes"
         )
         .order(
           "name"
@@ -1048,12 +1012,16 @@ async function loadBusinessData(){
 
     }
 
-    /*
-     * AHORA cargamos TODOS los clientes
-     * de los dos negocios.
-     */
+    if(
+      customersResult.error
+    ){
 
-    await loadSharedCustomers();
+      throw new Error(
+        "No pude cargar los clientes compartidos: " +
+        customersResult.error.message
+      );
+
+    }
 
     products =
       productsResult.data || [];
@@ -1061,11 +1029,8 @@ async function loadBusinessData(){
     payments =
       paymentsResult.data || [];
 
-    /*
-     * Si cambiamos de negocio y el método de pago
-     * anterior no existe en el nuevo negocio,
-     * seleccionamos el primero disponible.
-     */
+    customers =
+      customersResult.data || [];
 
     if(
       !payments.some(
@@ -1080,11 +1045,6 @@ async function loadBusinessData(){
         null;
 
     }
-
-    /*
-     * El cliente seleccionado se conserva siempre
-     * que siga existiendo en el catálogo compartido.
-     */
 
     const selectedCustomer =
       customers.find(
@@ -1730,15 +1690,6 @@ function renderCustomerResults(
 
   }
 
-  /*
-   * IMPORTANTE:
-   *
-   * customers contiene clientes de BakeQuiri
-   * Y SpicyRoll.
-   *
-   * Por eso aquí NO filtramos por currentBusiness.
-   */
-
   const filtered =
     customers.filter(
       customer => {
@@ -1832,9 +1783,7 @@ function renderCustomerResults(
               ) +
               "</small>"
             : ""
-          ) +
-
-          "<small>👥 Cliente compartido</small>";
+          );
 
         button.addEventListener(
           "click",
@@ -2401,50 +2350,6 @@ document
   );
 
 /* =========================================
-   LEER NEGOCIO DESDE LA URL
-========================================= */
-
-function loadBusinessFromURL(){
-
-  const params =
-    new URLSearchParams(
-      window.location.search
-    );
-
-  const business =
-    params.get(
-      "business"
-    );
-
-  if(
-    business === "BakeQuiri" ||
-    business === "SpicyRoll"
-  ){
-
-    currentBusiness =
-      business;
-
-    document
-      .querySelectorAll(
-        ".business-btn"
-      )
-      .forEach(
-        button => {
-
-          button.classList.toggle(
-            "active",
-            button.dataset.business ===
-            currentBusiness
-          );
-
-        }
-      );
-
-  }
-
-}
-
-/* =========================================
    INICIO
 ========================================= */
 
@@ -2453,17 +2358,6 @@ async function startApp(){
   try{
 
     initializeSupabase();
-
-    /*
-     * Si entramos desde:
-     *
-     * clientes.html?business=SpicyRoll
-     *
-     * o cualquier otra sección,
-     * mantenemos el negocio seleccionado.
-     */
-
-    loadBusinessFromURL();
 
     await loadBusinessData();
 
@@ -2490,5 +2384,4 @@ startApp();
 </script>
 
 </body>
-
 </html>
