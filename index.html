@@ -1,29 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1.0"
->
-
-<meta
-  name="theme-color"
-  content="#111827"
->
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Sistema de Ventas POS</title>
 
 <style>
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+*{box-sizing:border-box;margin:0;padding:0}
 
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -37,15 +20,8 @@ header{
   padding:22px 20px;
 }
 
-header h1{
-  font-size:28px;
-}
-
-header p{
-  font-size:15px;
-  opacity:.75;
-  margin-top:6px;
-}
+header h1{font-size:28px}
+header p{font-size:15px;opacity:.75;margin-top:6px}
 
 .container{
   max-width:1100px;
@@ -73,6 +49,12 @@ header p{
   display:block;
   background:#dcfce7;
   color:#166534;
+}
+
+.status.offline{
+  display:block;
+  background:#fef3c7;
+  color:#92400e;
 }
 
 .businesses{
@@ -107,9 +89,7 @@ header p{
   margin-bottom:20px;
 }
 
-.nav-btn{
-  color:#2563eb;
-}
+.nav-btn{color:#2563eb}
 
 .nav-btn.accounts{
   background:#fff7ed;
@@ -166,16 +146,10 @@ header p{
   cursor:pointer;
   background:#fff;
   text-align:left;
-  transition:.15s;
 }
 
 .product:hover{
   border-color:#2563eb;
-  transform:translateY(-1px);
-}
-
-.product:active{
-  transform:scale(.98);
 }
 
 .product.disabled{
@@ -210,9 +184,7 @@ header p{
   gap:12px;
 }
 
-.cart-name{
-  font-weight:700;
-}
+.cart-name{font-weight:700}
 
 .cart-price{
   font-size:13px;
@@ -235,10 +207,6 @@ header p{
   background:#eee;
   cursor:pointer;
   font-size:18px;
-}
-
-.quantity button:active{
-  transform:scale(.95);
 }
 
 .total{
@@ -281,11 +249,7 @@ header p{
   border-color:#111827;
 }
 
-/* CLIENTES */
-
-.customer-box{
-  position:relative;
-}
+.customer-box{position:relative}
 
 .customer-row{
   display:flex;
@@ -343,13 +307,7 @@ header p{
   cursor:pointer;
 }
 
-.customer-result:last-child{
-  border-bottom:none;
-}
-
-.customer-result:hover{
-  background:#f3f4f6;
-}
+.customer-result:hover{background:#f3f4f6}
 
 .customer-result strong{
   display:block;
@@ -380,7 +338,6 @@ header p{
   font-weight:700;
   cursor:pointer;
   margin-left:8px;
-  padding:0;
 }
 
 .general-customer{
@@ -391,15 +348,7 @@ header p{
   color:#555;
   font-weight:700;
   cursor:pointer;
-  border:2px solid transparent;
 }
-
-.general-customer:hover{
-  background:#e5e7eb;
-  border-color:#d1d5db;
-}
-
-/* BOTONES */
 
 .charge,
 .account{
@@ -414,10 +363,7 @@ header p{
   cursor:pointer;
 }
 
-.charge{
-  background:#16a34a;
-}
-
+.charge{background:#16a34a}
 .account{
   margin-top:10px;
   background:#f59e0b;
@@ -440,236 +386,116 @@ header p{
   pointer-events:none;
 }
 
+.offline-mode{
+  border:2px solid #f59e0b;
+}
+
 button{
   -webkit-tap-highlight-color:transparent;
 }
 
 @media(max-width:950px){
-
-  .navigation{
-    grid-template-columns:repeat(3,1fr);
-  }
-
+  .navigation{grid-template-columns:repeat(3,1fr)}
 }
 
 @media(max-width:850px){
-
-  .layout{
-    grid-template-columns:1fr;
-  }
-
-  .navigation{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .products{
-    grid-template-columns:1fr 1fr;
-  }
-
+  .layout{grid-template-columns:1fr}
+  .navigation{grid-template-columns:1fr 1fr}
+  .products{grid-template-columns:1fr 1fr}
 }
 
 @media(max-width:500px){
-
-  .container{
-    padding:15px;
-  }
-
-  header h1{
-    font-size:25px;
-  }
-
-  .navigation{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .business-btn{
-    flex:1;
-  }
-
-  .layout{
-    gap:15px;
-  }
-
-  .card{
-    padding:16px;
-  }
-
-  .products{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .product{
-    padding:15px 12px;
-  }
-
-  .product-name{
-    font-size:15px;
-  }
-
-  .price{
-    font-size:20px;
-  }
-
-  .customer-row{
-    flex-direction:column;
-  }
-
-  .add-client{
-    padding:12px;
-  }
-
+  .container{padding:15px}
+  header h1{font-size:25px}
+  .navigation{grid-template-columns:1fr 1fr}
+  .business-btn{flex:1}
+  .layout{gap:15px}
+  .card{padding:16px}
+  .products{grid-template-columns:1fr 1fr}
+  .product{padding:15px 12px}
+  .product-name{font-size:15px}
+  .price{font-size:20px}
+  .customer-row{flex-direction:column}
+  .add-client{padding:12px}
 }
-
 </style>
-
 </head>
 
 <body>
 
 <header>
-
 <h1>🧾 Sistema de Ventas POS</h1>
-
-<p>
-Administración de negocios y ventas
-</p>
-
+<p>Administración de negocios y ventas</p>
 </header>
 
 <div class="container">
 
 <div id="status" class="status"></div>
 
-<!-- ================================
-     NEGOCIOS
-================================ -->
-
 <div class="businesses">
 
-<button
-  type="button"
-  class="business-btn active"
-  data-business="BakeQuiri"
->
+<button type="button" class="business-btn active" data-business="BakeQuiri">
 🧁 BakeQuiri
 </button>
 
-<button
-  type="button"
-  class="business-btn"
-  data-business="SpicyRoll"
->
+<button type="button" class="business-btn" data-business="SpicyRoll">
 🍣 SpicyRoll
 </button>
 
 </div>
 
-<!-- ================================
-     NAVEGACIÓN
-================================ -->
-
 <div class="navigation">
 
-<button
-  type="button"
-  class="nav-btn accounts"
-  id="accountsButton"
->
+<button type="button" class="nav-btn accounts" id="accountsButton">
 💰 Cuentas pendientes
 </button>
 
-<button
-  type="button"
-  class="nav-btn clients"
-  id="clientsButton"
->
+<button type="button" class="nav-btn clients" id="clientsButton">
 👥 Clientes
 </button>
 
-<button
-  type="button"
-  class="nav-btn history"
-  id="historyButton"
->
+<button type="button" class="nav-btn history" id="historyButton">
 🧾 Historial
 </button>
 
-<button
-  type="button"
-  class="nav-btn inventory"
-  id="inventoryButton"
->
+<button type="button" class="nav-btn inventory" id="inventoryButton">
 📦 Inventario
 </button>
 
-<button
-  type="button"
-  class="nav-btn"
-  id="dashboardButton"
->
+<button type="button" class="nav-btn" id="dashboardButton">
 📊 Dashboard
 </button>
 
 </div>
 
-<!-- ================================
-     POS
-================================ -->
-
 <div class="layout">
 
 <div class="card">
 
-<h2>
-Productos
-</h2>
+<h2>Productos</h2>
 
-<div
-  id="products"
-  class="products"
->
-
+<div id="products" class="products">
 <div class="loading">
 Cargando productos...
 </div>
-
 </div>
 
 </div>
-
-<!-- ================================
-     CARRITO
-================================ -->
 
 <div class="card">
 
-<h2>
-🛒 Carrito
-</h2>
+<h2>🛒 Carrito</h2>
 
 <div id="cart">
-
 <div class="empty">
 El carrito está vacío
 </div>
-
 </div>
 
 <div class="total">
-
-<span>
-Total
-</span>
-
-<span id="total">
-$0.00
-</span>
-
+<span>Total</span>
+<span id="total">$0.00</span>
 </div>
-
-<!-- ================================
-     CLIENTE
-================================ -->
 
 <div class="customer-title">
 👤 Cliente
@@ -680,97 +506,61 @@ $0.00
 <div class="customer-row">
 
 <input
-  type="search"
-  id="customerSearch"
-  class="customer-search"
-  placeholder="🔎 Buscar cliente por nombre o teléfono"
-  autocomplete="off"
->
+type="search"
+id="customerSearch"
+class="customer-search"
+placeholder="🔎 Buscar cliente por nombre o teléfono"
+autocomplete="off">
 
 <button
-  type="button"
-  id="addClientButton"
-  class="add-client"
->
+type="button"
+id="addClientButton"
+class="add-client">
 + Cliente
 </button>
 
 </div>
 
-<div
-  id="customerResults"
-  class="customer-results"
-></div>
+<div id="customerResults" class="customer-results"></div>
 
-<div
-  id="selectedCustomer"
-  class="selected-customer"
-  style="display:none"
-></div>
+<div id="selectedCustomer" class="selected-customer" style="display:none"></div>
 
-<div
-  id="generalCustomer"
-  class="general-customer"
->
+<div id="generalCustomer" class="general-customer">
 👤 Consumidor general
 </div>
 
 </div>
 
-<!-- ================================
-     PAGO
-================================ -->
-
 <div class="payment-title">
 Método de pago
 </div>
 
-<div
-  id="payments"
-  class="payments"
->
-
+<div id="payments" class="payments">
 <div class="empty">
 Cargando métodos de pago...
 </div>
-
 </div>
 
-<!-- ================================
-     ACCIONES
-================================ -->
-
-<button
-  type="button"
-  id="chargeButton"
-  class="charge"
->
+<button type="button" id="chargeButton" class="charge">
 💵 COBRAR
 </button>
 
-<button
-  type="button"
-  id="accountButton"
-  class="account"
->
+<button type="button" id="accountButton" class="account">
 🟠 DEJAR A CUENTA
 </button>
 
 </div>
-
 </div>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-
 "use strict";
 
-/* =========================================
-   SUPABASE
-========================================= */
+/* =====================================================
+   CONFIGURACIÓN
+===================================================== */
 
 const SUPABASE_URL =
 "https://jrxklpstlloeckihcduv.supabase.co";
@@ -778,68 +568,129 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
-let supabaseClient = null;
-
-/* =========================================
-   NEGOCIOS
-========================================= */
-
 const BUSINESS_IDS = {
-
-  BakeQuiri:
-  "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
-
-  SpicyRoll:
-  "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
-
+  BakeQuiri:"c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+  SpicyRoll:"ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
 };
 
-/* =========================================
+/* =====================================================
    ESTADO
-========================================= */
+===================================================== */
 
-let currentBusiness =
-"BakeQuiri";
+let supabaseClient=null;
 
-let products = [];
+let currentBusiness="BakeQuiri";
 
-let payments = [];
+let products=[];
+let payments=[];
+let customers=[];
+let cart=[];
 
-/*
-  CLIENTES COMPARTIDOS
-*/
+let selectedPaymentId=null;
+let selectedCustomerId=null;
 
-let customers = [];
+/* =====================================================
+   CACHE OFFLINE
+===================================================== */
 
-let cart = [];
+const CACHE_KEY="POS_OFFLINE_CACHE_V1";
 
-let selectedPaymentId =
-null;
+function saveOfflineCache(){
 
-let selectedCustomerId =
-null;
+  try{
 
-/* =========================================
+    const data={
+      products,
+      payments,
+      customers,
+      currentBusiness,
+      savedAt:new Date().toISOString()
+    };
+
+    localStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify(data)
+    );
+
+  }
+  catch(error){
+
+    console.warn(
+      "No se pudo guardar cache:",
+      error
+    );
+
+  }
+
+}
+
+function loadOfflineCache(){
+
+  try{
+
+    const raw=
+      localStorage.getItem(CACHE_KEY);
+
+    if(!raw){
+      return false;
+    }
+
+    const data=
+      JSON.parse(raw);
+
+    if(!data){
+      return false;
+    }
+
+    products=
+      Array.isArray(data.products)
+      ? data.products
+      : [];
+
+    payments=
+      Array.isArray(data.payments)
+      ? data.payments
+      : [];
+
+    customers=
+      Array.isArray(data.customers)
+      ? data.customers
+      : [];
+
+    return true;
+
+  }
+  catch(error){
+
+    console.warn(
+      "Cache offline inválido:",
+      error
+    );
+
+    return false;
+
+  }
+
+}
+
+/* =====================================================
    UTILIDADES
-========================================= */
+===================================================== */
 
 function $(id){
-
   return document.getElementById(id);
-
 }
 
 function money(value){
 
-  return "$" +
-    Number(value || 0)
-      .toFixed(2);
+  return "$"+
+    Number(value||0).toFixed(2);
 
 }
 
 function escapeHTML(value){
 
-  return String(value ?? "")
+  return String(value??"")
     .replaceAll("&","&amp;")
     .replaceAll("<","&lt;")
     .replaceAll(">","&gt;")
@@ -848,51 +699,64 @@ function escapeHTML(value){
 
 }
 
-function showStatus(
-  message,
-  type="error"
-){
+function showStatus(message,type="error"){
 
-  const element =
-    $("status");
+  const element=$("status");
 
-  element.textContent =
-    message;
+  element.textContent=message;
 
-  element.className =
-    "status " + type;
+  element.className=
+    "status "+type;
 
 }
 
 function clearStatus(){
 
-  $("status").textContent =
-    "";
+  $("status").textContent="";
 
-  $("status").className =
-    "status";
+  $("status").className="status";
 
 }
 
-/* =========================================
-   INICIALIZAR SUPABASE
-========================================= */
+/* =====================================================
+   ESTADO DE CONEXIÓN
+===================================================== */
+
+function showOfflineStatus(){
+
+  showStatus(
+    "📴 Modo offline\n"+
+    "El POS está usando los datos guardados en este dispositivo. "+
+    "Las operaciones que necesiten Supabase no podrán sincronizarse hasta recuperar Internet.",
+    "offline"
+  );
+
+}
+
+function showOnlineStatus(){
+
+  clearStatus();
+
+}
+
+/* =====================================================
+   SUPABASE
+===================================================== */
 
 function initializeSupabase(){
 
   if(
     !window.supabase ||
-    typeof window.supabase.createClient !==
-    "function"
+    typeof window.supabase.createClient!=="function"
   ){
 
     throw new Error(
-      "No se pudo cargar la librería de Supabase. Revisa tu conexión a Internet."
+      "No se pudo cargar Supabase."
     );
 
   }
 
-  supabaseClient =
+  supabaseClient=
     window.supabase.createClient(
       SUPABASE_URL,
       SUPABASE_PUBLISHABLE_KEY
@@ -900,46 +764,36 @@ function initializeSupabase(){
 
 }
 
-/* =========================================
+/* =====================================================
    CARGAR DATOS
-========================================= */
+===================================================== */
 
 async function loadBusinessData(){
 
-  clearStatus();
-
-  $("products").innerHTML =
+  $("products").innerHTML=
     '<div class="empty">Cargando productos...</div>';
 
-  $("payments").innerHTML =
+  $("payments").innerHTML=
     '<div class="empty">Cargando métodos de pago...</div>';
 
-  const businessId =
+  const businessId=
     BUSINESS_IDS[currentBusiness];
-
-  if(!businessId){
-
-    showStatus(
-      "No existe la configuración del negocio seleccionado."
-    );
-
-    return;
-
-  }
 
   try{
 
+    if(!navigator.onLine){
+
+      throw new Error(
+        "OFFLINE"
+      );
+
+    }
+
     const [
-
       productsResult,
-
       paymentsResult,
-
       customersResult
-
-    ] = await Promise.all([
-
-      /* PRODUCTOS */
+    ]=await Promise.all([
 
       supabaseClient
         .from("products")
@@ -954,11 +808,7 @@ async function loadBusinessData(){
           "active",
           true
         )
-        .order(
-          "name"
-        ),
-
-      /* MÉTODOS DE PAGO */
+        .order("name"),
 
       supabaseClient
         .from("payment_methods")
@@ -973,325 +823,284 @@ async function loadBusinessData(){
           "active",
           true
         )
-        .order(
-          "name"
-        ),
+        .order("name"),
 
-      /* CLIENTES COMPARTIDOS */
+      /*
+        IMPORTANTE:
+        NO filtramos clientes por business_id.
+      */
 
       supabaseClient
         .from("customers")
         .select(
           "id,business_id,name,phone,notes"
         )
-        .order(
-          "name"
-        )
+        .order("name")
 
     ]);
 
-    if(
-      productsResult.error
-    ){
-
-      throw new Error(
-        "No pude cargar los productos: " +
-        productsResult.error.message
-      );
-
+    if(productsResult.error){
+      throw productsResult.error;
     }
 
-    if(
-      paymentsResult.error
-    ){
-
-      throw new Error(
-        "No pude cargar los métodos de pago: " +
-        paymentsResult.error.message
-      );
-
+    if(paymentsResult.error){
+      throw paymentsResult.error;
     }
 
-    if(
-      customersResult.error
-    ){
-
-      throw new Error(
-        "No pude cargar los clientes compartidos: " +
-        customersResult.error.message
-      );
-
+    if(customersResult.error){
+      throw customersResult.error;
     }
 
-    products =
-      productsResult.data || [];
+    products=
+      productsResult.data||[];
 
-    payments =
-      paymentsResult.data || [];
+    payments=
+      paymentsResult.data||[];
 
-    customers =
-      customersResult.data || [];
+    customers=
+      customersResult.data||[];
+
+    saveOfflineCache();
 
     if(
       !payments.some(
-        payment =>
-          payment.id ===
-          selectedPaymentId
+        p=>p.id===selectedPaymentId
       )
     ){
 
-      selectedPaymentId =
-        payments[0]?.id ||
-        null;
+      selectedPaymentId=
+        payments[0]?.id||null;
 
     }
 
-    const selectedCustomer =
-      customers.find(
-        customer =>
-          customer.id ===
-          selectedCustomerId
-      );
+    if(
+      !customers.some(
+        c=>c.id===selectedCustomerId
+      )
+    ){
 
-    if(!selectedCustomer){
-
-      selectedCustomerId =
-        null;
+      selectedCustomerId=null;
 
     }
 
     renderProducts();
-
     renderPayments();
-
     renderCart();
-
     renderSelectedCustomer();
 
-  }
+    showOnlineStatus();
 
+  }
   catch(error){
 
-    console.error(
-      "loadBusinessData:",
+    console.warn(
+      "No se pudo cargar Supabase:",
       error
     );
 
-    products = [];
+    if(
+      loadOfflineCache()
+    ){
 
-    payments = [];
+      if(
+        !payments.some(
+          p=>p.id===selectedPaymentId
+        )
+      ){
 
-    customers = [];
+        selectedPaymentId=
+          payments[0]?.id||null;
 
-    $("products").innerHTML =
-      '<div class="empty">No se pudieron cargar los productos.</div>';
+      }
 
-    $("payments").innerHTML =
-      '<div class="empty">No se pudieron cargar los métodos de pago.</div>';
+      renderProducts();
+      renderPayments();
+      renderCart();
+      renderSelectedCustomer();
 
-    showStatus(
-      error?.message ||
-      "No se pudo conectar con Supabase."
-    );
+      showOfflineStatus();
+
+    }
+    else{
+
+      products=[];
+      payments=[];
+      customers=[];
+
+      $("products").innerHTML=
+        '<div class="empty">'+
+        'No hay datos guardados para trabajar offline.'+
+        '</div>';
+
+      $("payments").innerHTML=
+        '<div class="empty">'+
+        'No hay métodos de pago guardados.'+
+        '</div>';
+
+      showStatus(
+        "No se pudo conectar y todavía no existe información guardada offline.",
+        "error"
+      );
+
+    }
 
   }
 
 }
 
-/* =========================================
+/* =====================================================
    PRODUCTOS
-========================================= */
+===================================================== */
 
 function renderProducts(){
 
-  const container =
-    $("products");
+  const container=$("products");
 
-  container.innerHTML =
-    "";
+  container.innerHTML="";
 
   if(!products.length){
 
-    container.innerHTML =
-      '<div class="empty">' +
-      'No hay productos activos para este negocio.' +
+    container.innerHTML=
+      '<div class="empty">'+
+      'No hay productos disponibles.'+
       '</div>';
 
     return;
 
   }
 
-  products.forEach(
-    product => {
+  products.forEach(product=>{
 
-      const stock =
-        Number(
-          product.stock || 0
-        );
+    const stock=
+      Number(product.stock||0);
 
-      const button =
-        document.createElement(
-          "button"
-        );
+    const button=
+      document.createElement("button");
 
-      button.type =
-        "button";
+    button.type="button";
 
-      button.className =
-        "product" +
-        (
-          stock <= 0
-          ? " disabled"
-          : ""
-        );
-
-      button.disabled =
-        stock <= 0;
-
-      button.innerHTML =
-
-        '<div class="product-name">' +
-
-        escapeHTML(
-          product.name
-        ) +
-
-        '</div>' +
-
-        '<div class="price">' +
-
-        money(
-          product.price
-        ) +
-
-        '</div>' +
-
-        '<div class="stock">' +
-
-        (
-          stock > 0
-          ? "Existencia: " + stock
-          : "Agotado"
-        ) +
-
-        '</div>';
-
-      button.addEventListener(
-        "click",
-        () =>
-          addToCart(product)
+    button.className=
+      "product"+
+      (
+        stock<=0
+        ?" disabled"
+        :""
       );
 
-      container.appendChild(
-        button
-      );
+    button.disabled=
+      stock<=0;
 
-    }
-  );
+    button.innerHTML=
+      '<div class="product-name">'+
+      escapeHTML(product.name)+
+      '</div>'+
+      '<div class="price">'+
+      money(product.price)+
+      '</div>'+
+      '<div class="stock">'+
+      (
+        stock>0
+        ?"Existencia: "+stock
+        :"Agotado"
+      )+
+      '</div>';
+
+    button.addEventListener(
+      "click",
+      ()=>addToCart(product)
+    );
+
+    container.appendChild(button);
+
+  });
 
 }
 
-/* =========================================
-   MÉTODOS DE PAGO
-========================================= */
+/* =====================================================
+   PAGOS
+===================================================== */
 
 function renderPayments(){
 
-  const container =
-    $("payments");
+  const container=$("payments");
 
-  container.innerHTML =
-    "";
+  container.innerHTML="";
 
   if(!payments.length){
 
-    container.innerHTML =
-      '<div class="empty">' +
-      'No hay métodos de pago activos.' +
+    container.innerHTML=
+      '<div class="empty">'+
+      'No hay métodos de pago disponibles.'+
       '</div>';
 
     return;
 
   }
 
-  payments.forEach(
-    payment => {
+  payments.forEach(payment=>{
 
-      const button =
-        document.createElement(
-          "button"
-        );
+    const button=
+      document.createElement("button");
 
-      button.type =
-        "button";
+    button.type="button";
 
-      button.className =
-        "payment" +
-        (
-          payment.id ===
-          selectedPaymentId
-          ? " active"
-          : ""
-        );
-
-      button.textContent =
-        payment.name;
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          selectedPaymentId =
-            payment.id;
-
-          renderPayments();
-
-        }
+    button.className=
+      "payment"+
+      (
+        payment.id===selectedPaymentId
+        ?" active"
+        :""
       );
 
-      container.appendChild(
-        button
-      );
+    button.textContent=
+      payment.name;
 
-    }
-  );
+    button.addEventListener(
+      "click",
+      ()=>{
+
+        selectedPaymentId=
+          payment.id;
+
+        renderPayments();
+
+      }
+    );
+
+    container.appendChild(button);
+
+  });
 
 }
 
-/* =========================================
+/* =====================================================
    CARRITO
-========================================= */
+===================================================== */
 
 function addToCart(product){
 
-  const stock =
-    Number(
-      product.stock || 0
-    );
+  const stock=
+    Number(product.stock||0);
 
-  if(stock <= 0){
+  if(stock<=0){
 
     showStatus(
-      "Este producto está agotado."
+      "Este producto está agotado.",
+      "error"
     );
 
     return;
 
   }
 
-  const item =
+  const item=
     cart.find(
-      i =>
-        i.id ===
-        product.id
+      i=>i.id===product.id
     );
 
   if(item){
 
-    if(
-      item.quantity <
-      stock
-    ){
+    if(item.quantity<stock){
 
       item.quantity++;
 
@@ -1299,7 +1108,8 @@ function addToCart(product){
     else{
 
       showStatus(
-        "No puedes agregar más unidades que la existencia disponible."
+        "No puedes agregar más unidades que la existencia.",
+        "error"
       );
 
     }
@@ -1308,11 +1118,8 @@ function addToCart(product){
   else{
 
     cart.push({
-
       ...product,
-
       quantity:1
-
     });
 
   }
@@ -1321,64 +1128,51 @@ function addToCart(product){
 
 }
 
-function changeQuantity(
-  id,
-  amount
-){
+function changeQuantity(id,amount){
 
-  const item =
+  const item=
     cart.find(
-      i =>
-        i.id ===
-        id
+      i=>i.id===id
     );
 
   if(!item){
     return;
   }
 
-  const product =
+  const product=
     products.find(
-      p =>
-        p.id ===
-        id
+      p=>p.id===id
     );
 
-  const max =
+  const max=
     Number(
       product?.stock ??
       item.stock ??
       0
     );
 
-  const newQuantity =
-    item.quantity +
-    amount;
+  const newQuantity=
+    item.quantity+amount;
 
-  if(
-    newQuantity >
-    max
-  ){
+  if(newQuantity>max){
 
     showStatus(
-      "No hay suficiente existencia disponible."
+      "No hay suficiente existencia disponible.",
+      "error"
     );
 
     return;
 
   }
 
-  item.quantity =
+  item.quantity=
     newQuantity;
 
-  if(
-    item.quantity <= 0
-  ){
+  if(item.quantity<=0){
 
-    cart =
+    cart=
       cart.filter(
-        i =>
-          i.id !== id
+        i=>i.id!==id
       );
 
   }
@@ -1390,511 +1184,345 @@ function changeQuantity(
 function getCartTotal(){
 
   return cart.reduce(
-    (
-      sum,
-      item
-    ) =>
-
-      sum +
-      (
-        Number(item.price) *
-        Number(item.quantity)
-      ),
-
+    (sum,item)=>
+      sum+
+      Number(item.price)*
+      Number(item.quantity),
     0
-
   );
 
 }
 
 function renderCart(){
 
-  const container =
-    $("cart");
+  const container=$("cart");
 
-  container.innerHTML =
-    "";
+  container.innerHTML="";
 
   if(!cart.length){
 
-    container.innerHTML =
-      '<div class="empty">' +
-      'El carrito está vacío' +
+    container.innerHTML=
+      '<div class="empty">'+
+      'El carrito está vacío'+
       '</div>';
 
-    $("total").textContent =
-      "$0.00";
+    $("total").textContent="$0.00";
 
     return;
 
   }
 
-  cart.forEach(
-    item => {
+  cart.forEach(item=>{
 
-      const subtotal =
-        Number(item.price) *
-        Number(item.quantity);
+    const subtotal=
+      Number(item.price)*
+      Number(item.quantity);
 
-      const row =
-        document.createElement(
-          "div"
-        );
+    const row=
+      document.createElement("div");
 
-      row.className =
-        "cart-item";
+    row.className="cart-item";
 
-      const info =
-        document.createElement(
-          "div"
-        );
+    const info=
+      document.createElement("div");
 
-      info.innerHTML =
+    info.innerHTML=
+      '<div class="cart-name">'+
+      escapeHTML(item.name)+
+      '</div>'+
+      '<div class="cart-price">'+
+      money(item.price)+
+      ' c/u</div>';
 
-        '<div class="cart-name">' +
+    const controls=
+      document.createElement("div");
 
-        escapeHTML(
-          item.name
-        ) +
+    controls.className="quantity";
 
-        '</div>' +
+    const minus=
+      document.createElement("button");
 
-        '<div class="cart-price">' +
+    minus.type="button";
+    minus.textContent="−";
 
-        money(
-          item.price
-        ) +
-
-        ' c/u</div>';
-
-      const controls =
-        document.createElement(
-          "div"
-        );
-
-      controls.className =
-        "quantity";
-
-      const minus =
-        document.createElement(
-          "button"
-        );
-
-      minus.type =
-        "button";
-
-      minus.textContent =
-        "−";
-
-      minus.addEventListener(
-        "click",
-        () =>
-          changeQuantity(
-            item.id,
-            -1
-          )
-      );
-
-      const quantity =
-        document.createElement(
-          "span"
-        );
-
-      quantity.textContent =
-        item.quantity;
-
-      const plus =
-        document.createElement(
-          "button"
-        );
-
-      plus.type =
-        "button";
-
-      plus.textContent =
-        "+";
-
-      plus.addEventListener(
-        "click",
-        () =>
-          changeQuantity(
-            item.id,
-            1
-          )
-      );
-
-      controls.append(
-        minus,
-        quantity,
-        plus
-      );
-
-      info.appendChild(
-        controls
-      );
-
-      const subtotalElement =
-        document.createElement(
-          "strong"
-        );
-
-      subtotalElement.textContent =
-        money(
-          subtotal
-        );
-
-      row.append(
-        info,
-        subtotalElement
-      );
-
-      container.appendChild(
-        row
-      );
-
-    }
-  );
-
-  $("total").textContent =
-    money(
-      getCartTotal()
+    minus.addEventListener(
+      "click",
+      ()=>changeQuantity(item.id,-1)
     );
+
+    const quantity=
+      document.createElement("span");
+
+    quantity.textContent=
+      item.quantity;
+
+    const plus=
+      document.createElement("button");
+
+    plus.type="button";
+    plus.textContent="+";
+
+    plus.addEventListener(
+      "click",
+      ()=>changeQuantity(item.id,1)
+    );
+
+    controls.append(
+      minus,
+      quantity,
+      plus
+    );
+
+    info.appendChild(controls);
+
+    const subtotalElement=
+      document.createElement("strong");
+
+    subtotalElement.textContent=
+      money(subtotal);
+
+    row.append(
+      info,
+      subtotalElement
+    );
+
+    container.appendChild(row);
+
+  });
+
+  $("total").textContent=
+    money(getCartTotal());
 
 }
 
-/* =========================================
-   CLIENTE SELECCIONADO
-========================================= */
+/* =====================================================
+   CLIENTES
+===================================================== */
 
 function renderSelectedCustomer(){
 
-  const selected =
+  const selected=
     customers.find(
-      customer =>
-        customer.id ===
-        selectedCustomerId
+      c=>c.id===selectedCustomerId
     );
 
-  const selectedElement =
-    $("selectedCustomer");
-
-  const general =
-    $("generalCustomer");
+  const element=$("selectedCustomer");
+  const general=$("generalCustomer");
 
   if(!selected){
 
-    selectedCustomerId =
-      null;
+    selectedCustomerId=null;
 
-    selectedElement.style.display =
-      "none";
+    element.style.display="none";
+    element.innerHTML="";
 
-    selectedElement.innerHTML =
-      "";
-
-    general.style.display =
-      "block";
-
-    general.innerHTML =
-      "👤 Consumidor general";
+    general.style.display="block";
 
     return;
 
   }
 
-  general.style.display =
-    "none";
+  general.style.display="none";
+  element.style.display="block";
 
-  selectedElement.style.display =
-    "block";
-
-  selectedElement.innerHTML =
-
-    "👤 <strong>" +
-
-    escapeHTML(
-      selected.name ||
-      "Cliente"
-    ) +
-
-    "</strong>" +
-
+  element.innerHTML=
+    "👤 <strong>"+
+    escapeHTML(selected.name||"Cliente")+
+    "</strong>"+
     (
       selected.phone
-      ? " · 📱 " +
-        escapeHTML(
-          selected.phone
-        )
-      : ""
-    ) +
-
-    '<button type="button" ' +
-    'class="clear-customer" ' +
-    'id="clearCustomer">' +
-    "Quitar" +
+      ?" · 📱 "+escapeHTML(selected.phone)
+      :""
+    )+
+    '<button type="button" class="clear-customer" id="clearCustomer">'+
+    "Quitar"+
     "</button>";
 
-  $("clearCustomer")
-    .addEventListener(
-      "click",
-      clearSelectedCustomer
-    );
+  $("clearCustomer").addEventListener(
+    "click",
+    clearSelectedCustomer
+  );
 
 }
 
 function clearSelectedCustomer(){
 
-  selectedCustomerId =
-    null;
+  selectedCustomerId=null;
 
-  $("customerSearch").value =
-    "";
+  $("customerSearch").value="";
 
-  $("customerResults").innerHTML =
-    "";
+  $("customerResults").innerHTML="";
 
-  $("customerResults").style.display =
-    "none";
+  $("customerResults").style.display="none";
 
   renderSelectedCustomer();
 
 }
 
-/* =========================================
-   BUSCAR CLIENTES COMPARTIDOS
-========================================= */
+function renderCustomerResults(query){
 
-function renderCustomerResults(
-  query
-){
-
-  const container =
+  const container=
     $("customerResults");
 
-  const search =
-    String(
-      query || ""
-    )
-    .trim()
-    .toLowerCase();
+  const search=
+    String(query||"")
+      .trim()
+      .toLowerCase();
 
   if(!search){
 
-    container.innerHTML =
-      "";
-
-    container.style.display =
-      "none";
+    container.innerHTML="";
+    container.style.display="none";
 
     return;
 
   }
 
-  const filtered =
-    customers.filter(
-      customer => {
+  const filtered=
+    customers.filter(customer=>{
 
-        const name =
-          String(
-            customer.name || ""
-          )
+      const name=
+        String(customer.name||"")
           .toLowerCase();
 
-        const phone =
-          String(
-            customer.phone || ""
-          )
+      const phone=
+        String(customer.phone||"")
           .toLowerCase();
 
-        const notes =
-          String(
-            customer.notes || ""
-          )
+      const notes=
+        String(customer.notes||"")
           .toLowerCase();
 
-        return (
-          name.includes(search) ||
-          phone.includes(search) ||
-          notes.includes(search)
-        );
+      return(
+        name.includes(search)||
+        phone.includes(search)||
+        notes.includes(search)
+      );
 
-      }
-    );
+    });
 
-  container.innerHTML =
-    "";
+  container.innerHTML="";
 
   if(!filtered.length){
 
-    const empty =
-      document.createElement(
-        "div"
-      );
+    const empty=
+      document.createElement("div");
 
-    empty.className =
-      "empty";
+    empty.className="empty";
 
-    empty.textContent =
+    empty.textContent=
       "No encontramos ese cliente.";
 
-    container.appendChild(
-      empty
-    );
+    container.appendChild(empty);
 
-    container.style.display =
-      "block";
+    container.style.display="block";
 
     return;
 
   }
 
-  filtered
-    .slice(0,10)
-    .forEach(
-      customer => {
+  filtered.slice(0,10).forEach(customer=>{
 
-        const button =
-          document.createElement(
-            "button"
-          );
+    const button=
+      document.createElement("button");
 
-        button.type =
-          "button";
+    button.type="button";
+    button.className="customer-result";
 
-        button.className =
-          "customer-result";
+    button.innerHTML=
+      "<strong>"+
+      escapeHTML(
+        customer.name||
+        "Cliente sin nombre"
+      )+
+      "</strong>"+
+      (
+        customer.phone
+        ?"<small>📱 "+
+        escapeHTML(customer.phone)+
+        "</small>"
+        :""
+      );
 
-        button.innerHTML =
+    button.addEventListener(
+      "click",
+      ()=>{
 
-          "<strong>" +
+        selectedCustomerId=
+          customer.id;
 
-          escapeHTML(
-            customer.name ||
-            "Cliente sin nombre"
-          ) +
+        $("customerSearch").value=
+          customer.name||"";
 
-          "</strong>" +
+        container.innerHTML="";
+        container.style.display="none";
 
-          (
-            customer.phone
-            ? "<small>📱 " +
-              escapeHTML(
-                customer.phone
-              ) +
-              "</small>"
-            : ""
-          );
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            selectedCustomerId =
-              customer.id;
-
-            $("customerSearch").value =
-              customer.name || "";
-
-            container.innerHTML =
-              "";
-
-            container.style.display =
-              "none";
-
-            renderSelectedCustomer();
-
-          }
-        );
-
-        container.appendChild(
-          button
-        );
+        renderSelectedCustomer();
 
       }
     );
 
-  container.style.display =
-    "block";
+    container.appendChild(button);
+
+  });
+
+  container.style.display="block";
 
 }
 
-/* =========================================
-   EVENTOS CLIENTES
-========================================= */
+$("customerSearch").addEventListener(
+  "input",
+  event=>
+    renderCustomerResults(
+      event.target.value
+    )
+);
 
-$("customerSearch")
-  .addEventListener(
-    "input",
-    event => {
+$("customerSearch").addEventListener(
+  "focus",
+  event=>{
 
-      renderCustomerResults(
-        event.target.value
-      );
+    const value=
+      event.target.value.trim();
 
-    }
-  );
+    if(value){
 
-$("customerSearch")
-  .addEventListener(
-    "focus",
-    event => {
-
-      const value =
-        event.target.value.trim();
-
-      if(value){
-
-        renderCustomerResults(
-          value
-        );
-
-      }
+      renderCustomerResults(value);
 
     }
-  );
 
-$("generalCustomer")
-  .addEventListener(
-    "click",
-    clearSelectedCustomer
-  );
+  }
+);
 
-$("addClientButton")
-  .addEventListener(
-    "click",
-    () => {
+$("generalCustomer").addEventListener(
+  "click",
+  clearSelectedCustomer
+);
 
-      window.location.href =
-        "clientes.html?business=" +
-        encodeURIComponent(
-          currentBusiness
-        );
+$("addClientButton").addEventListener(
+  "click",
+  ()=>{
 
-    }
-  );
+    window.location.href=
+      "clientes.html?business="+
+      encodeURIComponent(currentBusiness);
 
-/* =========================================
-   CERRAR RESULTADOS
-========================================= */
+  }
+);
 
 document.addEventListener(
   "click",
-  event => {
+  event=>{
 
-    const box =
-      document.querySelector(
-        ".customer-box"
-      );
+    const box=
+      document.querySelector(".customer-box");
 
     if(
       box &&
-      !box.contains(
-        event.target
-      )
+      !box.contains(event.target)
     ){
 
-      $("customerResults")
-        .style.display =
+      $("customerResults").style.display=
         "none";
 
     }
@@ -1902,201 +1530,160 @@ document.addEventListener(
   }
 );
 
-/* =========================================
+/* =====================================================
    CAMBIAR NEGOCIO
-========================================= */
+===================================================== */
 
-async function changeBusiness(
-  name,
-  button
-){
+async function changeBusiness(name,button){
 
-  if(
-    name ===
-    currentBusiness
-  ){
-
+  if(name===currentBusiness){
     return;
-
   }
 
-  currentBusiness =
-    name;
+  currentBusiness=name;
 
-  cart =
-    [];
+  cart=[];
+  selectedPaymentId=null;
+  selectedCustomerId=null;
 
-  selectedPaymentId =
-    null;
-
-  selectedCustomerId =
-    null;
-
-  $("customerSearch").value =
-    "";
-
-  $("customerResults").innerHTML =
-    "";
-
-  $("customerResults").style.display =
-    "none";
+  $("customerSearch").value="";
+  $("customerResults").innerHTML="";
+  $("customerResults").style.display="none";
 
   document
-    .querySelectorAll(
-      ".business-btn"
-    )
+    .querySelectorAll(".business-btn")
     .forEach(
-      b =>
-        b.classList.remove(
-          "active"
-        )
+      b=>b.classList.remove("active")
     );
 
-  button.classList.add(
-    "active"
-  );
+  button.classList.add("active");
 
   await loadBusinessData();
 
 }
 
-/* =========================================
+/* =====================================================
    REGISTRAR VENTA
-========================================= */
+===================================================== */
 
-async function registerSale(
-  isPending
-){
+async function registerSale(isPending){
 
   clearStatus();
 
   if(!cart.length){
 
     showStatus(
-      "Agrega al menos un producto."
+      "Agrega al menos un producto.",
+      "error"
     );
 
     return;
 
   }
 
-  if(
-    !isPending &&
-    !selectedPaymentId
-  ){
+  if(!isPending && !selectedPaymentId){
 
     showStatus(
-      "Selecciona un método de pago."
+      "Selecciona un método de pago.",
+      "error"
     );
 
     return;
 
   }
 
-  if(
-    isPending &&
-    !selectedCustomerId
-  ){
+  if(isPending && !selectedCustomerId){
 
     showStatus(
-      "Para dejar una venta a cuenta debes seleccionar un cliente."
+      "Para dejar una venta a cuenta debes seleccionar un cliente.",
+      "error"
     );
 
     return;
 
   }
 
-  const button =
+  /*
+    En modo offline no intentamos registrar
+    una venta contra Supabase.
+  */
+
+  if(!navigator.onLine){
+
+    showOfflineStatus();
+
+    alert(
+      "📴 Estás trabajando sin Internet.\n\n"+
+      "La venta NO se ha enviado a Supabase.\n\n"+
+      "Cuando recuperemos conexión podremos implementar "+
+      "la cola de sincronización de ventas."
+    );
+
+    return;
+
+  }
+
+  const button=
     isPending
-    ? $("accountButton")
-    : $("chargeButton");
+    ?$("accountButton")
+    :$("chargeButton");
 
-  const originalText =
+  const originalText=
     button.textContent;
 
-  button.disabled =
-    true;
+  button.disabled=true;
 
-  button.textContent =
+  button.textContent=
     isPending
-    ? "GUARDANDO..."
-    : "REGISTRANDO...";
+    ?"GUARDANDO..."
+    :"REGISTRANDO...";
 
   try{
 
-    const items =
-      cart.map(
-        item => ({
+    const items=
+      cart.map(item=>({
 
-          product_id:
-            item.id,
+        product_id:item.id,
 
-          description:
-            item.name,
+        description:item.name,
 
-          quantity:
-            Number(
-              item.quantity
-            ),
+        quantity:Number(item.quantity),
 
-          unit_price:
-            Number(
-              item.price
-            ),
+        unit_price:Number(item.price),
 
-          subtotal:
-            Number(
-              item.price
-            ) *
-            Number(
-              item.quantity
-            )
+        subtotal:
+          Number(item.price)*
+          Number(item.quantity)
 
-        })
+      }));
+
+    const businessId=
+      BUSINESS_IDS[currentBusiness];
+
+    const result=
+      await supabaseClient.rpc(
+        "register_sale",
+        {
+
+          p_business_id:
+            businessId,
+
+          p_customer_id:
+            selectedCustomerId||null,
+
+          p_payment_method_id:
+            isPending
+            ?null
+            :selectedPaymentId,
+
+          p_items:
+            items,
+
+          p_is_pending:
+            isPending
+
+        }
       );
-
-    const total =
-      items.reduce(
-        (
-          sum,
-          item
-        ) =>
-          sum +
-          item.subtotal,
-        0
-      );
-
-    const businessId =
-      BUSINESS_IDS[
-        currentBusiness
-      ];
-
-    const result =
-      await supabaseClient
-        .rpc(
-          "register_sale",
-          {
-
-            p_business_id:
-              businessId,
-
-            p_customer_id:
-              selectedCustomerId ||
-              null,
-
-            p_payment_method_id:
-              isPending
-              ? null
-              : selectedPaymentId,
-
-            p_items:
-              items,
-
-            p_is_pending:
-              isPending
-
-          }
-        );
 
     if(result.error){
 
@@ -2104,81 +1691,48 @@ async function registerSale(
 
     }
 
-    const customer =
+    const total=
+      getCartTotal();
+
+    const customer=
       customers.find(
-        c =>
-          c.id ===
-          selectedCustomerId
+        c=>c.id===selectedCustomerId
       );
 
-    const paymentName =
+    const paymentName=
       payments.find(
-        p =>
-          p.id ===
-          selectedPaymentId
-      )?.name ||
+        p=>p.id===selectedPaymentId
+      )?.name||
       "Pago";
 
-    let message;
+    alert(
+      (
+        isPending
+        ?"Cuenta registrada"
+        :"Venta registrada"
+      )+
+      "\n\n"+
+      currentBusiness+
+      "\nCliente: "+
+      (
+        customer?.name||
+        "Consumidor general"
+      )+
+      "\nTotal: "+
+      money(total)+
+      (
+        isPending
+        ?""
+        :"\nPago: "+paymentName
+      )
+    );
 
-    if(isPending){
+    cart=[];
+    selectedCustomerId=null;
 
-      message =
-        "Cuenta registrada\n\n" +
-
-        currentBusiness +
-
-        "\nCliente: " +
-
-        (
-          customer?.name ||
-          "Cliente"
-        ) +
-
-        "\nTotal: " +
-
-        money(total);
-
-    }
-    else{
-
-      message =
-        "Venta registrada\n\n" +
-
-        currentBusiness +
-
-        "\nCliente: " +
-
-        (
-          customer?.name ||
-          "Consumidor general"
-        ) +
-
-        "\nTotal: " +
-
-        money(total) +
-
-        "\nPago: " +
-
-        paymentName;
-
-    }
-
-    alert(message);
-
-    cart = [];
-
-    selectedCustomerId =
-      null;
-
-    $("customerSearch").value =
-      "";
-
-    $("customerResults").innerHTML =
-      "";
-
-    $("customerResults").style.display =
-      "none";
+    $("customerSearch").value="";
+    $("customerResults").innerHTML="";
+    $("customerResults").style.display="none";
 
     renderSelectedCustomer();
 
@@ -2186,18 +1740,12 @@ async function registerSale(
 
     showStatus(
       isPending
-      ? "Cuenta guardada correctamente."
-      : "Venta guardada correctamente.",
+      ?"Cuenta guardada correctamente."
+      :"Venta guardada correctamente.",
       "ok"
     );
 
-    console.log(
-      "register_sale response:",
-      result.data
-    );
-
   }
-
   catch(error){
 
     console.error(
@@ -2206,152 +1754,145 @@ async function registerSale(
     );
 
     showStatus(
-      "No se pudo registrar la operación:\n" +
+      "No se pudo registrar la operación:\n"+
       (
-        error?.message ||
+        error?.message||
         String(error)
-      )
+      ),
+      "error"
     );
 
   }
-
   finally{
 
-    button.disabled =
-      false;
-
-    button.textContent =
-      originalText;
+    button.disabled=false;
+    button.textContent=originalText;
 
   }
 
 }
 
-/* =========================================
-   COBRAR
-========================================= */
+/* =====================================================
+   BOTONES
+===================================================== */
 
-$("chargeButton")
-  .addEventListener(
-    "click",
-    () =>
-      registerSale(false)
-  );
+$("chargeButton").addEventListener(
+  "click",
+  ()=>registerSale(false)
+);
 
-/* =========================================
-   DEJAR A CUENTA
-========================================= */
+$("accountButton").addEventListener(
+  "click",
+  ()=>registerSale(true)
+);
 
-$("accountButton")
-  .addEventListener(
-    "click",
-    () =>
-      registerSale(true)
-  );
+$("accountsButton").addEventListener(
+  "click",
+  ()=>{
 
-/* =========================================
-   NAVEGACIÓN
-========================================= */
+    window.location.href=
+      "cuentas.html?business="+
+      encodeURIComponent(currentBusiness);
 
-$("accountsButton")
-  .addEventListener(
-    "click",
-    () => {
+  }
+);
 
-      window.location.href =
-        "cuentas.html?business=" +
-        encodeURIComponent(
-          currentBusiness
-        );
+$("clientsButton").addEventListener(
+  "click",
+  ()=>{
 
-    }
-  );
+    window.location.href=
+      "clientes.html?business="+
+      encodeURIComponent(currentBusiness);
 
-$("clientsButton")
-  .addEventListener(
-    "click",
-    () => {
+  }
+);
 
-      window.location.href =
-        "clientes.html?business=" +
-        encodeURIComponent(
-          currentBusiness
-        );
+$("historyButton").addEventListener(
+  "click",
+  ()=>{
 
-    }
-  );
+    window.location.href=
+      "historial.html?business="+
+      encodeURIComponent(currentBusiness);
 
-$("historyButton")
-  .addEventListener(
-    "click",
-    () => {
+  }
+);
 
-      window.location.href =
-        "historial.html?business=" +
-        encodeURIComponent(
-          currentBusiness
-        );
+$("inventoryButton").addEventListener(
+  "click",
+  ()=>{
 
-    }
-  );
+    window.location.href=
+      "inventario.html?business="+
+      encodeURIComponent(currentBusiness);
 
-$("inventoryButton")
-  .addEventListener(
-    "click",
-    () => {
+  }
+);
 
-      window.location.href =
-        "inventario.html?business=" +
-        encodeURIComponent(
-          currentBusiness
-        );
+$("dashboardButton").addEventListener(
+  "click",
+  ()=>{
 
-    }
-  );
+    window.location.href=
+      "dashboard.html?business="+
+      encodeURIComponent(currentBusiness);
 
-$("dashboardButton")
-  .addEventListener(
-    "click",
-    () => {
+  }
+);
 
-      window.location.href =
-        "dashboard.html?business=" +
-        encodeURIComponent(
-          currentBusiness
-        );
-
-    }
-  );
-
-/* =========================================
+/* =====================================================
    NEGOCIOS
-========================================= */
+===================================================== */
 
 document
-  .querySelectorAll(
-    ".business-btn"
-  )
-  .forEach(
-    button => {
+  .querySelectorAll(".business-btn")
+  .forEach(button=>{
 
-      button.addEventListener(
-        "click",
-        () => {
+    button.addEventListener(
+      "click",
+      ()=>{
 
-          changeBusiness(
-            button.dataset.business,
-            button
-          );
+        changeBusiness(
+          button.dataset.business,
+          button
+        );
 
-        }
-      );
+      }
+    );
 
-    }
-  );
+  });
 
-/* =========================================
+/* =====================================================
+   INTERNET: RECUPERACIÓN
+===================================================== */
+
+window.addEventListener(
+  "offline",
+  ()=>{
+
+    showOfflineStatus();
+
+  }
+);
+
+window.addEventListener(
+  "online",
+  async ()=>{
+
+    showStatus(
+      "🌐 Internet recuperado. Actualizando datos...",
+      "ok"
+    );
+
+    await loadBusinessData();
+
+  }
+);
+
+/* =====================================================
    INICIO
-========================================= */
+===================================================== */
 
 async function startApp(){
 
@@ -2362,7 +1903,6 @@ async function startApp(){
     await loadBusinessData();
 
   }
-
   catch(error){
 
     console.error(
@@ -2370,10 +1910,25 @@ async function startApp(){
       error
     );
 
-    showStatus(
-      error?.message ||
-      "No se pudo iniciar el sistema."
-    );
+    if(loadOfflineCache()){
+
+      renderProducts();
+      renderPayments();
+      renderCart();
+      renderSelectedCustomer();
+
+      showOfflineStatus();
+
+    }
+    else{
+
+      showStatus(
+        error?.message||
+        "No se pudo iniciar el sistema.",
+        "error"
+      );
+
+    }
 
   }
 
