@@ -10,11 +10,6 @@
   content="width=device-width,initial-scale=1.0"
 >
 
-<meta
-  name="theme-color"
-  content="#111827"
->
-
 <title>Sistema de Ventas POS</title>
 
 <style>
@@ -47,48 +42,6 @@ header p{
   margin-top:6px;
 }
 
-/* =========================================
-   ESTADO DE CONEXIÓN
-========================================= */
-
-.connection{
-  max-width:1100px;
-  margin:12px auto 0;
-  padding:0 20px;
-}
-
-.connection-status{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  padding:9px 12px;
-  border-radius:10px;
-  font-size:13px;
-  font-weight:700;
-  background:#dcfce7;
-  color:#166534;
-}
-
-.connection-status.offline{
-  background:#fee2e2;
-  color:#991b1b;
-}
-
-.connection-dot{
-  width:9px;
-  height:9px;
-  border-radius:50%;
-  background:#16a34a;
-}
-
-.connection-status.offline .connection-dot{
-  background:#dc2626;
-}
-
-/* =========================================
-   CONTENEDOR
-========================================= */
-
 .container{
   max-width:1100px;
   margin:auto;
@@ -117,10 +70,6 @@ header p{
   color:#166534;
 }
 
-/* =========================================
-   NEGOCIOS
-========================================= */
-
 .businesses{
   display:flex;
   gap:10px;
@@ -145,10 +94,6 @@ header p{
   color:#fff;
   border-color:#111827;
 }
-
-/* =========================================
-   NAVEGACIÓN
-========================================= */
 
 .navigation{
   display:grid;
@@ -185,10 +130,6 @@ header p{
   color:#1d4ed8;
 }
 
-/* =========================================
-   LAYOUT
-========================================= */
-
 .layout{
   display:grid;
   grid-template-columns:1fr 390px;
@@ -206,10 +147,6 @@ header p{
   font-size:21px;
   margin-bottom:16px;
 }
-
-/* =========================================
-   PRODUCTOS
-========================================= */
 
 .products{
   display:grid;
@@ -258,10 +195,6 @@ header p{
   color:#666;
   margin-top:7px;
 }
-
-/* =========================================
-   CARRITO
-========================================= */
 
 .cart-item{
   display:flex;
@@ -313,10 +246,6 @@ header p{
   border-top:2px solid #eee;
 }
 
-/* =========================================
-   PAGOS
-========================================= */
-
 .payment-title,
 .customer-title{
   margin-top:20px;
@@ -347,9 +276,7 @@ header p{
   border-color:#111827;
 }
 
-/* =========================================
-   CLIENTES
-========================================= */
+/* CLIENTES */
 
 .customer-box{
   position:relative;
@@ -467,9 +394,7 @@ header p{
   border-color:#d1d5db;
 }
 
-/* =========================================
-   BOTONES
-========================================= */
+/* BOTONES */
 
 .charge,
 .account{
@@ -499,10 +424,6 @@ header p{
   cursor:wait;
 }
 
-/* =========================================
-   UTILIDADES
-========================================= */
-
 .empty{
   color:#777;
   text-align:center;
@@ -517,10 +438,6 @@ header p{
 button{
   -webkit-tap-highlight-color:transparent;
 }
-
-/* =========================================
-   RESPONSIVE
-========================================= */
 
 @media(max-width:950px){
 
@@ -550,10 +467,6 @@ button{
 
   .container{
     padding:15px;
-  }
-
-  .connection{
-    padding:0 15px;
   }
 
   header h1{
@@ -618,34 +531,13 @@ Administración de negocios y ventas
 
 </header>
 
-<!-- =========================================
-     CONEXIÓN
-========================================= -->
-
-<div class="connection">
-
-<div
-  id="connectionStatus"
-  class="connection-status"
->
-
-<span class="connection-dot"></span>
-
-<span id="connectionText">
-Conectado a internet
-</span>
-
-</div>
-
-</div>
-
 <div class="container">
 
 <div id="status" class="status"></div>
 
-<!-- =========================================
+<!-- ================================
      NEGOCIOS
-========================================= -->
+================================ -->
 
 <div class="businesses">
 
@@ -667,9 +559,9 @@ Conectado a internet
 
 </div>
 
-<!-- =========================================
+<!-- ================================
      NAVEGACIÓN
-========================================= -->
+================================ -->
 
 <div class="navigation">
 
@@ -715,9 +607,9 @@ Conectado a internet
 
 </div>
 
-<!-- =========================================
+<!-- ================================
      POS
-========================================= -->
+================================ -->
 
 <div class="layout">
 
@@ -740,9 +632,9 @@ Cargando productos...
 
 </div>
 
-<!-- =========================================
+<!-- ================================
      CARRITO
-========================================= -->
+================================ -->
 
 <div class="card">
 
@@ -770,9 +662,9 @@ $0.00
 
 </div>
 
-<!-- =========================================
+<!-- ================================
      CLIENTE
-========================================= -->
+================================ -->
 
 <div class="customer-title">
 👤 Cliente
@@ -820,9 +712,9 @@ $0.00
 
 </div>
 
-<!-- =========================================
+<!-- ================================
      PAGO
-========================================= -->
+================================ -->
 
 <div class="payment-title">
 Método de pago
@@ -839,9 +731,9 @@ Cargando métodos de pago...
 
 </div>
 
-<!-- =========================================
+<!-- ================================
      ACCIONES
-========================================= -->
+================================ -->
 
 <button
   type="button"
@@ -864,10 +756,6 @@ Cargando métodos de pago...
 </div>
 
 </div>
-
-<!-- =========================================
-     SUPABASE
-========================================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -913,14 +801,14 @@ let products = [];
 let payments = [];
 
 /*
-  IMPORTANTE:
-
-  Los clientes pertenecen al negocio.
-
-  Esto coincide con tu estructura actual
-  de Supabase, donde customers.business_id
-  es obligatorio.
-*/
+ * IMPORTANTE:
+ *
+ * Los clientes son COMPARTIDOS.
+ * Ya NO pertenecen visualmente a un solo negocio.
+ *
+ * La consulta de clientes se hace sobre ambos
+ * business_id.
+ */
 
 let customers = [];
 
@@ -988,70 +876,6 @@ function clearStatus(){
 }
 
 /* =========================================
-   ESTADO DE INTERNET
-========================================= */
-
-function updateConnectionStatus(){
-
-  const element =
-    $("connectionStatus");
-
-  const text =
-    $("connectionText");
-
-  if(navigator.onLine){
-
-    element.classList.remove(
-      "offline"
-    );
-
-    text.textContent =
-      "Conectado a internet";
-
-  }
-  else{
-
-    element.classList.add(
-      "offline"
-    );
-
-    text.textContent =
-      "Sin conexión a internet";
-
-  }
-
-}
-
-window.addEventListener(
-  "online",
-  () => {
-
-    updateConnectionStatus();
-
-    showStatus(
-      "La conexión a internet se restableció.",
-      "ok"
-    );
-
-    loadBusinessData();
-
-  }
-);
-
-window.addEventListener(
-  "offline",
-  () => {
-
-    updateConnectionStatus();
-
-    showStatus(
-      "Sin conexión a internet. El POS necesita conexión para consultar y guardar información en Supabase."
-    );
-
-  }
-);
-
-/* =========================================
    INICIALIZAR SUPABASE
 ========================================= */
 
@@ -1074,6 +898,50 @@ function initializeSupabase(){
       SUPABASE_URL,
       SUPABASE_PUBLISHABLE_KEY
     );
+
+}
+
+/* =========================================
+   OBTENER CLIENTES COMPARTIDOS
+========================================= */
+
+async function loadSharedCustomers(){
+
+  const result =
+    await supabaseClient
+
+      .from("customers")
+
+      .select(
+        "id,business_id,name,phone,notes"
+      )
+
+      .in(
+        "business_id",
+        [
+          BUSINESS_IDS.BakeQuiri,
+          BUSINESS_IDS.SpicyRoll
+        ]
+      )
+
+      .order(
+        "name",
+        {
+          ascending:true
+        }
+      );
+
+  if(result.error){
+
+    throw new Error(
+      "No pude cargar los clientes: " +
+      result.error.message
+    );
+
+  }
+
+  customers =
+    result.data || [];
 
 }
 
@@ -1104,56 +972,21 @@ async function loadBusinessData(){
 
   }
 
-  /*
-    Si no hay internet, no intentamos hacer
-    consultas innecesarias a Supabase.
-  */
-
-  if(!navigator.onLine){
-
-    $("products").innerHTML =
-      '<div class="empty">' +
-      'Sin conexión a internet.<br><br>' +
-      'No es posible consultar los datos actuales de Supabase.' +
-      '</div>';
-
-    $("payments").innerHTML =
-      '<div class="empty">' +
-      'Sin conexión a internet.' +
-      '</div>';
-
-    customers = [];
-
-    showStatus(
-      "El sistema está sin conexión. Los datos de Supabase no están disponibles en este momento."
-    );
-
-    renderCart();
-
-    return;
-
-  }
-
   try{
 
     /*
-      PRODUCTOS:
-      pertenecen al negocio actual.
-
-      PAGOS:
-      pertenecen al negocio actual.
-
-      CLIENTES:
-      también pertenecen al negocio actual.
-    */
+     * Productos y métodos de pago:
+     * SOLO del negocio seleccionado.
+     *
+     * Clientes:
+     * COMPARTIDOS entre BakeQuiri y SpicyRoll.
+     */
 
     const [
 
       productsResult,
 
-      paymentsResult,
-
-      customersResult
+      paymentsResult
 
     ] = await Promise.all([
 
@@ -1189,49 +1022,38 @@ async function loadBusinessData(){
         )
         .order(
           "name"
-        ),
-
-      supabaseClient
-        .from("customers")
-        .select(
-          "id,business_id,name,phone,notes"
-        )
-        .eq(
-          "business_id",
-          businessId
-        )
-        .order(
-          "name"
         )
 
     ]);
 
-    if(productsResult.error){
+    if(
+      productsResult.error
+    ){
 
       throw new Error(
-        "No pude cargar los productos:\n" +
+        "No pude cargar los productos: " +
         productsResult.error.message
       );
 
     }
 
-    if(paymentsResult.error){
+    if(
+      paymentsResult.error
+    ){
 
       throw new Error(
-        "No pude cargar los métodos de pago:\n" +
+        "No pude cargar los métodos de pago: " +
         paymentsResult.error.message
       );
 
     }
 
-    if(customersResult.error){
+    /*
+     * AHORA cargamos TODOS los clientes
+     * de los dos negocios.
+     */
 
-      throw new Error(
-        "No pude cargar los clientes:\n" +
-        customersResult.error.message
-      );
-
-    }
+    await loadSharedCustomers();
 
     products =
       productsResult.data || [];
@@ -1239,13 +1061,11 @@ async function loadBusinessData(){
     payments =
       paymentsResult.data || [];
 
-    customers =
-      customersResult.data || [];
-
     /*
-      Conservamos el método de pago si todavía
-      pertenece al negocio seleccionado.
-    */
+     * Si cambiamos de negocio y el método de pago
+     * anterior no existe en el nuevo negocio,
+     * seleccionamos el primero disponible.
+     */
 
     if(
       !payments.some(
@@ -1262,9 +1082,9 @@ async function loadBusinessData(){
     }
 
     /*
-      Conservamos el cliente únicamente si
-      todavía pertenece al negocio actual.
-    */
+     * El cliente seleccionado se conserva siempre
+     * que siga existiendo en el catálogo compartido.
+     */
 
     const selectedCustomer =
       customers.find(
@@ -1304,14 +1124,10 @@ async function loadBusinessData(){
     customers = [];
 
     $("products").innerHTML =
-      '<div class="empty">' +
-      'No se pudieron cargar los productos.' +
-      '</div>';
+      '<div class="empty">No se pudieron cargar los productos.</div>';
 
     $("payments").innerHTML =
-      '<div class="empty">' +
-      'No se pudieron cargar los métodos de pago.' +
-      '</div>';
+      '<div class="empty">No se pudieron cargar los métodos de pago.</div>';
 
     showStatus(
       error?.message ||
@@ -1375,11 +1191,19 @@ function renderProducts(){
       button.innerHTML =
 
         '<div class="product-name">' +
-        escapeHTML(product.name) +
+
+        escapeHTML(
+          product.name
+        ) +
+
         '</div>' +
 
         '<div class="price">' +
-        money(product.price) +
+
+        money(
+          product.price
+        ) +
+
         '</div>' +
 
         '<div class="stock">' +
@@ -1571,7 +1395,10 @@ function changeQuantity(
     item.quantity +
     amount;
 
-  if(newQuantity > max){
+  if(
+    newQuantity >
+    max
+  ){
 
     showStatus(
       "No hay suficiente existencia disponible."
@@ -1584,7 +1411,9 @@ function changeQuantity(
   item.quantity =
     newQuantity;
 
-  if(item.quantity <= 0){
+  if(
+    item.quantity <= 0
+  ){
 
     cart =
       cart.filter(
@@ -1663,11 +1492,19 @@ function renderCart(){
       info.innerHTML =
 
         '<div class="cart-name">' +
-        escapeHTML(item.name) +
+
+        escapeHTML(
+          item.name
+        ) +
+
         '</div>' +
 
         '<div class="cart-price">' +
-        money(item.price) +
+
+        money(
+          item.price
+        ) +
+
         ' c/u</div>';
 
       const controls =
@@ -1742,7 +1579,9 @@ function renderCart(){
         );
 
       subtotalElement.textContent =
-        money(subtotal);
+        money(
+          subtotal
+        );
 
       row.append(
         info,
@@ -1796,6 +1635,9 @@ function renderSelectedCustomer(){
     general.style.display =
       "block";
 
+    general.innerHTML =
+      "👤 Consumidor general";
+
     return;
 
   }
@@ -1840,10 +1682,6 @@ function renderSelectedCustomer(){
 
 }
 
-/* =========================================
-   LIMPIAR CLIENTE
-========================================= */
-
 function clearSelectedCustomer(){
 
   selectedCustomerId =
@@ -1863,7 +1701,7 @@ function clearSelectedCustomer(){
 }
 
 /* =========================================
-   BUSCAR CLIENTES
+   BUSCAR CLIENTES COMPARTIDOS
 ========================================= */
 
 function renderCustomerResults(
@@ -1891,6 +1729,15 @@ function renderCustomerResults(
     return;
 
   }
+
+  /*
+   * IMPORTANTE:
+   *
+   * customers contiene clientes de BakeQuiri
+   * Y SpicyRoll.
+   *
+   * Por eso aquí NO filtramos por currentBusiness.
+   */
 
   const filtered =
     customers.filter(
@@ -1985,7 +1832,9 @@ function renderCustomerResults(
               ) +
               "</small>"
             : ""
-          );
+          ) +
+
+          "<small>👥 Cliente compartido</small>";
 
         button.addEventListener(
           "click",
@@ -2021,7 +1870,7 @@ function renderCustomerResults(
 }
 
 /* =========================================
-   EVENTOS DE CLIENTES
+   EVENTOS CLIENTES
 ========================================= */
 
 $("customerSearch")
@@ -2060,10 +1909,6 @@ $("generalCustomer")
     "click",
     clearSelectedCustomer
   );
-
-/* =========================================
-   AGREGAR CLIENTE
-========================================= */
 
 $("addClientButton")
   .addEventListener(
@@ -2176,16 +2021,6 @@ async function registerSale(
 
   clearStatus();
 
-  if(!navigator.onLine){
-
-    showStatus(
-      "No puedes guardar la venta porque no hay conexión a internet.\n\nPrimero recupera la conexión y vuelve a intentarlo."
-    );
-
-    return;
-
-  }
-
   if(!cart.length){
 
     showStatus(
@@ -2286,14 +2121,6 @@ async function registerSale(
       BUSINESS_IDS[
         currentBusiness
       ];
-
-    /*
-      La venta utiliza el business_id actual.
-
-      El cliente seleccionado pertenece al
-      mismo negocio porque customers se cargó
-      filtrado por business_id.
-    */
 
     const result =
       await supabaseClient
@@ -2574,6 +2401,50 @@ document
   );
 
 /* =========================================
+   LEER NEGOCIO DESDE LA URL
+========================================= */
+
+function loadBusinessFromURL(){
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const business =
+    params.get(
+      "business"
+    );
+
+  if(
+    business === "BakeQuiri" ||
+    business === "SpicyRoll"
+  ){
+
+    currentBusiness =
+      business;
+
+    document
+      .querySelectorAll(
+        ".business-btn"
+      )
+      .forEach(
+        button => {
+
+          button.classList.toggle(
+            "active",
+            button.dataset.business ===
+            currentBusiness
+          );
+
+        }
+      );
+
+  }
+
+}
+
+/* =========================================
    INICIO
 ========================================= */
 
@@ -2581,9 +2452,18 @@ async function startApp(){
 
   try{
 
-    updateConnectionStatus();
-
     initializeSupabase();
+
+    /*
+     * Si entramos desde:
+     *
+     * clientes.html?business=SpicyRoll
+     *
+     * o cualquier otra sección,
+     * mantenemos el negocio seleccionado.
+     */
+
+    loadBusinessFromURL();
 
     await loadBusinessData();
 
