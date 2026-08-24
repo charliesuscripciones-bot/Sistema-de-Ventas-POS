@@ -10,13 +10,29 @@
   content="width=device-width, initial-scale=1, viewport-fit=cover"
 >
 
+<meta
+  name="theme-color"
+  content="#111827"
+>
+
+<meta
+  name="apple-mobile-web-app-capable"
+  content="yes"
+>
+
+<meta
+  name="apple-mobile-web-app-status-bar-style"
+  content="black-translucent"
+>
+
+<meta
+  name="apple-mobile-web-app-title"
+  content="Dashboard POS"
+>
+
 <title>Dashboard | Sistema de Ventas POS</title>
 
 <style>
-
-/* =========================================================
-   RESET
-========================================================= */
 
 *{
   box-sizing:border-box;
@@ -46,11 +62,6 @@ body{
   color:#171717;
 }
 
-
-/* =========================================================
-   HEADER
-========================================================= */
-
 header{
   background:#111827;
   color:white;
@@ -77,11 +88,6 @@ header p{
   color:#d1d5db;
 }
 
-
-/* =========================================================
-   CONTENEDOR
-========================================================= */
-
 .container{
   width:100%;
   max-width:1100px;
@@ -89,17 +95,14 @@ header p{
   padding:20px;
 }
 
-
-/* =========================================================
-   STATUS
-========================================================= */
-
 .status{
   display:none;
-  padding:13px 15px;
-  border-radius:12px;
+  padding:14px 15px;
+  border-radius:13px;
   margin-bottom:20px;
   font-weight:700;
+  white-space:pre-line;
+  line-height:1.4;
 }
 
 .status.ok{
@@ -119,11 +122,6 @@ header p{
   background:#fef3c7;
   color:#92400e;
 }
-
-
-/* =========================================================
-   PANEL DE CONTROL
-========================================================= */
 
 .control-panel{
   background:#fff;
@@ -146,11 +144,6 @@ header p{
   gap:10px;
 }
 
-
-/* =========================================================
-   BOTONES
-========================================================= */
-
 button{
   border:0;
   cursor:pointer;
@@ -159,10 +152,16 @@ button{
   min-height:48px;
   border-radius:12px;
   transition:.15s ease;
+  -webkit-tap-highlight-color:transparent;
 }
 
 button:active{
   transform:scale(.98);
+}
+
+button:disabled{
+  opacity:.6;
+  cursor:wait;
 }
 
 .business-btn{
@@ -207,11 +206,6 @@ button:active{
   color:#111827;
   border:2px solid #ddd;
 }
-
-
-/* =========================================================
-   TARJETAS
-========================================================= */
 
 .cards{
   display:grid;
@@ -269,11 +263,6 @@ button:active{
   color:#d97706;
 }
 
-
-/* =========================================================
-   CONTENIDO PRINCIPAL
-========================================================= */
-
 .main-grid{
   display:grid;
   grid-template-columns:1.35fr .85fr;
@@ -285,11 +274,6 @@ button:active{
   font-weight:800;
   margin:0 0 18px;
 }
-
-
-/* =========================================================
-   VENTAS
-========================================================= */
 
 .sales-list{
   display:grid;
@@ -332,21 +316,11 @@ button:active{
   word-break:break-word;
 }
 
-
-/* =========================================================
-   FECHA Y HORA
-========================================================= */
-
 .sale-date{
   color:#6b7280;
   font-size:13px;
   margin-top:5px;
   line-height:1.35;
-}
-
-.sale-time{
-  color:#6b7280;
-  font-weight:600;
 }
 
 .sale-total{
@@ -380,11 +354,6 @@ button:active{
   background:#fee2e2;
   color:#991b1b;
 }
-
-
-/* =========================================================
-   INVENTARIO
-========================================================= */
 
 .inventory-list{
   display:grid;
@@ -430,10 +399,31 @@ button:active{
   padding:30px 10px;
 }
 
+.offline-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-top:8px;
+  padding:6px 10px;
+  border-radius:20px;
+  background:#fef3c7;
+  color:#92400e;
+  font-size:12px;
+  font-weight:800;
+}
 
-/* =========================================================
-   TABLET
-========================================================= */
+.online-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-top:8px;
+  padding:6px 10px;
+  border-radius:20px;
+  background:#dcfce7;
+  color:#166534;
+  font-size:12px;
+  font-weight:800;
+}
 
 @media(max-width:900px){
 
@@ -450,11 +440,6 @@ button:active{
   }
 
 }
-
-
-/* =========================================================
-   MÓVIL
-========================================================= */
 
 @media(max-width:600px){
 
@@ -499,9 +484,6 @@ button:active{
     padding:8px;
   }
 
-
-  /* TARJETAS */
-
   .cards{
     grid-template-columns:1fr 1fr;
     gap:10px;
@@ -535,9 +517,6 @@ button:active{
     font-size:19px;
   }
 
-
-  /* VENTAS */
-
   .sale-main{
     grid-template-columns:1fr;
     gap:7px;
@@ -560,11 +539,6 @@ button:active{
   }
 
 }
-
-
-/* =========================================================
-   iPHONE PEQUEÑO
-========================================================= */
 
 @media(max-width:390px){
 
@@ -590,11 +564,6 @@ button:active{
 
 }
 
-
-/* =========================================================
-   iOS
-========================================================= */
-
 @supports (-webkit-touch-callout:none){
 
   header{
@@ -605,11 +574,10 @@ button:active{
 }
 
 </style>
+
 </head>
 
-
 <body>
-
 
 <header>
 
@@ -621,19 +589,12 @@ button:active{
 
 </header>
 
-
 <div class="container">
-
 
   <div
     id="status"
     class="status">
   </div>
-
-
-  <!-- =====================================================
-       PANEL DE CONTROL
-  ====================================================== -->
 
   <div class="control-panel">
 
@@ -641,13 +602,12 @@ button:active{
 
       <button
         type="button"
-        class="business-btn active"
+        class="business-btn"
         data-business="BakeQuiri">
 
         🧁 BakeQuiri
 
       </button>
-
 
       <button
         type="button"
@@ -660,7 +620,6 @@ button:active{
 
     </div>
 
-
     <div class="action-grid">
 
       <button
@@ -672,7 +631,6 @@ button:active{
 
       </button>
 
-
       <button
         type="button"
         id="accounts"
@@ -681,7 +639,6 @@ button:active{
         💰 Cuentas
 
       </button>
-
 
       <button
         type="button"
@@ -692,7 +649,6 @@ button:active{
 
       </button>
 
-
       <button
         type="button"
         id="history"
@@ -702,7 +658,6 @@ button:active{
 
       </button>
 
-
       <button
         type="button"
         id="inventory"
@@ -711,7 +666,6 @@ button:active{
         📦 Inventario
 
       </button>
-
 
       <button
         type="button"
@@ -726,13 +680,7 @@ button:active{
 
   </div>
 
-
-  <!-- =====================================================
-       MÉTRICAS
-  ====================================================== -->
-
   <div class="cards">
-
 
     <div class="card metric-card">
 
@@ -754,7 +702,6 @@ button:active{
 
     </div>
 
-
     <div class="card metric-card">
 
       <div class="metric-icon">
@@ -774,7 +721,6 @@ button:active{
       </div>
 
     </div>
-
 
     <div class="card metric-card">
 
@@ -796,7 +742,6 @@ button:active{
 
     </div>
 
-
     <div class="card metric-card">
 
       <div class="metric-icon">
@@ -817,16 +762,9 @@ button:active{
 
     </div>
 
-
   </div>
 
-
-  <!-- =====================================================
-       VENTAS + INVENTARIO
-  ====================================================== -->
-
   <div class="main-grid">
-
 
     <div class="card">
 
@@ -844,7 +782,6 @@ button:active{
 
     </div>
 
-
     <div class="card">
 
       <h2 class="section-title">
@@ -861,47 +798,25 @@ button:active{
 
     </div>
 
-
   </div>
-
 
 </div>
 
-
-<!-- =======================================================
-     SUPABASE
-======================================================= -->
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 
 <script>
 
 "use strict";
 
-
 /* =========================================================
-   SUPABASE
+   CONFIGURACIÓN
 ========================================================= */
 
 const SUPABASE_URL =
 "https://jrxklpstlloeckihcduv.supabase.co";
 
-
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
-
-
-const supabaseClient =
-window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
-
-
-/* =========================================================
-   NEGOCIOS
-========================================================= */
 
 const BUSINESS_IDS = {
 
@@ -914,27 +829,390 @@ const BUSINESS_IDS = {
 };
 
 
+/* =========================================================
+   CACHE
+========================================================= */
+
+const DASHBOARD_CACHE_KEY =
+"POS_DASHBOARD_CACHE_V2";
+
+const LAST_BUSINESS_KEY =
+"POS_LAST_BUSINESS_V4";
+
+const BUSINESS_CACHE_KEY =
+"POS_BUSINESS_CACHE_V4";
+
+const PENDING_SALES_KEY =
+"POS_PENDING_SALES_V4";
+
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+let supabaseClient = null;
+
+
+/* =========================================================
+   ESTADO
+========================================================= */
+
 let currentBusiness =
-"BakeQuiri";
+localStorage.getItem(
+  LAST_BUSINESS_KEY
+) || "BakeQuiri";
+
+let currentData = {
+
+  products: [],
+
+  sales: [],
+
+  customers: []
+
+};
+
+let isLoading = false;
 
 
 /* =========================================================
    HELPERS
 ========================================================= */
 
-const $ =
-id =>
-document.getElementById(id);
+function $(id){
+
+  return document.getElementById(id);
+
+}
 
 
-const money =
-value =>
-"$" +
-Number(value || 0).toFixed(2);
+function money(value){
+
+  return "$" +
+    Number(value || 0)
+      .toFixed(2);
+
+}
+
+
+function escapeHTML(value){
+
+  return String(
+    value ?? ""
+  )
+  .replaceAll("&","&amp;")
+  .replaceAll("<","&lt;")
+  .replaceAll(">","&gt;")
+  .replaceAll('"',"&quot;")
+  .replaceAll("'","&#039;");
+
+}
 
 
 /* =========================================================
-   FORMATO DE FECHA Y HORA
+   SUPABASE
+========================================================= */
+
+function initializeSupabase(){
+
+  if(
+    !window.supabase ||
+    typeof window.supabase.createClient !==
+    "function"
+  ){
+
+    return false;
+
+  }
+
+  if(!supabaseClient){
+
+    supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+      );
+
+  }
+
+  return true;
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function showStatus(
+  message,
+  type="error"
+){
+
+  $("status").textContent =
+    message;
+
+  $("status").className =
+    "status " + type;
+
+}
+
+
+/* =========================================================
+   CACHE DEL DASHBOARD
+========================================================= */
+
+function getDashboardCache(){
+
+  try{
+
+    const raw =
+      localStorage.getItem(
+        DASHBOARD_CACHE_KEY
+      );
+
+    if(!raw){
+
+      return {};
+
+    }
+
+    const parsed =
+      JSON.parse(raw);
+
+    if(
+      !parsed ||
+      typeof parsed !== "object"
+    ){
+
+      return {};
+
+    }
+
+    return parsed;
+
+  }
+
+  catch(error){
+
+    console.warn(
+      "Error leyendo cache Dashboard:",
+      error
+    );
+
+    return {};
+
+  }
+
+}
+
+
+function saveDashboardCache(
+  businessName,
+  data
+){
+
+  try{
+
+    const cache =
+      getDashboardCache();
+
+    cache[businessName] = {
+
+      products:
+        Array.isArray(
+          data.products
+        )
+        ? data.products
+        : [],
+
+      sales:
+        Array.isArray(
+          data.sales
+        )
+        ? data.sales
+        : [],
+
+      customers:
+        Array.isArray(
+          data.customers
+        )
+        ? data.customers
+        : [],
+
+      savedAt:
+        new Date().toISOString()
+
+    };
+
+    localStorage.setItem(
+      DASHBOARD_CACHE_KEY,
+      JSON.stringify(cache)
+    );
+
+  }
+
+  catch(error){
+
+    console.warn(
+      "No se pudo guardar cache Dashboard:",
+      error
+    );
+
+  }
+
+}
+
+
+function loadDashboardCache(
+  businessName
+){
+
+  try{
+
+    const cache =
+      getDashboardCache();
+
+    const data =
+      cache[businessName];
+
+    if(!data){
+
+      return false;
+
+    }
+
+    currentData = {
+
+      products:
+        Array.isArray(data.products)
+        ? data.products
+        : [],
+
+      sales:
+        Array.isArray(data.sales)
+        ? data.sales
+        : [],
+
+      customers:
+        Array.isArray(data.customers)
+        ? data.customers
+        : []
+
+    };
+
+    return true;
+
+  }
+
+  catch(error){
+
+    console.warn(
+      "No se pudo cargar cache Dashboard:",
+      error
+    );
+
+    return false;
+
+  }
+
+}
+
+
+/* =========================================================
+   CACHE DE PRODUCTOS DEL POS
+========================================================= */
+
+function loadProductsFromPOSCache(
+  businessName
+){
+
+  try{
+
+    const raw =
+      localStorage.getItem(
+        BUSINESS_CACHE_KEY
+      );
+
+    if(!raw){
+
+      return [];
+
+    }
+
+    const cache =
+      JSON.parse(raw);
+
+    const business =
+      cache?.[businessName];
+
+    if(!business){
+
+      return [];
+
+    }
+
+    return Array.isArray(
+      business.products
+    )
+    ? business.products
+    : [];
+
+  }
+
+  catch(error){
+
+    console.warn(
+      "Error leyendo productos POS:",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+
+/* =========================================================
+   VENTAS OFFLINE PENDIENTES
+========================================================= */
+
+function getPendingSales(){
+
+  try{
+
+    const raw =
+      localStorage.getItem(
+        PENDING_SALES_KEY
+      );
+
+    if(!raw){
+
+      return [];
+
+    }
+
+    const data =
+      JSON.parse(raw);
+
+    return Array.isArray(data)
+      ? data
+      : [];
+
+  }
+
+  catch(error){
+
+    return [];
+
+  }
+
+}
+
+
+/* =========================================================
+   FECHA
 ========================================================= */
 
 function formatSaleDateTime(
@@ -947,12 +1225,8 @@ function formatSaleDateTime(
 
   }
 
-
   const date =
-  new Date(
-    createdAt
-  );
-
+    new Date(createdAt);
 
   if(
     isNaN(
@@ -964,28 +1238,25 @@ function formatSaleDateTime(
 
   }
 
-
   const dateText =
-  date.toLocaleDateString(
-    "es-MX",
-    {
-      day:"2-digit",
-      month:"2-digit",
-      year:"numeric"
-    }
-  );
-
+    date.toLocaleDateString(
+      "es-MX",
+      {
+        day:"2-digit",
+        month:"2-digit",
+        year:"numeric"
+      }
+    );
 
   const timeText =
-  date.toLocaleTimeString(
-    "es-MX",
-    {
-      hour:"numeric",
-      minute:"2-digit",
-      hour12:true
-    }
-  );
-
+    date.toLocaleTimeString(
+      "es-MX",
+      {
+        hour:"numeric",
+        minute:"2-digit",
+        hour12:true
+      }
+    );
 
   return (
     dateText +
@@ -997,67 +1268,842 @@ function formatSaleDateTime(
 
 
 /* =========================================================
-   STATUS
+   ES HOY
 ========================================================= */
 
-function showStatus(
-  message,
-  type = "error"
+function isToday(
+  value
 ){
 
-  $("status").textContent =
-  message;
+  if(!value){
 
-  $("status").className =
-  "status " + type;
+    return false;
+
+  }
+
+  const date =
+    new Date(value);
+
+  if(
+    isNaN(
+      date.getTime()
+    )
+  ){
+
+    return false;
+
+  }
+
+  const today =
+    new Date();
+
+  return(
+    date.getFullYear() ===
+    today.getFullYear() &&
+
+    date.getMonth() ===
+    today.getMonth() &&
+
+    date.getDate() ===
+    today.getDate()
+  );
 
 }
 
 
 /* =========================================================
-   DASHBOARD
+   ACTUALIZAR BOTONES
 ========================================================= */
 
-async function loadDashboard(){
+function updateBusinessButtons(){
 
-  $("salesContainer").innerHTML =
-  '<div class="loading">Cargando ventas...</div>';
+  document
+    .querySelectorAll(
+      ".business-btn"
+    )
+    .forEach(
+      button => {
+
+        button.classList.toggle(
+          "active",
+          button.dataset.business ===
+          currentBusiness
+        );
+
+      }
+    );
+
+  localStorage.setItem(
+    LAST_BUSINESS_KEY,
+    currentBusiness
+  );
+
+}
 
 
-  $("inventoryContainer").innerHTML =
-  '<div class="loading">Cargando inventario...</div>';
+/* =========================================================
+   DATOS OFFLINE
+========================================================= */
+
+function mergePendingSalesIntoDashboard(){
+
+  const pending =
+    getPendingSales()
+      .filter(
+        sale =>
+          sale.business_name ===
+          currentBusiness
+      );
+
+  if(!pending.length){
+
+    return;
+
+  }
+
+  const cachedSales =
+    Array.isArray(
+      currentData.sales
+    )
+    ? currentData.sales
+    : [];
+
+  const existingLocalIds =
+    new Set(
+      cachedSales
+        .map(
+          sale =>
+            sale.local_id
+        )
+        .filter(Boolean)
+    );
+
+  pending.forEach(
+    sale => {
+
+      if(
+        sale.local_id &&
+        existingLocalIds.has(
+          sale.local_id
+        )
+      ){
+
+        return;
+
+      }
+
+      cachedSales.unshift({
+
+        id:
+          sale.local_id,
+
+        local_id:
+          sale.local_id,
+
+        total:
+          sale.total,
+
+        balance:
+          sale.is_pending
+          ? sale.total
+          : 0,
+
+        status:
+          sale.is_pending
+          ? "pending"
+          : "paid",
+
+        created_at:
+          sale.created_at,
+
+        customer_id:
+          sale.customer_id,
+
+        customer_name:
+          sale.customer_name ||
+          "Consumidor general",
+
+        payment_method_name:
+          sale.payment_method_name,
+
+        offline:
+          true
+
+      });
+
+    }
+  );
+
+  currentData.sales =
+    cachedSales;
+
+}
 
 
-  $("status").className =
-  "status";
+/* =========================================================
+   MOSTRAR MÉTRICAS
+========================================================= */
+
+function renderMetrics(){
+
+  const products =
+    Array.isArray(
+      currentData.products
+    )
+    ? currentData.products
+    : [];
+
+  const sales =
+    Array.isArray(
+      currentData.sales
+    )
+    ? currentData.sales
+    : [];
+
+  const todaySales =
+    sales.filter(
+      sale =>
+        isToday(
+          sale.created_at ||
+          sale.sale_date
+        )
+    );
+
+  const validTodaySales =
+    todaySales.filter(
+      sale =>
+        sale.status !==
+        "cancelled"
+    );
+
+  const total =
+    validTodaySales.reduce(
+      (
+        sum,
+        sale
+      ) =>
+        sum +
+        Number(
+          sale.total || 0
+        ),
+      0
+    );
+
+  $("todaySales").textContent =
+    money(total);
+
+  $("salesCount").textContent =
+    validTodaySales.length;
+
+  const activeProducts =
+    products.filter(
+      product =>
+        product.active !== false
+    );
+
+  $("productCount").textContent =
+    activeProducts.length;
+
+  $("lowStock").textContent =
+    activeProducts.filter(
+      product =>
+        Number(
+          product.stock || 0
+        ) <= 5
+    ).length;
+
+}
 
 
-  try{
+/* =========================================================
+   INVENTARIO
+========================================================= */
 
-    const businessId =
-    BUSINESS_IDS[currentBusiness];
+function renderInventory(
+  products
+){
 
+  const container =
+    $("inventoryContainer");
 
-    if(!businessId){
+  const activeProducts =
+    (
+      Array.isArray(products)
+      ? products
+      : []
+    )
+    .filter(
+      product =>
+        product.active !== false
+    );
 
-      throw new Error(
-        "No se encontró el negocio seleccionado."
+  if(!activeProducts.length){
+
+    container.innerHTML =
+      '<div class="empty">' +
+      "No hay productos activos guardados." +
+      "</div>";
+
+    return;
+
+  }
+
+  container.innerHTML =
+    "";
+
+  const sortedProducts =
+    [...activeProducts].sort(
+      (
+        a,
+        b
+      ) =>
+        Number(
+          a.stock || 0
+        ) -
+        Number(
+          b.stock || 0
+        )
+    );
+
+  const list =
+    document.createElement(
+      "div"
+    );
+
+  list.className =
+    "inventory-list";
+
+  sortedProducts.forEach(
+    product => {
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+      row.className =
+        "stock-row";
+
+      const name =
+        document.createElement(
+          "div"
+        );
+
+      name.className =
+        "stock-name";
+
+      name.textContent =
+        product.name;
+
+      const stock =
+        document.createElement(
+          "div"
+        );
+
+      stock.className =
+        "stock-number";
+
+      const stockValue =
+        Number(
+          product.stock || 0
+        );
+
+      if(
+        stockValue <= 5
+      ){
+
+        stock.classList.add(
+          "low"
+        );
+
+      }
+
+      stock.textContent =
+        stockValue +
+        " uds";
+
+      if(
+        stockValue <= 5
+      ){
+
+        const warning =
+          document.createElement(
+            "span"
+          );
+
+        warning.className =
+          "stock-warning";
+
+        warning.textContent =
+          "⚠️";
+
+        stock.appendChild(
+          warning
+        );
+
+      }
+
+      row.append(
+        name,
+        stock
+      );
+
+      list.appendChild(
+        row
       );
 
     }
+  );
+
+  container.appendChild(
+    list
+  );
+
+}
 
 
-    /* =====================================================
-       PRODUCTOS
-    ====================================================== */
+/* =========================================================
+   CLIENTE
+========================================================= */
 
-    const productsResult =
+function findCustomer(
+  sale
+){
+
+  if(
+    sale.customer_name
+  ){
+
+    return sale.customer_name;
+
+  }
+
+  if(
+    !sale.customer_id
+  ){
+
+    return "Consumidor general";
+
+  }
+
+  const customer =
+    currentData.customers.find(
+      item =>
+        item.id ===
+        sale.customer_id
+    );
+
+  return(
+    customer?.name ||
+    "Cliente"
+  );
+
+}
+
+
+/* =========================================================
+   VENTAS
+========================================================= */
+
+function renderSales(){
+
+  const container =
+    $("salesContainer");
+
+  const sales =
+    (
+      Array.isArray(
+        currentData.sales
+      )
+      ? currentData.sales
+      : []
+    )
+    .filter(
+      sale =>
+        isToday(
+          sale.created_at ||
+          sale.sale_date
+        )
+    )
+    .sort(
+      (
+        a,
+        b
+      ) =>
+        new Date(
+          b.created_at ||
+          b.sale_date ||
+          0
+        ) -
+        new Date(
+          a.created_at ||
+          a.sale_date ||
+          0
+        )
+    );
+
+  if(!sales.length){
+
+    container.innerHTML =
+      '<div class="empty">' +
+      "No hay ventas de hoy guardadas en este dispositivo." +
+      "</div>";
+
+    return;
+
+  }
+
+  container.innerHTML =
+    "";
+
+  const list =
+    document.createElement(
+      "div"
+    );
+
+  list.className =
+    "sales-list";
+
+  sales
+    .slice(
+      0,
+      20
+    )
+    .forEach(
+      sale => {
+
+        const customerName =
+          findCustomer(
+            sale
+          );
+
+        const row =
+          document.createElement(
+            "div"
+          );
+
+        row.className =
+          "sale-row";
+
+        const main =
+          document.createElement(
+            "div"
+          );
+
+        main.className =
+          "sale-main";
+
+        const customerDiv =
+          document.createElement(
+            "div"
+          );
+
+        customerDiv.className =
+          "sale-customer";
+
+        if(
+          sale.customer_id
+        ){
+
+          const link =
+            document.createElement(
+              "a"
+            );
+
+          link.className =
+            "customer-link";
+
+          link.href =
+            "historial.html" +
+            "?customer_id=" +
+            encodeURIComponent(
+              sale.customer_id
+            ) +
+            "&business=" +
+            encodeURIComponent(
+              currentBusiness
+            );
+
+          link.textContent =
+            customerName;
+
+          customerDiv.appendChild(
+            link
+          );
+
+        }
+        else{
+
+          const general =
+            document.createElement(
+              "span"
+            );
+
+          general.className =
+            "customer-general";
+
+          general.textContent =
+            customerName;
+
+          customerDiv.appendChild(
+            general
+          );
+
+        }
+
+        const dateDiv =
+          document.createElement(
+            "div"
+          );
+
+        dateDiv.className =
+          "sale-date";
+
+        dateDiv.textContent =
+          formatSaleDateTime(
+            sale.created_at ||
+            sale.sale_date
+          );
+
+        if(
+          sale.offline
+        ){
+
+          const badge =
+            document.createElement(
+              "span"
+            );
+
+          badge.className =
+            "offline-badge";
+
+          badge.textContent =
+            "📴 Pendiente de sincronizar";
+
+          customerDiv.appendChild(
+            dateDiv
+          );
+
+          customerDiv.appendChild(
+            badge
+          );
+
+        }
+        else{
+
+          customerDiv.appendChild(
+            dateDiv
+          );
+
+        }
+
+        const totalDiv =
+          document.createElement(
+            "div"
+          );
+
+        totalDiv.className =
+          "sale-total";
+
+        totalDiv.textContent =
+          money(
+            sale.total
+          );
+
+        const statusDiv =
+          document.createElement(
+            "div"
+          );
+
+        statusDiv.className =
+          "sale-status";
+
+        const statusPill =
+          document.createElement(
+            "span"
+          );
+
+        statusPill.className =
+          "status-pill";
+
+        if(
+          sale.status ===
+          "cancelled"
+        ){
+
+          statusPill.classList.add(
+            "cancelled"
+          );
+
+          statusPill.textContent =
+            "Cancelada";
+
+        }
+        else if(
+          sale.status ===
+          "paid"
+        ){
+
+          statusPill.classList.add(
+            "paid"
+          );
+
+          statusPill.textContent =
+            "✓ Pagada";
+
+        }
+        else{
+
+          statusPill.classList.add(
+            "open"
+          );
+
+          statusPill.textContent =
+            "🔴 Debe " +
+            money(
+              sale.balance ||
+              sale.total ||
+              0
+            );
+
+        }
+
+        statusDiv.appendChild(
+          statusPill
+        );
+
+        main.append(
+          customerDiv,
+          totalDiv,
+          statusDiv
+        );
+
+        row.appendChild(
+          main
+        );
+
+        list.appendChild(
+          row
+        );
+
+      }
+    );
+
+  container.appendChild(
+    list
+  );
+
+}
+
+
+/* =========================================================
+   RENDER GENERAL
+========================================================= */
+
+function renderDashboard(){
+
+  mergePendingSalesIntoDashboard();
+
+  renderMetrics();
+
+  renderSales(
+  );
+
+  renderInventory(
+    currentData.products
+  );
+
+}
+
+
+/* =========================================================
+   CARGAR CACHE
+========================================================= */
+
+function loadCachedDashboard(){
+
+  const loaded =
+    loadDashboardCache(
+      currentBusiness
+    );
+
+  /*
+    Si todavía no existe cache del Dashboard,
+    utilizamos los productos que ya descargó
+    el POS.
+  */
+
+  if(!loaded){
+
+    const posProducts =
+      loadProductsFromPOSCache(
+        currentBusiness
+      );
+
+    currentData = {
+
+      products:
+        posProducts,
+
+      sales: [],
+
+      customers: []
+
+    };
+
+  }
+
+  renderDashboard();
+
+  return loaded;
+
+}
+
+
+/* =========================================================
+   CARGAR DESDE SUPABASE
+========================================================= */
+
+async function loadFromSupabase(){
+
+  if(!navigator.onLine){
+
+    return false;
+
+  }
+
+  if(
+    !initializeSupabase()
+  ){
+
+    return false;
+
+  }
+
+  const businessId =
+    BUSINESS_IDS[
+      currentBusiness
+    ];
+
+  if(!businessId){
+
+    throw new Error(
+      "No se encontró el negocio seleccionado."
+    );
+
+  }
+
+  /*
+    PRODUCTOS
+  */
+
+  const productsResult =
     await supabaseClient
 
       .from("products")
 
       .select(
-        "id,name,price,stock,active"
+        "id,name,price,cost,stock,active,business_id"
       )
 
       .eq(
@@ -1074,51 +2120,29 @@ async function loadDashboard(){
         "name"
       );
 
+  if(
+    productsResult.error
+  ){
 
-    if(productsResult.error){
+    throw productsResult.error;
 
-      throw productsResult.error;
+  }
 
-    }
+  /*
+    VENTAS
+  */
 
-
-    const products =
-    productsResult.data || [];
-
-
-    $("productCount").textContent =
-    products.length;
-
-
-    $("lowStock").textContent =
-    products.filter(
-      product =>
-      Number(product.stock || 0) <= 5
-    ).length;
-
-
-    renderInventory(
-      products
-    );
-
-
-    /* =====================================================
-       VENTAS DE HOY
-    ====================================================== */
-
-    const start =
+  const start =
     new Date();
 
+  start.setHours(
+    0,
+    0,
+    0,
+    0
+  );
 
-    start.setHours(
-      0,
-      0,
-      0,
-      0
-    );
-
-
-    const salesResult =
+  const salesResult =
     await supabaseClient
 
       .from("sales")
@@ -1144,302 +2168,40 @@ async function loadDashboard(){
         }
       );
 
+  if(
+    salesResult.error
+  ){
 
-    if(salesResult.error){
-
-      throw salesResult.error;
-
-    }
-
-
-    const sales =
-    salesResult.data || [];
-
-
-    /* =====================================================
-       TOTAL DE VENTAS
-    ====================================================== */
-
-    const total =
-    sales.reduce(
-      (
-        sum,
-        sale
-      ) => {
-
-        if(
-          sale.status ===
-          "cancelled"
-        ){
-
-          return sum;
-
-        }
-
-
-        return (
-          sum +
-          Number(
-            sale.total || 0
-          )
-        );
-
-      },
-      0
-    );
-
-
-    $("todaySales").textContent =
-    money(total);
-
-
-    $("salesCount").textContent =
-    sales.filter(
-      sale =>
-      sale.status !==
-      "cancelled"
-    ).length;
-
-
-    /* =====================================================
-       VENTAS
-    ====================================================== */
-
-    const customerLookupFailed =
-    await renderSales(
-      sales
-    );
-
-
-    if(customerLookupFailed){
-
-      showStatus(
-        currentBusiness +
-        " actualizado. No se pudieron cargar algunos nombres de clientes.",
-        "warn"
-      );
-
-    }
-    else{
-
-      showStatus(
-        currentBusiness +
-        " actualizado correctamente.",
-        "ok"
-      );
-
-    }
+    throw salesResult.error;
 
   }
 
-  catch(error){
-
-    console.error(
-      "Error Dashboard:",
-      error
-    );
-
-
-    showStatus(
-      "No se pudo cargar el Dashboard: " +
-      (
-        error.message ||
-        error
-      ),
-      "error"
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   INVENTARIO
-========================================================= */
-
-function renderInventory(
-  products
-){
-
-  const container =
-  $("inventoryContainer");
-
-
-  if(!products.length){
-
-    container.innerHTML =
-    '<div class="empty">' +
-    "No hay productos activos." +
-    "</div>";
-
-    return;
-
-  }
-
-
-  container.innerHTML =
-  "";
-
-
-  const sortedProducts =
-  [...products].sort(
-    (a,b) =>
-    Number(a.stock || 0) -
-    Number(b.stock || 0)
-  );
-
-
-  sortedProducts.forEach(
-    product => {
-
-      const row =
-      document.createElement(
-        "div"
-      );
-
-
-      row.className =
-      "stock-row";
-
-
-      const name =
-      document.createElement(
-        "div"
-      );
-
-
-      name.className =
-      "stock-name";
-
-
-      name.textContent =
-      product.name;
-
-
-      const stock =
-      document.createElement(
-        "div"
-      );
-
-
-      stock.className =
-      "stock-number";
-
-
-      const stockValue =
-      Number(
-        product.stock || 0
-      );
-
-
-      if(stockValue <= 5){
-
-        stock.classList.add(
-          "low"
-        );
-
-      }
-
-
-      stock.textContent =
-      stockValue +
-      " uds";
-
-
-      if(stockValue <= 5){
-
-        const warning =
-        document.createElement(
-          "span"
-        );
-
-
-        warning.className =
-        "stock-warning";
-
-
-        warning.textContent =
-        "⚠️";
-
-
-        stock.appendChild(
-          warning
-        );
-
-      }
-
-
-      row.append(
-        name,
-        stock
-      );
-
-
-      container.appendChild(
-        row
-      );
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   VENTAS
-========================================================= */
-
-async function renderSales(
-  sales
-){
-
-  const container =
-  $("salesContainer");
-
-
-  if(!sales.length){
-
-    container.innerHTML =
-    '<div class="empty">' +
-    "No hay ventas registradas hoy." +
-    "</div>";
-
-    return false;
-
-  }
-
+  /*
+    CLIENTES
+  */
 
   const customerIds =
-  [
-    ...new Set(
-      sales
+    [
+      ...new Set(
+        (
+          salesResult.data ||
+          []
+        )
         .map(
           sale =>
-          sale.customer_id
+            sale.customer_id
         )
         .filter(Boolean)
-    )
-  ];
+      )
+    ];
 
+  let customers = [];
 
-  const customerMap =
-  new Map();
+  if(
+    customerIds.length
+  ){
 
-
-  let customerLookupFailed =
-  false;
-
-
-  /* =====================================================
-     OBTENER CLIENTES
-  ====================================================== */
-
-  if(customerIds.length){
-
-    try{
-
-      const customersResult =
+    const customersResult =
       await supabaseClient
 
         .from("customers")
@@ -1453,324 +2215,206 @@ async function renderSales(
           customerIds
         );
 
+    if(
+      customersResult.error
+    ){
 
-      if(customersResult.error){
-
-        throw customersResult.error;
-
-      }
-
-
-      (
-        customersResult.data || []
-      ).forEach(
-        customer => {
-
-          customerMap.set(
-            customer.id,
-            customer
-          );
-
-        }
+      console.warn(
+        "No se pudieron cargar clientes:",
+        customersResult.error
       );
 
     }
+    else{
 
-    catch(error){
-
-      console.warn(
-        "No se pudieron cargar los clientes del Dashboard:",
-        error
-      );
-
-
-      customerLookupFailed =
-      true;
+      customers =
+        customersResult.data ||
+        [];
 
     }
 
   }
 
+  /*
+    GUARDAMOS LOS DATOS COMPLETOS.
+  */
 
-  container.innerHTML =
-  "";
+  currentData = {
 
+    products:
+      productsResult.data ||
+      [],
 
-  const list =
-  document.createElement(
-    "div"
+    sales:
+      salesResult.data ||
+      [],
+
+    customers:
+      customers
+
+  };
+
+  /*
+    Guardamos una copia independiente
+    para cada negocio.
+  */
+
+  saveDashboardCache(
+    currentBusiness,
+    currentData
   );
 
+  /*
+    Renderizamos inmediatamente.
+  */
 
-  list.className =
-  "sales-list";
+  renderDashboard();
 
+  return true;
 
-  sales
-    .slice(0,20)
-    .forEach(
-      sale => {
+}
 
-        const customer =
-        customerMap.get(
-          sale.customer_id
-        );
 
+/* =========================================================
+   CARGA PRINCIPAL
+========================================================= */
 
-        const customerName =
-        customer?.name ||
-        "Consumidor general";
+async function loadDashboard(){
 
+  if(isLoading){
 
-        const row =
-        document.createElement(
-          "div"
-        );
+    return;
 
+  }
 
-        row.className =
-        "sale-row";
+  isLoading =
+    true;
 
+  updateBusinessButtons();
 
-        /* =================================================
-           CLIENTE
-        ================================================== */
+  /*
+    PRIMERO:
 
-        const customerDiv =
-        document.createElement(
-          "div"
-        );
+    Mostramos inmediatamente el cache.
 
+    Así el Dashboard abre aunque Internet
+    no exista o esté lento.
+  */
 
-        customerDiv.className =
-        "sale-customer";
+  loadCachedDashboard();
 
+  /*
+    OFFLINE
+  */
 
-        if(
-          sale.customer_id &&
-          customer
-        ){
+  if(!navigator.onLine){
 
-          const link =
-          document.createElement(
-            "a"
-          );
+    showStatus(
 
+      "📴 Modo offline\n\n" +
 
-          link.className =
-          "customer-link";
+      "Mostrando la última información guardada de " +
 
+      currentBusiness +
 
-          link.href =
-          "historial.html" +
-          "?customer_id=" +
-          encodeURIComponent(
-            sale.customer_id
-          ) +
-          "&business=" +
-          encodeURIComponent(
-            currentBusiness
-          );
+      ".",
 
+      "warn"
 
-          link.textContent =
-          customerName;
-
-
-          link.title =
-          "Ver historial de " +
-          customerName;
-
-
-          customerDiv.appendChild(
-            link
-          );
-
-        }
-
-        else{
-
-          const general =
-          document.createElement(
-            "span"
-          );
-
-
-          general.className =
-          "customer-general";
-
-
-          general.textContent =
-          customerName;
-
-
-          customerDiv.appendChild(
-            general
-          );
-
-        }
-
-
-        /* =================================================
-           FECHA + HORA
-        ================================================== */
-
-        const dateDiv =
-        document.createElement(
-          "div"
-        );
-
-
-        dateDiv.className =
-        "sale-date";
-
-
-        const dateTimeText =
-        formatSaleDateTime(
-          sale.created_at
-        );
-
-
-        dateDiv.textContent =
-        dateTimeText;
-
-
-        customerDiv.appendChild(
-          dateDiv
-        );
-
-
-        /* =================================================
-           TOTAL
-        ================================================== */
-
-        const totalDiv =
-        document.createElement(
-          "div"
-        );
-
-
-        totalDiv.className =
-        "sale-total";
-
-
-        totalDiv.textContent =
-        money(
-          sale.total
-        );
-
-
-        /* =================================================
-           ESTADO
-        ================================================== */
-
-        const statusDiv =
-        document.createElement(
-          "div"
-        );
-
-
-        statusDiv.className =
-        "sale-status";
-
-
-        const paid =
-        sale.status ===
-        "paid";
-
-
-        const cancelled =
-        sale.status ===
-        "cancelled";
-
-
-        const statusPill =
-        document.createElement(
-          "span"
-        );
-
-
-        statusPill.className =
-        "status-pill " +
-        (
-          paid
-          ? "paid"
-          : cancelled
-          ? "cancelled"
-          : "open"
-        );
-
-
-        if(paid){
-
-          statusPill.textContent =
-          "✓ Pagada";
-
-        }
-
-        else if(cancelled){
-
-          statusPill.textContent =
-          "Cancelada";
-
-        }
-
-        else{
-
-          statusPill.textContent =
-          "🔴 Debe " +
-          money(
-            sale.balance || 0
-          );
-
-        }
-
-
-        statusDiv.appendChild(
-          statusPill
-        );
-
-
-        /* =================================================
-           FILA
-        ================================================== */
-
-        const main =
-        document.createElement(
-          "div"
-        );
-
-
-        main.className =
-        "sale-main";
-
-
-        main.append(
-          customerDiv,
-          totalDiv,
-          statusDiv
-        );
-
-
-        row.appendChild(
-          main
-        );
-
-
-        list.appendChild(
-          row
-        );
-
-      }
     );
 
+    isLoading =
+      false;
 
-  container.appendChild(
-    list
-  );
+    return;
 
+  }
 
-  return customerLookupFailed;
+  /*
+    ONLINE
+
+    Intentamos actualizar desde Supabase.
+  */
+
+  try{
+
+    await loadFromSupabase();
+
+    showStatus(
+
+      "🌐 " +
+      currentBusiness +
+      " actualizado correctamente.",
+
+      "ok"
+
+    );
+
+  }
+
+  catch(error){
+
+    console.warn(
+      "No se pudo actualizar Dashboard:",
+      error
+    );
+
+    /*
+      El cache ya fue mostrado antes.
+    */
+
+    const hasProducts =
+      currentData.products.length > 0;
+
+    const hasSales =
+      currentData.sales.length > 0;
+
+    if(
+      hasProducts ||
+      hasSales
+    ){
+
+      showStatus(
+
+        "⚠️ No se pudo actualizar desde Internet.\n\n" +
+
+        "Se está mostrando la última información guardada de " +
+
+        currentBusiness +
+
+        ".",
+
+        "warn"
+
+      );
+
+    }
+    else{
+
+      showStatus(
+
+        "⚠️ No fue posible cargar información de " +
+
+        currentBusiness +
+
+        ".\n\n" +
+
+        "Conecta Internet para realizar la primera descarga.",
+
+        "error"
+
+      );
+
+    }
+
+  }
+
+  finally{
+
+    isLoading =
+      false;
+
+  }
 
 }
 
@@ -1780,145 +2424,313 @@ async function renderSales(
 ========================================================= */
 
 document
-.querySelectorAll(
-  ".business-btn"
-)
-.forEach(
-  button => {
+  .querySelectorAll(
+    ".business-btn"
+  )
+  .forEach(
+    button => {
 
-    button.addEventListener(
-      "click",
-      async () => {
+      button.addEventListener(
+        "click",
+        async () => {
 
-        const business =
-        button.dataset.business;
+          const business =
+            button.dataset.business;
 
+          if(
+            business ===
+            currentBusiness
+          ){
 
-        if(
-          business ===
-          currentBusiness
-        ){
+            return;
 
-          return;
+          }
+
+          currentBusiness =
+            business;
+
+          localStorage.setItem(
+            LAST_BUSINESS_KEY,
+            currentBusiness
+          );
+
+          updateBusinessButtons();
+
+          /*
+            Limpiamos la pantalla
+            antes de cargar el otro negocio.
+          */
+
+          currentData = {
+
+            products: [],
+
+            sales: [],
+
+            customers: []
+
+          };
+
+          /*
+            Primero cache.
+          */
+
+          loadCachedDashboard();
+
+          /*
+            Después Internet si existe.
+          */
+
+          if(
+            navigator.onLine
+          ){
+
+            await loadDashboard();
+
+          }
+          else{
+
+            showStatus(
+
+              "📴 Modo offline\n\n" +
+
+              "Mostrando los datos guardados de " +
+
+              currentBusiness +
+
+              ".",
+
+              "warn"
+
+            );
+
+          }
 
         }
+      );
+
+    }
+  );
 
 
-        currentBusiness =
-        business;
+/* =========================================================
+   ACTUALIZAR
+========================================================= */
 
+$("refresh")
+  .addEventListener(
+    "click",
+    async () => {
 
-        document
-        .querySelectorAll(
-          ".business-btn"
-        )
-        .forEach(
-          b =>
-          b.classList.remove(
-            "active"
-          )
+      if(
+        !navigator.onLine
+      ){
+
+        showStatus(
+
+          "📴 No hay Internet.\n\n" +
+
+          "El Dashboard está funcionando con los datos guardados.",
+
+          "warn"
+
         );
 
+        loadCachedDashboard();
 
-        button.classList.add(
-          "active"
-        );
-
-
-        await loadDashboard();
+        return;
 
       }
+
+      await loadDashboard();
+
+    }
+  );
+
+
+/* =========================================================
+   CUENTAS
+========================================================= */
+
+$("accounts")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "cuentas.html" +
+        "?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+
+/* =========================================================
+   CLIENTES
+========================================================= */
+
+$("customers")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "clientes.html" +
+        "?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+
+/* =========================================================
+   HISTORIAL
+========================================================= */
+
+$("history")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "historial.html" +
+        "?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+
+/* =========================================================
+   INVENTARIO
+========================================================= */
+
+$("inventory")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "inventario.html" +
+        "?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+
+/* =========================================================
+   VOLVER AL POS
+========================================================= */
+
+$("back")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "index.html";
+
+    }
+  );
+
+
+/* =========================================================
+   INTERNET
+========================================================= */
+
+window.addEventListener(
+  "offline",
+  () => {
+
+    renderDashboard();
+
+    showStatus(
+
+      "📴 Internet desconectado.\n\n" +
+
+      "El Dashboard continuará funcionando con la información guardada.",
+
+      "warn"
+
     );
+
+  }
+);
+
+
+window.addEventListener(
+  "online",
+  async () => {
+
+    showStatus(
+
+      "🌐 Internet recuperado.\n\n" +
+
+      "Actualizando " +
+
+      currentBusiness +
+
+      "...",
+
+      "ok"
+
+    );
+
+    await loadDashboard();
 
   }
 );
 
 
 /* =========================================================
-   BOTONES
+   SERVICE WORKER
 ========================================================= */
 
-$("refresh")
-.addEventListener(
-  "click",
-  loadDashboard
-);
+if(
+  "serviceWorker" in navigator
+){
 
+  navigator.serviceWorker
+    .register(
+      "./sw.js",
+      {
+        scope:"./"
+      }
+    )
+    .then(
+      registration => {
 
-$("accounts")
-.addEventListener(
-  "click",
-  () => {
+        console.log(
+          "Dashboard Service Worker:",
+          registration.scope
+        );
 
-    window.location.href =
-    "cuentas.html" +
-    "?business=" +
-    encodeURIComponent(
-      currentBusiness
+        registration.update();
+
+      }
+    )
+    .catch(
+      error => {
+
+        console.warn(
+          "No se pudo registrar Service Worker:",
+          error
+        );
+
+      }
     );
 
-  }
-);
-
-
-$("customers")
-.addEventListener(
-  "click",
-  () => {
-
-    window.location.href =
-    "clientes.html" +
-    "?business=" +
-    encodeURIComponent(
-      currentBusiness
-    );
-
-  }
-);
-
-
-$("history")
-.addEventListener(
-  "click",
-  () => {
-
-    window.location.href =
-    "historial.html" +
-    "?business=" +
-    encodeURIComponent(
-      currentBusiness
-    );
-
-  }
-);
-
-
-$("inventory")
-.addEventListener(
-  "click",
-  () => {
-
-    window.location.href =
-    "inventario.html" +
-    "?business=" +
-    encodeURIComponent(
-      currentBusiness
-    );
-
-  }
-);
-
-
-$("back")
-.addEventListener(
-  "click",
-  () => {
-
-    window.location.href =
-    "index.html";
-
-  }
-);
+}
 
 
 /* =========================================================
@@ -1927,9 +2739,21 @@ $("back")
 
 document.addEventListener(
   "DOMContentLoaded",
-  () => {
+  async () => {
 
-    loadDashboard();
+    updateBusinessButtons();
+
+    /*
+      Render inmediato desde cache.
+    */
+
+    loadCachedDashboard();
+
+    /*
+      Después actualización online.
+    */
+
+    await loadDashboard();
 
   }
 );
@@ -1937,4 +2761,5 @@ document.addEventListener(
 </script>
 
 </body>
+
 </html>
