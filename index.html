@@ -10,6 +10,11 @@
   content="width=device-width,initial-scale=1.0"
 >
 
+<meta
+  name="theme-color"
+  content="#111827"
+>
+
 <title>Sistema de Ventas POS</title>
 
 <style>
@@ -42,6 +47,48 @@ header p{
   margin-top:6px;
 }
 
+/* =========================================
+   ESTADO DE CONEXIÓN
+========================================= */
+
+.connection{
+  max-width:1100px;
+  margin:12px auto 0;
+  padding:0 20px;
+}
+
+.connection-status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 12px;
+  border-radius:10px;
+  font-size:13px;
+  font-weight:700;
+  background:#dcfce7;
+  color:#166534;
+}
+
+.connection-status.offline{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.connection-dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:#16a34a;
+}
+
+.connection-status.offline .connection-dot{
+  background:#dc2626;
+}
+
+/* =========================================
+   CONTENEDOR
+========================================= */
+
 .container{
   max-width:1100px;
   margin:auto;
@@ -70,6 +117,10 @@ header p{
   color:#166534;
 }
 
+/* =========================================
+   NEGOCIOS
+========================================= */
+
 .businesses{
   display:flex;
   gap:10px;
@@ -94,6 +145,10 @@ header p{
   color:#fff;
   border-color:#111827;
 }
+
+/* =========================================
+   NAVEGACIÓN
+========================================= */
 
 .navigation{
   display:grid;
@@ -130,6 +185,10 @@ header p{
   color:#1d4ed8;
 }
 
+/* =========================================
+   LAYOUT
+========================================= */
+
 .layout{
   display:grid;
   grid-template-columns:1fr 390px;
@@ -147,6 +206,10 @@ header p{
   font-size:21px;
   margin-bottom:16px;
 }
+
+/* =========================================
+   PRODUCTOS
+========================================= */
 
 .products{
   display:grid;
@@ -195,6 +258,10 @@ header p{
   color:#666;
   margin-top:7px;
 }
+
+/* =========================================
+   CARRITO
+========================================= */
 
 .cart-item{
   display:flex;
@@ -246,6 +313,10 @@ header p{
   border-top:2px solid #eee;
 }
 
+/* =========================================
+   PAGOS
+========================================= */
+
 .payment-title,
 .customer-title{
   margin-top:20px;
@@ -276,7 +347,9 @@ header p{
   border-color:#111827;
 }
 
-/* CLIENTES */
+/* =========================================
+   CLIENTES
+========================================= */
 
 .customer-box{
   position:relative;
@@ -394,7 +467,9 @@ header p{
   border-color:#d1d5db;
 }
 
-/* BOTONES */
+/* =========================================
+   BOTONES
+========================================= */
 
 .charge,
 .account{
@@ -424,6 +499,10 @@ header p{
   cursor:wait;
 }
 
+/* =========================================
+   UTILIDADES
+========================================= */
+
 .empty{
   color:#777;
   text-align:center;
@@ -438,6 +517,10 @@ header p{
 button{
   -webkit-tap-highlight-color:transparent;
 }
+
+/* =========================================
+   RESPONSIVE
+========================================= */
 
 @media(max-width:950px){
 
@@ -467,6 +550,10 @@ button{
 
   .container{
     padding:15px;
+  }
+
+  .connection{
+    padding:0 15px;
   }
 
   header h1{
@@ -531,13 +618,34 @@ Administración de negocios y ventas
 
 </header>
 
+<!-- =========================================
+     CONEXIÓN
+========================================= -->
+
+<div class="connection">
+
+<div
+  id="connectionStatus"
+  class="connection-status"
+>
+
+<span class="connection-dot"></span>
+
+<span id="connectionText">
+Conectado a internet
+</span>
+
+</div>
+
+</div>
+
 <div class="container">
 
 <div id="status" class="status"></div>
 
-<!-- ================================
+<!-- =========================================
      NEGOCIOS
-================================ -->
+========================================= -->
 
 <div class="businesses">
 
@@ -559,9 +667,9 @@ Administración de negocios y ventas
 
 </div>
 
-<!-- ================================
+<!-- =========================================
      NAVEGACIÓN
-================================ -->
+========================================= -->
 
 <div class="navigation">
 
@@ -607,9 +715,9 @@ Administración de negocios y ventas
 
 </div>
 
-<!-- ================================
+<!-- =========================================
      POS
-================================ -->
+========================================= -->
 
 <div class="layout">
 
@@ -632,9 +740,9 @@ Cargando productos...
 
 </div>
 
-<!-- ================================
+<!-- =========================================
      CARRITO
-================================ -->
+========================================= -->
 
 <div class="card">
 
@@ -662,9 +770,9 @@ $0.00
 
 </div>
 
-<!-- ================================
+<!-- =========================================
      CLIENTE
-================================ -->
+========================================= -->
 
 <div class="customer-title">
 👤 Cliente
@@ -712,9 +820,9 @@ $0.00
 
 </div>
 
-<!-- ================================
+<!-- =========================================
      PAGO
-================================ -->
+========================================= -->
 
 <div class="payment-title">
 Método de pago
@@ -731,9 +839,9 @@ Cargando métodos de pago...
 
 </div>
 
-<!-- ================================
+<!-- =========================================
      ACCIONES
-================================ -->
+========================================= -->
 
 <button
   type="button"
@@ -756,6 +864,10 @@ Cargando métodos de pago...
 </div>
 
 </div>
+
+<!-- =========================================
+     SUPABASE
+========================================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -803,10 +915,13 @@ let payments = [];
 /*
   IMPORTANTE:
 
-  Los clientes son COMPARTIDOS.
+  Los clientes pertenecen al negocio.
 
-  No se vuelven a filtrar por negocio.
+  Esto coincide con tu estructura actual
+  de Supabase, donde customers.business_id
+  es obligatorio.
 */
+
 let customers = [];
 
 let cart = [];
@@ -873,6 +988,70 @@ function clearStatus(){
 }
 
 /* =========================================
+   ESTADO DE INTERNET
+========================================= */
+
+function updateConnectionStatus(){
+
+  const element =
+    $("connectionStatus");
+
+  const text =
+    $("connectionText");
+
+  if(navigator.onLine){
+
+    element.classList.remove(
+      "offline"
+    );
+
+    text.textContent =
+      "Conectado a internet";
+
+  }
+  else{
+
+    element.classList.add(
+      "offline"
+    );
+
+    text.textContent =
+      "Sin conexión a internet";
+
+  }
+
+}
+
+window.addEventListener(
+  "online",
+  () => {
+
+    updateConnectionStatus();
+
+    showStatus(
+      "La conexión a internet se restableció.",
+      "ok"
+    );
+
+    loadBusinessData();
+
+  }
+);
+
+window.addEventListener(
+  "offline",
+  () => {
+
+    updateConnectionStatus();
+
+    showStatus(
+      "Sin conexión a internet. El POS necesita conexión para consultar y guardar información en Supabase."
+    );
+
+  }
+);
+
+/* =========================================
    INICIALIZAR SUPABASE
 ========================================= */
 
@@ -899,7 +1078,7 @@ function initializeSupabase(){
 }
 
 /* =========================================
-   CARGAR DATOS
+   CARGAR DATOS DEL NEGOCIO
 ========================================= */
 
 async function loadBusinessData(){
@@ -925,15 +1104,47 @@ async function loadBusinessData(){
 
   }
 
+  /*
+    Si no hay internet, no intentamos hacer
+    consultas innecesarias a Supabase.
+  */
+
+  if(!navigator.onLine){
+
+    $("products").innerHTML =
+      '<div class="empty">' +
+      'Sin conexión a internet.<br><br>' +
+      'No es posible consultar los datos actuales de Supabase.' +
+      '</div>';
+
+    $("payments").innerHTML =
+      '<div class="empty">' +
+      'Sin conexión a internet.' +
+      '</div>';
+
+    customers = [];
+
+    showStatus(
+      "El sistema está sin conexión. Los datos de Supabase no están disponibles en este momento."
+    );
+
+    renderCart();
+
+    return;
+
+  }
+
   try{
 
     /*
-      PRODUCTOS y MÉTODOS DE PAGO
-      siguen siendo independientes por negocio.
+      PRODUCTOS:
+      pertenecen al negocio actual.
+
+      PAGOS:
+      pertenecen al negocio actual.
 
       CLIENTES:
-      son compartidos y por eso NO llevan
-      .eq("business_id", businessId)
+      también pertenecen al negocio actual.
     */
 
     const [
@@ -945,8 +1156,6 @@ async function loadBusinessData(){
       customersResult
 
     ] = await Promise.all([
-
-      /* PRODUCTOS DEL NEGOCIO */
 
       supabaseClient
         .from("products")
@@ -965,8 +1174,6 @@ async function loadBusinessData(){
           "name"
         ),
 
-      /* MÉTODOS DE PAGO DEL NEGOCIO */
-
       supabaseClient
         .from("payment_methods")
         .select(
@@ -984,20 +1191,14 @@ async function loadBusinessData(){
           "name"
         ),
 
-      /*
-        CLIENTES COMPARTIDOS
-
-        AQUÍ ESTÁ LA CORRECCIÓN.
-
-        Se cargan TODOS los clientes.
-        No importa si business_id es BakeQuiri
-        o SpicyRoll.
-      */
-
       supabaseClient
         .from("customers")
         .select(
           "id,business_id,name,phone,notes"
+        )
+        .eq(
+          "business_id",
+          businessId
         )
         .order(
           "name"
@@ -1005,34 +1206,28 @@ async function loadBusinessData(){
 
     ]);
 
-    if(
-      productsResult.error
-    ){
+    if(productsResult.error){
 
       throw new Error(
-        "No pude cargar los productos: " +
+        "No pude cargar los productos:\n" +
         productsResult.error.message
       );
 
     }
 
-    if(
-      paymentsResult.error
-    ){
+    if(paymentsResult.error){
 
       throw new Error(
-        "No pude cargar los métodos de pago: " +
+        "No pude cargar los métodos de pago:\n" +
         paymentsResult.error.message
       );
 
     }
 
-    if(
-      customersResult.error
-    ){
+    if(customersResult.error){
 
       throw new Error(
-        "No pude cargar los clientes compartidos: " +
+        "No pude cargar los clientes:\n" +
         customersResult.error.message
       );
 
@@ -1048,8 +1243,8 @@ async function loadBusinessData(){
       customersResult.data || [];
 
     /*
-      Conservamos el método de pago seleccionado
-      si sigue existiendo en el negocio.
+      Conservamos el método de pago si todavía
+      pertenece al negocio seleccionado.
     */
 
     if(
@@ -1067,8 +1262,8 @@ async function loadBusinessData(){
     }
 
     /*
-      Conservamos el cliente seleccionado
-      si existe dentro del catálogo compartido.
+      Conservamos el cliente únicamente si
+      todavía pertenece al negocio actual.
     */
 
     const selectedCustomer =
@@ -1109,10 +1304,14 @@ async function loadBusinessData(){
     customers = [];
 
     $("products").innerHTML =
-      '<div class="empty">No se pudieron cargar los productos.</div>';
+      '<div class="empty">' +
+      'No se pudieron cargar los productos.' +
+      '</div>';
 
     $("payments").innerHTML =
-      '<div class="empty">No se pudieron cargar los métodos de pago.</div>';
+      '<div class="empty">' +
+      'No se pudieron cargar los métodos de pago.' +
+      '</div>';
 
     showStatus(
       error?.message ||
@@ -1176,19 +1375,11 @@ function renderProducts(){
       button.innerHTML =
 
         '<div class="product-name">' +
-
-        escapeHTML(
-          product.name
-        ) +
-
+        escapeHTML(product.name) +
         '</div>' +
 
         '<div class="price">' +
-
-        money(
-          product.price
-        ) +
-
+        money(product.price) +
         '</div>' +
 
         '<div class="stock">' +
@@ -1380,10 +1571,7 @@ function changeQuantity(
     item.quantity +
     amount;
 
-  if(
-    newQuantity >
-    max
-  ){
+  if(newQuantity > max){
 
     showStatus(
       "No hay suficiente existencia disponible."
@@ -1396,9 +1584,7 @@ function changeQuantity(
   item.quantity =
     newQuantity;
 
-  if(
-    item.quantity <= 0
-  ){
+  if(item.quantity <= 0){
 
     cart =
       cart.filter(
@@ -1477,19 +1663,11 @@ function renderCart(){
       info.innerHTML =
 
         '<div class="cart-name">' +
-
-        escapeHTML(
-          item.name
-        ) +
-
+        escapeHTML(item.name) +
         '</div>' +
 
         '<div class="cart-price">' +
-
-        money(
-          item.price
-        ) +
-
+        money(item.price) +
         ' c/u</div>';
 
       const controls =
@@ -1564,9 +1742,7 @@ function renderCart(){
         );
 
       subtotalElement.textContent =
-        money(
-          subtotal
-        );
+        money(subtotal);
 
       row.append(
         info,
@@ -1620,9 +1796,6 @@ function renderSelectedCustomer(){
     general.style.display =
       "block";
 
-    general.innerHTML =
-      "👤 Consumidor general";
-
     return;
 
   }
@@ -1667,6 +1840,10 @@ function renderSelectedCustomer(){
 
 }
 
+/* =========================================
+   LIMPIAR CLIENTE
+========================================= */
+
 function clearSelectedCustomer(){
 
   selectedCustomerId =
@@ -1686,7 +1863,7 @@ function clearSelectedCustomer(){
 }
 
 /* =========================================
-   BUSCAR CLIENTES COMPARTIDOS
+   BUSCAR CLIENTES
 ========================================= */
 
 function renderCustomerResults(
@@ -1714,13 +1891,6 @@ function renderCustomerResults(
     return;
 
   }
-
-  /*
-    IMPORTANTE:
-
-    customers contiene TODOS los clientes,
-    no solamente los del negocio actual.
-  */
 
   const filtered =
     customers.filter(
@@ -1851,7 +2021,7 @@ function renderCustomerResults(
 }
 
 /* =========================================
-   EVENTOS CLIENTES
+   EVENTOS DE CLIENTES
 ========================================= */
 
 $("customerSearch")
@@ -1890,6 +2060,10 @@ $("generalCustomer")
     "click",
     clearSelectedCustomer
   );
+
+/* =========================================
+   AGREGAR CLIENTE
+========================================= */
 
 $("addClientButton")
   .addEventListener(
@@ -2002,6 +2176,16 @@ async function registerSale(
 
   clearStatus();
 
+  if(!navigator.onLine){
+
+    showStatus(
+      "No puedes guardar la venta porque no hay conexión a internet.\n\nPrimero recupera la conexión y vuelve a intentarlo."
+    );
+
+    return;
+
+  }
+
   if(!cart.length){
 
     showStatus(
@@ -2104,16 +2288,11 @@ async function registerSale(
       ];
 
     /*
-      IMPORTANTE:
+      La venta utiliza el business_id actual.
 
-      selectedCustomerId puede pertenecer
-      originalmente a BakeQuiri o SpicyRoll.
-
-      La venta sigue registrándose con el
-      business_id del NEGOCIO ACTUAL.
-
-      El cliente solamente funciona como
-      referencia compartida.
+      El cliente seleccionado pertenece al
+      mismo negocio porque customers se cargó
+      filtrado por business_id.
     */
 
     const result =
@@ -2401,6 +2580,8 @@ document
 async function startApp(){
 
   try{
+
+    updateConnectionStatus();
 
     initializeSupabase();
 
