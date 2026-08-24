@@ -1,4 +1,4 @@
-const CACHE_NAME = "sistema-pos-v1";
+const CACHE_NAME = "pos-offline-v1";
 
 const APP_FILES = [
   "./",
@@ -7,81 +7,68 @@ const APP_FILES = [
   "./clientes.html",
   "./cuentas.html",
   "./historial.html",
-  "./inventario.html"
+  "./inventario.html",
+  "./README.md"
 ];
 
+/* INSTALAR */
 self.addEventListener("install", event => {
 
   event.waitUntil(
-
     caches.open(CACHE_NAME)
       .then(cache => {
 
         return cache.addAll(APP_FILES);
 
       })
+      .then(() => {
 
+        return self.skipWaiting();
+
+      })
   );
-
-  self.skipWaiting();
 
 });
 
 
+/* ACTIVAR */
 self.addEventListener("activate", event => {
 
   event.waitUntil(
 
     caches.keys()
-      .then(keys => {
+      .then(cacheNames => {
 
         return Promise.all(
 
-          keys
-            .filter(key => key !== CACHE_NAME)
-            .map(key => caches.delete(key))
+          cacheNames
+            .filter(name => name !== CACHE_NAME)
+            .map(name => caches.delete(name))
 
         );
+
+      })
+      .then(() => {
+
+        return self.clients.claim();
 
       })
 
   );
 
-  self.clients.claim();
-
 });
 
 
+/* PETICIONES */
 self.addEventListener("fetch", event => {
 
   const request = event.request;
 
+  /*
+   * Solo manejamos peticiones GET.
+   */
   if(request.method !== "GET")
     return;
-
-
-  const url = new URL(
-    request.url
-  );
-
-
-  /*
-   * Supabase debe seguir funcionando
-   * normalmente cuando hay Internet.
-   *
-   * No intentamos guardar respuestas
-   * de Supabase en este primer paso.
-   */
-
-  if(
-    url.hostname.includes(
-      "supabase.co"
-    )
-  ){
-
-    return;
-
-  }
 
 
   event.respondWith(
@@ -89,6 +76,10 @@ self.addEventListener("fetch", event => {
     caches.match(request)
       .then(cachedResponse => {
 
+        /*
+         * Si ya tenemos el archivo guardado,
+         * lo usamos inmediatamente.
+         */
         if(cachedResponse){
 
           return cachedResponse;
@@ -96,48 +87,49 @@ self.addEventListener("fetch", event => {
         }
 
 
+        /*
+         * Si no está guardado, intentamos
+         * obtenerlo de Internet.
+         */
         return fetch(request)
-          .then(response => {
+          .then(networkResponse => {
 
+            /*
+             * Guardamos una copia para futuras
+             * visitas sin Internet.
+             */
             if(
-              !response ||
-              response.status !== 200 ||
-              response.type === "opaque"
+              networkResponse &&
+              networkResponse.status === 200 &&
+              networkResponse.type === "basic"
             ){
 
-              return response;
+              const responseClone =
+                networkResponse.clone();
+
+              caches.open(CACHE_NAME)
+                .then(cache => {
+
+                  cache.put(
+                    request,
+                    responseClone
+                  );
+
+                });
 
             }
 
 
-            const responseClone =
-              response.clone();
-
-
-            caches.open(
-              CACHE_NAME
-            )
-            .then(cache => {
-
-              cache.put(
-                request,
-                responseClone
-              );
-
-            });
-
-
-            return response;
+            return networkResponse;
 
           })
           .catch(() => {
 
             /*
-             * Si no hay Internet y la página
-             * no estaba previamente almacenada,
-             * intentamos regresar index.html.
+             * Si no hay Internet y tampoco existe
+             * una copia de la página solicitada,
+             * regresamos index.html.
              */
-
             return caches.match(
               "./index.html"
             );
