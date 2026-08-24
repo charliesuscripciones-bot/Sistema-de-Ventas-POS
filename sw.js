@@ -2,293 +2,718 @@
 
 /*
 =========================================================
- SERVICE WORKER
- Sistema de Ventas POS
- Offline + Dashboard + navegación
+ SISTEMA DE VENTAS POS
+ SERVICE WORKER — OFFLINE
+=========================================================
+
+ Funciones:
+
+ • Guarda las páginas principales del POS.
+ • Permite abrir Dashboard sin Internet.
+ • Permite abrir POS sin Internet.
+ • Guarda la librería de Supabase.
+ • Intercepta navegación cuando no hay conexión.
+ • Actualiza automáticamente la versión del caché.
+ • No intenta guardar las respuestas dinámicas de Supabase.
 =========================================================
 */
 
-const CACHE_NAME = "pos-cache-v8";
 
-/*
-=========================================================
- ARCHIVOS PRINCIPALES
-=========================================================
-*/
+/* ========================================================
+   VERSIÓN DEL CACHÉ
+======================================================== */
+
+const CACHE_VERSION =
+  "pos-offline-v4";
+
+
+/* ========================================================
+   CACHÉ PRINCIPAL
+======================================================== */
+
+const APP_CACHE =
+  CACHE_VERSION + "-app";
+
+
+/* ========================================================
+   ARCHIVOS PRINCIPALES DEL POS
+======================================================== */
 
 const APP_SHELL = [
+
   "./",
+
   "./index.html",
+
   "./dashboard.html",
+
   "./clientes.html",
+
   "./cuentas.html",
+
   "./historial.html",
+
   "./inventario.html",
+
   "./manifest.json",
+
   "./sw.js"
+
 ];
 
-/*
-=========================================================
- INSTALACIÓN
-=========================================================
-*/
 
-self.addEventListener("install", event => {
+/* ========================================================
+   RECURSOS EXTERNOS NECESARIOS OFFLINE
+======================================================== */
 
-  event.waitUntil(
+const EXTERNAL_RESOURCES = [
 
-    caches.open(CACHE_NAME)
+  "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
 
-      .then(cache => {
+];
 
-        return cache.addAll(APP_SHELL);
 
-      })
+/* ========================================================
+   INSTALACIÓN
+======================================================== */
 
-      .then(() => {
+self.addEventListener(
+  "install",
+  event => {
 
-        return self.skipWaiting();
+    event.waitUntil(
 
-      })
+      (async () => {
 
-  );
+        const cache =
+          await caches.open(
+            APP_CACHE
+          );
 
-});
 
-/*
-=========================================================
- ACTIVACIÓN
-=========================================================
-*/
+        /*
+        ----------------------------------------------------
+        Guardamos primero los archivos locales.
+        ----------------------------------------------------
+        */
 
-self.addEventListener("activate", event => {
+        try {
 
-  event.waitUntil(
+          await cache.addAll(
+            APP_SHELL
+          );
 
-    caches.keys()
+          console.log(
+            "[SW] App shell guardado."
+          );
 
-      .then(keys => {
+        }
 
-        return Promise.all(
+        catch(error) {
 
-          keys
-            .filter(key => key !== CACHE_NAME)
-            .map(key => caches.delete(key))
+          console.error(
+            "[SW] Error guardando App Shell:",
+            error
+          );
 
-        );
+        }
 
-      })
 
-      .then(() => {
+        /*
+        ----------------------------------------------------
+        Guardamos Supabase por separado.
+        ----------------------------------------------------
 
-        return self.clients.claim();
+        Si el CDN falla durante la instalación,
+        NO queremos que todo el Service Worker falle.
+        ----------------------------------------------------
+        */
 
-      })
+        for(
+          const resource
+          of EXTERNAL_RESOURCES
+        ){
 
-  );
+          try {
 
-});
+            const response =
+              await fetch(
+                resource,
+                {
+                  cache:
+                    "no-store"
+                }
+              );
 
-/*
-=========================================================
- FETCH
-=========================================================
-*/
 
-self.addEventListener("fetch", event => {
+            if(
+              response.ok
+            ){
 
-  const request = event.request;
+              await cache.put(
+                resource,
+                response.clone()
+              );
 
-  /*
-  Solo manejamos solicitudes GET.
-  */
-  if(request.method !== "GET"){
 
-    return;
-
-  }
-
-  const url = new URL(
-    request.url
-  );
-
-  /*
-  -------------------------------------------------------
-  NAVEGACIÓN HTML
-  -------------------------------------------------------
-  */
-
-  if(
-    request.mode === "navigate"
-  ){
-
-    event.respondWith(
-
-      fetch(request)
-
-        .then(response => {
-
-          /*
-          Guardamos la versión más reciente.
-          */
-
-          const copy =
-          response.clone();
-
-          caches.open(
-            CACHE_NAME
-          ).then(cache => {
-
-            cache.put(
-              request,
-              copy
-            );
-
-          });
-
-          return response;
-
-        })
-
-        .catch(() => {
-
-          /*
-          Si no hay Internet,
-          buscamos la página guardada.
-          */
-
-          return caches.match(
-            request
-          )
-
-          .then(cached => {
-
-            if(cached){
-
-              return cached;
+              console.log(
+                "[SW] Recurso externo guardado:",
+                resource
+              );
 
             }
 
-            /*
-            Si no existe exactamente
-            la página solicitada,
-            usamos index.html.
-            */
+          }
 
-            return caches.match(
-              "./index.html"
+          catch(error) {
+
+            console.warn(
+              "[SW] No se pudo guardar recurso externo:",
+              resource,
+              error
             );
 
-          });
+          }
 
-        })
+        }
+
+
+        /*
+        ----------------------------------------------------
+        Activa inmediatamente esta versión.
+        ----------------------------------------------------
+        */
+
+        await self.skipWaiting();
+
+      })()
 
     );
 
-    return;
+  }
+);
+
+
+/* ========================================================
+   ACTIVACIÓN
+======================================================== */
+
+self.addEventListener(
+  "activate",
+  event => {
+
+    event.waitUntil(
+
+      (async () => {
+
+        /*
+        ----------------------------------------------------
+        Elimina versiones anteriores del caché.
+        ----------------------------------------------------
+        */
+
+        const cacheNames =
+          await caches.keys();
+
+
+        await Promise.all(
+
+          cacheNames
+            .filter(
+              cacheName =>
+                cacheName !== APP_CACHE
+            )
+            .map(
+              cacheName =>
+                caches.delete(
+                  cacheName
+                )
+            )
+
+        );
+
+
+        /*
+        ----------------------------------------------------
+        Toma control de todas las páginas abiertas.
+        ----------------------------------------------------
+        */
+
+        await self.clients.claim();
+
+
+        console.log(
+          "[SW] Activado:",
+          CACHE_VERSION
+        );
+
+      })()
+
+    );
 
   }
+);
+
+
+/* ========================================================
+   FETCH
+======================================================== */
+
+self.addEventListener(
+  "fetch",
+  event => {
+
+    const request =
+      event.request;
+
+
+    /*
+    --------------------------------------------------------
+    Solo manejamos GET.
+    --------------------------------------------------------
+    */
+
+    if(
+      request.method !==
+      "GET"
+    ){
+
+      return;
+
+    }
+
+
+    const url =
+      new URL(
+        request.url
+      );
+
+
+    /*
+    ========================================================
+    1. SUPABASE JS DESDE CDN
+    ========================================================
+    */
+
+    if(
+      url.origin ===
+      "https://cdn.jsdelivr.net"
+    ){
+
+      event.respondWith(
+
+        cacheFirst(
+          request
+        )
+
+      );
+
+      return;
+
+    }
+
+
+    /*
+    ========================================================
+    2. ARCHIVOS DEL PROPIO POS
+    ========================================================
+    */
+
+    if(
+      url.origin ===
+      self.location.origin
+    ){
+
+      /*
+      ------------------------------------------------------
+      Navegación HTML
+      ------------------------------------------------------
+      */
+
+      if(
+        request.mode ===
+        "navigate"
+      ){
+
+        event.respondWith(
+
+          navigationHandler(
+            request
+          )
+
+        );
+
+        return;
+
+      }
+
+
+      /*
+      ------------------------------------------------------
+      CSS / JS / imágenes / manifest / etc.
+      ------------------------------------------------------
+      */
+
+      event.respondWith(
+
+        cacheFirst(
+          request
+        )
+
+      );
+
+      return;
+
+    }
+
+
+    /*
+    ========================================================
+    3. RESTO DE INTERNET
+    ========================================================
+
+    No intentamos cachearlo.
+    Esto evita guardar respuestas dinámicas,
+    especialmente las de Supabase.
+    ========================================================
+    */
+
+  }
+);
+
+
+/* ========================================================
+   CACHE FIRST
+======================================================== */
+
+async function cacheFirst(
+  request
+){
 
   /*
-  -------------------------------------------------------
-  ARCHIVOS LOCALES
-  -------------------------------------------------------
+  ----------------------------------------------------------
+  Primero buscamos en caché.
+  ----------------------------------------------------------
   */
+
+  const cached =
+    await caches.match(
+      request
+    );
+
 
   if(
-    url.origin === self.location.origin
+    cached
   ){
 
-    event.respondWith(
+    /*
+    --------------------------------------------------------
+    Tenemos una copia local.
+    --------------------------------------------------------
+    */
 
-      caches.match(request)
-
-        .then(cached => {
-
-          const networkFetch =
-          fetch(request)
-
-            .then(response => {
-
-              /*
-              Actualizar caché.
-              */
-
-              if(
-                response &&
-                response.status === 200
-              ){
-
-                const copy =
-                response.clone();
-
-                caches.open(
-                  CACHE_NAME
-                ).then(cache => {
-
-                  cache.put(
-                    request,
-                    copy
-                  );
-
-                });
-
-              }
-
-              return response;
-
-            })
-
-            .catch(() => {
-
-              return cached;
-
-            });
-
-          /*
-          Cache primero.
-          */
-
-          return cached ||
-                 networkFetch;
-
-        })
-
-    );
-
-    return;
+    return cached;
 
   }
 
-  /*
-  -------------------------------------------------------
-  RECURSOS EXTERNOS
-  -------------------------------------------------------
-  */
 
   /*
-  No intentamos cachear Supabase ni APIs.
-  Si hay Internet funcionan normalmente.
-  Si no hay Internet, el código local
-  seguirá funcionando con los datos locales.
+  ----------------------------------------------------------
+  No está en caché.
+  Intentamos Internet.
+  ----------------------------------------------------------
   */
 
-});
+  try {
 
-/*
-=========================================================
- MENSAJE DESDE LA PÁGINA
-=========================================================
-*/
+    const response =
+      await fetch(
+        request
+      );
+
+
+    /*
+    --------------------------------------------------------
+    Si la respuesta es válida, guardamos una copia.
+    --------------------------------------------------------
+    */
+
+    if(
+      response &&
+      response.ok
+    ){
+
+      const cache =
+        await caches.open(
+          APP_CACHE
+        );
+
+
+      await cache.put(
+        request,
+        response.clone()
+      );
+
+    }
+
+
+    return response;
+
+  }
+
+  catch(error) {
+
+    console.warn(
+      "[SW] Recurso no disponible:",
+      request.url
+    );
+
+
+    /*
+    --------------------------------------------------------
+    No hay Internet y tampoco existe caché.
+    --------------------------------------------------------
+    */
+
+    return new Response(
+      "",
+      {
+        status:404,
+        statusText:
+          "Recurso no disponible offline"
+      }
+    );
+
+  }
+
+}
+
+
+/* ========================================================
+   NAVEGACIÓN OFFLINE
+======================================================== */
+
+async function navigationHandler(
+  request
+){
+
+  /*
+  ----------------------------------------------------------
+  1. Intentamos Internet primero.
+  ----------------------------------------------------------
+  */
+
+  try {
+
+    const response =
+      await fetch(
+        request
+      );
+
+
+    if(
+      response &&
+      response.ok
+    ){
+
+      /*
+      ------------------------------------------------------
+      Guardamos la página solicitada.
+      ------------------------------------------------------
+      */
+
+      const cache =
+        await caches.open(
+          APP_CACHE
+        );
+
+
+      await cache.put(
+        request,
+        response.clone()
+      );
+
+
+      return response;
+
+    }
+
+  }
+
+  catch(error) {
+
+    console.log(
+      "[SW] Navegación offline:",
+      request.url
+    );
+
+  }
+
+
+  /*
+  ----------------------------------------------------------
+  2. Si no hay Internet, buscamos exactamente la página.
+  ----------------------------------------------------------
+  */
+
+  const cached =
+    await caches.match(
+      request
+    );
+
+
+  if(
+    cached
+  ){
+
+    return cached;
+
+  }
+
+
+  /*
+  ----------------------------------------------------------
+  3. Intentamos obtener el archivo por URL.
+  ----------------------------------------------------------
+  */
+
+  const url =
+    new URL(
+      request.url
+    );
+
+
+  const pathname =
+    url.pathname;
+
+
+  const filename =
+    pathname.split(
+      "/"
+    ).pop();
+
+
+  if(
+    filename
+  ){
+
+    const cachedFilename =
+      await caches.match(
+        "./" +
+        filename
+      );
+
+
+    if(
+      cachedFilename
+    ){
+
+      return cachedFilename;
+
+    }
+
+  }
+
+
+  /*
+  ==========================================================
+  4. FALLBACK PRINCIPAL
+  ==========================================================
+
+  Si no encontramos la página solicitada,
+  abrimos el POS principal.
+  ==========================================================
+  */
+
+  const offlineHome =
+    await caches.match(
+      "./index.html"
+    );
+
+
+  if(
+    offlineHome
+  ){
+
+    return offlineHome;
+
+  }
+
+
+  /*
+  ----------------------------------------------------------
+  Último recurso.
+  ----------------------------------------------------------
+  */
+
+  return new Response(
+
+    `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1">
+<title>POS Offline</title>
+<style>
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#f5f5f5;
+  padding:30px;
+  text-align:center;
+}
+.card{
+  background:white;
+  border-radius:18px;
+  padding:30px;
+  max-width:500px;
+  margin:40px auto;
+}
+h1{
+  color:#111827;
+}
+p{
+  color:#666;
+}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>📱 Sistema de Ventas POS</h1>
+<p>
+El sistema está funcionando sin conexión.
+</p>
+<p>
+Abre nuevamente el POS cuando se haya cargado
+la aplicación al menos una vez con Internet.
+</p>
+</div>
+</body>
+</html>`,
+
+    {
+      status:200,
+      headers:{
+        "Content-Type":
+          "text/html; charset=utf-8"
+      }
+    }
+
+  );
+
+}
+
+
+/* ========================================================
+   MENSAJE DESDE LA PÁGINA
+======================================================== */
 
 self.addEventListener(
   "message",
   event => {
 
     if(
-      event.data &&
-      event.data.type ===
+      event.data ===
       "SKIP_WAITING"
     ){
 
@@ -297,4 +722,14 @@ self.addEventListener(
     }
 
   }
+);
+
+
+/* ========================================================
+   DEBUG
+======================================================== */
+
+console.log(
+  "[SW] Sistema POS Offline cargado:",
+  CACHE_VERSION
 );
