@@ -4,7 +4,11 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1"
+>
 
 <title>Clientes | Sistema de Ventas POS</title>
 
@@ -16,7 +20,12 @@
 
 body{
   margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
   background:#f5f5f5;
   color:#171717;
 }
@@ -85,12 +94,16 @@ button{
 }
 
 .business-btn,
+.refresh,
 .dashboard{
-  background:white;
-  border:2px solid #ddd;
   border-radius:12px;
   padding:12px 20px;
   font-weight:700;
+}
+
+.business-btn{
+  background:white;
+  border:2px solid #ddd;
 }
 
 .business-btn.active{
@@ -102,9 +115,11 @@ button{
 .refresh{
   background:#2563eb;
   color:white;
-  padding:12px 20px;
-  border-radius:12px;
-  font-weight:700;
+}
+
+.dashboard{
+  background:white;
+  border:2px solid #ddd;
 }
 
 .card{
@@ -223,15 +238,10 @@ textarea{
   margin-top:8px;
   padding:5px 9px;
   border-radius:8px;
-  background:#eef2ff;
-  color:#3730a3;
-  font-size:13px;
-  font-weight:700;
-}
-
-.shared{
   background:#dcfce7;
   color:#166534;
+  font-size:13px;
+  font-weight:700;
 }
 
 .customer-actions{
@@ -294,11 +304,6 @@ textarea{
   color:#9a3412;
 }
 
-.pending{
-  background:#fef3c7;
-  color:#92400e;
-}
-
 @media(max-width:600px){
 
   .container{
@@ -339,7 +344,9 @@ textarea{
 
 </head>
 
+
 <body>
+
 
 <header>
 
@@ -361,63 +368,78 @@ Sistema de Ventas POS · Clientes compartidos
 
 <div class="container">
 
-<div id="status" class="status"></div>
 
+<div
+  id="status"
+  class="status"
+></div>
+
+
+<!-- ======================================
+     BOTONES
+====================================== -->
 
 <div class="topbar">
 
+
 <button
-type="button"
-class="business-btn active"
-data-business="Todos"
+  type="button"
+  class="business-btn active"
+  data-business="Todos"
 >
 👥 Todos
 </button>
 
 
 <button
-type="button"
-class="business-btn"
-data-business="BakeQuiri"
+  type="button"
+  class="business-btn"
+  data-business="BakeQuiri"
 >
 🧁 BakeQuiri
 </button>
 
 
 <button
-type="button"
-class="business-btn"
-data-business="SpicyRoll"
+  type="button"
+  class="business-btn"
+  data-business="SpicyRoll"
 >
 🍣 SpicyRoll
 </button>
 
 
 <button
-type="button"
-id="refresh"
-class="refresh"
+  type="button"
+  id="refresh"
+  class="refresh"
 >
 🔄 Actualizar
 </button>
 
 
 <button
-type="button"
-id="dashboard"
-class="dashboard"
+  type="button"
+  id="dashboard"
+  class="dashboard"
 >
 ← POS
 </button>
 
+
 </div>
 
 
+<!-- ======================================
+     FORMULARIO
+====================================== -->
+
 <div class="card">
 
+
 <h2
-id="formTitle"
-class="section-title"
+  id="formTitle"
+  class="section-title"
 >
 ➕ Nuevo cliente
 </h2>
@@ -425,7 +447,9 @@ class="section-title"
 
 <form id="customerForm">
 
+
 <div class="form-grid">
+
 
 <div class="field">
 
@@ -434,10 +458,10 @@ Nombre *
 </label>
 
 <input
-id="name"
-type="text"
-placeholder="Nombre del cliente"
-required
+  id="name"
+  type="text"
+  placeholder="Nombre del cliente"
+  required
 >
 
 </div>
@@ -450,9 +474,9 @@ Teléfono
 </label>
 
 <input
-id="phone"
-type="tel"
-placeholder="662 123 4567"
+  id="phone"
+  type="tel"
+  placeholder="662 123 4567"
 >
 
 </div>
@@ -465,49 +489,64 @@ Notas
 </label>
 
 <textarea
-id="notes"
-placeholder="Notas del cliente"
+  id="notes"
+  placeholder="Notas del cliente"
 ></textarea>
 
 </div>
+
 
 </div>
 
 
 <div class="helper">
 
-<strong>👥 Clientes compartidos</strong><br>
+<strong>
+👥 Clientes compartidos
+</strong>
 
-Los clientes se guardan localmente en este dispositivo
-para que el sistema continúe funcionando aunque no haya Internet.
+<br>
+
+Los clientes son compartidos entre
+BakeQuiri y SpicyRoll.
+
+No necesitas crear el mismo cliente
+dos veces.
 
 </div>
 
 
 <button
-type="submit"
-class="save"
-id="saveButton"
+  type="submit"
+  class="save"
+  id="saveButton"
 >
 Guardar cliente
 </button>
 
 
 <button
-type="button"
-class="cancel"
-id="cancelButton"
-style="display:none"
+  type="button"
+  class="cancel"
+  id="cancelButton"
+  style="display:none"
 >
 Cancelar edición
 </button>
 
+
 </form>
+
 
 </div>
 
 
+<!-- ======================================
+     LISTA
+====================================== -->
+
 <div class="card">
+
 
 <h2 class="section-title">
 📋 Clientes registrados
@@ -515,17 +554,17 @@ Cancelar edición
 
 
 <input
-id="search"
-class="search"
-type="search"
-placeholder="🔎 Buscar por nombre, teléfono o notas"
-autocomplete="off"
+  id="search"
+  class="search"
+  type="search"
+  placeholder="🔎 Buscar por nombre, teléfono o notas"
+  autocomplete="off"
 >
 
 
 <div
-id="count"
-class="count"
+  id="count"
+  class="count"
 >
 0 clientes
 </div>
@@ -539,12 +578,16 @@ Cargando clientes...
 
 </div>
 
-</div>
 
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</div>
+
+
+<script
+  src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
 
 
 <script>
@@ -552,23 +595,27 @@ Cargando clientes...
 "use strict";
 
 
-/* =========================================
+/* ======================================
    SUPABASE
-========================================= */
+====================================== */
 
 const SUPABASE_URL =
 "https://jrxklpstlloeckihcduv.supabase.co";
 
+
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
+
 let supabaseClient = null;
+
 
 try{
 
   if(
     window.supabase &&
-    typeof window.supabase.createClient === "function"
+    typeof window.supabase.createClient ===
+    "function"
   ){
 
     supabaseClient =
@@ -583,39 +630,24 @@ try{
 catch(error){
 
   console.error(
-    "Supabase no disponible:",
+    "Error iniciando Supabase:",
     error
   );
 
 }
 
 
-/* =========================================
-   NEGOCIOS
-========================================= */
-
-const BUSINESS_IDS = {
-
-  BakeQuiri:
-  "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
-
-  SpicyRoll:
-  "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
-
-};
-
-
-/* =========================================
+/* ======================================
    ALMACENAMIENTO LOCAL
-========================================= */
+====================================== */
 
 const STORAGE_KEY =
-"pos_clientes_compartidos_v1";
+"pos_clientes_compartidos_v2";
 
 
-/* =========================================
+/* ======================================
    ESTADO
-========================================= */
+====================================== */
 
 let currentBusiness =
 "Todos";
@@ -626,16 +658,20 @@ let editingId =
 null;
 
 
-/* =========================================
-   UTILIDAD
-========================================= */
+/* ======================================
+   ELEMENTOS
+====================================== */
 
 const $ =
 id =>
 document.getElementById(id);
 
 
-function generateId(){
+/* ======================================
+   ID LOCAL
+====================================== */
+
+function generateLocalId(){
 
   return (
     "local-" +
@@ -643,15 +679,15 @@ function generateId(){
     "-" +
     Math.random()
       .toString(36)
-      .slice(2,10)
+      .substring(2,10)
   );
 
 }
 
 
-/* =========================================
-   STATUS
-========================================= */
+/* ======================================
+   MENSAJES
+====================================== */
 
 function showStatus(
   message,
@@ -681,30 +717,31 @@ function clearStatus(){
 }
 
 
-/* =========================================
+/* ======================================
    CONEXIÓN
-========================================= */
+====================================== */
 
 function updateConnection(){
 
-  const element =
+  const connection =
     $("connection");
+
 
   if(navigator.onLine){
 
-    element.textContent =
+    connection.textContent =
       "🟢 En línea";
 
-    element.className =
+    connection.className =
       "connection";
 
   }
   else{
 
-    element.textContent =
+    connection.textContent =
       "🟠 Modo offline";
 
-    element.className =
+    connection.className =
       "connection offline";
 
   }
@@ -718,10 +755,7 @@ window.addEventListener(
 
     updateConnection();
 
-    showStatus(
-      "🟢 Conexión recuperada. Los clientes locales siguen disponibles.",
-      "ok"
-    );
+    loadCustomers();
 
   }
 );
@@ -734,7 +768,7 @@ window.addEventListener(
     updateConnection();
 
     showStatus(
-      "🟠 Sin Internet. El módulo de clientes continúa funcionando en modo offline.",
+      "🟠 Sin Internet. Se utilizarán los clientes guardados en este dispositivo.",
       "offline"
     );
 
@@ -742,9 +776,9 @@ window.addEventListener(
 );
 
 
-/* =========================================
-   GUARDAR LOCALMENTE
-========================================= */
+/* ======================================
+   LOCAL STORAGE
+====================================== */
 
 function saveLocalCustomers(){
 
@@ -752,9 +786,7 @@ function saveLocalCustomers(){
 
     localStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify(
-        customers
-      )
+      JSON.stringify(customers)
     );
 
     return true;
@@ -763,13 +795,8 @@ function saveLocalCustomers(){
   catch(error){
 
     console.error(
-      "No se pudo guardar localmente:",
+      "Error guardando localmente:",
       error
-    );
-
-    showStatus(
-      "No se pudieron guardar los clientes en este dispositivo.",
-      "error"
     );
 
     return false;
@@ -778,10 +805,6 @@ function saveLocalCustomers(){
 
 }
 
-
-/* =========================================
-   CARGAR LOCALMENTE
-========================================= */
 
 function loadLocalCustomers(){
 
@@ -792,6 +815,7 @@ function loadLocalCustomers(){
         STORAGE_KEY
       );
 
+
     if(!raw){
 
       customers = [];
@@ -800,19 +824,21 @@ function loadLocalCustomers(){
 
     }
 
-    const parsed =
+
+    const data =
       JSON.parse(raw);
 
+
     customers =
-      Array.isArray(parsed)
-      ? parsed
+      Array.isArray(data)
+      ? data
       : [];
 
   }
   catch(error){
 
     console.error(
-      "Error leyendo clientes locales:",
+      "Error leyendo almacenamiento local:",
       error
     );
 
@@ -823,38 +849,23 @@ function loadLocalCustomers(){
 }
 
 
-/* =========================================
+/* ======================================
    CARGAR CLIENTES
-========================================= */
+====================================== */
 
 async function loadCustomers(){
-
-  /*
-    PRIMERO:
-
-    cargamos los datos locales.
-
-    Esto hace que el POS siga funcionando
-    aunque no exista conexión.
-  */
 
   loadLocalCustomers();
 
   renderCustomers();
 
 
-  /*
-    SI NO HAY INTERNET:
-
-    no intentamos consultar Supabase.
-  */
-
   if(!navigator.onLine){
 
     showStatus(
       customers.length
-      ? "🟠 Modo offline. Se muestran los clientes guardados en este dispositivo."
-      : "🟠 Modo offline. Todavía no hay clientes guardados en este dispositivo.",
+      ? "🟠 Modo offline. Mostrando clientes guardados en este dispositivo."
+      : "🟠 Modo offline. No hay clientes guardados todavía.",
       "offline"
     );
 
@@ -863,16 +874,10 @@ async function loadCustomers(){
   }
 
 
-  /*
-    SI HAY INTERNET:
-
-    intentamos actualizar desde Supabase.
-  */
-
   if(!supabaseClient){
 
     showStatus(
-      "🟠 Supabase no está disponible. El módulo continúa usando almacenamiento local.",
+      "⚠️ Supabase no está disponible. Se utilizará el almacenamiento local.",
       "offline"
     );
 
@@ -883,19 +888,24 @@ async function loadCustomers(){
 
   try{
 
+    /*
+      IMPORTANTE:
+
+      NO usamos business_id.
+
+      La tabla customers de tu Supabase
+      no tiene esa columna.
+
+      Los clientes son globales/compartidos.
+    */
+
     const result =
       await supabaseClient
+
         .from("customers")
-        .select(
-          "id,business_id,name,phone,notes,created_at"
-        )
-        .in(
-          "business_id",
-          [
-            BUSINESS_IDS.BakeQuiri,
-            BUSINESS_IDS.SpicyRoll
-          ]
-        )
+
+        .select("*")
+
         .order(
           "name",
           {
@@ -911,72 +921,83 @@ async function loadCustomers(){
     }
 
 
-    /*
-      IMPORTANTE:
+    customers =
+      Array.isArray(result.data)
+      ? result.data
+      : [];
 
-      Si Supabase responde correctamente,
-      actualizamos la copia local.
 
-      Si falla, NO borramos la copia local.
-    */
+    saveLocalCustomers();
 
-    if(
-      Array.isArray(
-        result.data
-      )
-    ){
 
-      customers =
-        result.data;
+    renderCustomers();
 
-      saveLocalCustomers();
 
-      renderCustomers();
-
-      showStatus(
-        customers.length === 1
-        ? "🟢 1 cliente sincronizado."
-        : "🟢 " +
-          customers.length +
-          " clientes sincronizados.",
-        "ok"
-      );
-
-    }
+    showStatus(
+      customers.length === 1
+      ? "✅ 1 cliente cargado desde Supabase."
+      : "✅ " +
+        customers.length +
+        " clientes cargados desde Supabase.",
+      "ok"
+    );
 
   }
   catch(error){
 
     console.error(
-      "Error sincronizando clientes:",
+      "Error cargando clientes:",
       error
     );
 
 
     /*
-      NO mostramos un error destructivo.
-
-      Los datos locales permanecen.
+      Si Supabase falla,
+      mantenemos los datos locales.
     */
 
-    showStatus(
-      "🟠 No se pudo sincronizar con Internet. Se conservaron los clientes locales.",
-      "offline"
-    );
+    loadLocalCustomers();
+
+    renderCustomers();
+
+
+    if(customers.length){
+
+      showStatus(
+        "🟠 No se pudo conectar con Supabase.\n" +
+        "Mostrando los clientes guardados localmente.",
+        "offline"
+      );
+
+    }
+    else{
+
+      showStatus(
+        "❌ No se pudieron cargar los clientes.\n\n" +
+        "Error: " +
+        (
+          error.message ||
+          String(error)
+        ),
+        "error"
+      );
+
+    }
 
   }
 
 }
 
 
-/* =========================================
+/* ======================================
    RENDER CLIENTES
-========================================= */
+====================================== */
 
 function renderCustomers(){
 
   const container =
     $("customersContainer");
+
 
   const query =
     $("search")
@@ -990,54 +1011,15 @@ function renderCustomers(){
 
 
   /*
-    FILTRO POR NEGOCIO
+    FILTRO VISUAL
 
-    Solo visual.
+    Como los clientes son compartidos,
+    BakeQuiri y SpicyRoll muestran
+    el mismo catálogo.
+
+    Por eso NO filtramos por business_id.
   */
 
-  if(
-    currentBusiness !==
-    "Todos"
-  ){
-
-    const businessId =
-      BUSINESS_IDS[
-        currentBusiness
-      ];
-
-
-    list =
-      list.filter(
-        customer => {
-
-          /*
-            Si el cliente está marcado
-            como compartido, aparece
-            en ambos negocios.
-          */
-
-          if(
-            customer.shared === true
-          ){
-
-            return true;
-
-          }
-
-          return (
-            customer.business_id ===
-            businessId
-          );
-
-        }
-      );
-
-  }
-
-
-  /*
-    BUSCADOR
-  */
 
   if(query){
 
@@ -1083,14 +1065,12 @@ function renderCustomers(){
 
     container.innerHTML =
       '<div class="empty">' +
-
       (
         query
-        ? "No se encontraron clientes."
-        : "No hay clientes registrados."
+        ? "🔎 No se encontraron clientes."
+        : "👥 No hay clientes registrados."
       ) +
-
-      "</div>";
+      '</div>';
 
     return;
 
@@ -1183,10 +1163,10 @@ function renderCustomers(){
         );
 
       badge.className =
-        "customer-business shared";
+        "customer-business";
 
       badge.textContent =
-        "👥 Disponible en BakeQuiri + SpicyRoll";
+        "👥 Cliente compartido";
 
 
       info.append(
@@ -1195,6 +1175,10 @@ function renderCustomers(){
         badge
       );
 
+
+      /* ================================
+         ACCIONES
+      ================================= */
 
       const actions =
         document.createElement(
@@ -1217,15 +1201,18 @@ function renderCustomers(){
         "edit";
 
       edit.textContent =
-        "Editar";
+        "✏️ Editar";
 
 
       edit.addEventListener(
         "click",
-        () =>
+        () => {
+
           editCustomer(
             customer
-          )
+          );
+
+        }
       );
 
 
@@ -1241,15 +1228,18 @@ function renderCustomers(){
         "delete";
 
       del.textContent =
-        "Eliminar";
+        "🗑️ Eliminar";
 
 
       del.addEventListener(
         "click",
-        () =>
+        () => {
+
           deleteCustomer(
             customer
-          )
+          );
+
+        }
       );
 
 
@@ -1265,12 +1255,12 @@ function renderCustomers(){
       );
 
 
-      item.appendChild(
+      item.append(
         top
       );
 
 
-      container.appendChild(
+      container.append(
         item
       );
 
@@ -1280,9 +1270,9 @@ function renderCustomers(){
 }
 
 
-/* =========================================
+/* ======================================
    CREAR CLIENTE
-========================================= */
+====================================== */
 
 async function createCustomer(){
 
@@ -1307,7 +1297,7 @@ async function createCustomer(){
   if(!name){
 
     showStatus(
-      "El nombre del cliente es obligatorio.",
+      "⚠️ El nombre del cliente es obligatorio.",
       "error"
     );
 
@@ -1324,179 +1314,165 @@ async function createCustomer(){
     true;
 
   saveButton.textContent =
-    "GUARDANDO...";
+    "Guardando...";
 
-
-  /*
-    Guardamos PRIMERO en local.
-
-    Esto garantiza que funcione
-    aunque no haya Internet.
-  */
-
-  const localCustomer = {
-
-    id:
-      generateId(),
-
-    business_id:
-      currentBusiness === "SpicyRoll"
-      ? BUSINESS_IDS.SpicyRoll
-      : BUSINESS_IDS.BakeQuiri,
-
-    name:
-      name,
-
-    phone:
-      phone || null,
-
-    notes:
-      notes || null,
-
-    shared:
-      true,
-
-    created_at:
-      new Date().toISOString(),
-
-    local:
-      true
-
-  };
-
-
-  customers.push(
-    localCustomer
-  );
-
-
-  saveLocalCustomers();
-
-  renderCustomers();
-
-  resetForm();
-
-
-  /*
-    Si estamos offline:
-
-    terminamos aquí.
-  */
-
-  if(!navigator.onLine){
-
-    showStatus(
-      "🟠 Cliente guardado en este dispositivo. Se podrá sincronizar cuando haya Internet.",
-      "offline"
-    );
-
-    saveButton.disabled =
-      false;
-
-    saveButton.textContent =
-      "Guardar cliente";
-
-    return;
-
-  }
-
-
-  /*
-    Intentamos guardarlo también
-    en Supabase.
-
-    Si falla, NO perdemos
-    el cliente local.
-  */
 
   try{
 
-    if(!supabaseClient){
+    /*
+      Primero intentamos guardar
+      directamente en Supabase.
+    */
 
-      throw new Error(
-        "Supabase no disponible"
+    if(
+      navigator.onLine &&
+      supabaseClient
+    ){
+
+      const result =
+        await supabaseClient
+
+          .from("customers")
+
+          .insert({
+
+            name:
+              name,
+
+            phone:
+              phone || null,
+
+            notes:
+              notes || null
+
+          });
+
+
+      if(result.error){
+
+        throw result.error;
+
+      }
+
+
+      showStatus(
+        "✅ Cliente guardado correctamente.\n" +
+        "El cliente está disponible para BakeQuiri y SpicyRoll.",
+        "ok"
       );
+
+
+      resetForm();
+
+      await loadCustomers();
+
+      return;
 
     }
 
 
     /*
-      Se intenta usar el negocio actual
-      como business_id.
-
-      La copia local ya está segura.
+      MODO OFFLINE
     */
 
-    const result =
-      await supabaseClient
-        .from("customers")
-        .insert({
+    const localCustomer = {
 
-          business_id:
-            localCustomer.business_id,
+      id:
+        generateLocalId(),
 
-          name:
-            name,
+      name:
+        name,
 
-          phone:
-            phone || null,
+      phone:
+        phone || null,
 
-          notes:
-            notes || null
+      notes:
+        notes || null,
 
-        })
-        .select(
-          "id,business_id,name,phone,notes,created_at"
-        )
-        .single();
+      created_at:
+        new Date().toISOString(),
 
+      local_only:
+        true
 
-    if(result.error){
-
-      throw result.error;
-
-    }
+    };
 
 
-    /*
-      Reemplazamos el registro local
-      por el registro real de Supabase.
-    */
-
-    customers =
-      customers.map(
-        customer =>
-          customer.id ===
-          localCustomer.id
-          ? {
-              ...result.data,
-              shared:true
-            }
-          : customer
-      );
+    customers.push(
+      localCustomer
+    );
 
 
     saveLocalCustomers();
 
     renderCustomers();
 
+    resetForm();
+
 
     showStatus(
-      "✅ Cliente guardado y sincronizado correctamente.",
-      "ok"
+      "🟠 Cliente guardado en este dispositivo.\n" +
+      "Se podrá sincronizar cuando vuelva Internet.",
+      "offline"
     );
 
   }
   catch(error){
 
     console.error(
-      "No se pudo sincronizar el cliente:",
+      "Error creando cliente:",
       error
     );
 
 
+    /*
+      Si falla Supabase,
+      guardamos localmente.
+    */
+
+    const localCustomer = {
+
+      id:
+        generateLocalId(),
+
+      name:
+        name,
+
+      phone:
+        phone || null,
+
+      notes:
+        notes || null,
+
+      created_at:
+        new Date().toISOString(),
+
+      local_only:
+        true
+
+    };
+
+
+    customers.push(
+      localCustomer
+    );
+
+
+    saveLocalCustomers();
+
+    renderCustomers();
+
+    resetForm();
+
+
     showStatus(
-      "🟠 Cliente guardado localmente. No se pudo sincronizar con Supabase todavía.",
+      "🟠 Supabase rechazó el registro.\n" +
+      "El cliente quedó guardado localmente.\n\n" +
+      "Error: " +
+      (
+        error.message ||
+        String(error)
+      ),
       "offline"
     );
 
@@ -1514,9 +1490,9 @@ async function createCustomer(){
 }
 
 
-/* =========================================
+/* ======================================
    EDITAR
-========================================= */
+====================================== */
 
 function editCustomer(
   customer
@@ -1531,15 +1507,18 @@ function editCustomer(
 
 
   $("name").value =
-    customer.name || "";
+    customer.name ||
+    "";
 
 
   $("phone").value =
-    customer.phone || "";
+    customer.phone ||
+    "";
 
 
   $("notes").value =
-    customer.notes || "";
+    customer.notes ||
+    "";
 
 
   $("saveButton").textContent =
@@ -1551,16 +1530,19 @@ function editCustomer(
 
 
   window.scrollTo({
+
     top:0,
+
     behavior:"smooth"
+
   });
 
 }
 
 
-/* =========================================
+/* ======================================
    ACTUALIZAR
-========================================= */
+====================================== */
 
 async function updateCustomer(){
 
@@ -1585,7 +1567,7 @@ async function updateCustomer(){
   if(!name){
 
     showStatus(
-      "El nombre del cliente es obligatorio.",
+      "⚠️ El nombre del cliente es obligatorio.",
       "error"
     );
 
@@ -1602,127 +1584,126 @@ async function updateCustomer(){
     true;
 
   saveButton.textContent =
-    "GUARDANDO...";
-
-
-  /*
-    Actualizamos inmediatamente
-    la copia local.
-  */
-
-  const index =
-    customers.findIndex(
-      customer =>
-        customer.id ===
-        editingId
-    );
-
-
-  if(index === -1){
-
-    resetForm();
-
-    saveButton.disabled =
-      false;
-
-    saveButton.textContent =
-      "Guardar cliente";
-
-    return;
-
-  }
-
-
-  const original =
-    customers[index];
-
-
-  customers[index] = {
-
-    ...original,
-
-    name:
-      name,
-
-    phone:
-      phone || null,
-
-    notes:
-      notes || null
-
-  };
-
-
-  saveLocalCustomers();
-
-  renderCustomers();
-
-  resetForm();
-
-
-  /*
-    Si el registro es local,
-    todavía no tiene un UUID de Supabase.
-  */
-
-  if(
-    String(editingId)
-      .startsWith("local-")
-  ){
-
-    showStatus(
-      "🟢 Cliente actualizado localmente.",
-      "ok"
-    );
-
-    saveButton.disabled =
-      false;
-
-    saveButton.textContent =
-      "Guardar cliente";
-
-    return;
-
-  }
-
-
-  /*
-    Si no hay conexión,
-    conservamos el cambio local.
-  */
-
-  if(!navigator.onLine){
-
-    showStatus(
-      "🟠 Cambio guardado localmente. Se sincronizará cuando haya Internet.",
-      "offline"
-    );
-
-    saveButton.disabled =
-      false;
-
-    saveButton.textContent =
-      "Guardar cliente";
-
-    return;
-
-  }
+    "Guardando...";
 
 
   try{
 
-    if(!supabaseClient){
+    /*
+      CLIENTE LOCAL
+    */
 
-      throw new Error(
-        "Supabase no disponible"
+    if(
+      String(editingId)
+        .startsWith("local-")
+    ){
+
+      const index =
+        customers.findIndex(
+          customer =>
+            customer.id ===
+            editingId
+        );
+
+
+      if(index !== -1){
+
+        customers[index] = {
+
+          ...customers[index],
+
+          name:
+            name,
+
+          phone:
+            phone || null,
+
+          notes:
+            notes || null
+
+        };
+
+      }
+
+
+      saveLocalCustomers();
+
+      renderCustomers();
+
+      resetForm();
+
+
+      showStatus(
+        "✅ Cliente actualizado localmente.",
+        "ok"
       );
+
+
+      return;
+
+    }
+
+
+    /*
+      CLIENTE DE SUPABASE
+    */
+
+    if(
+      !navigator.onLine ||
+      !supabaseClient
+    ){
+
+      const index =
+        customers.findIndex(
+          customer =>
+            customer.id ===
+            editingId
+        );
+
+
+      if(index !== -1){
+
+        customers[index] = {
+
+          ...customers[index],
+
+          name:
+            name,
+
+          phone:
+            phone || null,
+
+          notes:
+            notes || null
+
+        };
+
+      }
+
+
+      saveLocalCustomers();
+
+      renderCustomers();
+
+      resetForm();
+
+
+      showStatus(
+        "🟠 Actualizado localmente porque no hay conexión.",
+        "offline"
+      );
+
+
+      return;
 
     }
 
 
     const result =
       await supabaseClient
+
         .from("customers")
+
         .update({
 
           name:
@@ -1735,6 +1716,7 @@ async function updateCustomer(){
             notes || null
 
         })
+
         .eq(
           "id",
           editingId
@@ -1753,6 +1735,11 @@ async function updateCustomer(){
       "ok"
     );
 
+
+    resetForm();
+
+    await loadCustomers();
+
   }
   catch(error){
 
@@ -1763,8 +1750,12 @@ async function updateCustomer(){
 
 
     showStatus(
-      "🟠 Cambio guardado localmente. No se pudo sincronizar todavía.",
-      "offline"
+      "❌ No se pudo actualizar el cliente.\n\n" +
+      (
+        error.message ||
+        String(error)
+      ),
+      "error"
     );
 
   }
@@ -1781,9 +1772,9 @@ async function updateCustomer(){
 }
 
 
-/* =========================================
+/* ======================================
    ELIMINAR
-========================================= */
+====================================== */
 
 async function deleteCustomer(
   customer
@@ -1794,7 +1785,7 @@ async function deleteCustomer(
       "¿Eliminar a " +
       customer.name +
       "?\n\n" +
-      "El cliente será eliminado de este dispositivo."
+      "Esta acción eliminará el cliente."
     );
 
 
@@ -1805,75 +1796,67 @@ async function deleteCustomer(
   }
 
 
-  /*
-    ELIMINACIÓN LOCAL INMEDIATA
-  */
-
-  customers =
-    customers.filter(
-      item =>
-        item.id !==
-        customer.id
-    );
-
-
-  saveLocalCustomers();
-
-  renderCustomers();
-
-
-  /*
-    Si es un cliente creado localmente,
-    no hay nada que borrar en Supabase.
-  */
-
-  if(
-    String(customer.id)
-      .startsWith("local-")
-  ){
-
-    showStatus(
-      "Cliente eliminado correctamente.",
-      "ok"
-    );
-
-    return;
-
-  }
-
-
-  /*
-    Si estamos offline,
-    no intentamos conectar.
-  */
-
-  if(!navigator.onLine){
-
-    showStatus(
-      "🟠 Cliente eliminado localmente. La eliminación se sincronizará después.",
-      "offline"
-    );
-
-    return;
-
-  }
-
-
   try{
 
-    if(!supabaseClient){
+    /*
+      CLIENTE LOCAL
+    */
 
-      throw new Error(
-        "Supabase no disponible"
+    if(
+      String(customer.id)
+        .startsWith("local-")
+    ){
+
+      customers =
+        customers.filter(
+          item =>
+            item.id !==
+            customer.id
+        );
+
+
+      saveLocalCustomers();
+
+      renderCustomers();
+
+
+      showStatus(
+        "✅ Cliente eliminado.",
+        "ok"
       );
+
+
+      return;
+
+    }
+
+
+    /*
+      SUPABASE
+    */
+
+    if(
+      !navigator.onLine ||
+      !supabaseClient
+    ){
+
+      showStatus(
+        "🟠 No hay conexión. No se puede eliminar este cliente de Supabase.",
+        "offline"
+      );
+
+      return;
 
     }
 
 
     const result =
       await supabaseClient
+
         .from("customers")
+
         .delete()
+
         .eq(
           "id",
           customer.id
@@ -1892,6 +1875,9 @@ async function deleteCustomer(
       "ok"
     );
 
+
+    await loadCustomers();
+
   }
   catch(error){
 
@@ -1902,8 +1888,12 @@ async function deleteCustomer(
 
 
     showStatus(
-      "🟠 Cliente eliminado de este dispositivo. No se pudo sincronizar con Supabase.",
-      "offline"
+      "❌ No se pudo eliminar el cliente.\n\n" +
+      (
+        error.message ||
+        String(error)
+      ),
+      "error"
     );
 
   }
@@ -1911,9 +1901,9 @@ async function deleteCustomer(
 }
 
 
-/* =========================================
+/* ======================================
    RESET FORMULARIO
-========================================= */
+====================================== */
 
 function resetForm(){
 
@@ -1939,9 +1929,9 @@ function resetForm(){
 }
 
 
-/* =========================================
+/* ======================================
    FORMULARIO
-========================================= */
+====================================== */
 
 $("customerForm")
   .addEventListener(
@@ -1966,9 +1956,9 @@ $("customerForm")
   );
 
 
-/* =========================================
+/* ======================================
    CANCELAR
-========================================= */
+====================================== */
 
 $("cancelButton")
   .addEventListener(
@@ -1983,9 +1973,9 @@ $("cancelButton")
   );
 
 
-/* =========================================
+/* ======================================
    BUSCAR
-========================================= */
+====================================== */
 
 $("search")
   .addEventListener(
@@ -1998,9 +1988,9 @@ $("search")
   );
 
 
-/* =========================================
-   CAMBIAR NEGOCIO
-========================================= */
+/* ======================================
+   BOTONES DE NEGOCIO
+====================================== */
 
 document
   .querySelectorAll(
@@ -2022,10 +2012,13 @@ document
               ".business-btn"
             )
             .forEach(
-              item =>
+              item => {
+
                 item.classList.remove(
                   "active"
-                )
+                );
+
+              }
             );
 
 
@@ -2033,6 +2026,14 @@ document
             "active"
           );
 
+
+          /*
+            IMPORTANTE:
+
+            NO filtramos clientes por negocio.
+
+            Los clientes son compartidos.
+          */
 
           renderCustomers();
 
@@ -2043,9 +2044,9 @@ document
   );
 
 
-/* =========================================
+/* ======================================
    ACTUALIZAR
-========================================= */
+====================================== */
 
 $("refresh")
   .addEventListener(
@@ -2058,9 +2059,9 @@ $("refresh")
   );
 
 
-/* =========================================
+/* ======================================
    VOLVER AL POS
-========================================= */
+====================================== */
 
 $("dashboard")
   .addEventListener(
@@ -2068,7 +2069,8 @@ $("dashboard")
     () => {
 
       const business =
-        currentBusiness === "Todos"
+        currentBusiness ===
+        "Todos"
         ? "BakeQuiri"
         : currentBusiness;
 
@@ -2083,15 +2085,16 @@ $("dashboard")
   );
 
 
-/* =========================================
+/* ======================================
    INICIO
-========================================= */
+====================================== */
 
 updateConnection();
 
 loadCustomers();
 
 </script>
+
 
 </body>
 
