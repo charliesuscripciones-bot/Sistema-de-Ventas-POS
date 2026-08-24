@@ -4,10 +4,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Historial de ventas | Sistema de Ventas POS</title>
+<title>Cuentas pendientes | Sistema de Ventas POS</title>
 
 <style>
-
 *{
   box-sizing:border-box;
   margin:0;
@@ -173,7 +172,7 @@ button:disabled{
   margin-top:7px;
 }
 
-/* VENTAS */
+/* CUENTAS */
 
 .card{
   background:#fff;
@@ -182,14 +181,15 @@ button:disabled{
   box-shadow:0 5px 20px rgba(0,0,0,.06);
 }
 
-.sale{
-  border:2px solid #eee;
-  border-radius:16px;
+.account{
+  border:2px solid #f1f5f9;
+  border-radius:18px;
   padding:18px;
-  margin-bottom:12px;
+  margin-bottom:14px;
+  background:#fff;
 }
 
-.sale:last-child{
+.account:last-child{
   margin-bottom:0;
 }
 
@@ -211,11 +211,11 @@ button:disabled{
 .customer{
   color:#2680eb;
   font-weight:700;
-  margin-top:7px;
+  margin-top:8px;
 }
 
 .details{
-  color:#6b7280;
+  color:#64748b;
   font-size:14px;
   margin-top:7px;
   word-break:break-word;
@@ -226,29 +226,47 @@ button:disabled{
   margin-top:10px;
   padding:6px 10px;
   border-radius:9px;
-  background:#dcfce7;
-  color:#166534;
+  background:#fef3c7;
+  color:#92400e;
   font-weight:700;
   font-size:13px;
 }
 
-.status.open{
-  background:#fef3c7;
-  color:#92400e;
+/* SALDO */
+
+.balance-box{
+  margin-top:14px;
+  padding:15px;
+  border-radius:14px;
+  background:#fff7ed;
+  border:2px solid #fed7aa;
 }
 
-/* SALDO */
+.balance-label{
+  color:#9a3412;
+  font-size:13px;
+  font-weight:700;
+}
+
+.balance-value{
+  color:#dc2626;
+  font-size:25px;
+  font-weight:900;
+  margin-top:4px;
+}
+
+/* BOTON ABONO */
 
 .balance-button{
   display:block;
   width:100%;
   margin-top:12px;
-  padding:13px 15px;
+  padding:14px 15px;
   border-radius:12px;
   border:2px solid #f59e0b;
   background:#fffbeb;
   color:#92400e;
-  text-align:left;
+  text-align:center;
   font-size:15px;
   font-weight:800;
 }
@@ -257,14 +275,7 @@ button:disabled{
   background:#fef3c7;
 }
 
-.balance-button.paid{
-  background:#dcfce7;
-  border-color:#bbf7d0;
-  color:#166534;
-  cursor:default;
-}
-
-/* HISTORIAL DE ABONOS */
+/* HISTORIAL */
 
 .payment-history{
   margin-top:15px;
@@ -505,10 +516,10 @@ button:disabled{
 
 <header>
 
-<h1>📊 Historial de ventas</h1>
+<h1>💰 Cuentas pendientes</h1>
 
 <p>
-Consulta las ventas registradas de tus negocios
+Aquí aparecen únicamente las cuentas que tienen saldo por cobrar
 </p>
 
 </header>
@@ -518,7 +529,7 @@ Consulta las ventas registradas de tus negocios
 <div id="customerBanner" class="customer-banner">
 
 <div class="customer-banner-title">
-HISTORIAL DEL CLIENTE
+CUENTA PENDIENTE DEL CLIENTE
 </div>
 
 <div id="customerBannerName" class="customer-banner-name"></div>
@@ -564,7 +575,7 @@ id="back">
 <input
 id="search"
 type="search"
-placeholder="🔎 Buscar cliente o venta"
+placeholder="🔎 Buscar cliente o cuenta"
 autocomplete="off">
 
 <input
@@ -582,7 +593,7 @@ type="date">
 <div class="summary-card">
 
 <div class="label">
-VENTAS
+CUENTAS PENDIENTES
 </div>
 
 <div id="count" class="value">
@@ -594,7 +605,7 @@ VENTAS
 <div class="summary-card">
 
 <div class="label">
-TOTAL VENDIDO
+TOTAL DE VENTAS A CRÉDITO
 </div>
 
 <div id="total" class="value">
@@ -606,7 +617,7 @@ $0.00
 <div class="summary-card">
 
 <div class="label">
-PENDIENTE
+SALDO POR COBRAR
 </div>
 
 <div id="balance" class="value">
@@ -624,7 +635,7 @@ $0.00
 <div id="sales">
 
 <div class="empty">
-Cargando ventas...
+Cargando cuentas pendientes...
 </div>
 
 </div>
@@ -676,9 +687,11 @@ Método de pago del abono
 </label>
 
 <select id="paymentMethod">
+
 <option value="">
 Cargando métodos de pago...
 </option>
+
 </select>
 
 <div class="modal-buttons">
@@ -749,7 +762,7 @@ const BUSINESS_IDS = {
 
 
 /* =========================================
-   CONTEXTO URL
+   URL
 ========================================= */
 
 const urlParams =
@@ -792,17 +805,6 @@ function money(value){
 
 }
 
-
-/*
- * IMPORTANTE:
- *
- * Para la fecha de la venta usamos
- * created_at PRIMERO.
- *
- * Esto evita que todas las ventas aparezcan
- * con la misma fecha/hora cuando sale_date
- * fue guardado con una fecha por defecto.
- */
 
 function getSaleDate(sale){
 
@@ -876,7 +878,7 @@ function getDateForFilter(sale){
 
 
 /* =========================================
-   BOTONES NEGOCIO
+   NEGOCIO
 ========================================= */
 
 function updateBusinessButtons(){
@@ -986,9 +988,7 @@ async function loadSelectedCustomer(){
   if(!selectedCustomerId){
 
     $("customerBanner")
-      .classList.remove(
-        "visible"
-      );
+      .classList.remove("visible");
 
     return;
 
@@ -1029,9 +1029,7 @@ async function loadSelectedCustomer(){
       : "";
 
     $("customerBanner")
-      .classList.add(
-        "visible"
-      );
+      .classList.add("visible");
 
   }
   catch(error){
@@ -1047,23 +1045,29 @@ async function loadSelectedCustomer(){
 
 
 /* =========================================
-   CARGAR VENTAS
+   CARGAR SOLO CUENTAS PENDIENTES
 ========================================= */
 
 async function loadSales(){
 
   $("sales").innerHTML =
     '<div class="empty">' +
-    'Cargando ventas...' +
-    '</div>';
+    "Cargando cuentas pendientes..." +
+    "</div>";
 
   try{
 
     const businessId =
       BUSINESS_IDS[currentBusiness];
 
-
-    /* VENTAS */
+    /*
+     * ESTA ES LA PARTE IMPORTANTE:
+     *
+     * Solo solicitamos ventas cuyo saldo
+     * pendiente sea mayor que cero.
+     *
+     * Las ventas pagadas NO llegan a esta página.
+     */
 
     const result =
       await supabaseClient
@@ -1075,6 +1079,10 @@ async function loadSales(){
           "business_id",
           businessId
         )
+        .gt(
+          "balance",
+          0
+        )
         .order(
           "created_at",
           {
@@ -1082,26 +1090,18 @@ async function loadSales(){
           }
         );
 
-
     if(result.error)
       throw result.error;
-
 
     sales =
       result.data || [];
 
-
-    /* ABONOS */
-
     const saleIds =
       sales.map(
-        sale =>
-          sale.id
+        sale => sale.id
       );
 
-
     payments = [];
-
 
     if(saleIds.length){
 
@@ -1122,16 +1122,13 @@ async function loadSales(){
             }
           );
 
-
       if(paymentsResult.error)
         throw paymentsResult.error;
-
 
       payments =
         paymentsResult.data || [];
 
     }
-
 
     await loadPaymentMethods();
 
@@ -1139,7 +1136,7 @@ async function loadSales(){
 
     await loadSelectedCustomer();
 
-    await renderSales();
+    await renderAccounts();
 
   }
   catch(error){
@@ -1147,16 +1144,12 @@ async function loadSales(){
     console.error(error);
 
     $("sales").innerHTML =
-
       '<div class="error">' +
-
-      "No se pudieron cargar las ventas: " +
-
+      "No se pudieron cargar las cuentas: " +
       (
         error.message ||
         error
       ) +
-
       "</div>";
 
   }
@@ -1165,10 +1158,10 @@ async function loadSales(){
 
 
 /* =========================================
-   RENDERIZAR VENTAS
+   RENDERIZAR CUENTAS
 ========================================= */
 
-async function renderSales(){
+async function renderAccounts(){
 
   const searchText =
     $("search")
@@ -1183,21 +1176,28 @@ async function renderSales(){
     $("to").value;
 
 
+  /*
+   * SEGURIDAD EXTRA:
+   * Aunque Supabase ya filtró balance > 0,
+   * volvemos a comprobarlo aquí.
+   */
+
   let rows =
     sales.filter(
       sale => {
 
-        /*
-         * AHORA LOS FILTROS USAN created_at,
-         * que es la fecha real de creación
-         * del registro.
-         */
+        const balance =
+          Number(
+            sale.balance || 0
+          );
+
+        if(balance <= 0)
+          return false;
 
         const date =
           getDateForFilter(
             sale
           );
-
 
         if(from && date < from)
           return false;
@@ -1205,14 +1205,12 @@ async function renderSales(){
         if(to && date > to)
           return false;
 
-
         if(
           selectedCustomerId &&
           sale.customer_id !==
           selectedCustomerId
         )
           return false;
-
 
         return true;
 
@@ -1251,10 +1249,8 @@ async function renderSales(){
           customerIds
         );
 
-
     if(result.error)
       throw result.error;
-
 
     (result.data || [])
       .forEach(
@@ -1280,12 +1276,10 @@ async function renderSales(){
         if(!searchText)
           return true;
 
-
         const customer =
           customerMap.get(
             sale.customer_id
           );
-
 
         const text =
           [
@@ -1296,7 +1290,6 @@ async function renderSales(){
           .filter(Boolean)
           .join(" ")
           .toLowerCase();
-
 
         return text.includes(
           searchText
@@ -1311,7 +1304,6 @@ async function renderSales(){
   $("count").textContent =
     rows.length;
 
-
   $("total").textContent =
     money(
       rows.reduce(
@@ -1323,7 +1315,6 @@ async function renderSales(){
         0
       )
     );
-
 
   $("balance").textContent =
     money(
@@ -1342,7 +1333,7 @@ async function renderSales(){
 
     $("sales").innerHTML =
       '<div class="empty">' +
-      "No hay ventas que coincidan con los filtros." +
+      "🎉 No tienes cuentas pendientes." +
       "</div>";
 
     return;
@@ -1353,8 +1344,6 @@ async function renderSales(){
   $("sales").innerHTML = "";
 
 
-  /* VENTAS */
-
   rows.forEach(
     sale => {
 
@@ -1363,11 +1352,9 @@ async function renderSales(){
           sale.customer_id
         );
 
-
       const customerName =
         customer?.name ||
         "Consumidor general";
-
 
       const phone =
         customer?.phone
@@ -1375,18 +1362,15 @@ async function renderSales(){
           customer.phone
         : "";
 
-
-      const state =
-        sale.status || "";
-
-
       const balance =
         Number(
           sale.balance || 0
         );
 
 
-      /* ABONOS */
+      /*
+       * TOTAL ABONADO
+       */
 
       const salePayments =
         payments.filter(
@@ -1394,7 +1378,6 @@ async function renderSales(){
             payment.sale_id ===
             sale.id
         );
-
 
       const totalPaid =
         salePayments.reduce(
@@ -1407,61 +1390,32 @@ async function renderSales(){
         );
 
 
-      let statusText;
-
-
-      if(state === "paid"){
-
-        statusText =
-          "Pagada";
-
-      }
-      else if(state === "open"){
-
-        statusText =
-          "Pendiente";
-
-      }
-      else{
-
-        statusText =
-          state ||
-          "Registrada";
-
-      }
-
-
-      /* CONTENEDOR */
+      /*
+       * TARJETA
+       */
 
       const element =
         document.createElement(
           "div"
         );
 
-
       element.className =
-        "sale";
+        "account";
 
-
-      /*
-       * AQUÍ ESTÁ LA CORRECCIÓN PRINCIPAL:
-       *
-       * Se muestra created_at antes que
-       * sale_date.
-       */
 
       element.innerHTML =
 
         '<div class="top">' +
 
         '<div class="date">' +
-        "Venta · " +
+        "Cuenta · " +
         formatDate(
           getSaleDate(sale)
         ) +
         "</div>" +
 
         '<div class="total">' +
+        "Venta: " +
         money(sale.total) +
         "</div>" +
 
@@ -1478,26 +1432,26 @@ async function renderSales(){
         sale.id +
         "</div>" +
 
-        '<span class="status ' +
-        (
-          state === "open"
-          ? "open"
-          : ""
-        ) +
-        '">' +
+        '<span class="status">' +
+        "⚠️ Cuenta pendiente" +
+        "</span>" +
 
-        (
-          state === "paid"
-          ? "✓ "
-          : ""
-        ) +
+        '<div class="balance-box">' +
 
-        statusText +
+        '<div class="balance-label">' +
+        "SALDO POR COBRAR" +
+        "</div>" +
 
-        "</span>";
+        '<div class="balance-value">' +
+        money(balance) +
+        "</div>" +
+
+        "</div>";
 
 
-      /* HISTORIAL DE ABONOS */
+      /*
+       * HISTORIAL DE ABONOS
+       */
 
       if(salePayments.length){
 
@@ -1506,10 +1460,8 @@ async function renderSales(){
             "div"
           );
 
-
         history.className =
           "payment-history";
-
 
         history.innerHTML =
           '<div class="payment-history-title">' +
@@ -1524,7 +1476,6 @@ async function renderSales(){
               document.createElement(
                 "div"
               );
-
 
             row.className =
               "payment-row";
@@ -1543,7 +1494,7 @@ async function renderSales(){
               '<div>' +
 
               '<div class="payment-date">' +
-              "💵 " +
+              "📅 " +
               formatDate(
                 payment.paid_at
               ) +
@@ -1581,24 +1532,18 @@ async function renderSales(){
             "div"
           );
 
-
         totalRow.className =
           "payment-total";
 
-
         totalRow.innerHTML =
-
           "<span>Total abonado</span>" +
-
           "<span>" +
           money(totalPaid) +
           "</span>";
 
-
         history.appendChild(
           totalRow
         );
-
 
         element.appendChild(
           history
@@ -1607,77 +1552,40 @@ async function renderSales(){
       }
 
 
-      /* SALDO */
+      /*
+       * BOTÓN ABONO
+       */
 
-      if(balance > 0){
+      const balanceButton =
+        document.createElement(
+          "button"
+        );
 
-        const balanceButton =
-          document.createElement(
-            "button"
+      balanceButton.type =
+        "button";
+
+      balanceButton.className =
+        "balance-button";
+
+      balanceButton.innerHTML =
+        "💰 Registrar abono · Saldo " +
+        money(balance);
+
+      balanceButton.addEventListener(
+        "click",
+        () => {
+
+          openPaymentModal(
+            sale,
+            customerName
           );
 
+        }
+      );
 
-        balanceButton.type =
-          "button";
-
-
-        balanceButton.className =
-          "balance-button";
-
-
-        balanceButton.innerHTML =
-          "💰 Saldo pendiente: " +
-          money(balance) +
-          " · Registrar abono";
-
-
-        balanceButton.addEventListener(
-          "click",
-          () => {
-
-            openPaymentModal(
-              sale,
-              customerName
-            );
-
-          }
-        );
-
-
-        element.appendChild(
-          balanceButton
-        );
-
-      }
-      else{
-
-        const paidButton =
-          document.createElement(
-            "button"
-          );
-
-
-        paidButton.type =
-          "button";
-
-
-        paidButton.className =
-          "balance-button paid";
-
-
-        paidButton.disabled =
-          true;
-
-
-        paidButton.innerHTML =
-          "✓ Cuenta liquidada";
-
-
-        element.appendChild(
-          paidButton
-        );
-
-      }
+      element.appendChild(
+        balanceButton
+      );
 
 
       $("sales")
@@ -1703,56 +1611,43 @@ function openPaymentModal(
   selectedSaleForPayment =
     sale;
 
-
   $("paymentSubtitle")
     .textContent =
       customerName +
       " · Venta de " +
-      money(
-        sale.total
-      );
-
+      money(sale.total);
 
   $("modalBalance")
     .textContent =
-      money(
-        sale.balance
-      );
-
+      money(sale.balance);
 
   $("paymentAmount")
     .value =
       "";
 
-
   $("modalError")
     .textContent =
       "";
-
 
   $("modalError")
     .classList.remove(
       "visible"
     );
 
-
   renderPaymentMethods();
-
 
   if(paymentMethods.length){
 
     $("paymentMethod")
       .value =
-        paymentMethods[0].id;
+      paymentMethods[0].id;
 
   }
-
 
   $("paymentModal")
     .classList.add(
       "visible"
     );
-
 
   setTimeout(
     () => {
@@ -1786,7 +1681,7 @@ function showPaymentError(
 
   $("modalError")
     .textContent =
-      message;
+    message;
 
   $("modalError")
     .classList.add(
@@ -1807,20 +1702,16 @@ async function registerPayment(
   if(!selectedSaleForPayment)
     return;
 
-
   const sale =
     selectedSaleForPayment;
-
 
   const currentBalance =
     Number(
       sale.balance || 0
     );
 
-
   amount =
     Number(amount);
-
 
   const paymentMethodId =
     $("paymentMethod").value;
@@ -1836,7 +1727,6 @@ async function registerPayment(
 
   }
 
-
   if(amount <= 0){
 
     showPaymentError(
@@ -1846,7 +1736,6 @@ async function registerPayment(
     return;
 
   }
-
 
   if(
     amount >
@@ -1863,7 +1752,6 @@ async function registerPayment(
 
   }
 
-
   if(!paymentMethodId){
 
     showPaymentError(
@@ -1875,25 +1763,20 @@ async function registerPayment(
   }
 
 
-  $("savePayment")
-    .disabled =
-      true;
+  $("savePayment").disabled =
+    true;
 
-  $("payFull")
-    .disabled =
-      true;
+  $("payFull").disabled =
+    true;
 
-  $("paymentMethod")
-    .disabled =
-      true;
+  $("paymentMethod").disabled =
+    true;
 
-  $("savePayment")
-    .textContent =
-      "⏳ Procesando...";
+  $("savePayment").textContent =
+    "⏳ Procesando...";
 
-  $("payFull")
-    .textContent =
-      "⏳ Procesando...";
+  $("payFull").textContent =
+    "⏳ Procesando...";
 
 
   try{
@@ -1962,7 +1845,7 @@ async function registerPayment(
           selectedMethod?.name ||
           "el método seleccionado"
         ) +
-        "." +
+        ". La cuenta desaparecerá de pendientes." +
         "</div>";
 
     }
@@ -2003,7 +1886,6 @@ async function registerPayment(
       error
     );
 
-
     showPaymentError(
       "No se pudo registrar el abono: " +
       (
@@ -2015,25 +1897,20 @@ async function registerPayment(
   }
   finally{
 
-    $("savePayment")
-      .disabled =
-        false;
+    $("savePayment").disabled =
+      false;
 
-    $("payFull")
-      .disabled =
-        false;
+    $("payFull").disabled =
+      false;
 
-    $("paymentMethod")
-      .disabled =
-        false;
+    $("paymentMethod").disabled =
+      false;
 
-    $("savePayment")
-      .textContent =
-        "💵 Registrar abono";
+    $("savePayment").textContent =
+      "💵 Registrar abono";
 
-    $("payFull")
-      .textContent =
-        "✓ Liquidar cuenta";
+    $("payFull").textContent =
+      "✓ Liquidar cuenta";
 
   }
 
@@ -2067,13 +1944,10 @@ $("payFull")
     if(!selectedSaleForPayment)
       return;
 
-
     const balance =
       Number(
-        selectedSaleForPayment.balance ||
-        0
+        selectedSaleForPayment.balance || 0
       );
-
 
     await registerPayment(
       balance
@@ -2145,24 +2019,20 @@ document
         const business =
           button.dataset.business;
 
-
         if(
           business ===
           currentBusiness
         )
           return;
 
-
         currentBusiness =
           business;
-
 
         updateBusinessButtons();
 
 
         const params =
           new URLSearchParams();
-
 
         if(selectedCustomerId){
 
@@ -2173,7 +2043,6 @@ document
 
         }
 
-
         params.set(
           "business",
           currentBusiness
@@ -2183,7 +2052,7 @@ document
         window.history.replaceState(
           {},
           "",
-          "historial.html?" +
+          "cuentas.html?" +
           params.toString()
         );
 
@@ -2204,21 +2073,19 @@ document
 $("search")
 .addEventListener(
   "input",
-  renderSales
+  renderAccounts
 );
-
 
 $("from")
 .addEventListener(
   "change",
-  renderSales
+  renderAccounts
 );
-
 
 $("to")
 .addEventListener(
   "change",
-  renderSales
+  renderAccounts
 );
 
 
