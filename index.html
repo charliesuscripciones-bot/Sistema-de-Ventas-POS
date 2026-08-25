@@ -11,707 +11,718 @@
 
 <style>
 *{
-box-sizing:border-box;
-margin:0;
-padding:0
+  box-sizing:border-box;
+  margin:0;
+  padding:0
 }
 
 html{
-width:100%;
-min-height:100%
+  width:100%;
+  min-height:100%
 }
 
 body{
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-background:#f5f5f5;
-color:#222;
-min-height:100vh
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#f5f5f5;
+  color:#222;
+  min-height:100vh
 }
 
 body.modal-open{
-overflow:hidden
+  overflow:hidden
 }
 
 header{
-background:#111827;
-color:#fff;
-padding-top:calc(22px + env(safe-area-inset-top));
-padding-right:20px;
-padding-bottom:22px;
-padding-left:20px
+  background:#111827;
+  color:#fff;
+  padding-top:calc(22px + env(safe-area-inset-top));
+  padding-right:20px;
+  padding-bottom:22px;
+  padding-left:20px
 }
 
 header h1{
-font-size:28px;
-line-height:1.15
+  font-size:28px;
+  line-height:1.15
 }
 
 header p{
-font-size:15px;
-opacity:.75;
-margin-top:8px
+  font-size:15px;
+  opacity:.75;
+  margin-top:8px
 }
 
 .container{
-width:100%;
-max-width:1100px;
-margin:auto;
-padding:20px
+  width:100%;
+  max-width:1100px;
+  margin:auto;
+  padding:20px
 }
 
 .status{
-margin:0 0 15px;
-padding:14px 16px;
-border-radius:12px;
-font-size:14px;
-display:none;
-font-weight:700;
-white-space:pre-line
+  margin:0 0 15px;
+  padding:14px 16px;
+  border-radius:12px;
+  font-size:14px;
+  display:none;
+  font-weight:700;
+  white-space:pre-line
 }
 
 .status.error{
-display:block;
-background:#fee2e2;
-color:#991b1b
+  display:block;
+  background:#fee2e2;
+  color:#991b1b
 }
 
 .status.ok{
-display:block;
-background:#dcfce7;
-color:#166534
+  display:block;
+  background:#dcfce7;
+  color:#166534
 }
 
 .status.warn{
-display:block;
-background:#fef3c7;
-color:#92400e
+  display:block;
+  background:#fef3c7;
+  color:#92400e
 }
 
 .businesses{
-display:flex;
-gap:10px;
-margin-bottom:20px;
-flex-wrap:wrap
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+  flex-wrap:wrap
 }
 
 .business-btn,
 .nav-btn{
-border:none;
-padding:13px 20px;
-border-radius:12px;
-background:#fff;
-border:2px solid #ddd;
-font-weight:700;
-cursor:pointer;
-font-size:16px
+  border:none;
+  padding:13px 20px;
+  border-radius:12px;
+  background:#fff;
+  border:2px solid #ddd;
+  font-weight:700;
+  cursor:pointer;
+  font-size:16px
 }
 
 .business-btn{
-flex:1
+  flex:1;
+  min-height:58px
 }
 
 .business-btn.active{
-background:#111827;
-color:#fff;
-border-color:#111827
+  background:#111827;
+  color:#fff;
+  border-color:#111827
 }
 
 .navigation{
-display:grid;
-grid-template-columns:repeat(5,1fr);
-gap:10px;
-margin-bottom:20px
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
+  margin-bottom:20px
 }
 
 .nav-btn{
-color:#2563eb
+  color:#2563eb;
+  min-height:60px
 }
 
 .nav-btn.accounts{
-background:#fff7ed;
-border-color:#f59e0b;
-color:#b45309
+  background:#fff7ed;
+  border-color:#f59e0b;
+  color:#b45309
 }
 
 .nav-btn.clients{
-background:#ecfdf5;
-border-color:#10b981;
-color:#047857
+  background:#ecfdf5;
+  border-color:#10b981;
+  color:#047857
 }
 
 .nav-btn.history{
-background:#f5f3ff;
-border-color:#7c3aed;
-color:#6d28d9
+  background:#f5f3ff;
+  border-color:#7c3aed;
+  color:#6d28d9
 }
 
 .nav-btn.inventory{
-background:#eff6ff;
-border-color:#2563eb;
-color:#1d4ed8
+  background:#eff6ff;
+  border-color:#2563eb;
+  color:#1d4ed8
 }
 
 .layout{
-display:grid;
-grid-template-columns:1fr 390px;
-gap:20px
+  display:grid;
+  grid-template-columns:1fr 390px;
+  gap:20px
 }
 
 .card{
-background:#fff;
-border-radius:18px;
-padding:20px;
-box-shadow:0 3px 14px rgba(0,0,0,.06)
+  background:#fff;
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 3px 14px rgba(0,0,0,.06)
 }
 
 .card h2{
-font-size:21px;
-margin-bottom:16px
+  font-size:21px;
+  margin-bottom:16px
 }
 
 /* =========================================================
    PRODUCTOS
-   SIEMPRE 2 COLUMNAS
 ========================================================= */
 
 .products{
-display:grid;
-grid-template-columns:repeat(2,minmax(0,1fr));
-gap:12px;
-width:100%
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  width:100%
 }
 
 .product{
-border:2px solid #ddd;
-border-radius:14px;
-padding:18px 14px;
-cursor:pointer;
-background:#fff;
-text-align:left;
-transition:.15s;
-min-width:0;
-width:100%
+  width:100%;
+  min-width:0;
+  border:2px solid #ddd;
+  border-radius:14px;
+  padding:18px 14px;
+  cursor:pointer;
+  background:#fff;
+  text-align:left;
+  transition:.15s
 }
 
 .product:hover{
-border-color:#2563eb
+  border-color:#2563eb
 }
 
 .product:active{
-transform:scale(.98)
+  transform:scale(.98)
 }
 
 .product.disabled{
-opacity:.5;
-cursor:not-allowed
+  opacity:.5;
+  cursor:not-allowed
 }
 
 .product-name{
-font-weight:700;
-font-size:17px;
-margin-bottom:9px
+  font-weight:700;
+  font-size:17px;
+  margin-bottom:9px
 }
 
 .price{
-font-size:23px;
-font-weight:800;
-color:#2563eb
+  font-size:23px;
+  font-weight:800;
+  color:#2563eb
 }
 
 .stock{
-font-size:14px;
-color:#666;
-margin-top:7px
+  font-size:14px;
+  color:#666;
+  margin-top:7px
 }
 
+/* =========================================================
+   CARRITO
+========================================================= */
+
 .cart-item{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:13px 0;
-border-bottom:1px solid #eee;
-gap:12px
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:13px 0;
+  border-bottom:1px solid #eee;
+  gap:12px
 }
 
 .cart-name{
-font-weight:700
+  font-weight:700
 }
 
 .cart-price{
-font-size:13px;
-color:#666;
-margin-top:4px
+  font-size:13px;
+  color:#666;
+  margin-top:4px
 }
 
 .quantity{
-display:flex;
-align-items:center;
-gap:8px;
-margin-top:8px
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:8px
 }
 
 .quantity button{
-width:32px;
-height:32px;
-border:none;
-border-radius:7px;
-background:#eee;
-cursor:pointer;
-font-size:18px
+  width:32px;
+  height:32px;
+  border:none;
+  border-radius:7px;
+  background:#eee;
+  cursor:pointer;
+  font-size:18px
 }
 
 .total{
-display:flex;
-justify-content:space-between;
-font-size:25px;
-font-weight:800;
-margin-top:20px;
-padding-top:18px;
-border-top:2px solid #eee
+  display:flex;
+  justify-content:space-between;
+  font-size:25px;
+  font-weight:800;
+  margin-top:20px;
+  padding-top:18px;
+  border-top:2px solid #eee
 }
+
+/* =========================================================
+   CLIENTE
+========================================================= */
 
 .payment-title,
 .customer-title{
-margin-top:20px;
-margin-bottom:10px;
-font-weight:800;
-font-size:17px
-}
-
-.payments{
-display:grid;
-gap:9px
-}
-
-.payment{
-padding:14px;
-border:2px solid #ddd;
-border-radius:11px;
-background:#fff;
-cursor:pointer;
-text-align:left;
-font-size:16px;
-font-weight:700
-}
-
-.payment.active{
-background:#111827;
-color:#fff;
-border-color:#111827
+  margin-top:20px;
+  margin-bottom:10px;
+  font-weight:800;
+  font-size:17px
 }
 
 .customer-box{
-position:relative
+  position:relative
 }
 
 .customer-row{
-display:flex;
-gap:8px
+  display:flex;
+  gap:8px
 }
 
 .customer-search{
-flex:1;
-padding:13px;
-border:2px solid #ddd;
-border-radius:11px;
-font-size:15px;
-min-width:0;
-background:#fff
+  flex:1;
+  padding:13px;
+  border:2px solid #ddd;
+  border-radius:11px;
+  font-size:15px;
+  min-width:0;
+  background:#fff
 }
 
 .customer-search:focus{
-outline:none;
-border-color:#2563eb
+  outline:none;
+  border-color:#2563eb
 }
 
 .add-client{
-border:none;
-background:#2563eb;
-color:#fff;
-padding:0 14px;
-border-radius:11px;
-font-weight:800;
-cursor:pointer;
-white-space:nowrap
+  border:none;
+  background:#2563eb;
+  color:#fff;
+  padding:0 14px;
+  border-radius:11px;
+  font-weight:800;
+  cursor:pointer;
+  white-space:nowrap
 }
 
 .customer-results{
-margin-top:8px;
-display:none;
-border:2px solid #ddd;
-border-radius:11px;
-overflow:hidden;
-background:#fff;
-box-shadow:0 8px 25px rgba(0,0,0,.12);
-position:absolute;
-left:0;
-right:0;
-z-index:100
+  margin-top:8px;
+  display:none;
+  border:2px solid #ddd;
+  border-radius:11px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:0 8px 25px rgba(0,0,0,.12);
+  position:absolute;
+  left:0;
+  right:0;
+  z-index:100
 }
 
 .customer-result{
-display:block;
-width:100%;
-border:none;
-border-bottom:1px solid #eee;
-background:#fff;
-padding:13px;
-text-align:left;
-cursor:pointer
+  display:block;
+  width:100%;
+  border:none;
+  border-bottom:1px solid #eee;
+  background:#fff;
+  padding:13px;
+  text-align:left;
+  cursor:pointer
 }
 
 .customer-result:hover{
-background:#f3f4f6
+  background:#f3f4f6
 }
 
 .customer-result strong{
-display:block;
-font-size:15px
+  display:block;
+  font-size:15px
 }
 
 .customer-result small{
-display:block;
-color:#6b7280;
-margin-top:4px
+  display:block;
+  color:#6b7280;
+  margin-top:4px
 }
 
 .selected-customer{
-margin-top:8px;
-padding:12px;
-border-radius:9px;
-background:#eff6ff;
-border:2px solid #bfdbfe;
-color:#1d4ed8;
-font-size:14px;
-font-weight:600
+  margin-top:8px;
+  padding:12px;
+  border-radius:9px;
+  background:#eff6ff;
+  border:2px solid #bfdbfe;
+  color:#1d4ed8;
+  font-size:14px;
+  font-weight:600
 }
 
 .clear-customer{
-border:none;
-background:none;
-color:#dc2626;
-font-weight:700;
-cursor:pointer;
-margin-left:8px
+  border:none;
+  background:none;
+  color:#dc2626;
+  font-weight:700;
+  cursor:pointer;
+  margin-left:8px
 }
 
 .general-customer{
-margin-top:8px;
-padding:13px;
-border-radius:9px;
-background:#f3f4f6;
-color:#555;
-font-weight:700;
-cursor:pointer
+  margin-top:8px;
+  padding:13px;
+  border-radius:9px;
+  background:#f3f4f6;
+  color:#555;
+  font-weight:700;
+  cursor:pointer
 }
+
+/* =========================================================
+   PAGOS
+========================================================= */
+
+.payments{
+  display:grid;
+  gap:9px
+}
+
+.payment{
+  padding:14px;
+  border:2px solid #ddd;
+  border-radius:11px;
+  background:#fff;
+  cursor:pointer;
+  text-align:left;
+  font-size:16px;
+  font-weight:700
+}
+
+.payment.active{
+  background:#111827;
+  color:#fff;
+  border-color:#111827
+}
+
+/* =========================================================
+   BOTONES
+========================================================= */
 
 .charge,
 .account{
-width:100%;
-margin-top:15px;
-padding:16px;
-border:none;
-border-radius:12px;
-color:#fff;
-font-size:18px;
-font-weight:800;
-cursor:pointer
+  width:100%;
+  margin-top:15px;
+  padding:16px;
+  border:none;
+  border-radius:12px;
+  color:#fff;
+  font-size:18px;
+  font-weight:800;
+  cursor:pointer
 }
 
 .charge{
-background:#16a34a
+  background:#16a34a
 }
 
 .account{
-margin-top:10px;
-background:#f59e0b
+  margin-top:10px;
+  background:#f59e0b
 }
 
 .charge:disabled,
 .account:disabled{
-opacity:.6;
-cursor:wait
+  opacity:.6;
+  cursor:wait
 }
 
 .empty{
-color:#777;
-text-align:center;
-padding:30px 10px
+  color:#777;
+  text-align:center;
+  padding:30px 10px
 }
 
 .offline-badge{
-display:inline-block;
-margin-top:10px;
-padding:6px 10px;
-border-radius:20px;
-background:#fef3c7;
-color:#92400e;
-font-size:12px;
-font-weight:800
+  display:inline-block;
+  margin-top:10px;
+  padding:6px 10px;
+  border-radius:20px;
+  background:#fef3c7;
+  color:#92400e;
+  font-size:12px;
+  font-weight:800
 }
 
 /* =========================================================
-   MODAL AGREGAR CLIENTE
+   MODAL CLIENTE
 ========================================================= */
 
 .client-modal{
-position:fixed;
-inset:0;
-z-index:9999;
-display:none;
-align-items:center;
-justify-content:center;
-padding:20px;
-background:rgba(0,0,0,.58);
-backdrop-filter:blur(5px);
--webkit-backdrop-filter:blur(5px)
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,.58);
+  backdrop-filter:blur(5px);
+  -webkit-backdrop-filter:blur(5px)
 }
 
 .client-modal.show{
-display:flex
+  display:flex
 }
 
 .client-modal-box{
-width:100%;
-max-width:430px;
-background:#fff;
-border-radius:22px;
-box-shadow:0 20px 60px rgba(0,0,0,.30);
-overflow:hidden;
-animation:modalIn .18s ease-out
+  width:100%;
+  max-width:430px;
+  background:#fff;
+  border-radius:22px;
+  box-shadow:0 20px 60px rgba(0,0,0,.30);
+  overflow:hidden;
+  animation:modalIn .18s ease-out
 }
 
 @keyframes modalIn{
-from{
-opacity:0;
-transform:translateY(15px) scale(.97)
-}
-to{
-opacity:1;
-transform:translateY(0) scale(1)
-}
+  from{
+    opacity:0;
+    transform:translateY(15px) scale(.97)
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1)
+  }
 }
 
 .client-modal-header{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:15px;
-padding:20px;
-background:#111827;
-color:#fff
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  padding:20px;
+  background:#111827;
+  color:#fff
 }
 
 .client-modal-header h3{
-font-size:20px
+  font-size:20px
 }
 
 .client-modal-header p{
-font-size:13px;
-opacity:.75;
-margin-top:4px
+  font-size:13px;
+  opacity:.75;
+  margin-top:4px
 }
 
 .close-modal{
-width:38px;
-height:38px;
-border:none;
-border-radius:50%;
-background:rgba(255,255,255,.12);
-color:#fff;
-font-size:25px;
-cursor:pointer;
-flex-shrink:0
+  width:38px;
+  height:38px;
+  border:none;
+  border-radius:50%;
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  font-size:25px;
+  cursor:pointer;
+  flex-shrink:0
 }
 
 .client-form{
-padding:20px
+  padding:20px
 }
 
 .form-group{
-margin-bottom:15px
+  margin-bottom:15px
 }
 
 .form-group label{
-display:block;
-font-size:14px;
-font-weight:800;
-margin-bottom:7px;
-color:#374151
+  display:block;
+  font-size:14px;
+  font-weight:800;
+  margin-bottom:7px;
+  color:#374151
 }
 
 .form-group input,
 .form-group textarea{
-width:100%;
-padding:13px 14px;
-border:2px solid #ddd;
-border-radius:11px;
-font-size:16px;
-font-family:inherit;
-background:#fff
+  width:100%;
+  padding:13px 14px;
+  border:2px solid #ddd;
+  border-radius:11px;
+  font-size:16px;
+  font-family:inherit;
+  background:#fff
 }
 
 .form-group textarea{
-min-height:80px;
-resize:vertical
+  min-height:80px;
+  resize:vertical
 }
 
 .form-group input:focus,
 .form-group textarea:focus{
-outline:none;
-border-color:#2563eb
+  outline:none;
+  border-color:#2563eb
 }
 
 .client-form-buttons{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-margin-top:20px
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:20px
 }
 
 .modal-cancel,
 .modal-save{
-border:none;
-border-radius:11px;
-padding:14px;
-font-size:16px;
-font-weight:800;
-cursor:pointer
+  border:none;
+  border-radius:11px;
+  padding:14px;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer
 }
 
 .modal-cancel{
-background:#f3f4f6;
-color:#374151
+  background:#f3f4f6;
+  color:#374151
 }
 
 .modal-save{
-background:#2563eb;
-color:#fff
+  background:#2563eb;
+  color:#fff
 }
 
 .modal-save:disabled{
-opacity:.6;
-cursor:wait
+  opacity:.6;
+  cursor:wait
 }
 
 .modal-error{
-display:none;
-padding:11px 13px;
-border-radius:10px;
-background:#fee2e2;
-color:#991b1b;
-font-size:13px;
-font-weight:700;
-margin-bottom:15px;
-white-space:pre-line
+  display:none;
+  padding:11px 13px;
+  border-radius:10px;
+  background:#fee2e2;
+  color:#991b1b;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:15px;
+  white-space:pre-line
 }
 
 .modal-error.show{
-display:block
+  display:block
 }
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
 @media(max-width:950px){
 
-.navigation{
-grid-template-columns:repeat(3,1fr)
-}
+  .navigation{
+    grid-template-columns:repeat(3,1fr)
+  }
 
 }
 
 @media(max-width:850px){
 
-.layout{
-grid-template-columns:1fr
-}
+  .layout{
+    grid-template-columns:1fr
+  }
 
-.navigation{
-grid-template-columns:1fr 1fr
-}
+  .navigation{
+    grid-template-columns:1fr 1fr
+  }
 
 }
 
 @media(max-width:500px){
 
-.container{
-padding:15px
-}
+  .container{
+    padding:15px
+  }
 
-header h1{
-font-size:25px
-}
+  header h1{
+    font-size:25px
+  }
 
-header p{
-font-size:14px
-}
+  header p{
+    font-size:14px
+  }
 
-.navigation{
-grid-template-columns:1fr 1fr
-}
+  .navigation{
+    grid-template-columns:1fr 1fr
+  }
 
-.card{
-padding:16px
-}
+  .card{
+    padding:16px
+  }
 
-/*
-=========================================================
-IMPORTANTE:
-DOS PRODUCTOS UNO AL LADO DEL OTRO EN IPHONE
-=========================================================
-*/
+  /* DOS PRODUCTOS POR FILA EN IPHONE */
+  .products{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px
+  }
 
-.products{
-grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-gap:10px;
-width:100%
-}
+  .product{
+    padding:15px 10px
+  }
 
-.product{
-padding:14px 10px;
-border-radius:14px
-}
+  .product-name{
+    font-size:15px
+  }
 
-.product-name{
-font-size:15px;
-line-height:1.25;
-margin-bottom:8px
-}
+  .price{
+    font-size:20px
+  }
 
-.price{
-font-size:20px
-}
+  .stock{
+    font-size:13px
+  }
 
-.stock{
-font-size:13px;
-margin-top:6px
-}
+  .customer-row{
+    flex-direction:column
+  }
 
-.customer-row{
-flex-direction:column
-}
+  .add-client{
+    padding:12px
+  }
 
-.add-client{
-padding:12px
-}
+  .client-modal{
+    padding:12px
+  }
 
-.client-modal{
-padding:12px
-}
+  .client-modal-box{
+    border-radius:18px
+  }
 
-.client-modal-box{
-border-radius:18px
-}
-
-.client-form{
-padding:16px
-}
+  .client-form{
+    padding:16px
+  }
 
 }
 
 @supports (-webkit-touch-callout:none){
 
-header{
-padding-top:calc(22px + env(safe-area-inset-top))
-}
+  header{
+    padding-top:calc(22px + env(safe-area-inset-top))
+  }
 
 }
 </style>
@@ -721,9 +732,7 @@ padding-top:calc(22px + env(safe-area-inset-top))
 
 <header>
 
-<h1>
-🧾 Sistema de Ventas POS
-</h1>
+<h1>🧾 Sistema de Ventas POS</h1>
 
 <p>
 Administración de negocios y ventas
@@ -739,109 +748,122 @@ Administración de negocios y ventas
 <div id="status" class="status"></div>
 
 
+<!-- =====================================================
+     NEGOCIOS
+====================================================== -->
+
 <div class="businesses">
 
 <button
-type="button"
-class="business-btn active"
-data-business="BakeQuiri">
+  type="button"
+  class="business-btn active"
+  data-business="BakeQuiri">
 
-🧁 BakeQuiri
+  🧁 BakeQuiri
 
 </button>
 
-
 <button
-type="button"
-class="business-btn"
-data-business="SpicyRoll">
+  type="button"
+  class="business-btn"
+  data-business="SpicyRoll">
 
-🍣 SpicyRoll
+  🍣 SpicyRoll
 
 </button>
 
 </div>
 
+
+<!-- =====================================================
+     NAVEGACIÓN
+====================================================== -->
 
 <div class="navigation">
 
 <button
-type="button"
-class="nav-btn accounts"
-id="accountsButton">
+  type="button"
+  class="nav-btn accounts"
+  id="accountsButton">
 
-💰 Cuentas pendientes
-
-</button>
-
-
-<button
-type="button"
-class="nav-btn clients"
-id="clientsButton">
-
-👥 Clientes
+  💰 Cuentas pendientes
 
 </button>
 
-
 <button
-type="button"
-class="nav-btn history"
-id="historyButton">
+  type="button"
+  class="nav-btn clients"
+  id="clientsButton">
 
-🧾 Historial
+  👥 Clientes
 
 </button>
 
-
 <button
-type="button"
-class="nav-btn inventory"
-id="inventoryButton">
+  type="button"
+  class="nav-btn history"
+  id="historyButton">
 
-📦 Inventario
+  🧾 Historial
 
 </button>
 
+<button
+  type="button"
+  class="nav-btn inventory"
+  id="inventoryButton">
+
+  📦 Inventario
+
+</button>
 
 <button
-type="button"
-class="nav-btn"
-id="dashboardButton">
+  type="button"
+  class="nav-btn"
+  id="dashboardButton">
 
-📊 Dashboard
+  📊 Dashboard
 
 </button>
 
 </div>
 
+
+<!-- =====================================================
+     POS
+====================================================== -->
 
 <div class="layout">
 
 
-<div class="card">
-
-<h2>
-Productos
-</h2>
-
-<div id="products">
-
-<div class="empty">
-Cargando productos...
-</div>
-
-</div>
-
-</div>
-
+<!-- =====================================================
+     PRODUCTOS
+====================================================== -->
 
 <div class="card">
 
-<h2>
-🛒 Carrito
-</h2>
+<h2>Productos</h2>
+
+<div
+  id="products"
+  class="products">
+
+  <div class="empty">
+    Cargando productos...
+  </div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     CARRITO
+====================================================== -->
+
+<div class="card">
+
+<h2>🛒 Carrito</h2>
 
 <div id="cart">
 
@@ -854,9 +876,7 @@ El carrito está vacío
 
 <div class="total">
 
-<span>
-Total
-</span>
+<span>Total</span>
 
 <span id="total">
 $0.00
@@ -865,31 +885,32 @@ $0.00
 </div>
 
 
+<!-- =====================================================
+     CLIENTE
+====================================================== -->
+
 <div class="customer-title">
 👤 Cliente
 </div>
 
-
 <div class="customer-box">
-
 
 <div class="customer-row">
 
 <input
-type="search"
-id="customerSearch"
-class="customer-search"
-placeholder="🔎 Buscar cliente por nombre o teléfono"
-autocomplete="off"
+  type="search"
+  id="customerSearch"
+  class="customer-search"
+  placeholder="🔎 Buscar cliente por nombre o teléfono"
+  autocomplete="off"
 >
 
-
 <button
-type="button"
-id="addClientButton"
-class="add-client">
+  type="button"
+  id="addClientButton"
+  class="add-client">
 
-+ Cliente
+  + Cliente
 
 </button>
 
@@ -897,61 +918,64 @@ class="add-client">
 
 
 <div
-id="customerResults"
-class="customer-results">
+  id="customerResults"
+  class="customer-results">
 </div>
 
 
 <div
-id="selectedCustomer"
-class="selected-customer"
-style="display:none">
+  id="selectedCustomer"
+  class="selected-customer"
+  style="display:none">
 </div>
 
 
 <div
-id="generalCustomer"
-class="general-customer">
+  id="generalCustomer"
+  class="general-customer">
 
-👤 Consumidor general
-
-</div>
+  👤 Consumidor general
 
 </div>
 
+</div>
+
+
+<!-- =====================================================
+     MÉTODO DE PAGO
+====================================================== -->
 
 <div class="payment-title">
 Método de pago
 </div>
 
-
 <div
-id="payments"
-class="payments">
+  id="payments"
+  class="payments">
 
-<div class="empty">
-Cargando métodos de pago...
-</div>
+  <div class="empty">
+    Cargando métodos de pago...
+  </div>
 
 </div>
 
 
 <button
-type="button"
-id="chargeButton"
-class="charge">
+  type="button"
+  id="chargeButton"
+  class="charge">
 
-💵 COBRAR
+  💵 COBRAR
 
 </button>
 
 
 <button
-type="button"
-id="accountButton"
-class="account">
+  type="button"
+  id="accountButton"
+  class="account">
 
-🟠 DEJAR A CUENTA
+  🟠 DEJAR A CUENTA
 
 </button>
 
@@ -967,18 +991,15 @@ class="account">
 ====================================================== -->
 
 <div
-id="clientModal"
-class="client-modal"
-aria-hidden="true"
->
+  id="clientModal"
+  class="client-modal"
+  aria-hidden="true">
 
 <div
-class="client-modal-box"
-role="dialog"
-aria-modal="true"
-aria-labelledby="clientModalTitle"
->
-
+  class="client-modal-box"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="clientModalTitle">
 
 <div class="client-modal-header">
 
@@ -994,14 +1015,13 @@ Cliente para BakeQuiri
 
 </div>
 
-
 <button
-type="button"
-class="close-modal"
-id="closeClientModal"
-aria-label="Cerrar">
+  type="button"
+  class="close-modal"
+  id="closeClientModal"
+  aria-label="Cerrar">
 
-×
+  ×
 
 </button>
 
@@ -1009,15 +1029,14 @@ aria-label="Cerrar">
 
 
 <form
-id="clientForm"
-class="client-form"
-autocomplete="off"
->
+  id="clientForm"
+  class="client-form"
+  autocomplete="off">
 
 
 <div
-id="clientModalError"
-class="modal-error">
+  id="clientModalError"
+  class="modal-error">
 </div>
 
 
@@ -1028,13 +1047,12 @@ Nombre del cliente *
 </label>
 
 <input
-type="text"
-id="newClientName"
-name="name"
-placeholder="Ej. Juan Pérez"
-autocomplete="name"
-required
->
+  type="text"
+  id="newClientName"
+  name="name"
+  placeholder="Ej. Juan Pérez"
+  autocomplete="name"
+  required>
 
 </div>
 
@@ -1046,12 +1064,11 @@ Teléfono
 </label>
 
 <input
-type="tel"
-id="newClientPhone"
-name="phone"
-placeholder="Ej. 662 123 4567"
-autocomplete="tel"
->
+  type="tel"
+  id="newClientPhone"
+  name="phone"
+  placeholder="Ej. 662 123 4567"
+  autocomplete="tel">
 
 </div>
 
@@ -1063,10 +1080,9 @@ Notas
 </label>
 
 <textarea
-id="newClientNotes"
-name="notes"
-placeholder="Notas opcionales..."
-></textarea>
+  id="newClientNotes"
+  name="notes"
+  placeholder="Notas opcionales..."></textarea>
 
 </div>
 
@@ -1074,21 +1090,20 @@ placeholder="Notas opcionales..."
 <div class="client-form-buttons">
 
 <button
-type="button"
-class="modal-cancel"
-id="cancelClientModal">
+  type="button"
+  class="modal-cancel"
+  id="cancelClientModal">
 
-Cancelar
+  Cancelar
 
 </button>
 
-
 <button
-type="submit"
-class="modal-save"
-id="saveClientButton">
+  type="submit"
+  class="modal-save"
+  id="saveClientButton">
 
-Guardar cliente
+  Guardar cliente
 
 </button>
 
@@ -1100,6 +1115,10 @@ Guardar cliente
 
 </div>
 
+
+<!-- =====================================================
+     SUPABASE
+====================================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -1113,231 +1132,357 @@ Guardar cliente
 ========================================================= */
 
 const SUPABASE_URL =
-"https://jrxklpstlloeckihcduv.supabase.co";
+  "https://jrxklpstlloeckihcduv.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
-"sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
+  "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
 
 const BUSINESS_IDS = {
 
-BakeQuiri:
-"c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+  BakeQuiri:
+    "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
 
-SpicyRoll:
-"ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
+  SpicyRoll:
+    "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
 
 };
 
 
-let supabaseClient=null;
+let supabaseClient = null;
 
-let currentBusiness="BakeQuiri";
+let currentBusiness = "BakeQuiri";
 
-let products=[];
-let payments=[];
-let customers=[];
-let cart=[];
+let products = [];
+let payments = [];
+let customers = [];
 
-let selectedPaymentId=null;
-let selectedCustomerId=null;
+let cart = [];
+
+let selectedPaymentId = null;
+let selectedCustomerId = null;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function $(id){
+  return document.getElementById(id);
+}
+
+
+function money(value){
+
+  return "$" +
+    Number(value || 0).toFixed(2);
+
+}
+
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+function showStatus(
+  message,
+  type = "error"
+){
+
+  $("status").textContent =
+    message;
+
+  $("status").className =
+    "status " + type;
+
+}
+
+
+function clearStatus(){
+
+  $("status").textContent = "";
+
+  $("status").className =
+    "status";
+
+}
+
+
+/* =========================================================
+   TIMEOUT
+========================================================= */
+
+function withTimeout(
+  promise,
+  milliseconds,
+  message = "La operación tardó demasiado."
+){
+
+  let timeoutId;
+
+  const timeout =
+    new Promise(
+      (_, reject) => {
+
+        timeoutId =
+          setTimeout(
+            () => {
+
+              reject(
+                new Error(message)
+              );
+
+            },
+            milliseconds
+          );
+
+      }
+    );
+
+
+  return Promise.race([
+    promise,
+    timeout
+  ])
+  .finally(
+    () => clearTimeout(timeoutId)
+  );
+
+}
 
 
 /* =========================================================
    INDEXED DB
 ========================================================= */
 
-const DB_NAME="SistemaPOSOffline";
+const DB_NAME =
+  "SistemaPOSOffline";
 
-const DB_VERSION=1;
+const DB_VERSION = 1;
 
-const STORE_NAME="data";
+const STORE_NAME =
+  "data";
 
-let dbPromise=null;
+let dbPromise = null;
 
 
 function openOfflineDB(){
 
-if(dbPromise){
-return dbPromise;
-}
-
-dbPromise=new Promise(
-(resolve,reject)=>{
-
-const request=
-indexedDB.open(
-DB_NAME,
-DB_VERSION
-);
+  if(dbPromise){
+    return dbPromise;
+  }
 
 
-request.onupgradeneeded=
-event=>{
+  dbPromise =
+    new Promise(
+      (resolve,reject) => {
 
-const db=
-event.target.result;
-
-if(
-!db.objectStoreNames.contains(
-STORE_NAME
-)
-){
-
-db.createObjectStore(
-STORE_NAME,
-{
-keyPath:"key"
-}
-);
-
-}
-
-};
+        const request =
+          indexedDB.open(
+            DB_NAME,
+            DB_VERSION
+          );
 
 
-request.onsuccess=()=>{
-resolve(
-request.result
-);
-};
+        request.onupgradeneeded =
+          event => {
+
+            const db =
+              event.target.result;
 
 
-request.onerror=()=>{
-reject(
-request.error
-);
-};
+            if(
+              !db.objectStoreNames.contains(
+                STORE_NAME
+              )
+            ){
 
-});
+              db.createObjectStore(
+                STORE_NAME,
+                {
+                  keyPath:"key"
+                }
+              );
 
-return dbPromise;
+            }
+
+          };
+
+
+        request.onsuccess =
+          () => {
+
+            resolve(
+              request.result
+            );
+
+          };
+
+
+        request.onerror =
+          () => {
+
+            reject(
+              request.error
+            );
+
+          };
+
+      }
+    );
+
+
+  return dbPromise;
 
 }
 
 
 async function saveOfflineData(
-business,
-data
+  business,
+  data
 ){
 
-try{
+  try{
 
-const db=
-await openOfflineDB();
+    const db =
+      await openOfflineDB();
 
-return new Promise(
-(resolve,reject)=>{
 
-const transaction=
-db.transaction(
-STORE_NAME,
-"readwrite"
-);
+    return new Promise(
+      (resolve,reject) => {
 
-const store=
-transaction.objectStore(
-STORE_NAME
-);
+        const transaction =
+          db.transaction(
+            STORE_NAME,
+            "readwrite"
+          );
 
-store.put({
 
-key:
-"business_"+business,
+        const store =
+          transaction.objectStore(
+            STORE_NAME
+          );
 
-business,
 
-savedAt:
-Date.now(),
+        store.put({
 
-...data
+          key:
+            "business_" +
+            business,
 
-});
+          business,
 
-transaction.oncomplete=()=>{
-resolve(true);
-};
+          savedAt:
+            Date.now(),
 
-transaction.onerror=()=>{
-reject(
-transaction.error
-);
-};
+          ...data
 
-});
+        });
 
-}
 
-catch(error){
+        transaction.oncomplete =
+          () => resolve(true);
 
-console.error(
-"Error guardando datos offline:",
-error
-);
 
-return false;
+        transaction.onerror =
+          () => reject(
+            transaction.error
+          );
 
-}
+      }
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "[POS] Error guardando offline:",
+      error
+    );
+
+    return false;
+
+  }
 
 }
 
 
 async function getOfflineData(
-business
+  business
 ){
 
-try{
+  try{
 
-const db=
-await openOfflineDB();
-
-return new Promise(
-(resolve,reject)=>{
-
-const transaction=
-db.transaction(
-STORE_NAME,
-"readonly"
-);
-
-const store=
-transaction.objectStore(
-STORE_NAME
-);
-
-const request=
-store.get(
-"business_"+business
-);
+    const db =
+      await openOfflineDB();
 
 
-request.onsuccess=()=>{
-resolve(
-request.result||null
-);
-};
+    return new Promise(
+      (resolve,reject) => {
+
+        const transaction =
+          db.transaction(
+            STORE_NAME,
+            "readonly"
+          );
 
 
-request.onerror=()=>{
-reject(
-request.error
-);
-};
+        const store =
+          transaction.objectStore(
+            STORE_NAME
+          );
 
-});
 
-}
+        const request =
+          store.get(
+            "business_" +
+            business
+          );
 
-catch(error){
 
-console.error(
-"Error leyendo datos offline:",
-error
-);
+        request.onsuccess =
+          () => {
 
-return null;
+            resolve(
+              request.result || null
+            );
 
-}
+          };
+
+
+        request.onerror =
+          () => {
+
+            reject(
+              request.error
+            );
+
+          };
+
+      }
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "[POS] Error leyendo offline:",
+      error
+    );
+
+    return null;
+
+  }
 
 }
 
@@ -1348,332 +1493,500 @@ return null;
 
 function initializeSupabase(){
 
-if(
-!window.supabase ||
-typeof window.supabase.createClient!=="function"
-){
+  if(
+    !window.supabase ||
+    typeof window.supabase.createClient !==
+      "function"
+  ){
 
-throw new Error(
-"No se pudo cargar Supabase."
-);
+    throw new Error(
+      "No se pudo cargar la librería de Supabase."
+    );
 
-}
-
-supabaseClient=
-window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_PUBLISHABLE_KEY
-);
-
-}
+  }
 
 
-/* =========================================================
-   HELPERS
-========================================================= */
+  if(!supabaseClient){
 
-function $(id){
-return document.getElementById(id);
-}
+    supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+      );
 
-
-function money(value){
-
-return "$"+
-Number(value||0).toFixed(2);
-
-}
-
-
-function escapeHTML(value){
-
-return String(value??"")
-.replaceAll("&","&amp;")
-.replaceAll("<","&lt;")
-.replaceAll(">","&gt;")
-.replaceAll('"',"&quot;")
-.replaceAll("'","&#039;");
-
-}
-
-
-function showStatus(
-message,
-type="error"
-){
-
-$("status").textContent=
-message;
-
-$("status").className=
-"status "+type;
-
-}
-
-
-function clearStatus(){
-
-$("status").textContent="";
-
-$("status").className="status";
+  }
 
 }
 
 
 /* =========================================================
-   SERVICE WORKER
-========================================================= */
-
-async function registerServiceWorker(){
-
-if(
-!("serviceWorker" in navigator)
-){
-return;
-}
-
-try{
-
-const registration=
-await navigator.serviceWorker.register(
-"./sw.js",
-{
-scope:"./",
-updateViaCache:"none"
-}
-);
-
-console.log(
-"[POS] SW:",
-registration.scope
-);
-
-
-try{
-
-await registration.update();
-
-}catch(error){
-
-console.warn(
-"SW update:",
-error
-);
-
-}
-
-
-if(
-registration.waiting
-){
-
-registration.waiting.postMessage(
-"SKIP_WAITING"
-);
-
-}
-
-}catch(error){
-
-console.warn(
-"[POS] Service Worker:",
-error
-);
-
-}
-
-}
-
-
-/* =========================================================
-   CARGAR DATOS ONLINE
-========================================================= */
-
-async function loadOnlineData(){
-
-const businessId=
-BUSINESS_IDS[currentBusiness];
-
-
-/* PRODUCTOS */
-
-const productsResult=
-await supabaseClient
-.from("products")
-.select(
-"id,name,price,cost,stock,active,business_id"
-)
-.eq(
-"business_id",
-businessId
-)
-.eq(
-"active",
-true
-)
-.order("name");
-
-
-if(
-productsResult.error
-){
-throw productsResult.error;
-}
-
-
-/* MÉTODOS DE PAGO */
-
-const paymentsResult=
-await supabaseClient
-.from("payment_methods")
-.select(
-"id,name,provider,active,business_id"
-)
-.eq(
-"business_id",
-businessId
-)
-.eq(
-"active",
-true
-)
-.order("name");
-
-
-if(
-paymentsResult.error
-){
-throw paymentsResult.error;
-}
-
-
-/* CLIENTES */
-
-const customersResult=
-await supabaseClient
-.from("customers")
-.select(
-"id,name,phone,notes,business_id"
-)
-.or(
-"business_id.is.null,business_id.eq."+businessId
-)
-.order("name");
-
-
-if(
-customersResult.error
-){
-
-const fallbackCustomers=
-await supabaseClient
-.from("customers")
-.select(
-"id,name,phone,notes"
-)
-.order("name");
-
-
-if(
-fallbackCustomers.error
-){
-throw customersResult.error;
-}
-
-customers=
-fallbackCustomers.data||[];
-
-}else{
-
-customers=
-customersResult.data||[];
-
-}
-
-
-products=
-productsResult.data||[];
-
-payments=
-paymentsResult.data||[];
-
-
-await saveOfflineData(
-currentBusiness,
-{
-products,
-payments,
-customers
-}
-);
-
-}
-
-
-/* =========================================================
-   CARGAR OFFLINE
+   DATOS OFFLINE
 ========================================================= */
 
 async function loadOfflineData(){
 
-const cached=
-await getOfflineData(
-currentBusiness
-);
+  const cached =
+    await getOfflineData(
+      currentBusiness
+    );
 
 
-if(!cached){
+  if(!cached){
 
-products=[];
-payments=[];
-customers=[];
+    products = [];
+    payments = [];
+    customers = [];
 
-renderProducts();
-renderPayments();
-renderCart();
-renderSelectedCustomer();
+    renderProducts();
+    renderPayments();
+    renderCart();
+    renderSelectedCustomer();
 
-showStatus(
-"Este negocio todavía no tiene datos guardados en este dispositivo. Conéctate a Internet una vez para descargar productos, clientes y métodos de pago.",
-"warn"
-);
 
-return false;
+    showStatus(
+      "No hay datos locales para " +
+      currentBusiness +
+      ". Conéctate a Internet para sincronizar este negocio.",
+      "warn"
+    );
+
+
+    return false;
+
+  }
+
+
+  products =
+    Array.isArray(cached.products)
+      ? cached.products
+      : [];
+
+
+  payments =
+    Array.isArray(cached.payments)
+      ? cached.payments
+      : [];
+
+
+  customers =
+    Array.isArray(cached.customers)
+      ? cached.customers
+      : [];
+
+
+  renderProducts();
+  renderPayments();
+  renderCart();
+  renderSelectedCustomer();
+
+
+  showStatus(
+    "Modo OFFLINE activo.\n" +
+    currentBusiness +
+    " · Productos: " +
+    products.length +
+    " · Clientes: " +
+    customers.length,
+    "warn"
+  );
+
+
+  return true;
 
 }
 
 
-products=
-Array.isArray(cached.products)
-?cached.products
-:[];
+/* =========================================================
+   CARGAR PRODUCTOS
+========================================================= */
 
-payments=
-Array.isArray(cached.payments)
-?cached.payments
-:[];
+async function fetchProducts(){
 
-customers=
-Array.isArray(cached.customers)
-?cached.customers
-:[];
+  const businessId =
+    BUSINESS_IDS[currentBusiness];
 
 
-renderProducts();
-renderPayments();
-renderCart();
-renderSelectedCustomer();
+  const result =
+    await withTimeout(
+
+      supabaseClient
+        .from("products")
+        .select(
+          "id,name,price,cost,stock,active,business_id"
+        )
+        .eq(
+          "business_id",
+          businessId
+        )
+        .eq(
+          "active",
+          true
+        )
+        .order("name"),
+
+      8000,
+
+      "La carga de productos tardó demasiado."
+
+    );
 
 
-showStatus(
-"Modo OFFLINE activo.\n"+
-"Productos: "+products.length+
-" · Métodos de pago: "+payments.length+
-" · Clientes: "+customers.length,
-"warn"
-);
+  if(result.error){
+    throw result.error;
+  }
 
-return true;
+
+  return result.data || [];
+
+}
+
+
+/* =========================================================
+   CARGAR PAGOS
+========================================================= */
+
+async function fetchPayments(){
+
+  const businessId =
+    BUSINESS_IDS[currentBusiness];
+
+
+  const result =
+    await withTimeout(
+
+      supabaseClient
+        .from("payment_methods")
+        .select(
+          "id,name,provider,active,business_id"
+        )
+        .eq(
+          "business_id",
+          businessId
+        )
+        .eq(
+          "active",
+          true
+        )
+        .order("name"),
+
+      8000,
+
+      "La carga de métodos de pago tardó demasiado."
+
+    );
+
+
+  if(result.error){
+    throw result.error;
+  }
+
+
+  return result.data || [];
+
+}
+
+
+/* =========================================================
+   CARGAR CLIENTES
+========================================================= */
+
+async function fetchCustomers(){
+
+  const businessId =
+    BUSINESS_IDS[currentBusiness];
+
+
+  try{
+
+    const result =
+      await withTimeout(
+
+        supabaseClient
+          .from("customers")
+          .select(
+            "id,name,phone,notes,business_id"
+          )
+          .or(
+            "business_id.is.null,business_id.eq." +
+            businessId
+          )
+          .order("name"),
+
+        8000,
+
+        "La carga de clientes tardó demasiado."
+
+      );
+
+
+    if(!result.error){
+
+      return result.data || [];
+
+    }
+
+  }
+
+  catch(error){
+
+    console.warn(
+      "[POS] Consulta completa de clientes falló:",
+      error
+    );
+
+  }
+
+
+  /* Compatibilidad con tabla antigua */
+
+  const fallback =
+    await withTimeout(
+
+      supabaseClient
+        .from("customers")
+        .select(
+          "id,name,phone,notes"
+        )
+        .order("name"),
+
+      8000,
+
+      "La carga de clientes tardó demasiado."
+
+    );
+
+
+  if(fallback.error){
+    throw fallback.error;
+  }
+
+
+  return fallback.data || [];
+
+}
+
+
+/* =========================================================
+   CARGA ONLINE ROBUSTA
+========================================================= */
+
+async function loadOnlineData(){
+
+  initializeSupabase();
+
+
+  /*
+   * IMPORTANTE:
+   *
+   * Los tres catálogos se cargan por separado.
+   *
+   * Si clientes falla, NO bloquea productos.
+   *
+   * Si pagos falla, NO bloquea productos.
+   *
+   * Esto corrige el problema de quedarse eternamente
+   * en "Cargando productos..."
+   */
+
+
+  const results =
+    await Promise.allSettled([
+
+      fetchProducts(),
+
+      fetchPayments(),
+
+      fetchCustomers()
+
+    ]);
+
+
+  const productResult =
+    results[0];
+
+  const paymentResult =
+    results[1];
+
+  const customerResult =
+    results[2];
+
+
+  const problems = [];
+
+
+  /*
+   * PRODUCTOS
+   */
+
+  if(
+    productResult.status === "fulfilled"
+  ){
+
+    products =
+      productResult.value;
+
+  }
+
+  else{
+
+    problems.push(
+      "productos"
+    );
+
+  }
+
+
+  /*
+   * PAGOS
+   */
+
+  if(
+    paymentResult.status === "fulfilled"
+  ){
+
+    payments =
+      paymentResult.value;
+
+  }
+
+  else{
+
+    problems.push(
+      "métodos de pago"
+    );
+
+  }
+
+
+  /*
+   * CLIENTES
+   */
+
+  if(
+    customerResult.status === "fulfilled"
+  ){
+
+    customers =
+      customerResult.value;
+
+  }
+
+  else{
+
+    problems.push(
+      "clientes"
+    );
+
+  }
+
+
+  /*
+   * Si alguno falló, intentamos recuperar
+   * específicamente desde IndexedDB.
+   */
+
+  if(problems.length){
+
+    const cached =
+      await getOfflineData(
+        currentBusiness
+      );
+
+
+    if(cached){
+
+      if(
+        productResult.status !==
+        "fulfilled"
+      ){
+
+        products =
+          Array.isArray(cached.products)
+            ? cached.products
+            : [];
+
+      }
+
+
+      if(
+        paymentResult.status !==
+        "fulfilled"
+      ){
+
+        payments =
+          Array.isArray(cached.payments)
+            ? cached.payments
+            : [];
+
+      }
+
+
+      if(
+        customerResult.status !==
+        "fulfilled"
+      ){
+
+        customers =
+          Array.isArray(cached.customers)
+            ? cached.customers
+            : [];
+
+      }
+
+    }
+
+  }
+
+
+  /*
+   * Guardamos lo que sí tenemos.
+   */
+
+  await saveOfflineData(
+    currentBusiness,
+    {
+      products,
+      payments,
+      customers
+    }
+  );
+
+
+  /*
+   * Renderizamos SIEMPRE.
+   *
+   * Ya no dependemos de que las tres consultas
+   * terminen correctamente.
+   */
+
+  renderProducts();
+  renderPayments();
+  renderCart();
+  renderSelectedCustomer();
+
+
+  if(problems.length){
+
+    showStatus(
+      currentBusiness +
+      " cargado parcialmente.\n" +
+      "No se pudieron actualizar: " +
+      problems.join(", ") +
+      ".\nSe utilizaron los datos disponibles en el dispositivo.",
+      "warn"
+    );
+
+  }
+
+  else{
+
+    showStatus(
+      currentBusiness +
+      " actualizado correctamente.",
+      "ok"
+    );
+
+  }
 
 }
 
@@ -1684,64 +1997,147 @@ return true;
 
 async function loadBusinessData(){
 
-clearStatus();
+  clearStatus();
 
 
-$("products").innerHTML=
-'<div class="empty">Cargando productos...</div>';
-
-$("payments").innerHTML=
-'<div class="empty">Cargando métodos de pago...</div>';
+  $("products").innerHTML =
+    '<div class="empty">Cargando productos...</div>';
 
 
-if(
-!navigator.onLine
-){
-
-await loadOfflineData();
-
-return;
-
-}
+  $("payments").innerHTML =
+    '<div class="empty">Cargando métodos de pago...</div>';
 
 
-try{
+  /*
+   * Primero mostramos inmediatamente lo que exista
+   * localmente. Esto evita que el POS parezca congelado.
+   */
 
-await loadOnlineData();
-
-renderProducts();
-renderPayments();
-renderCart();
-renderSelectedCustomer();
-
-
-showStatus(
-currentBusiness+
-" actualizado correctamente.\n"+
-"Datos guardados para uso OFFLINE.",
-"ok"
-);
-
-}
-catch(error){
-
-console.warn(
-"[POS] Error online. Usando caché:",
-error
-);
-
-const loaded=
-await loadOfflineData();
+  const cached =
+    await getOfflineData(
+      currentBusiness
+    );
 
 
-if(!loaded){
+  if(cached){
 
-showStatus(
-"No se pudieron cargar los datos desde Supabase ni desde el almacenamiento OFFLINE.",
-"error"
-);
+    products =
+      Array.isArray(cached.products)
+        ? cached.products
+        : [];
 
-}
+
+    payments =
+      Array.isArray(cached.payments)
+        ? cached.payments
+        : [];
+
+
+    customers =
+      Array.isArray(cached.customers)
+        ? cached.customers
+        : [];
+
+
+    renderProducts();
+    renderPayments();
+    renderCart();
+    renderSelectedCustomer();
+
+  }
+
+
+  /*
+   * Si no hay Internet:
+   * usamos directamente el almacenamiento local.
+   */
+
+  if(!navigator.onLine){
+
+    if(cached){
+
+      showStatus(
+        "📴 MODO OFFLINE\n" +
+        currentBusiness +
+        " · Productos: " +
+        products.length +
+        " · Clientes: " +
+        customers.length,
+        "warn"
+      );
+
+    }
+    else{
+
+      showStatus(
+        "📴 Sin Internet y todavía no hay datos guardados para " +
+        currentBusiness,
+        "warn"
+      );
+
+    }
+
+    return;
+
+  }
+
+
+  /*
+   * ONLINE
+   */
+
+  try{
+
+    await loadOnlineData();
+
+  }
+
+  catch(error){
+
+    console.error(
+      "[POS] Error general online:",
+      error
+    );
+
+
+    /*
+     * Si ya mostramos caché arriba,
+     * simplemente dejamos el POS funcionando.
+     */
+
+    if(cached){
+
+      renderProducts();
+      renderPayments();
+      renderCart();
+      renderSelectedCustomer();
+
+
+      showStatus(
+        "⚠️ No se pudo actualizar desde Internet.\n" +
+        "El POS está funcionando con los datos guardados en este dispositivo.",
+        "warn"
+      );
+
+    }
+    else{
+
+      renderProducts();
+      renderPayments();
+
+
+      showStatus(
+        "No se pudieron cargar los datos.\n\n" +
+        (
+          error?.message ||
+          String(error)
+        ),
+        "error"
+      );
+
+    }
+
+  }
 
 }
 
@@ -1752,74 +2148,95 @@ showStatus(
 
 function renderProducts(){
 
-const container=
-$("products");
-
-container.innerHTML="";
+  const container =
+    $("products");
 
 
-if(!products.length){
-
-container.innerHTML=
-'<div class="empty">'+
-"No hay productos disponibles."+
-"</div>";
-
-return;
-
-}
+  container.innerHTML = "";
 
 
-products.forEach(
-product=>{
+  if(!products.length){
 
-const stock=
-Number(product.stock||0);
+    container.innerHTML =
+      '<div class="empty">No hay productos disponibles.</div>';
 
-const button=
-document.createElement("button");
+    return;
 
-button.type="button";
-
-button.className=
-"product"+
-(
-stock<=0
-?" disabled"
-:""
-);
-
-button.disabled=
-stock<=0;
+  }
 
 
-button.innerHTML=
+  /*
+   * MUY IMPORTANTE:
+   *
+   * Cada producto se crea como botón.
+   * No hay navegación.
+   */
 
-'<div class="product-name">'+
-escapeHTML(product.name)+
-'</div>'+
+  products.forEach(
+    product => {
 
-'<div class="price">'+
-money(product.price)+
-'</div>'+
-
-'<div class="stock">'+
-(
-stock>0
-?"Existencia: "+stock
-:"Agotado"
-)+
-'</div>';
+      const stock =
+        Number(
+          product.stock || 0
+        );
 
 
-button.addEventListener(
-"click",
-()=>addToCart(product)
-);
+      const button =
+        document.createElement(
+          "button"
+        );
 
-container.appendChild(button);
 
-});
+      button.type =
+        "button";
+
+
+      button.className =
+        "product" +
+        (
+          stock <= 0
+            ? " disabled"
+            : ""
+        );
+
+
+      button.disabled =
+        stock <= 0;
+
+
+      button.innerHTML =
+
+        '<div class="product-name">' +
+        escapeHTML(product.name) +
+        '</div>' +
+
+        '<div class="price">' +
+        money(product.price) +
+        '</div>' +
+
+        '<div class="stock">' +
+
+        (
+          stock > 0
+            ? "Existencia: " + stock
+            : "Agotado"
+        ) +
+
+        '</div>';
+
+
+      button.addEventListener(
+        "click",
+        () => addToCart(product)
+      );
+
+
+      container.appendChild(
+        button
+      );
+
+    }
+  );
 
 }
 
@@ -1830,72 +2247,84 @@ container.appendChild(button);
 
 function renderPayments(){
 
-const container=
-$("payments");
-
-container.innerHTML="";
+  const container =
+    $("payments");
 
 
-if(!payments.length){
-
-container.innerHTML=
-'<div class="empty">'+
-"No hay métodos de pago disponibles."+
-"</div>";
-
-return;
-
-}
+  container.innerHTML = "";
 
 
-if(
-!payments.some(
-p=>p.id===selectedPaymentId
-)
-){
+  if(!payments.length){
 
-selectedPaymentId=
-payments[0]?.id||null;
+    container.innerHTML =
+      '<div class="empty">No hay métodos de pago disponibles.</div>';
 
-}
+    return;
+
+  }
 
 
-payments.forEach(
-payment=>{
+  if(
+    !payments.some(
+      payment =>
+        String(payment.id) ===
+        String(selectedPaymentId)
+    )
+  ){
 
-const button=
-document.createElement("button");
+    selectedPaymentId =
+      payments[0]?.id ||
+      null;
 
-button.type="button";
-
-button.className=
-"payment"+
-(
-payment.id===selectedPaymentId
-?" active"
-:""
-);
-
-button.textContent=
-payment.name;
+  }
 
 
-button.addEventListener(
-"click",
-()=>{
+  payments.forEach(
+    payment => {
 
-selectedPaymentId=
-payment.id;
-
-renderPayments();
-
-}
-);
+      const button =
+        document.createElement(
+          "button"
+        );
 
 
-container.appendChild(button);
+      button.type =
+        "button";
 
-});
+
+      button.className =
+        "payment" +
+        (
+          String(payment.id) ===
+          String(selectedPaymentId)
+            ? " active"
+            : ""
+        );
+
+
+      button.textContent =
+        payment.name;
+
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          selectedPaymentId =
+            payment.id;
+
+          renderPayments();
+
+        }
+      );
+
+
+      container.appendChild(
+        button
+      );
+
+    }
+  );
 
 }
 
@@ -1906,269 +2335,316 @@ container.appendChild(button);
 
 function addToCart(product){
 
-const stock=
-Number(product.stock||0);
+  const stock =
+    Number(
+      product.stock || 0
+    );
 
 
-if(stock<=0){
+  if(stock <= 0){
 
-showStatus(
-"Este producto está agotado."
-);
+    showStatus(
+      "Este producto está agotado."
+    );
 
-return;
+    return;
 
-}
-
-
-const item=
-cart.find(
-i=>i.id===product.id
-);
+  }
 
 
-if(item){
-
-if(
-item.quantity<stock
-){
-
-item.quantity++;
-
-}else{
-
-showStatus(
-"No puedes agregar más unidades que la existencia disponible."
-);
-
-return;
-
-}
-
-}else{
-
-cart.push({
-...product,
-quantity:1
-});
-
-}
+  const item =
+    cart.find(
+      i =>
+        String(i.id) ===
+        String(product.id)
+    );
 
 
-renderCart();
+  if(item){
+
+    if(
+      item.quantity <
+      stock
+    ){
+
+      item.quantity++;
+
+    }
+    else{
+
+      showStatus(
+        "No puedes agregar más unidades que la existencia disponible."
+      );
+
+      return;
+
+    }
+
+  }
+
+  else{
+
+    cart.push({
+
+      ...product,
+
+      quantity:1
+
+    });
+
+  }
+
+
+  renderCart();
 
 }
 
 
 function changeQuantity(
-id,
-amount
+  id,
+  amount
 ){
 
-const item=
-cart.find(
-i=>i.id===id
-);
-
-if(!item)return;
-
-
-const product=
-products.find(
-p=>p.id===id
-);
+  const item =
+    cart.find(
+      i =>
+        String(i.id) ===
+        String(id)
+    );
 
 
-const max=
-Number(
-product?.stock??
-item.stock??
-0
-);
+  if(!item){
+    return;
+  }
 
 
-const newQuantity=
-item.quantity+amount;
+  const product =
+    products.find(
+      p =>
+        String(p.id) ===
+        String(id)
+    );
 
 
-if(
-newQuantity>max
-){
-
-showStatus(
-"No hay suficiente existencia disponible."
-);
-
-return;
-
-}
+  const max =
+    Number(
+      product?.stock ??
+      item.stock ??
+      0
+    );
 
 
-item.quantity=
-newQuantity;
+  const newQuantity =
+    item.quantity +
+    amount;
 
 
-if(
-item.quantity<=0
-){
+  if(newQuantity > max){
 
-cart=
-cart.filter(
-i=>i.id!==id
-);
+    showStatus(
+      "No hay suficiente existencia disponible."
+    );
 
-}
+    return;
+
+  }
 
 
-renderCart();
+  item.quantity =
+    newQuantity;
+
+
+  if(item.quantity <= 0){
+
+    cart =
+      cart.filter(
+        i =>
+          String(i.id) !==
+          String(id)
+      );
+
+  }
+
+
+  renderCart();
 
 }
 
 
 function getCartTotal(){
 
-return cart.reduce(
-(sum,item)=>
-sum+
-Number(item.price)*
-Number(item.quantity),
-0
-);
+  return cart.reduce(
+    (sum,item) =>
+      sum +
+      Number(item.price) *
+      Number(item.quantity),
+    0
+  );
 
 }
 
 
 function renderCart(){
 
-const container=
-$("cart");
-
-container.innerHTML="";
+  const container =
+    $("cart");
 
 
-if(!cart.length){
-
-container.innerHTML=
-'<div class="empty">El carrito está vacío</div>';
-
-$("total").textContent="$0.00";
-
-return;
-
-}
+  container.innerHTML = "";
 
 
-cart.forEach(
-item=>{
+  if(!cart.length){
 
-const row=
-document.createElement("div");
+    container.innerHTML =
+      '<div class="empty">El carrito está vacío</div>';
 
-row.className=
-"cart-item";
+    $("total").textContent =
+      "$0.00";
 
+    return;
 
-const info=
-document.createElement("div");
-
-
-info.innerHTML=
-
-'<div class="cart-name">'+
-escapeHTML(item.name)+
-'</div>'+
-
-'<div class="cart-price">'+
-money(item.price)+
-" c/u</div>";
+  }
 
 
-const controls=
-document.createElement("div");
+  cart.forEach(
+    item => {
 
-controls.className=
-"quantity";
-
-
-const minus=
-document.createElement("button");
-
-minus.type="button";
-
-minus.textContent="−";
+      const row =
+        document.createElement(
+          "div"
+        );
 
 
-minus.addEventListener(
-"click",
-()=>changeQuantity(
-item.id,
--1
-)
-);
+      row.className =
+        "cart-item";
 
 
-const quantity=
-document.createElement("span");
-
-quantity.textContent=
-item.quantity;
-
-
-const plus=
-document.createElement("button");
-
-plus.type="button";
-
-plus.textContent="+";
+      const info =
+        document.createElement(
+          "div"
+        );
 
 
-plus.addEventListener(
-"click",
-()=>changeQuantity(
-item.id,
-1
-)
-);
+      info.innerHTML =
+
+        '<div class="cart-name">' +
+        escapeHTML(item.name) +
+        '</div>' +
+
+        '<div class="cart-price">' +
+        money(item.price) +
+        " c/u</div>";
 
 
-controls.append(
-minus,
-quantity,
-plus
-);
-
-info.appendChild(
-controls
-);
+      const controls =
+        document.createElement(
+          "div"
+        );
 
 
-const subtotal=
-document.createElement("strong");
-
-subtotal.textContent=
-money(
-Number(item.price)*
-Number(item.quantity)
-);
+      controls.className =
+        "quantity";
 
 
-row.append(
-info,
-subtotal
-);
+      const minus =
+        document.createElement(
+          "button"
+        );
 
 
-container.appendChild(
-row
-);
+      minus.type =
+        "button";
 
-});
+      minus.textContent =
+        "−";
 
 
-$("total").textContent=
-money(
-getCartTotal()
-);
+      minus.addEventListener(
+        "click",
+        () =>
+          changeQuantity(
+            item.id,
+            -1
+          )
+      );
+
+
+      const quantity =
+        document.createElement(
+          "span"
+        );
+
+
+      quantity.textContent =
+        item.quantity;
+
+
+      const plus =
+        document.createElement(
+          "button"
+        );
+
+
+      plus.type =
+        "button";
+
+      plus.textContent =
+        "+";
+
+
+      plus.addEventListener(
+        "click",
+        () =>
+          changeQuantity(
+            item.id,
+            1
+          )
+      );
+
+
+      controls.append(
+        minus,
+        quantity,
+        plus
+      );
+
+
+      info.appendChild(
+        controls
+      );
+
+
+      const subtotal =
+        document.createElement(
+          "strong"
+        );
+
+
+      subtotal.textContent =
+        money(
+          Number(item.price) *
+          Number(item.quantity)
+        );
+
+
+      row.append(
+        info,
+        subtotal
+      );
+
+
+      container.appendChild(
+        row
+      );
+
+    }
+  );
+
+
+  $("total").textContent =
+    money(
+      getCartTotal()
+    );
 
 }
 
@@ -2179,289 +2655,341 @@ getCartTotal()
 
 function renderSelectedCustomer(){
 
-const selected=
-customers.find(
-c=>String(c.id)===
-String(selectedCustomerId)
-);
+  const selected =
+    customers.find(
+      customer =>
+        String(customer.id) ===
+        String(selectedCustomerId)
+    );
 
 
-const selectedElement=
-$("selectedCustomer");
-
-const general=
-$("generalCustomer");
+  const selectedElement =
+    $("selectedCustomer");
 
 
-if(!selected){
-
-selectedCustomerId=null;
-
-selectedElement.style.display=
-"none";
-
-selectedElement.innerHTML="";
-
-general.style.display=
-"block";
-
-return;
-
-}
+  const general =
+    $("generalCustomer");
 
 
-general.style.display=
-"none";
+  if(!selected){
+
+    selectedCustomerId =
+      null;
 
 
-selectedElement.style.display=
-"block";
+    selectedElement.style.display =
+      "none";
 
 
-selectedElement.innerHTML=
-
-"👤 <strong>"+
-escapeHTML(
-selected.name||"Cliente"
-)+
-"</strong>"+
-
-(
-selected.phone
-?" · 📱 "+
-escapeHTML(selected.phone)
-:""
-)+
-
-'<button type="button" class="clear-customer" id="clearCustomer">Quitar</button>';
+    selectedElement.innerHTML =
+      "";
 
 
-$("clearCustomer").addEventListener(
-"click",
-clearSelectedCustomer
-);
+    general.style.display =
+      "block";
+
+
+    return;
+
+  }
+
+
+  general.style.display =
+    "none";
+
+
+  selectedElement.style.display =
+    "block";
+
+
+  selectedElement.innerHTML =
+
+    "👤 <strong>" +
+
+    escapeHTML(
+      selected.name ||
+      "Cliente"
+    ) +
+
+    "</strong>" +
+
+    (
+      selected.phone
+        ? " · 📱 " +
+          escapeHTML(
+            selected.phone
+          )
+        : ""
+    ) +
+
+    '<button type="button" class="clear-customer" id="clearCustomer">Quitar</button>';
+
+
+  $("clearCustomer").addEventListener(
+    "click",
+    clearSelectedCustomer
+  );
 
 }
 
 
 function clearSelectedCustomer(){
 
-selectedCustomerId=null;
-
-$("customerSearch").value="";
-
-$("customerResults").innerHTML="";
-
-$("customerResults").style.display=
-"none";
-
-renderSelectedCustomer();
-
-}
+  selectedCustomerId =
+    null;
 
 
-function renderCustomerResults(query){
-
-const container=
-$("customerResults");
+  $("customerSearch").value =
+    "";
 
 
-const search=
-String(query||"")
-.trim()
-.toLowerCase();
+  $("customerResults").innerHTML =
+    "";
 
 
-if(!search){
+  $("customerResults").style.display =
+    "none";
 
-container.innerHTML="";
 
-container.style.display=
-"none";
-
-return;
+  renderSelectedCustomer();
 
 }
 
 
-const filtered=
-customers.filter(
-customer=>{
-
-const name=
-String(
-customer.name||""
-).toLowerCase();
-
-const phone=
-String(
-customer.phone||""
-).toLowerCase();
-
-const notes=
-String(
-customer.notes||""
-).toLowerCase();
-
-
-return(
-name.includes(search)||
-phone.includes(search)||
-notes.includes(search)
-);
-
-});
-
-
-container.innerHTML="";
-
-
-if(!filtered.length){
-
-const empty=
-document.createElement("div");
-
-empty.className="empty";
-
-empty.textContent=
-"No encontramos ese cliente.";
-
-container.appendChild(
-empty
-);
-
-container.style.display=
-"block";
-
-return;
-
-}
-
-
-filtered
-.slice(0,20)
-.forEach(
-customer=>{
-
-const button=
-document.createElement("button");
-
-button.type="button";
-
-button.className=
-"customer-result";
-
-
-button.innerHTML=
-
-"<strong>"+
-escapeHTML(
-customer.name||
-"Cliente sin nombre"
-)+
-"</strong>"+
-
-(
-customer.phone
-?"<small>📱 "+
-escapeHTML(
-customer.phone
-)+
-"</small>"
-:""
-);
-
-
-button.addEventListener(
-"click",
-()=>{
-
-selectedCustomerId=
-customer.id;
-
-$("customerSearch").value=
-customer.name||"";
-
-container.innerHTML="";
-
-container.style.display=
-"none";
-
-renderSelectedCustomer();
-
-}
-);
-
-
-container.appendChild(
-button
-);
-
-});
-
-
-container.style.display=
-"block";
-
-}
-
-
-$("customerSearch").addEventListener(
-"input",
-event=>{
-renderCustomerResults(
-event.target.value
-);
-}
-);
-
-
-$("customerSearch").addEventListener(
-"focus",
-event=>{
-
-if(
-event.target.value.trim()
+function renderCustomerResults(
+  query
 ){
 
-renderCustomerResults(
-event.target.value
-);
+  const container =
+    $("customerResults");
+
+
+  const search =
+    String(
+      query || ""
+    )
+    .trim()
+    .toLowerCase();
+
+
+  if(!search){
+
+    container.innerHTML =
+      "";
+
+    container.style.display =
+      "none";
+
+    return;
+
+  }
+
+
+  const filtered =
+    customers.filter(
+      customer => {
+
+        const name =
+          String(
+            customer.name || ""
+          ).toLowerCase();
+
+
+        const phone =
+          String(
+            customer.phone || ""
+          ).toLowerCase();
+
+
+        const notes =
+          String(
+            customer.notes || ""
+          ).toLowerCase();
+
+
+        return(
+          name.includes(search) ||
+          phone.includes(search) ||
+          notes.includes(search)
+        );
+
+      }
+    );
+
+
+  container.innerHTML =
+    "";
+
+
+  if(!filtered.length){
+
+    const empty =
+      document.createElement(
+        "div"
+      );
+
+
+    empty.className =
+      "empty";
+
+
+    empty.textContent =
+      "No encontramos ese cliente.";
+
+
+    container.appendChild(
+      empty
+    );
+
+
+    container.style.display =
+      "block";
+
+
+    return;
+
+  }
+
+
+  filtered
+    .slice(0,20)
+    .forEach(
+      customer => {
+
+        const button =
+          document.createElement(
+            "button"
+          );
+
+
+        button.type =
+          "button";
+
+
+        button.className =
+          "customer-result";
+
+
+        button.innerHTML =
+
+          "<strong>" +
+
+          escapeHTML(
+            customer.name ||
+            "Cliente sin nombre"
+          ) +
+
+          "</strong>" +
+
+          (
+            customer.phone
+              ? "<small>📱 " +
+                escapeHTML(
+                  customer.phone
+                ) +
+                "</small>"
+              : ""
+          );
+
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            selectedCustomerId =
+              customer.id;
+
+
+            $("customerSearch").value =
+              customer.name || "";
+
+
+            container.innerHTML =
+              "";
+
+
+            container.style.display =
+              "none";
+
+
+            renderSelectedCustomer();
+
+          }
+        );
+
+
+        container.appendChild(
+          button
+        );
+
+      }
+    );
+
+
+  container.style.display =
+    "block";
 
 }
 
-});
+
+$("customerSearch").addEventListener(
+  "input",
+  event => {
+
+    renderCustomerResults(
+      event.target.value
+    );
+
+  }
+);
+
+
+$("customerSearch").addEventListener(
+  "focus",
+  event => {
+
+    if(
+      event.target.value.trim()
+    ){
+
+      renderCustomerResults(
+        event.target.value
+      );
+
+    }
+
+  }
+);
 
 
 $("generalCustomer").addEventListener(
-"click",
-clearSelectedCustomer
+  "click",
+  clearSelectedCustomer
 );
 
 
 document.addEventListener(
-"click",
-event=>{
+  "click",
+  event => {
 
-const box=
-document.querySelector(
-".customer-box"
+    const box =
+      document.querySelector(
+        ".customer-box"
+      );
+
+
+    if(
+      box &&
+      !box.contains(event.target)
+    ){
+
+      $("customerResults").style.display =
+        "none";
+
+    }
+
+  }
 );
-
-
-if(
-box &&
-!box.contains(
-event.target
-)
-){
-
-$("customerResults").style.display=
-"none";
-
-}
-
-});
 
 
 /* =========================================================
@@ -2470,463 +2998,516 @@ $("customerResults").style.display=
 
 function openClientModal(){
 
-const modal=
-$("clientModal");
+  const modal =
+    $("clientModal");
 
 
-$("clientModalBusiness").textContent=
-"Nuevo cliente para "+
-currentBusiness;
+  $("clientModalBusiness").textContent =
+    "Nuevo cliente para " +
+    currentBusiness;
 
 
-$("clientModalError").textContent="";
-
-$("clientModalError")
-.classList.remove("show");
+  $("clientModalError").textContent =
+    "";
 
 
-$("clientForm").reset();
+  $("clientModalError")
+    .classList.remove(
+      "show"
+    );
 
 
-modal.classList.add("show");
-
-modal.setAttribute(
-"aria-hidden",
-"false"
-);
+  $("clientForm").reset();
 
 
-document.body.classList.add(
-"modal-open"
-);
+  modal.classList.add(
+    "show"
+  );
 
 
-setTimeout(
-()=>{
-$("newClientName").focus();
-},
-100
-);
+  modal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+
+  document.body.classList.add(
+    "modal-open"
+  );
+
+
+  setTimeout(
+    () => {
+
+      $("newClientName").focus();
+
+    },
+    100
+  );
 
 }
 
 
 function closeClientModal(){
 
-const modal=
-$("clientModal");
+  const modal =
+    $("clientModal");
 
 
-modal.classList.remove("show");
-
-modal.setAttribute(
-"aria-hidden",
-"true"
-);
+  modal.classList.remove(
+    "show"
+  );
 
 
-document.body.classList.remove(
-"modal-open"
-);
+  modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
 
 
-$("clientModalError").textContent="";
+  document.body.classList.remove(
+    "modal-open"
+  );
 
-$("clientModalError")
-.classList.remove("show");
+
+  $("clientModalError").textContent =
+    "";
+
+
+  $("clientModalError")
+    .classList.remove(
+      "show"
+    );
 
 }
 
 
 function showClientModalError(
-message
+  message
 ){
 
-const error=
-$("clientModalError");
+  const error =
+    $("clientModalError");
 
 
-error.textContent=
-message;
+  error.textContent =
+    message;
 
-error.classList.add(
-"show"
-);
+
+  error.classList.add(
+    "show"
+  );
 
 }
 
 
 async function saveNewClient(){
 
-const name=
-$("newClientName")
-.value
-.trim();
+  const name =
+    $("newClientName")
+      .value
+      .trim();
 
 
-const phone=
-$("newClientPhone")
-.value
-.trim();
+  const phone =
+    $("newClientPhone")
+      .value
+      .trim();
 
 
-const notes=
-$("newClientNotes")
-.value
-.trim();
+  const notes =
+    $("newClientNotes")
+      .value
+      .trim();
 
 
-if(!name){
+  if(!name){
 
-showClientModalError(
-"Escribe el nombre del cliente."
-);
+    showClientModalError(
+      "Escribe el nombre del cliente."
+    );
 
-$("newClientName").focus();
 
-return;
+    $("newClientName").focus();
 
-}
 
+    return;
 
-const saveButton=
-$("saveClientButton");
+  }
 
 
-const originalText=
-saveButton.textContent;
+  const saveButton =
+    $("saveClientButton");
 
 
-saveButton.disabled=
-true;
+  const originalText =
+    saveButton.textContent;
 
 
-saveButton.textContent=
-"Guardando...";
+  saveButton.disabled =
+    true;
 
 
-try{
+  saveButton.textContent =
+    "Guardando...";
 
-const businessId=
-BUSINESS_IDS[currentBusiness];
 
+  try{
 
-/* OFFLINE */
+    const businessId =
+      BUSINESS_IDS[
+        currentBusiness
+      ];
 
-if(!navigator.onLine){
 
-const temporaryId=
-"offline-client-"+Date.now();
+    /*
+     * OFFLINE
+     */
 
+    if(!navigator.onLine){
 
-const newClient={
+      const temporaryId =
+        "offline-client-" +
+        Date.now();
 
-id:temporaryId,
 
-name,
+      const newClient = {
 
-phone:
-phone||null,
+        id:
+          temporaryId,
 
-notes:
-notes||null,
+        name,
 
-business_id:
-businessId,
+        phone:
+          phone || null,
 
-offline:true
+        notes:
+          notes || null,
 
-};
+        business_id:
+          businessId,
 
+        offline:
+          true
 
-customers.push(
-newClient
-);
+      };
 
 
-customers.sort(
-(a,b)=>
-String(a.name||"")
-.localeCompare(
-String(b.name||"")
-)
-);
+      customers.push(
+        newClient
+      );
 
 
-await saveOfflineData(
-currentBusiness,
-{
-products,
-payments,
-customers
-}
-);
+      customers.sort(
+        (a,b) =>
+          String(a.name || "")
+            .localeCompare(
+              String(b.name || "")
+            )
+      );
 
 
-selectedCustomerId=
-temporaryId;
+      await saveOfflineData(
+        currentBusiness,
+        {
+          products,
+          payments,
+          customers
+        }
+      );
 
 
-$("customerSearch").value=
-name;
+      selectedCustomerId =
+        temporaryId;
 
 
-renderSelectedCustomer();
+      $("customerSearch").value =
+        name;
 
-closeClientModal();
 
+      renderSelectedCustomer();
 
-showStatus(
-"Cliente agregado correctamente en modo OFFLINE.\n"+
-"Se guardó en este dispositivo y quedó seleccionado para esta venta.",
-"ok"
-);
 
-return;
+      closeClientModal();
 
-}
 
+      showStatus(
+        "Cliente agregado correctamente en modo OFFLINE.\n" +
+        "Quedó seleccionado para esta venta.",
+        "ok"
+      );
 
-/* ONLINE */
 
-if(!supabaseClient){
+      return;
 
-initializeSupabase();
+    }
 
-}
 
+    /*
+     * ONLINE
+     */
 
-let insertPayload={
+    initializeSupabase();
 
-name,
 
-phone:
-phone||null,
+    let result =
+      await withTimeout(
 
-notes:
-notes||null
+        supabaseClient
+          .from("customers")
+          .insert({
 
-};
+            name,
 
+            phone:
+              phone || null,
 
-let result=
-await supabaseClient
-.from("customers")
-.insert({
+            notes:
+              notes || null,
 
-...insertPayload,
+            business_id:
+              businessId
 
-business_id:
-businessId
+          })
+          .select(
+            "id,name,phone,notes,business_id"
+          )
+          .single(),
 
-})
-.select(
-"id,name,phone,notes,business_id"
-)
-.single();
+        10000,
 
+        "Guardar el cliente tardó demasiado."
 
-if(
-result.error &&
-(
-String(
-result.error.message||""
-)
-.toLowerCase()
-.includes("business_id")||
+      );
 
-String(
-result.error.message||""
-)
-.toLowerCase()
-.includes("column")
-)
-){
 
-result=
-await supabaseClient
-.from("customers")
-.insert(
-insertPayload
-)
-.select(
-"id,name,phone,notes"
-)
-.single();
+    /*
+     * Compatibilidad con tabla sin business_id
+     */
 
-}
+    if(
+      result.error &&
+      (
+        String(
+          result.error.message || ""
+        )
+        .toLowerCase()
+        .includes("business_id")
+        ||
+        String(
+          result.error.message || ""
+        )
+        .toLowerCase()
+        .includes("column")
+      )
+    ){
 
+      result =
+        await withTimeout(
 
-if(result.error){
+          supabaseClient
+            .from("customers")
+            .insert({
 
-throw result.error;
+              name,
 
-}
+              phone:
+                phone || null,
 
+              notes:
+                notes || null
 
-const newClient=
-result.data;
+            })
+            .select(
+              "id,name,phone,notes"
+            )
+            .single(),
 
+          10000,
 
-if(!newClient){
+          "Guardar el cliente tardó demasiado."
 
-throw new Error(
-"Supabase no devolvió el cliente creado."
-);
+        );
 
-}
+    }
 
 
-customers=
-[
-...customers,
-newClient
-]
-.sort(
-(a,b)=>
-String(a.name||"")
-.localeCompare(
-String(b.name||"")
-)
-);
+    if(result.error){
 
+      throw result.error;
 
-await saveOfflineData(
-currentBusiness,
-{
-products,
-payments,
-customers
-}
-);
+    }
 
 
-selectedCustomerId=
-newClient.id;
+    if(!result.data){
 
+      throw new Error(
+        "Supabase no devolvió el cliente creado."
+      );
 
-$("customerSearch").value=
-newClient.name||name;
+    }
 
 
-renderSelectedCustomer();
+    const newClient =
+      result.data;
 
-closeClientModal();
 
+    customers =
+      [
+        ...customers,
+        newClient
+      ]
+      .sort(
+        (a,b) =>
+          String(a.name || "")
+            .localeCompare(
+              String(b.name || "")
+            )
+      );
 
-showStatus(
-"Cliente agregado correctamente.\n"+
-"Quedó seleccionado para esta venta.",
-"ok"
-);
 
-}
-catch(error){
+    await saveOfflineData(
+      currentBusiness,
+      {
+        products,
+        payments,
+        customers
+      }
+    );
 
-console.error(
-"[POS] Error creando cliente:",
-error
-);
 
+    selectedCustomerId =
+      newClient.id;
 
-showClientModalError(
-"No se pudo guardar el cliente.\n\n"+
-(error?.message||String(error))
-);
 
-}
-finally{
+    $("customerSearch").value =
+      newClient.name ||
+      name;
 
-saveButton.disabled=
-false;
 
-saveButton.textContent=
-originalText;
+    renderSelectedCustomer();
 
-}
+
+    closeClientModal();
+
+
+    showStatus(
+      "Cliente agregado correctamente.\n" +
+      "Quedó seleccionado para esta venta.",
+      "ok"
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "[POS] Error creando cliente:",
+      error
+    );
+
+
+    showClientModalError(
+
+      "No se pudo guardar el cliente.\n\n" +
+
+      (
+        error?.message ||
+        String(error)
+      )
+
+    );
+
+  }
+
+  finally{
+
+    saveButton.disabled =
+      false;
+
+
+    saveButton.textContent =
+      originalText;
+
+  }
 
 }
 
 
 /* =========================================================
-   BOTÓN AGREGAR CLIENTE
+   BOTÓN + CLIENTE
 ========================================================= */
 
-$("addClientButton")
-.addEventListener(
-"click",
-event=>{
+$("addClientButton").addEventListener(
+  "click",
+  event => {
 
-event.preventDefault();
+    event.preventDefault();
+    event.stopPropagation();
 
-event.stopPropagation();
+    openClientModal();
 
-openClientModal();
-
-}
+  }
 );
 
 
-$("closeClientModal")
-.addEventListener(
-"click",
-closeClientModal
+$("closeClientModal").addEventListener(
+  "click",
+  closeClientModal
 );
 
 
-$("cancelClientModal")
-.addEventListener(
-"click",
-closeClientModal
+$("cancelClientModal").addEventListener(
+  "click",
+  closeClientModal
 );
 
 
-$("clientForm")
-.addEventListener(
-"submit",
-event=>{
+$("clientForm").addEventListener(
+  "submit",
+  event => {
 
-event.preventDefault();
+    event.preventDefault();
 
-saveNewClient();
+    saveNewClient();
 
-}
+  }
 );
 
 
-$("clientModal")
-.addEventListener(
-"click",
-event=>{
+$("clientModal").addEventListener(
+  "click",
+  event => {
 
-if(
-event.target===
-$("clientModal")
-){
+    if(
+      event.target ===
+      $("clientModal")
+    ){
 
-closeClientModal();
+      closeClientModal();
 
-}
+    }
 
-});
+  }
+);
 
 
 document.addEventListener(
-"keydown",
-event=>{
+  "keydown",
+  event => {
 
-if(
-event.key==="Escape" &&
-$("clientModal")
-.classList
-.contains("show")
-){
+    if(
+      event.key === "Escape" &&
+      $("clientModal")
+        .classList
+        .contains("show")
+    ){
 
-closeClientModal();
+      closeClientModal();
 
-}
+    }
 
-}
+  }
 );
 
 
@@ -2935,59 +3516,65 @@ closeClientModal();
 ========================================================= */
 
 async function changeBusiness(
-name,
-button
+  name,
+  button
 ){
 
-if(
-name===
-currentBusiness
-){
+  if(
+    name ===
+    currentBusiness
+  ){
 
-return;
+    return;
 
-}
-
-
-currentBusiness=
-name;
+  }
 
 
-cart=[];
-
-selectedPaymentId=
-null;
-
-selectedCustomerId=
-null;
+  currentBusiness =
+    name;
 
 
-$("customerSearch").value="";
-
-$("customerResults").innerHTML="";
-
-$("customerResults").style.display=
-"none";
+  cart = [];
 
 
-document
-.querySelectorAll(
-".business-btn"
-)
-.forEach(
-b=>
-b.classList.remove(
-"active"
-)
-);
+  selectedPaymentId =
+    null;
 
 
-button.classList.add(
-"active"
-);
+  selectedCustomerId =
+    null;
 
 
-await loadBusinessData();
+  $("customerSearch").value =
+    "";
+
+
+  $("customerResults").innerHTML =
+    "";
+
+
+  $("customerResults").style.display =
+    "none";
+
+
+  document
+    .querySelectorAll(
+      ".business-btn"
+    )
+    .forEach(
+      b =>
+        b.classList.remove(
+          "active"
+        )
+    );
+
+
+  button.classList.add(
+    "active"
+  );
+
+
+  await loadBusinessData();
 
 }
 
@@ -2997,207 +3584,233 @@ await loadBusinessData();
 ========================================================= */
 
 async function registerSale(
-isPending
+  isPending
 ){
 
-clearStatus();
+  clearStatus();
 
 
-if(!cart.length){
+  if(!cart.length){
 
-showStatus(
-"Agrega al menos un producto."
-);
+    showStatus(
+      "Agrega al menos un producto."
+    );
 
-return;
+    return;
 
-}
+  }
 
 
-if(
-!isPending &&
-!selectedPaymentId
-){
+  if(
+    !isPending &&
+    !selectedPaymentId
+  ){
 
-showStatus(
-"Selecciona un método de pago."
-);
+    showStatus(
+      "Selecciona un método de pago."
+    );
 
-return;
+    return;
 
-}
+  }
 
 
-if(
-isPending &&
-!selectedCustomerId
-){
+  if(
+    isPending &&
+    !selectedCustomerId
+  ){
 
-showStatus(
-"Para dejar una venta a cuenta debes seleccionar un cliente."
-);
+    showStatus(
+      "Para dejar una venta a cuenta debes seleccionar un cliente."
+    );
 
-return;
+    return;
 
-}
+  }
 
 
-if(!navigator.onLine){
+  if(!navigator.onLine){
 
-showStatus(
-"Estás OFFLINE.\n\n"+
-"Los productos, clientes y métodos de pago están disponibles porque fueron guardados en el dispositivo.\n\n"+
-"El registro de la venta offline se habilitará en la siguiente etapa.",
-"warn"
-);
+    showStatus(
+      "Estás OFFLINE.\n\n" +
+      "El registro de ventas offline todavía no está habilitado.",
+      "warn"
+    );
 
-return;
+    return;
 
-}
+  }
 
 
-const button=
-isPending
-?$("accountButton")
-:$("chargeButton");
+  initializeSupabase();
 
 
-const originalText=
-button.textContent;
+  const button =
+    isPending
+      ? $("accountButton")
+      : $("chargeButton");
 
 
-button.disabled=
-true;
+  const originalText =
+    button.textContent;
 
 
-button.textContent=
-isPending
-?"GUARDANDO..."
-:"REGISTRANDO...";
+  button.disabled =
+    true;
 
 
-try{
+  button.textContent =
+    isPending
+      ? "GUARDANDO..."
+      : "REGISTRANDO...";
 
-const items=
-cart.map(
-item=>({
 
-product_id:
-item.id,
+  try{
 
-description:
-item.name,
+    const items =
+      cart.map(
+        item => ({
 
-quantity:
-Number(item.quantity),
+          product_id:
+            item.id,
 
-unit_price:
-Number(item.price),
+          description:
+            item.name,
 
-subtotal:
-Number(item.price)*
-Number(item.quantity)
+          quantity:
+            Number(item.quantity),
 
-})
-);
+          unit_price:
+            Number(item.price),
 
+          subtotal:
+            Number(item.price) *
+            Number(item.quantity)
 
-const businessId=
-BUSINESS_IDS[currentBusiness];
+        })
+      );
 
 
-const result=
-await supabaseClient.rpc(
-"register_sale",
-{
+    const businessId =
+      BUSINESS_IDS[
+        currentBusiness
+      ];
 
-p_business_id:
-businessId,
 
-p_customer_id:
-selectedCustomerId||
-null,
+    const result =
+      await withTimeout(
 
-p_payment_method_id:
-isPending
-?null
-:selectedPaymentId,
+        supabaseClient.rpc(
+          "register_sale",
+          {
 
-p_items:
-items,
+            p_business_id:
+              businessId,
 
-p_is_pending:
-isPending
+            p_customer_id:
+              selectedCustomerId ||
+              null,
 
-}
-);
+            p_payment_method_id:
+              isPending
+                ? null
+                : selectedPaymentId,
 
+            p_items:
+              items,
 
-if(result.error){
+            p_is_pending:
+              isPending
 
-throw result.error;
+          }
+        ),
 
-}
+        15000,
 
+        "Registrar la venta tardó demasiado."
 
-alert(
-isPending
-?"Cuenta registrada correctamente."
-:"Venta registrada correctamente."
-);
+      );
 
 
-cart=[];
+    if(result.error){
 
-selectedCustomerId=
-null;
+      throw result.error;
 
+    }
 
-$("customerSearch").value="";
 
-$("customerResults").innerHTML="";
+    alert(
+      isPending
+        ? "Cuenta registrada correctamente."
+        : "Venta registrada correctamente."
+    );
 
-$("customerResults").style.display=
-"none";
 
+    cart = [];
 
-renderSelectedCustomer();
 
+    selectedCustomerId =
+      null;
 
-await loadBusinessData();
 
+    $("customerSearch").value =
+      "";
 
-showStatus(
-isPending
-?"Cuenta guardada correctamente."
-:"Venta guardada correctamente.",
-"ok"
-);
 
-}
-catch(error){
+    $("customerResults").innerHTML =
+      "";
 
-console.error(
-"registerSale:",
-error
-);
 
+    $("customerResults").style.display =
+      "none";
 
-showStatus(
-"No se pudo registrar la operación:\n"+
-(error?.message||String(error))
-);
 
-}
-finally{
+    renderSelectedCustomer();
 
-button.disabled=
-false;
 
-button.textContent=
-originalText;
+    await loadBusinessData();
 
-}
+
+    showStatus(
+      isPending
+        ? "Cuenta guardada correctamente."
+        : "Venta guardada correctamente.",
+      "ok"
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "registerSale:",
+      error
+    );
+
+
+    showStatus(
+
+      "No se pudo registrar la operación:\n" +
+
+      (
+        error?.message ||
+        String(error)
+      )
+
+    );
+
+  }
+
+  finally{
+
+    button.disabled =
+      false;
+
+
+    button.textContent =
+      originalText;
+
+  }
 
 }
 
@@ -3206,120 +3819,115 @@ originalText;
    NAVEGACIÓN
 ========================================================= */
 
-$("chargeButton")
-.addEventListener(
-"click",
-()=>registerSale(false)
+$("chargeButton").addEventListener(
+  "click",
+  () =>
+    registerSale(false)
 );
 
 
-$("accountButton")
-.addEventListener(
-"click",
-()=>registerSale(true)
+$("accountButton").addEventListener(
+  "click",
+  () =>
+    registerSale(true)
 );
 
 
-$("accountsButton")
-.addEventListener(
-"click",
-()=>{
+$("accountsButton").addEventListener(
+  "click",
+  () => {
 
-window.location.href=
-"cuentas.html?business="+
-encodeURIComponent(
-currentBusiness
-);
+    window.location.href =
+      "cuentas.html?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
 
-}
-);
-
-
-$("clientsButton")
-.addEventListener(
-"click",
-()=>{
-
-window.location.href=
-"clientes.html?business="+
-encodeURIComponent(
-currentBusiness
-);
-
-}
+  }
 );
 
 
-$("historyButton")
-.addEventListener(
-"click",
-()=>{
+$("clientsButton").addEventListener(
+  "click",
+  () => {
 
-window.location.href=
-"historial.html?business="+
-encodeURIComponent(
-currentBusiness
-);
+    window.location.href =
+      "clientes.html?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
 
-}
-);
-
-
-$("inventoryButton")
-.addEventListener(
-"click",
-()=>{
-
-window.location.href=
-"inventario.html?business="+
-encodeURIComponent(
-currentBusiness
-);
-
-}
+  }
 );
 
 
-$("dashboardButton")
-.addEventListener(
-"click",
-()=>{
+$("historyButton").addEventListener(
+  "click",
+  () => {
 
-window.location.href=
-"dashboard.html?business="+
-encodeURIComponent(
-currentBusiness
+    window.location.href =
+      "historial.html?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
+
+  }
 );
 
-}
+
+$("inventoryButton").addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+      "inventario.html?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
+
+  }
+);
+
+
+$("dashboardButton").addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+      "dashboard.html?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
+
+  }
 );
 
 
 /* =========================================================
-   NEGOCIOS
+   BOTONES DE NEGOCIO
 ========================================================= */
 
 document
-.querySelectorAll(
-".business-btn"
-)
-.forEach(
-button=>{
+  .querySelectorAll(
+    ".business-btn"
+  )
+  .forEach(
+    button => {
 
-button.addEventListener(
-"click",
-()=>{
+      button.addEventListener(
+        "click",
+        () => {
 
-changeBusiness(
-button.dataset.business,
-button
-);
+          changeBusiness(
+            button.dataset.business,
+            button
+          );
 
-}
-);
+        }
+      );
 
-}
-);
+    }
+  );
 
 
 /* =========================================================
@@ -3327,27 +3935,30 @@ button
 ========================================================= */
 
 window.addEventListener(
-"online",
-async()=>{
+  "online",
+  async () => {
 
-$("offlineBadge").innerHTML="";
+    $("offlineBadge").innerHTML =
+      "";
 
-await loadBusinessData();
 
-}
+    await loadBusinessData();
+
+  }
 );
 
 
 window.addEventListener(
-"offline",
-async()=>{
+  "offline",
+  async () => {
 
-$("offlineBadge").innerHTML=
-'<span class="offline-badge">📴 MODO OFFLINE</span>';
+    $("offlineBadge").innerHTML =
+      '<span class="offline-badge">📴 MODO OFFLINE</span>';
 
-await loadOfflineData();
 
-}
+    await loadBusinessData();
+
+  }
 );
 
 
@@ -3357,41 +3968,38 @@ await loadOfflineData();
 
 async function startApp(){
 
-await registerServiceWorker();
+  if(!navigator.onLine){
+
+    $("offlineBadge").innerHTML =
+      '<span class="offline-badge">📴 MODO OFFLINE</span>';
+
+  }
 
 
-if(!navigator.onLine){
+  try{
 
-$("offlineBadge").innerHTML=
-'<span class="offline-badge">📴 MODO OFFLINE</span>';
+    await loadBusinessData();
 
-}else{
+  }
 
-$("offlineBadge").innerHTML="";
+  catch(error){
 
-}
+    console.error(
+      "[POS] Error inicial:",
+      error
+    );
 
 
-try{
+    await loadOfflineData();
 
-initializeSupabase();
-
-await loadBusinessData();
-
-}
-catch(error){
-
-console.error(
-"[POS] Error inicial:",
-error
-);
-
-await loadOfflineData();
+  }
 
 }
 
-}
 
+/* =========================================================
+   ARRANCAR
+========================================================= */
 
 startApp();
 
