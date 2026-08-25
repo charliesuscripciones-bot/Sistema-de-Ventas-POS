@@ -364,38 +364,40 @@ font-weight:800
 }
 
 /* =========================================================
-   MODAL NUEVO CLIENTE
+   VENTANA FLOTANTE PARA AGREGAR CLIENTE
 ========================================================= */
 
 .client-modal{
-display:none;
 position:fixed;
 inset:0;
 z-index:9999;
-background:rgba(0,0,0,.55);
-padding:20px;
+display:none;
 align-items:center;
-justify-content:center
+justify-content:center;
+padding:20px;
+background:rgba(0,0,0,.58);
+backdrop-filter:blur(5px);
+-webkit-backdrop-filter:blur(5px)
 }
 
 .client-modal.show{
 display:flex
 }
 
-.client-modal-content{
+.client-modal-box{
 width:100%;
 max-width:430px;
 background:#fff;
 border-radius:22px;
-padding:22px;
-box-shadow:0 20px 60px rgba(0,0,0,.3);
+box-shadow:0 20px 60px rgba(0,0,0,.30);
+overflow:hidden;
 animation:modalIn .18s ease-out
 }
 
 @keyframes modalIn{
 from{
 opacity:0;
-transform:translateY(15px) scale(.98)
+transform:translateY(15px) scale(.97)
 }
 to{
 opacity:1;
@@ -408,12 +410,19 @@ display:flex;
 align-items:center;
 justify-content:space-between;
 gap:15px;
-margin-bottom:18px
+padding:20px;
+background:#111827;
+color:#fff
 }
 
-.client-modal-header h2{
-font-size:21px;
-color:#111827
+.client-modal-header h3{
+font-size:20px
+}
+
+.client-modal-header p{
+font-size:13px;
+opacity:.75;
+margin-top:4px
 }
 
 .close-modal{
@@ -421,17 +430,22 @@ width:38px;
 height:38px;
 border:none;
 border-radius:50%;
-background:#f3f4f6;
-font-size:22px;
+background:rgba(255,255,255,.12);
+color:#fff;
+font-size:25px;
 cursor:pointer;
-color:#374151
+flex-shrink:0
 }
 
-.client-form-group{
-margin-bottom:14px
+.client-form{
+padding:20px
 }
 
-.client-form-group label{
+.form-group{
+margin-bottom:15px
+}
+
+.form-group label{
 display:block;
 font-size:14px;
 font-weight:800;
@@ -439,10 +453,10 @@ margin-bottom:7px;
 color:#374151
 }
 
-.client-form-group input,
-.client-form-group textarea{
+.form-group input,
+.form-group textarea{
 width:100%;
-padding:13px;
+padding:13px 14px;
 border:2px solid #ddd;
 border-radius:11px;
 font-size:16px;
@@ -450,29 +464,29 @@ font-family:inherit;
 background:#fff
 }
 
-.client-form-group input:focus,
-.client-form-group textarea:focus{
-outline:none;
-border-color:#2563eb
-}
-
-.client-form-group textarea{
+.form-group textarea{
 min-height:80px;
 resize:vertical
 }
 
-.client-modal-actions{
+.form-group input:focus,
+.form-group textarea:focus{
+outline:none;
+border-color:#2563eb
+}
+
+.client-form-buttons{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:10px;
-margin-top:18px
+margin-top:20px
 }
 
 .modal-cancel,
 .modal-save{
 border:none;
-padding:14px;
 border-radius:11px;
+padding:14px;
 font-size:16px;
 font-weight:800;
 cursor:pointer
@@ -495,13 +509,13 @@ cursor:wait
 
 .modal-error{
 display:none;
-margin-top:12px;
-padding:11px;
+padding:11px 13px;
 border-radius:10px;
 background:#fee2e2;
 color:#991b1b;
-font-size:14px;
+font-size:13px;
 font-weight:700;
+margin-bottom:15px;
 white-space:pre-line
 }
 
@@ -530,15 +544,14 @@ header p{font-size:14px}
 .price{font-size:20px}
 .customer-row{flex-direction:column}
 .add-client{padding:12px}
-
 .client-modal{
-padding:12px;
-align-items:flex-end
+padding:12px
 }
-
-.client-modal-content{
-border-radius:22px 22px 16px 16px;
-padding:19px
+.client-modal-box{
+border-radius:18px
+}
+.client-form{
+padding:16px
 }
 }
 
@@ -641,10 +654,6 @@ placeholder="🔎 Buscar cliente por nombre o teléfono"
 autocomplete="off"
 >
 
-<!-- IMPORTANTE:
-     ESTE BOTÓN YA NO REDIRIGE A clientes.html.
-     ABRE DIRECTAMENTE EL MODAL.
--->
 <button type="button"
 id="addClientButton"
 class="add-client">
@@ -653,16 +662,14 @@ class="add-client">
 
 </div>
 
-<div id="customerResults"
-class="customer-results"></div>
+<div id="customerResults" class="customer-results"></div>
 
 <div id="selectedCustomer"
 class="selected-customer"
 style="display:none">
 </div>
 
-<div id="generalCustomer"
-class="general-customer">
+<div id="generalCustomer" class="general-customer">
 👤 Consumidor general
 </div>
 
@@ -691,40 +698,54 @@ class="account">
 </div>
 </div>
 
+</div>
 
 <!-- =====================================================
      MODAL AGREGAR CLIENTE
-===================================================== -->
+====================================================== -->
 
 <div
 id="clientModal"
 class="client-modal"
-aria-hidden="true">
+aria-hidden="true"
+>
 
 <div
-class="client-modal-content"
+class="client-modal-box"
 role="dialog"
 aria-modal="true"
-aria-labelledby="clientModalTitle">
+aria-labelledby="clientModalTitle"
+>
 
 <div class="client-modal-header">
 
-<h2 id="clientModalTitle">
-👤 Nuevo cliente
-</h2>
+<div>
+<h3 id="clientModalTitle">👤 Agregar cliente</h3>
+<p id="clientModalBusiness">Cliente para BakeQuiri</p>
+</div>
 
 <button
 type="button"
 class="close-modal"
-id="closeClientModal">
+id="closeClientModal"
+aria-label="Cerrar">
 ×
 </button>
 
 </div>
 
-<form id="newClientForm">
+<form
+id="clientForm"
+class="client-form"
+autocomplete="off"
+>
 
-<div class="client-form-group">
+<div
+id="clientModalError"
+class="modal-error">
+</div>
+
+<div class="form-group">
 
 <label for="newClientName">
 Nombre del cliente *
@@ -741,7 +762,7 @@ required
 
 </div>
 
-<div class="client-form-group">
+<div class="form-group">
 
 <label for="newClientPhone">
 Teléfono
@@ -751,13 +772,13 @@ Teléfono
 type="tel"
 id="newClientPhone"
 name="phone"
-placeholder="Ej. 6621234567"
+placeholder="Ej. 662 123 4567"
 autocomplete="tel"
 >
 
 </div>
 
-<div class="client-form-group">
+<div class="form-group">
 
 <label for="newClientNotes">
 Notas
@@ -766,17 +787,12 @@ Notas
 <textarea
 id="newClientNotes"
 name="notes"
-placeholder="Información adicional..."
+placeholder="Notas opcionales..."
 ></textarea>
 
 </div>
 
-<div
-id="clientModalError"
-class="modal-error">
-</div>
-
-<div class="client-modal-actions">
+<div class="client-form-buttons">
 
 <button
 type="button"
@@ -799,7 +815,6 @@ Guardar cliente
 </div>
 
 </div>
-
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -887,7 +902,6 @@ return dbPromise;
 
 }
 
-
 async function saveOfflineData(
 business,
 data
@@ -950,7 +964,6 @@ return false;
 }
 
 }
-
 
 async function getOfflineData(
 business
@@ -1042,14 +1055,12 @@ function $(id){
 return document.getElementById(id);
 }
 
-
 function money(value){
 
 return "$"+
 Number(value||0).toFixed(2);
 
 }
-
 
 function escapeHTML(value){
 
@@ -1061,7 +1072,6 @@ return String(value??"")
 .replaceAll("'","&#039;");
 
 }
-
 
 function showStatus(
 message,
@@ -1075,7 +1085,6 @@ $("status").className=
 "status "+type;
 
 }
-
 
 function clearStatus(){
 
@@ -1165,7 +1174,6 @@ true
 )
 .order("name");
 
-
 if(productsResult.error){
 throw productsResult.error;
 }
@@ -1189,7 +1197,6 @@ true
 )
 .order("name");
 
-
 if(paymentsResult.error){
 throw paymentsResult.error;
 }
@@ -1201,15 +1208,41 @@ const customersResult=
 await supabaseClient
 .from("customers")
 .select(
+"id,name,phone,notes,business_id"
+)
+.or(
+"business_id.is.null,business_id.eq."+businessId
+)
+.order("name");
+
+if(customersResult.error){
+
+/*
+ * Compatibilidad con una tabla customers
+ * que todavía no tenga business_id en el SELECT.
+ */
+
+const fallbackCustomers=
+await supabaseClient
+.from("customers")
+.select(
 "id,name,phone,notes"
 )
 .order("name");
 
-
-if(customersResult.error){
+if(fallbackCustomers.error){
 throw customersResult.error;
 }
 
+customers=
+fallbackCustomers.data||[];
+
+}else{
+
+customers=
+customersResult.data||[];
+
+}
 
 products=
 productsResult.data||[];
@@ -1217,11 +1250,11 @@ productsResult.data||[];
 payments=
 paymentsResult.data||[];
 
-customers=
-customersResult.data||[];
 
-
-/* GUARDAR TODO LOCALMENTE */
+/*
+ * GUARDAMOS LOS TRES CATÁLOGOS EN EL MISMO
+ * REGISTRO LOCAL DEL NEGOCIO.
+ */
 
 await saveOfflineData(
 currentBusiness,
@@ -1277,7 +1310,6 @@ return false;
 
 }
 
-
 products=
 Array.isArray(cached.products)
 ?cached.products
@@ -1293,23 +1325,23 @@ Array.isArray(cached.customers)
 ?cached.customers
 :[];
 
-
 console.log(
 "[POS] Datos cargados desde IndexedDB:",
 {
 business:currentBusiness,
 products:products.length,
 payments:payments.length,
-customers:customers.length
+customers:customers.length,
+savedAt:new Date(
+cached.savedAt
+).toLocaleString()
 }
 );
-
 
 renderProducts();
 renderPayments();
 renderCart();
 renderSelectedCustomer();
-
 
 showStatus(
 "Modo OFFLINE activo.\n"+
@@ -1338,7 +1370,6 @@ $("products").innerHTML=
 $("payments").innerHTML=
 '<div class="empty">Cargando métodos de pago...</div>';
 
-
 if(!navigator.onLine){
 
 await loadOfflineData();
@@ -1346,7 +1377,6 @@ await loadOfflineData();
 return;
 
 }
-
 
 try{
 
@@ -1365,7 +1395,6 @@ currentBusiness+
 );
 
 }
-
 catch(error){
 
 console.warn(
@@ -1375,7 +1404,6 @@ error
 
 const loaded=
 await loadOfflineData();
-
 
 if(!loaded){
 
@@ -1403,12 +1431,13 @@ container.innerHTML="";
 if(!products.length){
 
 container.innerHTML=
-'<div class="empty">No hay productos disponibles.</div>';
+'<div class="empty">'+
+"No hay productos disponibles."+
+"</div>";
 
 return;
 
 }
-
 
 products.forEach(product=>{
 
@@ -1467,12 +1496,13 @@ container.innerHTML="";
 if(!payments.length){
 
 container.innerHTML=
-'<div class="empty">No hay métodos de pago disponibles.</div>';
+'<div class="empty">'+
+"No hay métodos de pago disponibles."+
+"</div>";
 
 return;
 
 }
-
 
 if(
 !payments.some(
@@ -1484,7 +1514,6 @@ selectedPaymentId=
 payments[0]?.id||null;
 
 }
-
 
 payments.forEach(payment=>{
 
@@ -1575,7 +1604,6 @@ renderCart();
 
 }
 
-
 function changeQuantity(
 id,
 amount
@@ -1629,7 +1657,6 @@ renderCart();
 
 }
 
-
 function getCartTotal(){
 
 return cart.reduce(
@@ -1641,7 +1668,6 @@ Number(item.quantity),
 );
 
 }
-
 
 function renderCart(){
 
@@ -1660,7 +1686,6 @@ $("total").textContent="$0.00";
 return;
 
 }
-
 
 cart.forEach(item=>{
 
@@ -1739,7 +1764,6 @@ container.appendChild(row);
 
 });
 
-
 $("total").textContent=
 money(getCartTotal());
 
@@ -1747,14 +1771,14 @@ money(getCartTotal());
 
 
 /* =========================================================
-   CLIENTES
+   CLIENTES - BÚSQUEDA
 ========================================================= */
 
 function renderSelectedCustomer(){
 
 const selected=
 customers.find(
-c=>c.id===selectedCustomerId
+c=>String(c.id)===String(selectedCustomerId)
 );
 
 const selectedElement=
@@ -1762,7 +1786,6 @@ $("selectedCustomer");
 
 const general=
 $("generalCustomer");
-
 
 if(!selected){
 
@@ -1776,7 +1799,6 @@ general.style.display="block";
 return;
 
 }
-
 
 general.style.display="none";
 
@@ -1802,7 +1824,6 @@ clearSelectedCustomer
 
 }
 
-
 function clearSelectedCustomer(){
 
 selectedCustomerId=null;
@@ -1816,7 +1837,6 @@ $("customerResults").style.display="none";
 renderSelectedCustomer();
 
 }
-
 
 function renderCustomerResults(query){
 
@@ -1835,7 +1855,6 @@ container.style.display="none";
 return;
 
 }
-
 
 const filtered=
 customers.filter(customer=>{
@@ -1857,9 +1876,7 @@ notes.includes(search)
 
 });
 
-
 container.innerHTML="";
-
 
 if(!filtered.length){
 
@@ -1878,7 +1895,6 @@ container.style.display="block";
 return;
 
 }
-
 
 filtered.slice(0,20).forEach(customer=>{
 
@@ -1931,7 +1947,6 @@ container.style.display="block";
 
 }
 
-
 $("customerSearch").addEventListener(
 "input",
 event=>{
@@ -1940,7 +1955,6 @@ event.target.value
 );
 }
 );
-
 
 $("customerSearch").addEventListener(
 "focus",
@@ -1953,385 +1967,10 @@ event.target.value
 }
 );
 
-
 $("generalCustomer").addEventListener(
 "click",
 clearSelectedCustomer
 );
-
-
-/* =========================================================
-   MODAL NUEVO CLIENTE
-========================================================= */
-
-function openClientModal(){
-
-const modal=
-$("clientModal");
-
-const nameInput=
-$("newClientName");
-
-$("newClientForm").reset();
-
-$("clientModalError").textContent="";
-$("clientModalError").classList.remove("show");
-
-modal.classList.add("show");
-
-modal.setAttribute(
-"aria-hidden",
-"false"
-);
-
-document.body.classList.add(
-"modal-open"
-);
-
-setTimeout(()=>{
-nameInput.focus();
-},100);
-
-}
-
-
-function closeClientModal(){
-
-const modal=
-$("clientModal");
-
-modal.classList.remove("show");
-
-modal.setAttribute(
-"aria-hidden",
-"true"
-);
-
-document.body.classList.remove(
-"modal-open"
-);
-
-$("clientModalError").textContent="";
-$("clientModalError").classList.remove("show");
-
-}
-
-
-function showModalError(message){
-
-const error=
-$("clientModalError");
-
-error.textContent=
-message;
-
-error.classList.add("show");
-
-}
-
-
-async function saveNewClient(){
-
-const name=
-$("newClientName")
-.value
-.trim();
-
-const phone=
-$("newClientPhone")
-.value
-.trim();
-
-const notes=
-$("newClientNotes")
-.value
-.trim();
-
-if(!name){
-
-showModalError(
-"Escribe el nombre del cliente."
-);
-
-$("newClientName").focus();
-
-return;
-
-}
-
-
-const saveButton=
-$("saveClientButton");
-
-saveButton.disabled=true;
-
-saveButton.textContent=
-"Guardando...";
-
-
-try{
-
-/*
- * =====================================================
- * IMPORTANTE:
- *
- * AQUÍ SE GUARDA EL CLIENTE EN LA TABLA customers.
- * NO SE REDIRIGE A clientes.html.
- * =====================================================
- */
-
-if(!navigator.onLine){
-
-/*
- * Si estamos OFFLINE, creamos un cliente local.
- * Usamos un identificador temporal para poder
- * seleccionarlo inmediatamente en la venta.
- */
-
-const localId=
-"offline_customer_"+Date.now()+"_"+Math.random()
-.toString(36)
-.substring(2,8);
-
-const newCustomer={
-id:localId,
-name,
-phone:phone||null,
-notes:notes||null,
-offline:true
-};
-
-customers.push(
-newCustomer
-);
-
-await saveOfflineData(
-currentBusiness,
-{
-products,
-payments,
-customers
-}
-);
-
-selectedCustomerId=
-localId;
-
-$("customerSearch").value=
-name;
-
-renderSelectedCustomer();
-
-closeClientModal();
-
-showStatus(
-"Cliente agregado al POS y guardado en este dispositivo.\n\n"+
-"Como estás OFFLINE, se sincronizará con Supabase cuando vuelva la conexión.",
-"warn"
-);
-
-return;
-
-}
-
-
-/*
- * ONLINE:
- * Insertar directamente en customers.
- */
-
-const result=
-await supabaseClient
-.from("customers")
-.insert({
-name:name,
-phone:phone||null,
-notes:notes||null
-})
-.select(
-"id,name,phone,notes"
-)
-.single();
-
-
-if(result.error){
-
-throw result.error;
-
-}
-
-
-const newCustomer=
-result.data;
-
-
-/*
- * Agregarlo inmediatamente al arreglo
- * para que aparezca en la búsqueda
- * sin abandonar el POS.
- */
-
-customers=
-[
-newCustomer,
-...customers
-];
-
-
-/*
- * Guardar también la lista actualizada
- * en IndexedDB para el modo offline.
- */
-
-await saveOfflineData(
-currentBusiness,
-{
-products,
-payments,
-customers
-}
-);
-
-
-/*
- * Seleccionar automáticamente
- * el cliente recién creado.
- */
-
-selectedCustomerId=
-newCustomer.id;
-
-$("customerSearch").value=
-newCustomer.name||name;
-
-$("customerResults").innerHTML="";
-$("customerResults").style.display="none";
-
-renderSelectedCustomer();
-
-closeClientModal();
-
-showStatus(
-"Cliente \""+
-newCustomer.name+
-"\" agregado correctamente y seleccionado para esta venta.",
-"ok"
-);
-
-}
-catch(error){
-
-console.error(
-"[POS] Error agregando cliente:",
-error
-);
-
-showModalError(
-"No se pudo guardar el cliente.\n\n"+
-(error?.message||String(error))
-);
-
-}
-finally{
-
-saveButton.disabled=false;
-
-saveButton.textContent=
-"Guardar cliente";
-
-}
-
-}
-
-
-/*
- * ESTE ES EL CAMBIO PRINCIPAL:
- *
- * Ya NO existe:
- *
- * window.location.href="clientes.html..."
- *
- * El botón solamente abre el modal.
- */
-
-$("addClientButton").addEventListener(
-"click",
-function(event){
-
-event.preventDefault();
-event.stopPropagation();
-
-openClientModal();
-
-}
-);
-
-
-$("closeClientModal").addEventListener(
-"click",
-closeClientModal
-);
-
-
-$("cancelClientModal").addEventListener(
-"click",
-closeClientModal
-);
-
-
-$("newClientForm").addEventListener(
-"submit",
-async function(event){
-
-event.preventDefault();
-
-await saveNewClient();
-
-}
-);
-
-
-/*
- * Cerrar tocando fuera del cuadro.
- */
-
-$("clientModal").addEventListener(
-"click",
-function(event){
-
-if(
-event.target===
-$("clientModal")
-){
-
-closeClientModal();
-
-}
-
-}
-);
-
-
-/*
- * Cerrar con ESC.
- */
-
-document.addEventListener(
-"keydown",
-function(event){
-
-if(
-event.key==="Escape" &&
-$("clientModal").classList.contains("show")
-){
-
-closeClientModal();
-
-}
-
-}
-);
-
 
 document.addEventListener(
 "click",
@@ -2347,6 +1986,410 @@ box &&
 
 $("customerResults").style.display=
 "none";
+
+}
+
+});
+
+
+/* =========================================================
+   MODAL CLIENTE
+========================================================= */
+
+function openClientModal(){
+
+const modal=
+$("clientModal");
+
+$("clientModalBusiness").textContent=
+"Nuevo cliente para "+currentBusiness;
+
+$("clientModalError").textContent="";
+$("clientModalError").classList.remove("show");
+
+$("clientForm").reset();
+
+modal.classList.add("show");
+modal.setAttribute("aria-hidden","false");
+
+document.body.classList.add("modal-open");
+
+setTimeout(
+()=>{
+$("newClientName").focus();
+},
+100
+);
+
+}
+
+function closeClientModal(){
+
+const modal=
+$("clientModal");
+
+modal.classList.remove("show");
+modal.setAttribute("aria-hidden","true");
+
+document.body.classList.remove("modal-open");
+
+$("clientModalError").textContent="";
+$("clientModalError").classList.remove("show");
+
+}
+
+function showClientModalError(message){
+
+const error=
+$("clientModalError");
+
+error.textContent=
+message;
+
+error.classList.add("show");
+
+}
+
+async function saveNewClient(){
+
+const name=
+$("newClientName").value.trim();
+
+const phone=
+$("newClientPhone").value.trim();
+
+const notes=
+$("newClientNotes").value.trim();
+
+if(!name){
+
+showClientModalError(
+"Escribe el nombre del cliente."
+);
+
+$("newClientName").focus();
+
+return;
+
+}
+
+const saveButton=
+$("saveClientButton");
+
+const originalText=
+saveButton.textContent;
+
+saveButton.disabled=true;
+
+saveButton.textContent=
+"Guardando...";
+
+try{
+
+const businessId=
+BUSINESS_IDS[currentBusiness];
+
+
+/*
+ * =======================================================
+ * MODO OFFLINE
+ * =======================================================
+ *
+ * El cliente se agrega inmediatamente al catálogo local.
+ */
+
+if(!navigator.onLine){
+
+const temporaryId=
+"offline-client-"+Date.now();
+
+const newClient={
+id:temporaryId,
+name,
+phone:phone||null,
+notes:notes||null,
+business_id:businessId,
+offline:true
+};
+
+customers.push(newClient);
+
+customers.sort(
+(a,b)=>
+String(a.name||"").localeCompare(
+String(b.name||"")
+)
+);
+
+await saveOfflineData(
+currentBusiness,
+{
+products,
+payments,
+customers
+}
+);
+
+selectedCustomerId=
+temporaryId;
+
+$("customerSearch").value=
+name;
+
+renderSelectedCustomer();
+
+closeClientModal();
+
+showStatus(
+"Cliente agregado correctamente en modo OFFLINE.\n"+
+"Se guardó en este dispositivo y quedó seleccionado para esta venta.",
+"ok"
+);
+
+return;
+
+}
+
+
+/*
+ * =======================================================
+ * MODO ONLINE
+ * =======================================================
+ *
+ * Se registra directamente en Supabase.
+ */
+
+if(!supabaseClient){
+
+initializeSupabase();
+
+}
+
+let insertPayload={
+name,
+phone:phone||null,
+notes:notes||null
+};
+
+
+/*
+ * Primero intentamos registrar con business_id.
+ * Esto permite que el cliente quede asociado
+ * correctamente al negocio desde el POS.
+ */
+
+let result=
+await supabaseClient
+.from("customers")
+.insert({
+...insertPayload,
+business_id:businessId
+})
+.select(
+"id,name,phone,notes,business_id"
+)
+.single();
+
+
+/*
+ * Si la tabla customers todavía no tiene
+ * business_id, usamos el esquema anterior.
+ */
+
+if(
+result.error &&
+(
+String(result.error.message||"")
+.toLowerCase().includes("business_id") ||
+String(result.error.message||"")
+.toLowerCase().includes("column")
+)
+){
+
+result=
+await supabaseClient
+.from("customers")
+.insert(insertPayload)
+.select(
+"id,name,phone,notes"
+)
+.single();
+
+}
+
+if(result.error){
+
+throw result.error;
+
+}
+
+const newClient=
+result.data;
+
+if(!newClient){
+
+throw new Error(
+"Supabase no devolvió el cliente creado."
+);
+
+}
+
+
+/*
+ * Agregamos inmediatamente el cliente
+ * al catálogo que usa el buscador del POS.
+ */
+
+customers=
+[
+...customers,
+newClient
+].sort(
+(a,b)=>
+String(a.name||"").localeCompare(
+String(b.name||"")
+)
+);
+
+
+/*
+ * Guardamos nuevamente el catálogo local.
+ * Así el cliente recién creado también
+ * queda disponible posteriormente OFFLINE.
+ */
+
+await saveOfflineData(
+currentBusiness,
+{
+products,
+payments,
+customers
+}
+);
+
+
+/*
+ * Seleccionar automáticamente al nuevo cliente.
+ */
+
+selectedCustomerId=
+newClient.id;
+
+$("customerSearch").value=
+newClient.name||name;
+
+renderSelectedCustomer();
+
+closeClientModal();
+
+showStatus(
+"Cliente agregado correctamente.\n"+
+"Quedó seleccionado para esta venta.",
+"ok"
+);
+
+}
+catch(error){
+
+console.error(
+"[POS] Error creando cliente:",
+error
+);
+
+showClientModalError(
+"No se pudo guardar el cliente.\n\n"+
+(error?.message||String(error))
+);
+
+}
+finally{
+
+saveButton.disabled=false;
+
+saveButton.textContent=
+originalText;
+
+}
+
+}
+
+
+/*
+ * ESTE ES EL CAMBIO PRINCIPAL:
+ *
+ * Ya NO existe:
+ *
+ * window.location.href = clientes.html...
+ *
+ * El botón abre directamente el modal.
+ */
+
+$("addClientButton").addEventListener(
+"click",
+event=>{
+
+event.preventDefault();
+event.stopPropagation();
+
+openClientModal();
+
+}
+);
+
+$("closeClientModal").addEventListener(
+"click",
+closeClientModal
+);
+
+$("cancelClientModal").addEventListener(
+"click",
+closeClientModal
+);
+
+$("clientForm").addEventListener(
+"submit",
+event=>{
+
+event.preventDefault();
+
+saveNewClient();
+
+}
+);
+
+
+/*
+ * Cerrar tocando fuera de la ventana.
+ */
+
+$("clientModal").addEventListener(
+"click",
+event=>{
+
+if(event.target === $("clientModal")){
+
+closeClientModal();
+
+}
+
+}
+);
+
+
+/*
+ * Cerrar con ESC.
+ */
+
+document.addEventListener(
+"keydown",
+event=>{
+
+if(
+event.key==="Escape" &&
+$("clientModal").classList.contains("show")
+){
+
+closeClientModal();
 
 }
 
@@ -2432,7 +2475,6 @@ return;
 
 }
 
-
 if(!navigator.onLine){
 
 showStatus(
@@ -2445,7 +2487,6 @@ showStatus(
 return;
 
 }
-
 
 const button=
 isPending
@@ -2461,7 +2502,6 @@ button.textContent=
 isPending
 ?"GUARDANDO..."
 :"REGISTRANDO...";
-
 
 try{
 
@@ -2556,7 +2596,7 @@ button.textContent=originalText;
 
 
 /* =========================================================
-   EVENTOS
+   EVENTOS DE NAVEGACIÓN
 ========================================================= */
 
 $("chargeButton").addEventListener(
@@ -2569,7 +2609,6 @@ $("accountButton").addEventListener(
 ()=>registerSale(true)
 );
 
-
 $("accountsButton").addEventListener(
 "click",
 ()=>{
@@ -2578,7 +2617,6 @@ window.location.href=
 encodeURIComponent(currentBusiness);
 }
 );
-
 
 $("clientsButton").addEventListener(
 "click",
@@ -2589,7 +2627,6 @@ encodeURIComponent(currentBusiness);
 }
 );
 
-
 $("historyButton").addEventListener(
 "click",
 ()=>{
@@ -2598,7 +2635,6 @@ window.location.href=
 encodeURIComponent(currentBusiness);
 }
 );
-
 
 $("inventoryButton").addEventListener(
 "click",
@@ -2609,7 +2645,6 @@ encodeURIComponent(currentBusiness);
 }
 );
 
-
 $("dashboardButton").addEventListener(
 "click",
 ()=>{
@@ -2618,7 +2653,6 @@ window.location.href=
 encodeURIComponent(currentBusiness);
 }
 );
-
 
 document
 .querySelectorAll(".business-btn")
@@ -2651,7 +2685,6 @@ await loadBusinessData();
 
 }
 );
-
 
 window.addEventListener(
 "offline",
@@ -2704,7 +2737,6 @@ await loadOfflineData();
 }
 
 }
-
 
 startApp();
 
