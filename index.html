@@ -11,16 +11,9 @@
 <title>Sistema de Ventas POS</title>
 
 <style>
-*{
-box-sizing:border-box;
-margin:0;
-padding:0
-}
+*{box-sizing:border-box;margin:0;padding:0}
 
-html{
-width:100%;
-min-height:100%
-}
+html{width:100%;min-height:100%}
 
 body{
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -29,23 +22,15 @@ color:#222;
 min-height:100vh
 }
 
-body.modal-open{
-overflow:hidden
-}
+body.modal-open{overflow:hidden}
 
 header{
 background:#111827;
 color:#fff;
-padding-top:calc(22px + env(safe-area-inset-top));
-padding-right:20px;
-padding-bottom:22px;
-padding-left:20px
+padding:calc(22px + env(safe-area-inset-top)) 20px 22px
 }
 
-header h1{
-font-size:28px;
-line-height:1.15
-}
+header h1{font-size:28px;line-height:1.15}
 
 header p{
 font-size:15px;
@@ -70,23 +55,9 @@ font-weight:700;
 white-space:pre-line
 }
 
-.status.error{
-display:block;
-background:#fee2e2;
-color:#991b1b
-}
-
-.status.ok{
-display:block;
-background:#dcfce7;
-color:#166534
-}
-
-.status.warn{
-display:block;
-background:#fef3c7;
-color:#92400e
-}
+.status.error{display:block;background:#fee2e2;color:#991b1b}
+.status.ok{display:block;background:#dcfce7;color:#166534}
+.status.warn{display:block;background:#fef3c7;color:#92400e}
 
 .businesses{
 display:flex;
@@ -95,8 +66,7 @@ margin-bottom:20px;
 flex-wrap:wrap
 }
 
-.business-btn,
-.nav-btn{
+.business-btn,.nav-btn{
 border:none;
 padding:13px 20px;
 border-radius:12px;
@@ -107,9 +77,7 @@ cursor:pointer;
 font-size:16px
 }
 
-.business-btn{
-flex:1
-}
+.business-btn{flex:1}
 
 .business-btn.active{
 background:#111827;
@@ -124,9 +92,7 @@ gap:10px;
 margin-bottom:20px
 }
 
-.nav-btn{
-color:#2563eb
-}
+.nav-btn{color:#2563eb}
 
 .nav-btn.accounts{
 background:#fff7ed;
@@ -186,18 +152,9 @@ text-align:left;
 transition:.15s
 }
 
-.product:hover{
-border-color:#2563eb
-}
-
-.product:active{
-transform:scale(.98)
-}
-
-.product.disabled{
-opacity:.5;
-cursor:not-allowed
-}
+.product:hover{border-color:#2563eb}
+.product:active{transform:scale(.98)}
+.product.disabled{opacity:.5;cursor:not-allowed}
 
 .product-name{
 font-weight:700;
@@ -226,9 +183,7 @@ border-bottom:1px solid #eee;
 gap:12px
 }
 
-.cart-name{
-font-weight:700
-}
+.cart-name{font-weight:700}
 
 .cart-price{
 font-size:13px;
@@ -263,18 +218,14 @@ padding-top:18px;
 border-top:2px solid #eee
 }
 
-.payment-title,
-.customer-title{
+.payment-title,.customer-title{
 margin-top:20px;
 margin-bottom:10px;
 font-weight:800;
 font-size:17px
 }
 
-.payments{
-display:grid;
-gap:9px
-}
+.payments{display:grid;gap:9px}
 
 .payment{
 padding:14px;
@@ -293,9 +244,7 @@ color:#fff;
 border-color:#111827
 }
 
-.customer-box{
-position:relative
-}
+.customer-box{position:relative}
 
 .customer-row{
 display:flex;
@@ -353,9 +302,7 @@ text-align:left;
 cursor:pointer
 }
 
-.customer-result:hover{
-background:#f3f4f6
-}
+.customer-result:hover{background:#f3f4f6}
 
 .customer-result strong{
 display:block;
@@ -398,8 +345,7 @@ font-weight:700;
 cursor:pointer
 }
 
-.charge,
-.account{
+.charge,.account{
 width:100%;
 margin-top:15px;
 padding:16px;
@@ -411,17 +357,14 @@ font-weight:800;
 cursor:pointer
 }
 
-.charge{
-background:#16a34a
-}
+.charge{background:#16a34a}
 
 .account{
 margin-top:10px;
 background:#f59e0b
 }
 
-.charge:disabled,
-.account:disabled{
+.charge:disabled,.account:disabled{
 opacity:.6;
 cursor:wait
 }
@@ -443,9 +386,7 @@ font-size:12px;
 font-weight:800
 }
 
-/* =========================================================
-   MODAL AGREGAR CLIENTE
-========================================================= */
+/* MODAL */
 
 .client-modal{
 position:fixed;
@@ -460,9 +401,7 @@ backdrop-filter:blur(5px);
 -webkit-backdrop-filter:blur(5px)
 }
 
-.client-modal.show{
-display:flex
-}
+.client-modal.show{display:flex}
 
 .client-modal-box{
 width:100%;
@@ -475,15 +414,8 @@ animation:modalIn .18s ease-out
 }
 
 @keyframes modalIn{
-from{
-opacity:0;
-transform:translateY(15px) scale(.97)
-}
-
-to{
-opacity:1;
-transform:translateY(0) scale(1)
-}
+from{opacity:0;transform:translateY(15px) scale(.97)}
+to{opacity:1;transform:translateY(0) scale(1)}
 }
 
 .client-modal-header{
@@ -496,9 +428,7 @@ background:#111827;
 color:#fff
 }
 
-.client-modal-header h3{
-font-size:20px
-}
+.client-modal-header h3{font-size:20px}
 
 .client-modal-header p{
 font-size:13px;
@@ -518,13 +448,9 @@ cursor:pointer;
 flex-shrink:0
 }
 
-.client-form{
-padding:20px
-}
+.client-form{padding:20px}
 
-.form-group{
-margin-bottom:15px
-}
+.form-group{margin-bottom:15px}
 
 .form-group label{
 display:block;
@@ -534,8 +460,7 @@ margin-bottom:7px;
 color:#374151
 }
 
-.form-group input,
-.form-group textarea{
+.form-group input,.form-group textarea{
 width:100%;
 padding:13px 14px;
 border:2px solid #ddd;
@@ -550,8 +475,7 @@ min-height:80px;
 resize:vertical
 }
 
-.form-group input:focus,
-.form-group textarea:focus{
+.form-group input:focus,.form-group textarea:focus{
 outline:none;
 border-color:#2563eb
 }
@@ -563,8 +487,7 @@ gap:10px;
 margin-top:20px
 }
 
-.modal-cancel,
-.modal-save{
+.modal-cancel,.modal-save{
 border:none;
 border-radius:11px;
 padding:14px;
@@ -600,96 +523,32 @@ margin-bottom:15px;
 white-space:pre-line
 }
 
-.modal-error.show{
-display:block
-}
+.modal-error.show{display:block}
 
 @media(max-width:950px){
-
-.navigation{
-grid-template-columns:repeat(3,1fr)
-}
-
+.navigation{grid-template-columns:repeat(3,1fr)}
 }
 
 @media(max-width:850px){
-
-.layout{
-grid-template-columns:1fr
-}
-
-.navigation{
-grid-template-columns:1fr 1fr
-}
-
+.layout{grid-template-columns:1fr}
+.navigation{grid-template-columns:1fr 1fr}
 }
 
 @media(max-width:500px){
-
-.container{
-padding:15px
-}
-
-header h1{
-font-size:25px
-}
-
-header p{
-font-size:14px
-}
-
-.navigation{
-grid-template-columns:1fr 1fr
-}
-
-.card{
-padding:16px
-}
-
-.products{
-grid-template-columns:1fr 1fr
-}
-
-.product{
-padding:15px 12px
-}
-
-.product-name{
-font-size:15px
-}
-
-.price{
-font-size:20px
-}
-
-.customer-row{
-flex-direction:column
-}
-
-.add-client{
-padding:12px
-}
-
-.client-modal{
-padding:12px
-}
-
-.client-modal-box{
-border-radius:18px
-}
-
-.client-form{
-padding:16px
-}
-
-}
-
-@supports (-webkit-touch-callout:none){
-
-header{
-padding-top:calc(22px + env(safe-area-inset-top))
-}
-
+.container{padding:15px}
+header h1{font-size:25px}
+header p{font-size:14px}
+.navigation{grid-template-columns:1fr 1fr}
+.card{padding:16px}
+.products{grid-template-columns:1fr 1fr}
+.product{padding:15px 12px}
+.product-name{font-size:15px}
+.price{font-size:20px}
+.customer-row{flex-direction:column}
+.add-client{padding:12px}
+.client-modal{padding:12px}
+.client-modal-box{border-radius:18px}
+.client-form{padding:16px}
 }
 </style>
 </head>
@@ -697,13 +556,9 @@ padding-top:calc(22px + env(safe-area-inset-top))
 <body>
 
 <header>
-
 <h1>🧾 Sistema de Ventas POS</h1>
-
 <p>Administración de negocios y ventas</p>
-
 <div id="offlineBadge"></div>
-
 </header>
 
 <div class="container">
@@ -712,71 +567,36 @@ padding-top:calc(22px + env(safe-area-inset-top))
 
 <div class="businesses">
 
-<button
-type="button"
-class="business-btn active"
-data-business="BakeQuiri">
-
+<button type="button" class="business-btn active" data-business="BakeQuiri">
 🧁 BakeQuiri
-
 </button>
 
-<button
-type="button"
-class="business-btn"
-data-business="SpicyRoll">
-
+<button type="button" class="business-btn" data-business="SpicyRoll">
 🍣 SpicyRoll
-
 </button>
 
 </div>
 
 <div class="navigation">
 
-<button
-type="button"
-class="nav-btn accounts"
-id="accountsButton">
-
+<button type="button" class="nav-btn accounts" id="accountsButton">
 💰 Cuentas pendientes
-
 </button>
 
-<button
-type="button"
-class="nav-btn clients"
-id="clientsButton">
-
+<button type="button" class="nav-btn clients" id="clientsButton">
 👥 Clientes
-
 </button>
 
-<button
-type="button"
-class="nav-btn history"
-id="historyButton">
-
+<button type="button" class="nav-btn history" id="historyButton">
 🧾 Historial
-
 </button>
 
-<button
-type="button"
-class="nav-btn inventory"
-id="inventoryButton">
-
+<button type="button" class="nav-btn inventory" id="inventoryButton">
 📦 Inventario
-
 </button>
 
-<button
-type="button"
-class="nav-btn"
-id="dashboardButton">
-
+<button type="button" class="nav-btn" id="dashboardButton">
 📊 Dashboard
-
 </button>
 
 </div>
@@ -788,11 +608,7 @@ id="dashboardButton">
 <h2>Productos</h2>
 
 <div id="products">
-
-<div class="empty">
-Cargando productos...
-</div>
-
+<div class="empty">Cargando productos...</div>
 </div>
 
 </div>
@@ -802,26 +618,15 @@ Cargando productos...
 <h2>🛒 Carrito</h2>
 
 <div id="cart">
-
-<div class="empty">
-El carrito está vacío
-</div>
-
+<div class="empty">El carrito está vacío</div>
 </div>
 
 <div class="total">
-
 <span>Total</span>
-
-<span id="total">
-$0.00
-</span>
-
+<span id="total">$0.00</span>
 </div>
 
-<div class="customer-title">
-👤 Cliente
-</div>
+<div class="customer-title">👤 Cliente</div>
 
 <div class="customer-box">
 
@@ -839,64 +644,33 @@ autocomplete="off"
 type="button"
 id="addClientButton"
 class="add-client">
-
 + Cliente
-
 </button>
 
 </div>
 
-<div
-id="customerResults"
-class="customer-results">
-</div>
+<div id="customerResults" class="customer-results"></div>
 
-<div
-id="selectedCustomer"
-class="selected-customer"
-style="display:none">
-</div>
+<div id="selectedCustomer" class="selected-customer" style="display:none"></div>
 
-<div
-id="generalCustomer"
-class="general-customer">
-
+<div id="generalCustomer" class="general-customer">
 👤 Consumidor general
-
 </div>
 
 </div>
 
-<div class="payment-title">
-Método de pago
+<div class="payment-title">Método de pago</div>
+
+<div id="payments" class="payments">
+<div class="empty">Cargando métodos de pago...</div>
 </div>
 
-<div
-id="payments"
-class="payments">
-
-<div class="empty">
-Cargando métodos de pago...
-</div>
-
-</div>
-
-<button
-type="button"
-id="chargeButton"
-class="charge">
-
+<button type="button" id="chargeButton" class="charge">
 💵 COBRAR
-
 </button>
 
-<button
-type="button"
-id="accountButton"
-class="account">
-
+<button type="button" id="accountButton" class="account">
 🟠 DEJAR A CUENTA
-
 </button>
 
 </div>
@@ -905,16 +679,9 @@ class="account">
 
 </div>
 
+<!-- MODAL CLIENTE -->
 
-<!-- =====================================================
-     MODAL CLIENTE
-====================================================== -->
-
-<div
-id="clientModal"
-class="client-modal"
-aria-hidden="true"
->
+<div id="clientModal" class="client-modal" aria-hidden="true">
 
 <div
 class="client-modal-box"
@@ -927,9 +694,7 @@ aria-labelledby="clientModalTitle"
 
 <div>
 
-<h3 id="clientModalTitle">
-👤 Agregar cliente
-</h3>
+<h3 id="clientModalTitle">👤 Agregar cliente</h3>
 
 <p id="clientModalBusiness">
 Nuevo cliente para BakeQuiri
@@ -942,23 +707,14 @@ type="button"
 class="close-modal"
 id="closeClientModal"
 aria-label="Cerrar">
-
 ×
-
 </button>
 
 </div>
 
-<form
-id="clientForm"
-class="client-form"
-autocomplete="off"
->
+<form id="clientForm" class="client-form" autocomplete="off">
 
-<div
-id="clientModalError"
-class="modal-error">
-</div>
+<div id="clientModalError" class="modal-error"></div>
 
 <div class="form-group">
 
@@ -1013,18 +769,14 @@ placeholder="Notas opcionales..."
 type="button"
 class="modal-cancel"
 id="cancelClientModal">
-
 Cancelar
-
 </button>
 
 <button
 type="submit"
 class="modal-save"
 id="saveClientButton">
-
 Guardar cliente
-
 </button>
 
 </div>
@@ -1034,7 +786,6 @@ Guardar cliente
 </div>
 
 </div>
-
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -1052,17 +803,11 @@ const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
 const BUSINESS_IDS = {
-
-BakeQuiri:
-"c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
-
-SpicyRoll:
-"ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
-
+BakeQuiri:"c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+SpicyRoll:"ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
 };
 
 let supabaseClient = null;
-
 let currentBusiness = "BakeQuiri";
 
 let products = [];
@@ -1073,195 +818,128 @@ let cart = [];
 let selectedPaymentId = null;
 let selectedCustomerId = null;
 
-
 /* =========================================================
    INDEXED DB
 ========================================================= */
 
 const DB_NAME = "SistemaPOSOffline";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const STORE_NAME = "data";
 
 let dbPromise = null;
 
-
 function openOfflineDB(){
 
-if(dbPromise){
-return dbPromise;
-}
+if(dbPromise) return dbPromise;
 
 dbPromise = new Promise((resolve,reject)=>{
 
-const request =
-indexedDB.open(
-DB_NAME,
-DB_VERSION
-);
+const request = indexedDB.open(DB_NAME,DB_VERSION);
 
-request.onupgradeneeded = event => {
+request.onupgradeneeded = event=>{
 
 const db = event.target.result;
 
 if(!db.objectStoreNames.contains(STORE_NAME)){
-
-db.createObjectStore(
-STORE_NAME,
-{keyPath:"key"}
-);
-
+db.createObjectStore(STORE_NAME,{keyPath:"key"});
 }
 
 };
 
-request.onsuccess = () => {
-
+request.onsuccess = ()=>{
 resolve(request.result);
-
 };
 
-request.onerror = () => {
-
+request.onerror = ()=>{
 reject(request.error);
-
 };
 
 });
 
 return dbPromise;
-
 }
 
-
-async function saveOfflineData(
-business,
-data
-){
+async function saveOfflineData(business,data){
 
 try{
 
-const db =
-await openOfflineDB();
+const db = await openOfflineDB();
 
-return new Promise(
-(resolve,reject)=>{
+return new Promise((resolve,reject)=>{
 
 const transaction =
-db.transaction(
-STORE_NAME,
-"readwrite"
-);
+db.transaction(STORE_NAME,"readwrite");
 
 const store =
-transaction.objectStore(
-STORE_NAME
-);
+transaction.objectStore(STORE_NAME);
 
 store.put({
-
-key:
-"business_"+business,
-
-business:
-
+key:"business_"+business,
 business,
-
-savedAt:
-Date.now(),
-
+savedAt:Date.now(),
 ...data
-
 });
 
-transaction.oncomplete = () => {
-
+transaction.oncomplete = ()=>{
 resolve(true);
-
 };
 
-transaction.onerror = () => {
-
+transaction.onerror = ()=>{
 reject(transaction.error);
-
 };
 
 });
 
-}
-
-catch(error){
+}catch(error){
 
 console.error(
-"Error guardando datos offline:",
+"[POS] Error guardando datos offline:",
 error
 );
 
 return false;
-
 }
 
 }
 
-
-async function getOfflineData(
-business
-){
+async function getOfflineData(business){
 
 try{
 
-const db =
-await openOfflineDB();
+const db = await openOfflineDB();
 
-return new Promise(
-(resolve,reject)=>{
+return new Promise((resolve,reject)=>{
 
 const transaction =
-db.transaction(
-STORE_NAME,
-"readonly"
-);
+db.transaction(STORE_NAME,"readonly");
 
 const store =
-transaction.objectStore(
-STORE_NAME
-);
+transaction.objectStore(STORE_NAME);
 
 const request =
-store.get(
-"business_"+business
-);
+store.get("business_"+business);
 
-request.onsuccess = () => {
-
-resolve(
-request.result || null
-);
-
+request.onsuccess = ()=>{
+resolve(request.result || null);
 };
 
-request.onerror = () => {
-
+request.onerror = ()=>{
 reject(request.error);
-
 };
 
 });
 
-}
-
-catch(error){
+}catch(error){
 
 console.error(
-"Error leyendo datos offline:",
+"[POS] Error leyendo datos offline:",
 error
 );
 
 return null;
-
 }
 
 }
-
 
 /* =========================================================
    SUPABASE
@@ -1274,9 +952,7 @@ if(
 typeof window.supabase.createClient !== "function"
 ){
 
-throw new Error(
-"No se pudo cargar Supabase."
-);
+throw new Error("No se pudo cargar Supabase.");
 
 }
 
@@ -1288,25 +964,17 @@ SUPABASE_PUBLISHABLE_KEY
 
 }
 
-
 /* =========================================================
    HELPERS
 ========================================================= */
 
 function $(id){
-
 return document.getElementById(id);
-
 }
-
 
 function money(value){
-
-return "$"+
-Number(value || 0).toFixed(2);
-
+return "$"+Number(value || 0).toFixed(2);
 }
-
 
 function escapeHTML(value){
 
@@ -1319,117 +987,19 @@ return String(value ?? "")
 
 }
 
+function showStatus(message,type="error"){
 
-function showStatus(
-message,
-type="error"
-){
-
-$("status").textContent =
-message;
-
-$("status").className =
-"status "+type;
+$("status").textContent = message;
+$("status").className = "status "+type;
 
 }
-
 
 function clearStatus(){
 
 $("status").textContent = "";
-
-$("status").className =
-"status";
+$("status").className = "status";
 
 }
-
-
-/* =========================================================
-   LIMPIEZA DE VERSIONES ANTIGUAS DEL SERVICE WORKER
-========================================================= */
-
-/*
- * Esta versión NO registra ningún Service Worker.
- *
- * Además intentamos eliminar cualquier Service Worker
- * antiguo que haya quedado instalado anteriormente.
- *
- * Esto es importante porque una versión vieja de sw.js
- * podía seguir entregando un index.html antiguo.
- */
-
-async function removeOldServiceWorkers(){
-
-if(!("serviceWorker" in navigator)){
-return;
-}
-
-try{
-
-const registrations =
-await navigator.serviceWorker.getRegistrations();
-
-for(
-const registration
-of registrations
-){
-
-await registration.unregister();
-
-console.log(
-"[POS] Service Worker antiguo eliminado."
-);
-
-}
-
-}catch(error){
-
-console.warn(
-"[POS] No se pudo eliminar un Service Worker antiguo:",
-error
-);
-
-}
-
-
-try{
-
-if(
-"caches" in window
-){
-
-const cacheNames =
-await caches.keys();
-
-for(
-const cacheName
-of cacheNames
-){
-
-await caches.delete(
-cacheName
-);
-
-console.log(
-"[POS] Caché eliminada:",
-cacheName
-);
-
-}
-
-}
-
-}catch(error){
-
-console.warn(
-"[POS] No se pudo limpiar la caché:",
-error
-);
-
-}
-
-}
-
 
 /* =========================================================
    CARGAR DATOS ONLINE
@@ -1440,7 +1010,6 @@ async function loadOnlineData(){
 const businessId =
 BUSINESS_IDS[currentBusiness];
 
-
 /* PRODUCTOS */
 
 const productsResult =
@@ -1449,22 +1018,13 @@ await supabaseClient
 .select(
 "id,name,price,cost,stock,active,business_id"
 )
-.eq(
-"business_id",
-businessId
-)
-.eq(
-"active",
-true
-)
+.eq("business_id",businessId)
+.eq("active",true)
 .order("name");
 
 if(productsResult.error){
-
 throw productsResult.error;
-
 }
-
 
 /* MÉTODOS DE PAGO */
 
@@ -1474,22 +1034,13 @@ await supabaseClient
 .select(
 "id,name,provider,active,business_id"
 )
-.eq(
-"business_id",
-businessId
-)
-.eq(
-"active",
-true
-)
+.eq("business_id",businessId)
+.eq("active",true)
 .order("name");
 
 if(paymentsResult.error){
-
 throw paymentsResult.error;
-
 }
-
 
 /* CLIENTES */
 
@@ -1504,7 +1055,6 @@ await supabaseClient
 )
 .order("name");
 
-
 if(customersResult.error){
 
 customersResult =
@@ -1516,35 +1066,22 @@ await supabaseClient
 .order("name");
 
 if(customersResult.error){
-
 throw customersResult.error;
-
 }
 
 }
 
+products = productsResult.data || [];
+payments = paymentsResult.data || [];
+customers = customersResult.data || [];
 
-products =
-productsResult.data || [];
-
-payments =
-paymentsResult.data || [];
-
-customers =
-customersResult.data || [];
-
-
-await saveOfflineData(
-currentBusiness,
-{
+await saveOfflineData(currentBusiness,{
 products,
 payments,
 customers
-}
-);
+});
 
 }
-
 
 /* =========================================================
    CARGAR DATOS OFFLINE
@@ -1553,9 +1090,7 @@ customers
 async function loadOfflineData(){
 
 const cached =
-await getOfflineData(
-currentBusiness
-);
+await getOfflineData(currentBusiness);
 
 if(!cached){
 
@@ -1569,12 +1104,11 @@ renderCart();
 renderSelectedCustomer();
 
 showStatus(
-"Este negocio todavía no tiene datos guardados en este dispositivo. Conéctate a Internet una vez para descargar productos, clientes y métodos de pago.",
+"Este negocio todavía no tiene datos guardados en este dispositivo. Conéctate a Internet una vez para descargar sus productos.",
 "warn"
 );
 
 return false;
-
 }
 
 products =
@@ -1599,16 +1133,15 @@ renderSelectedCustomer();
 
 showStatus(
 "Modo OFFLINE activo.\n"+
-"Productos: "+products.length+
+currentBusiness+
+" · Productos: "+products.length+
 " · Métodos de pago: "+payments.length+
 " · Clientes: "+customers.length,
 "warn"
 );
 
 return true;
-
 }
-
 
 /* =========================================================
    CARGADOR PRINCIPAL
@@ -1624,15 +1157,11 @@ $("products").innerHTML =
 $("payments").innerHTML =
 '<div class="empty">Cargando métodos de pago...</div>';
 
-
 if(!navigator.onLine){
 
 await loadOfflineData();
-
 return;
-
 }
-
 
 try{
 
@@ -1645,16 +1174,14 @@ renderSelectedCustomer();
 
 showStatus(
 currentBusiness+
-" actualizado correctamente.\n"+
-"Datos guardados para uso OFFLINE.",
+" actualizado correctamente.",
 "ok"
 );
 
-}
-catch(error){
+}catch(error){
 
 console.warn(
-"[POS] Error online. Intentando caché local...",
+"[POS] Error online. Intentando caché:",
 error
 );
 
@@ -1664,7 +1191,8 @@ await loadOfflineData();
 if(!loaded){
 
 showStatus(
-"No se pudieron cargar los datos desde Supabase ni desde el almacenamiento OFFLINE.",
+"No se pudieron cargar los datos.\n\n"+
+(error?.message || String(error)),
 "error"
 );
 
@@ -1672,6 +1200,7 @@ showStatus(
 
 }
 
+}
 
 /* =========================================================
    PRODUCTOS
@@ -1679,8 +1208,7 @@ showStatus(
 
 function renderProducts(){
 
-const container =
-$("products");
+const container = $("products");
 
 container.innerHTML = "";
 
@@ -1690,13 +1218,11 @@ container.innerHTML =
 '<div class="empty">No hay productos disponibles.</div>';
 
 return;
-
 }
 
 products.forEach(product=>{
 
-const stock =
-Number(product.stock || 0);
+const stock = Number(product.stock || 0);
 
 const button =
 document.createElement("button");
@@ -1707,8 +1233,7 @@ button.className =
 "product"+
 (stock <= 0 ? " disabled" : "");
 
-button.disabled =
-stock <= 0;
+button.disabled = stock <= 0;
 
 button.innerHTML =
 '<div class="product-name">'+
@@ -1736,15 +1261,13 @@ container.appendChild(button);
 
 }
 
-
 /* =========================================================
    MÉTODOS DE PAGO
 ========================================================= */
 
 function renderPayments(){
 
-const container =
-$("payments");
+const container = $("payments");
 
 container.innerHTML = "";
 
@@ -1754,7 +1277,6 @@ container.innerHTML =
 '<div class="empty">No hay métodos de pago disponibles.</div>';
 
 return;
-
 }
 
 if(
@@ -1784,15 +1306,13 @@ String(selectedPaymentId)
 :""
 );
 
-button.textContent =
-payment.name;
+button.textContent = payment.name;
 
 button.addEventListener(
 "click",
 ()=>{
 
-selectedPaymentId =
-payment.id;
+selectedPaymentId = payment.id;
 
 renderPayments();
 
@@ -1805,7 +1325,6 @@ container.appendChild(button);
 
 }
 
-
 /* =========================================================
    CARRITO
 ========================================================= */
@@ -1817,10 +1336,7 @@ Number(product.stock || 0);
 
 if(stock <= 0){
 
-showStatus(
-"Este producto está agotado."
-);
-
+showStatus("Este producto está agotado.");
 return;
 
 }
@@ -1859,20 +1375,14 @@ renderCart();
 
 }
 
-
-function changeQuantity(
-id,
-amount
-){
+function changeQuantity(id,amount){
 
 const item =
 cart.find(
 i=>String(i.id)===String(id)
 );
 
-if(!item){
-return;
-}
+if(!item) return;
 
 const product =
 products.find(
@@ -1899,8 +1409,7 @@ return;
 
 }
 
-item.quantity =
-newQuantity;
+item.quantity = newQuantity;
 
 if(item.quantity <= 0){
 
@@ -1915,7 +1424,6 @@ renderCart();
 
 }
 
-
 function getCartTotal(){
 
 return cart.reduce(
@@ -1928,11 +1436,9 @@ Number(item.quantity),
 
 }
 
-
 function renderCart(){
 
-const container =
-$("cart");
+const container = $("cart");
 
 container.innerHTML = "";
 
@@ -1941,11 +1447,9 @@ if(!cart.length){
 container.innerHTML =
 '<div class="empty">El carrito está vacío</div>';
 
-$("total").textContent =
-"$0.00";
+$("total").textContent = "$0.00";
 
 return;
-
 }
 
 cart.forEach(item=>{
@@ -1953,8 +1457,7 @@ cart.forEach(item=>{
 const row =
 document.createElement("div");
 
-row.className =
-"cart-item";
+row.className = "cart-item";
 
 const info =
 document.createElement("div");
@@ -1970,17 +1473,13 @@ money(item.price)+
 const controls =
 document.createElement("div");
 
-controls.className =
-"quantity";
+controls.className = "quantity";
 
 const minus =
 document.createElement("button");
 
-minus.type =
-"button";
-
-minus.textContent =
-"−";
+minus.type = "button";
+minus.textContent = "−";
 
 minus.addEventListener(
 "click",
@@ -1990,32 +1489,22 @@ minus.addEventListener(
 const quantity =
 document.createElement("span");
 
-quantity.textContent =
-item.quantity;
+quantity.textContent = item.quantity;
 
 const plus =
 document.createElement("button");
 
-plus.type =
-"button";
-
-plus.textContent =
-"+";
+plus.type = "button";
+plus.textContent = "+";
 
 plus.addEventListener(
 "click",
 ()=>changeQuantity(item.id,1)
 );
 
-controls.append(
-minus,
-quantity,
-plus
-);
+controls.append(minus,quantity,plus);
 
-info.appendChild(
-controls
-);
+info.appendChild(controls);
 
 const subtotal =
 document.createElement("strong");
@@ -2026,10 +1515,7 @@ Number(item.price)*
 Number(item.quantity)
 );
 
-row.append(
-info,
-subtotal
-);
+row.append(info,subtotal);
 
 container.appendChild(row);
 
@@ -2039,7 +1525,6 @@ $("total").textContent =
 money(getCartTotal());
 
 }
-
 
 /* =========================================================
    CLIENTES
@@ -2061,38 +1546,27 @@ $("generalCustomer");
 
 if(!selected){
 
-selectedCustomerId =
-null;
+selectedCustomerId = null;
 
-selectedElement.style.display =
-"none";
+selectedElement.style.display = "none";
+selectedElement.innerHTML = "";
 
-selectedElement.innerHTML =
-"";
-
-general.style.display =
-"block";
+general.style.display = "block";
 
 return;
-
 }
 
-general.style.display =
-"none";
+general.style.display = "none";
 
-selectedElement.style.display =
-"block";
+selectedElement.style.display = "block";
 
 selectedElement.innerHTML =
 "👤 <strong>"+
-escapeHTML(
-selected.name || "Cliente"
-)+
+escapeHTML(selected.name || "Cliente")+
 "</strong>"+
 (
 selected.phone
-?" · 📱 "+
-escapeHTML(selected.phone)
+?" · 📱 "+escapeHTML(selected.phone)
 :""
 )+
 '<button type="button" class="clear-customer" id="clearCustomer">Quitar</button>';
@@ -2104,25 +1578,19 @@ clearSelectedCustomer
 
 }
 
-
 function clearSelectedCustomer(){
 
-selectedCustomerId =
-null;
+selectedCustomerId = null;
 
-$("customerSearch").value =
-"";
+$("customerSearch").value = "";
 
-$("customerResults").innerHTML =
-"";
+$("customerResults").innerHTML = "";
 
-$("customerResults").style.display =
-"none";
+$("customerResults").style.display = "none";
 
 renderSelectedCustomer();
 
 }
-
 
 function renderCustomerResults(query){
 
@@ -2136,30 +1604,23 @@ String(query || "")
 
 if(!search){
 
-container.innerHTML =
-"";
-
-container.style.display =
-"none";
+container.innerHTML = "";
+container.style.display = "none";
 
 return;
-
 }
 
 const filtered =
 customers.filter(customer=>{
 
 const name =
-String(customer.name || "")
-.toLowerCase();
+String(customer.name || "").toLowerCase();
 
 const phone =
-String(customer.phone || "")
-.toLowerCase();
+String(customer.phone || "").toLowerCase();
 
 const notes =
-String(customer.notes || "")
-.toLowerCase();
+String(customer.notes || "").toLowerCase();
 
 return(
 name.includes(search) ||
@@ -2169,47 +1630,35 @@ notes.includes(search)
 
 });
 
-container.innerHTML =
-"";
+container.innerHTML = "";
 
 if(!filtered.length){
 
 const empty =
 document.createElement("div");
 
-empty.className =
-"empty";
-
-empty.textContent =
-"No encontramos ese cliente.";
+empty.className = "empty";
+empty.textContent = "No encontramos ese cliente.";
 
 container.appendChild(empty);
 
-container.style.display =
-"block";
+container.style.display = "block";
 
 return;
-
 }
 
-filtered
-.slice(0,20)
-.forEach(customer=>{
+filtered.slice(0,20).forEach(customer=>{
 
 const button =
 document.createElement("button");
 
-button.type =
-"button";
-
-button.className =
-"customer-result";
+button.type = "button";
+button.className = "customer-result";
 
 button.innerHTML =
 "<strong>"+
 escapeHTML(
-customer.name ||
-"Cliente sin nombre"
+customer.name || "Cliente sin nombre"
 )+
 "</strong>"+
 (
@@ -2224,17 +1673,13 @@ button.addEventListener(
 "click",
 ()=>{
 
-selectedCustomerId =
-customer.id;
+selectedCustomerId = customer.id;
 
 $("customerSearch").value =
 customer.name || "";
 
-container.innerHTML =
-"";
-
-container.style.display =
-"none";
+container.innerHTML = "";
+container.style.display = "none";
 
 renderSelectedCustomer();
 
@@ -2245,45 +1690,32 @@ container.appendChild(button);
 
 });
 
-container.style.display =
-"block";
+container.style.display = "block";
 
 }
-
 
 $("customerSearch").addEventListener(
 "input",
 event=>{
-renderCustomerResults(
-event.target.value
-);
+renderCustomerResults(event.target.value);
 }
 );
-
 
 $("customerSearch").addEventListener(
 "focus",
 event=>{
 
-if(
-event.target.value.trim()
-){
-
-renderCustomerResults(
-event.target.value
-);
-
+if(event.target.value.trim()){
+renderCustomerResults(event.target.value);
 }
 
 }
 );
-
 
 $("generalCustomer").addEventListener(
 "click",
 clearSelectedCustomer
 );
-
 
 /* =========================================================
    MODAL CLIENTE
@@ -2291,81 +1723,53 @@ clearSelectedCustomer
 
 function openClientModal(){
 
-const modal =
-$("clientModal");
-
 $("clientModalBusiness").textContent =
 "Nuevo cliente para "+currentBusiness;
 
-$("clientModalError").textContent =
-"";
+$("clientModalError").textContent = "";
 
-$("clientModalError").classList.remove(
-"show"
-);
+$("clientModalError").classList.remove("show");
 
 $("clientForm").reset();
 
-modal.classList.add(
-"show"
-);
+$("clientModal").classList.add("show");
 
-modal.setAttribute(
+$("clientModal").setAttribute(
 "aria-hidden",
 "false"
 );
 
-document.body.classList.add(
-"modal-open"
-);
+document.body.classList.add("modal-open");
 
 setTimeout(
-()=>{
-$("newClientName").focus();
-},
+()=>$("newClientName").focus(),
 150
 );
 
 }
 
-
 function closeClientModal(){
 
-const modal =
-$("clientModal");
+$("clientModal").classList.remove("show");
 
-modal.classList.remove(
-"show"
-);
-
-modal.setAttribute(
+$("clientModal").setAttribute(
 "aria-hidden",
 "true"
 );
 
-document.body.classList.remove(
-"modal-open"
-);
+document.body.classList.remove("modal-open");
 
 }
 
-
-function showClientModalError(
-message
-){
+function showClientModalError(message){
 
 const error =
 $("clientModalError");
 
-error.textContent =
-message;
-
-error.classList.add(
-"show"
-);
+error.textContent = message;
+error.classList.add("show");
 
 }
-
 
 async function saveNewClient(){
 
@@ -2387,7 +1791,6 @@ showClientModalError(
 $("newClientName").focus();
 
 return;
-
 }
 
 const saveButton =
@@ -2396,22 +1799,15 @@ $("saveClientButton");
 const originalText =
 saveButton.textContent;
 
-saveButton.disabled =
-true;
-
-saveButton.textContent =
-"Guardando...";
-
+saveButton.disabled = true;
+saveButton.textContent = "Guardando...";
 
 try{
 
 const businessId =
 BUSINESS_IDS[currentBusiness];
 
-
-/* =====================================================
-   OFFLINE
-===================================================== */
+/* OFFLINE */
 
 if(!navigator.onLine){
 
@@ -2419,30 +1815,15 @@ const temporaryId =
 "offline-client-"+Date.now();
 
 const newClient = {
-
-id:
-temporaryId,
-
-name:
+id:temporaryId,
 name,
-
-phone:
-phone || null,
-
-notes:
-notes || null,
-
-business_id:
-businessId,
-
-offline:
-true
-
+phone:phone || null,
+notes:notes || null,
+business_id:businessId,
+offline:true
 };
 
-customers.push(
-newClient
-);
+customers.push(newClient);
 
 customers.sort(
 (a,b)=>
@@ -2461,11 +1842,9 @@ customers
 }
 );
 
-selectedCustomerId =
-temporaryId;
+selectedCustomerId = temporaryId;
 
-$("customerSearch").value =
-name;
+$("customerSearch").value = name;
 
 renderSelectedCustomer();
 
@@ -2478,58 +1857,39 @@ showStatus(
 );
 
 return;
-
 }
 
-
-/* =====================================================
-   ONLINE
-===================================================== */
+/* ONLINE */
 
 if(!supabaseClient){
-
 initializeSupabase();
-
 }
 
 let result =
 await supabaseClient
 .from("customers")
 .insert({
-
-name:
 name,
-
-phone:
-phone || null,
-
-notes:
-notes || null,
-
-business_id:
-businessId
-
+phone:phone || null,
+notes:notes || null,
+business_id:businessId
 })
 .select(
 "id,name,phone,notes,business_id"
 )
 .single();
 
-
 /*
- * Compatibilidad si customers todavía
- * no tiene business_id.
- */
+Compatibilidad con tabla antigua sin business_id.
+*/
 
 if(
 result.error &&
 (
 String(result.error.message || "")
-.toLowerCase()
-.includes("business_id") ||
+.toLowerCase().includes("business_id") ||
 String(result.error.message || "")
-.toLowerCase()
-.includes("column")
+.toLowerCase().includes("column")
 )
 ){
 
@@ -2537,16 +1897,9 @@ result =
 await supabaseClient
 .from("customers")
 .insert({
-
-name:
 name,
-
-phone:
-phone || null,
-
-notes:
-notes || null
-
+phone:phone || null,
+notes:notes || null
 })
 .select(
 "id,name,phone,notes"
@@ -2555,23 +1908,17 @@ notes || null
 
 }
 
-
 if(result.error){
-
 throw result.error;
-
 }
 
 if(!result.data){
-
 throw new Error(
 "Supabase no devolvió el cliente creado."
 );
-
 }
 
-const newClient =
-result.data;
+const newClient = result.data;
 
 customers =
 [
@@ -2594,14 +1941,6 @@ customers
 }
 );
 
-
-/*
- * MUY IMPORTANTE:
- *
- * Seleccionamos al cliente nuevo
- * sin abandonar la venta.
- */
-
 selectedCustomerId =
 newClient.id;
 
@@ -2618,8 +1957,7 @@ showStatus(
 "ok"
 );
 
-}
-catch(error){
+}catch(error){
 
 console.error(
 "[POS] Error creando cliente:",
@@ -2631,34 +1969,24 @@ showClientModalError(
 (error?.message || String(error))
 );
 
-}
-finally{
+}finally{
 
-saveButton.disabled =
-false;
-
-saveButton.textContent =
-originalText;
+saveButton.disabled = false;
+saveButton.textContent = originalText;
 
 }
 
 }
 
-
-/*
- * =======================================================
- * BOTÓN + CLIENTE
- * =======================================================
- *
- * NO EXISTE ninguna redirección aquí.
- */
+/* =========================================================
+   BOTÓN + CLIENTE
+========================================================= */
 
 $("addClientButton").addEventListener(
 "click",
-function(event){
+event=>{
 
 event.preventDefault();
-
 event.stopPropagation();
 
 openClientModal();
@@ -2666,12 +1994,13 @@ openClientModal();
 }
 );
 
-
-/* Cerrar */
+/* =========================================================
+   CERRAR MODAL
+========================================================= */
 
 $("closeClientModal").addEventListener(
 "click",
-function(event){
+event=>{
 
 event.preventDefault();
 
@@ -2679,11 +2008,10 @@ closeClientModal();
 
 }
 );
-
 
 $("cancelClientModal").addEventListener(
 "click",
-function(event){
+event=>{
 
 event.preventDefault();
 
@@ -2692,15 +2020,11 @@ closeClientModal();
 }
 );
 
-
-/* Guardar */
-
 $("clientForm").addEventListener(
 "submit",
-function(event){
+event=>{
 
 event.preventDefault();
-
 event.stopPropagation();
 
 saveNewClient();
@@ -2708,31 +2032,20 @@ saveNewClient();
 }
 );
 
-
-/* Cerrar tocando fuera */
-
 $("clientModal").addEventListener(
 "click",
-function(event){
+event=>{
 
-if(
-event.target ===
-$("clientModal")
-){
-
+if(event.target === $("clientModal")){
 closeClientModal();
-
 }
 
 }
 );
 
-
-/* Cerrar con ESC */
-
 document.addEventListener(
 "keydown",
-function(event){
+event=>{
 
 if(
 event.key === "Escape" &&
@@ -2746,98 +2059,70 @@ closeClientModal();
 }
 );
 
-
-/* Ocultar resultados al tocar fuera */
-
 document.addEventListener(
 "click",
-function(event){
+event=>{
 
 const customerBox =
-document.querySelector(
-".customer-box"
-);
+document.querySelector(".customer-box");
 
 if(
 customerBox &&
-!customerBox.contains(
-event.target
-)
+!customerBox.contains(event.target)
 ){
 
-$("customerResults").style.display =
-"none";
+$("customerResults").style.display = "none";
 
 }
 
 }
 );
-
 
 /* =========================================================
    CAMBIO DE NEGOCIO
 ========================================================= */
 
-async function changeBusiness(
-name,
-button
-){
+async function changeBusiness(name,button){
 
-if(
-name === currentBusiness
-){
-
+if(name === currentBusiness){
 return;
-
 }
 
-currentBusiness =
-name;
+/*
+IMPORTANTE:
+guardamos el estado actual del carrito antes
+de cambiar de negocio solamente en memoria.
+El carrito se limpia porque pertenece al negocio.
+*/
+
+currentBusiness = name;
 
 cart = [];
 
-selectedPaymentId =
-null;
+selectedPaymentId = null;
+selectedCustomerId = null;
 
-selectedCustomerId =
-null;
-
-$("customerSearch").value =
-"";
-
-$("customerResults").innerHTML =
-"";
-
-$("customerResults").style.display =
-"none";
+$("customerSearch").value = "";
+$("customerResults").innerHTML = "";
+$("customerResults").style.display = "none";
 
 document
-.querySelectorAll(
-".business-btn"
-)
+.querySelectorAll(".business-btn")
 .forEach(
-b=>
-b.classList.remove(
-"active"
-)
+b=>b.classList.remove("active")
 );
 
-button.classList.add(
-"active"
-);
+button.classList.add("active");
 
 await loadBusinessData();
 
 }
 
-
 /* =========================================================
    REGISTRAR VENTA
 ========================================================= */
 
-async function registerSale(
-isPending
-){
+async function registerSale(isPending){
 
 clearStatus();
 
@@ -2848,7 +2133,6 @@ showStatus(
 );
 
 return;
-
 }
 
 if(
@@ -2861,7 +2145,6 @@ showStatus(
 );
 
 return;
-
 }
 
 if(
@@ -2874,20 +2157,17 @@ showStatus(
 );
 
 return;
-
 }
 
 if(!navigator.onLine){
 
 showStatus(
 "Estás OFFLINE.\n\n"+
-"Los productos, clientes y métodos de pago están disponibles porque fueron guardados en el dispositivo.\n\n"+
-"El registro de la venta offline se habilitará en la siguiente etapa.",
+"El registro de ventas offline todavía no está habilitado.",
 "warn"
 );
 
 return;
-
 }
 
 const button =
@@ -2898,32 +2178,22 @@ isPending
 const originalText =
 button.textContent;
 
-button.disabled =
-true;
+button.disabled = true;
 
 button.textContent =
 isPending
 ?"GUARDANDO..."
 :"REGISTRANDO...";
 
-
 try{
 
 const items =
 cart.map(item=>({
 
-product_id:
-item.id,
-
-description:
-item.name,
-
-quantity:
-Number(item.quantity),
-
-unit_price:
-Number(item.price),
-
+product_id:item.id,
+description:item.name,
+quantity:Number(item.quantity),
+unit_price:Number(item.price),
 subtotal:
 Number(item.price)*
 Number(item.quantity)
@@ -2937,31 +2207,19 @@ const result =
 await supabaseClient.rpc(
 "register_sale",
 {
-
-p_business_id:
-businessId,
-
-p_customer_id:
-selectedCustomerId || null,
-
+p_business_id:businessId,
+p_customer_id:selectedCustomerId || null,
 p_payment_method_id:
 isPending
 ?null
 :selectedPaymentId,
-
-p_items:
-items,
-
-p_is_pending:
-isPending
-
+p_items:items,
+p_is_pending:isPending
 }
 );
 
 if(result.error){
-
 throw result.error;
-
 }
 
 alert(
@@ -2972,17 +2230,13 @@ isPending
 
 cart = [];
 
-selectedCustomerId =
-null;
+selectedCustomerId = null;
 
-$("customerSearch").value =
-"";
+$("customerSearch").value = "";
 
-$("customerResults").innerHTML =
-"";
+$("customerResults").innerHTML = "";
 
-$("customerResults").style.display =
-"none";
+$("customerResults").style.display = "none";
 
 renderSelectedCustomer();
 
@@ -2995,11 +2249,10 @@ isPending
 "ok"
 );
 
-}
-catch(error){
+}catch(error){
 
 console.error(
-"registerSale:",
+"[POS] registerSale:",
 error
 );
 
@@ -3008,114 +2261,75 @@ showStatus(
 (error?.message || String(error))
 );
 
-}
-finally{
+}finally{
 
-button.disabled =
-false;
-
-button.textContent =
-originalText;
+button.disabled = false;
+button.textContent = originalText;
 
 }
 
 }
-
 
 /* =========================================================
    NAVEGACIÓN
 ========================================================= */
 
-/*
- * Estos botones SÍ continúan llevando a sus páginas.
- *
- * El botón + Cliente NO está aquí.
- */
-
 $("accountsButton").addEventListener(
 "click",
-function(){
-
+()=>{
 window.location.href =
 "cuentas.html?business="+
-encodeURIComponent(
-currentBusiness
-);
-
+encodeURIComponent(currentBusiness);
 }
 );
-
 
 $("clientsButton").addEventListener(
 "click",
-function(){
-
+()=>{
 window.location.href =
 "clientes.html?business="+
-encodeURIComponent(
-currentBusiness
-);
-
+encodeURIComponent(currentBusiness);
 }
 );
-
 
 $("historyButton").addEventListener(
 "click",
-function(){
-
+()=>{
 window.location.href =
 "historial.html?business="+
-encodeURIComponent(
-currentBusiness
-);
-
+encodeURIComponent(currentBusiness);
 }
 );
-
 
 $("inventoryButton").addEventListener(
 "click",
-function(){
-
+()=>{
 window.location.href =
 "inventario.html?business="+
-encodeURIComponent(
-currentBusiness
-);
-
+encodeURIComponent(currentBusiness);
 }
 );
-
 
 $("dashboardButton").addEventListener(
 "click",
-function(){
-
+()=>{
 window.location.href =
 "dashboard.html?business="+
-encodeURIComponent(
-currentBusiness
-);
-
+encodeURIComponent(currentBusiness);
 }
 );
-
 
 /* =========================================================
    BOTONES DE NEGOCIO
 ========================================================= */
 
 document
-.querySelectorAll(
-".business-btn"
-)
-.forEach(
-button=>{
+.querySelectorAll(".business-btn")
+.forEach(button=>{
 
 button.addEventListener(
 "click",
-function(){
+()=>{
 
 changeBusiness(
 button.dataset.business,
@@ -3125,9 +2339,7 @@ button
 }
 );
 
-}
-);
-
+});
 
 /* =========================================================
    COBRAR / CUENTA
@@ -3135,44 +2347,36 @@ button
 
 $("chargeButton").addEventListener(
 "click",
-function(){
-
+()=>{
 registerSale(false);
-
 }
 );
-
 
 $("accountButton").addEventListener(
 "click",
-function(){
-
+()=>{
 registerSale(true);
-
 }
 );
 
-
 /* =========================================================
-   CONEXIÓN
+   ESTADO DE CONEXIÓN
 ========================================================= */
 
 window.addEventListener(
 "online",
-async function(){
+async()=>{
 
-$("offlineBadge").innerHTML =
-"";
+$("offlineBadge").innerHTML = "";
 
 await loadBusinessData();
 
 }
 );
 
-
 window.addEventListener(
 "offline",
-async function(){
+async()=>{
 
 $("offlineBadge").innerHTML =
 '<span class="offline-badge">📴 MODO OFFLINE</span>';
@@ -3182,7 +2386,6 @@ await loadOfflineData();
 }
 );
 
-
 /* =========================================================
    INICIO
 ========================================================= */
@@ -3190,14 +2393,15 @@ await loadOfflineData();
 async function startApp(){
 
 /*
- * NO registramos Service Worker.
- *
- * Primero eliminamos cualquier versión antigua
- * que pueda estar instalada.
- */
+NO hacemos:
+- unregister()
+- caches.delete()
+- borrar Service Worker
+- borrar caché del navegador
 
-await removeOldServiceWorkers();
-
+Esto era lo que estaba provocando que versiones
+anteriores dejaran de funcionar correctamente.
+*/
 
 if(!navigator.onLine){
 
@@ -3205,13 +2409,6 @@ $("offlineBadge").innerHTML =
 '<span class="offline-badge">📴 MODO OFFLINE</span>';
 
 }
-else{
-
-$("offlineBadge").innerHTML =
-"";
-
-}
-
 
 try{
 
@@ -3219,8 +2416,7 @@ initializeSupabase();
 
 await loadBusinessData();
 
-}
-catch(error){
+}catch(error){
 
 console.error(
 "[POS] Error inicial:",
@@ -3232,7 +2428,6 @@ await loadOfflineData();
 }
 
 }
-
 
 startApp();
 
