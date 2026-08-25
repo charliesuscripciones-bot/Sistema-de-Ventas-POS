@@ -12,34 +12,44 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 
-html{width:100%;min-height:100%}
+html,body{
+width:100%;
+min-height:100%;
+}
 
 body{
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 background:#f5f5f5;
 color:#222;
-min-height:100vh
+min-height:100vh;
 }
 
-body.modal-open{overflow:hidden}
+body.modal-open{
+overflow:hidden;
+}
 
 header{
 background:#111827;
 color:#fff;
-padding-top:calc(22px + env(safe-area-inset-top));
-padding-right:20px;
-padding-bottom:22px;
-padding-left:20px
+padding:calc(22px + env(safe-area-inset-top)) 20px 22px;
 }
 
-header h1{font-size:28px;line-height:1.15}
-header p{font-size:15px;opacity:.75;margin-top:8px}
+header h1{
+font-size:28px;
+line-height:1.15;
+}
+
+header p{
+font-size:15px;
+opacity:.75;
+margin-top:8px;
+}
 
 .container{
 width:100%;
 max-width:1100px;
 margin:auto;
-padding:20px
+padding:20px;
 }
 
 .status{
@@ -49,7 +59,7 @@ border-radius:12px;
 font-size:14px;
 display:none;
 font-weight:700;
-white-space:pre-line
+white-space:pre-line;
 }
 
 .status.error{display:block;background:#fee2e2;color:#991b1b}
@@ -60,7 +70,7 @@ white-space:pre-line
 display:flex;
 gap:10px;
 margin-bottom:20px;
-flex-wrap:wrap
+flex-wrap:wrap;
 }
 
 .business-btn,.nav-btn{
@@ -71,53 +81,76 @@ background:#fff;
 border:2px solid #ddd;
 font-weight:700;
 cursor:pointer;
-font-size:16px
+font-size:16px;
 }
 
-.business-btn{flex:1}
+.business-btn{
+flex:1;
+}
 
 .business-btn.active{
 background:#111827;
 color:#fff;
-border-color:#111827
+border-color:#111827;
 }
 
 .navigation{
 display:grid;
 grid-template-columns:repeat(5,1fr);
 gap:10px;
-margin-bottom:20px
+margin-bottom:20px;
 }
 
-.nav-btn{color:#2563eb}
+.nav-btn{
+color:#2563eb;
+}
 
-.nav-btn.accounts{background:#fff7ed;border-color:#f59e0b;color:#b45309}
-.nav-btn.clients{background:#ecfdf5;border-color:#10b981;color:#047857}
-.nav-btn.history{background:#f5f3ff;border-color:#7c3aed;color:#6d28d9}
-.nav-btn.inventory{background:#eff6ff;border-color:#2563eb;color:#1d4ed8}
+.nav-btn.accounts{
+background:#fff7ed;
+border-color:#f59e0b;
+color:#b45309;
+}
+
+.nav-btn.clients{
+background:#ecfdf5;
+border-color:#10b981;
+color:#047857;
+}
+
+.nav-btn.history{
+background:#f5f3ff;
+border-color:#7c3aed;
+color:#6d28d9;
+}
+
+.nav-btn.inventory{
+background:#eff6ff;
+border-color:#2563eb;
+color:#1d4ed8;
+}
 
 .layout{
 display:grid;
 grid-template-columns:1fr 390px;
-gap:20px
+gap:20px;
 }
 
 .card{
 background:#fff;
 border-radius:18px;
 padding:20px;
-box-shadow:0 3px 14px rgba(0,0,0,.06)
+box-shadow:0 3px 14px rgba(0,0,0,.06);
 }
 
 .card h2{
 font-size:21px;
-margin-bottom:16px
+margin-bottom:16px;
 }
 
 .products{
 display:grid;
 grid-template-columns:repeat(2,1fr);
-gap:12px
+gap:12px;
 }
 
 .product{
@@ -127,29 +160,38 @@ padding:18px 14px;
 cursor:pointer;
 background:#fff;
 text-align:left;
-transition:.15s
+transition:.15s;
 }
 
-.product:hover{border-color:#2563eb}
-.product:active{transform:scale(.98)}
-.product.disabled{opacity:.5;cursor:not-allowed}
+.product:hover{
+border-color:#2563eb;
+}
+
+.product:active{
+transform:scale(.98);
+}
+
+.product.disabled{
+opacity:.5;
+cursor:not-allowed;
+}
 
 .product-name{
 font-weight:700;
 font-size:17px;
-margin-bottom:9px
+margin-bottom:9px;
 }
 
 .price{
 font-size:23px;
 font-weight:800;
-color:#2563eb
+color:#2563eb;
 }
 
 .stock{
 font-size:14px;
 color:#666;
-margin-top:7px
+margin-top:7px;
 }
 
 .cart-item{
@@ -158,22 +200,24 @@ justify-content:space-between;
 align-items:center;
 padding:13px 0;
 border-bottom:1px solid #eee;
-gap:12px
+gap:12px;
 }
 
-.cart-name{font-weight:700}
+.cart-name{
+font-weight:700;
+}
 
 .cart-price{
 font-size:13px;
 color:#666;
-margin-top:4px
+margin-top:4px;
 }
 
 .quantity{
 display:flex;
 align-items:center;
 gap:8px;
-margin-top:8px
+margin-top:8px;
 }
 
 .quantity button{
@@ -183,7 +227,7 @@ border:none;
 border-radius:7px;
 background:#eee;
 cursor:pointer;
-font-size:18px
+font-size:18px;
 }
 
 .total{
@@ -193,19 +237,19 @@ font-size:25px;
 font-weight:800;
 margin-top:20px;
 padding-top:18px;
-border-top:2px solid #eee
+border-top:2px solid #eee;
 }
 
 .payment-title,.customer-title{
 margin-top:20px;
 margin-bottom:10px;
 font-weight:800;
-font-size:17px
+font-size:17px;
 }
 
 .payments{
 display:grid;
-gap:9px
+gap:9px;
 }
 
 .payment{
@@ -216,20 +260,22 @@ background:#fff;
 cursor:pointer;
 text-align:left;
 font-size:16px;
-font-weight:700
+font-weight:700;
 }
 
 .payment.active{
 background:#111827;
 color:#fff;
-border-color:#111827
+border-color:#111827;
 }
 
-.customer-box{position:relative}
+.customer-box{
+position:relative;
+}
 
 .customer-row{
 display:flex;
-gap:8px
+gap:8px;
 }
 
 .customer-search{
@@ -239,12 +285,12 @@ border:2px solid #ddd;
 border-radius:11px;
 font-size:15px;
 min-width:0;
-background:#fff
+background:#fff;
 }
 
 .customer-search:focus{
 outline:none;
-border-color:#2563eb
+border-color:#2563eb;
 }
 
 .add-client{
@@ -255,7 +301,7 @@ padding:0 14px;
 border-radius:11px;
 font-weight:800;
 cursor:pointer;
-white-space:nowrap
+white-space:nowrap;
 }
 
 .customer-results{
@@ -269,7 +315,7 @@ box-shadow:0 8px 25px rgba(0,0,0,.12);
 position:absolute;
 left:0;
 right:0;
-z-index:100
+z-index:100;
 }
 
 .customer-result{
@@ -280,20 +326,22 @@ border-bottom:1px solid #eee;
 background:#fff;
 padding:13px;
 text-align:left;
-cursor:pointer
+cursor:pointer;
 }
 
-.customer-result:hover{background:#f3f4f6}
+.customer-result:hover{
+background:#f3f4f6;
+}
 
 .customer-result strong{
 display:block;
-font-size:15px
+font-size:15px;
 }
 
 .customer-result small{
 display:block;
 color:#6b7280;
-margin-top:4px
+margin-top:4px;
 }
 
 .selected-customer{
@@ -304,7 +352,7 @@ background:#eff6ff;
 border:2px solid #bfdbfe;
 color:#1d4ed8;
 font-size:14px;
-font-weight:600
+font-weight:600;
 }
 
 .clear-customer{
@@ -313,7 +361,7 @@ background:none;
 color:#dc2626;
 font-weight:700;
 cursor:pointer;
-margin-left:8px
+margin-left:8px;
 }
 
 .general-customer{
@@ -323,7 +371,7 @@ border-radius:9px;
 background:#f3f4f6;
 color:#555;
 font-weight:700;
-cursor:pointer
+cursor:pointer;
 }
 
 .charge,.account{
@@ -335,21 +383,27 @@ border-radius:12px;
 color:#fff;
 font-size:18px;
 font-weight:800;
-cursor:pointer
+cursor:pointer;
 }
 
-.charge{background:#16a34a}
-.account{margin-top:10px;background:#f59e0b}
+.charge{
+background:#16a34a;
+}
+
+.account{
+margin-top:10px;
+background:#f59e0b;
+}
 
 .charge:disabled,.account:disabled{
 opacity:.6;
-cursor:wait
+cursor:wait;
 }
 
 .empty{
 color:#777;
 text-align:center;
-padding:30px 10px
+padding:30px 10px;
 }
 
 .offline-badge{
@@ -360,48 +414,50 @@ border-radius:20px;
 background:#fef3c7;
 color:#92400e;
 font-size:12px;
-font-weight:800
+font-weight:800;
 }
 
+
 /* =========================================================
-   VENTANA FLOTANTE PARA AGREGAR CLIENTE
+   MODAL AGREGAR CLIENTE
 ========================================================= */
 
 .client-modal{
 position:fixed;
 inset:0;
-z-index:9999;
+z-index:999999;
 display:none;
 align-items:center;
 justify-content:center;
-padding:20px;
-background:rgba(0,0,0,.58);
-backdrop-filter:blur(5px);
--webkit-backdrop-filter:blur(5px)
+padding:16px;
+background:rgba(0,0,0,.65);
+backdrop-filter:blur(6px);
+-webkit-backdrop-filter:blur(6px);
 }
 
 .client-modal.show{
-display:flex
+display:flex !important;
 }
 
 .client-modal-box{
 width:100%;
 max-width:430px;
+max-height:calc(100vh - 32px);
+overflow-y:auto;
 background:#fff;
 border-radius:22px;
-box-shadow:0 20px 60px rgba(0,0,0,.30);
-overflow:hidden;
-animation:modalIn .18s ease-out
+box-shadow:0 20px 60px rgba(0,0,0,.35);
+animation:modalIn .18s ease-out;
 }
 
 @keyframes modalIn{
 from{
 opacity:0;
-transform:translateY(15px) scale(.97)
+transform:translateY(20px) scale(.97);
 }
 to{
 opacity:1;
-transform:translateY(0) scale(1)
+transform:translateY(0) scale(1);
 }
 }
 
@@ -412,37 +468,38 @@ justify-content:space-between;
 gap:15px;
 padding:20px;
 background:#111827;
-color:#fff
+color:#fff;
 }
 
 .client-modal-header h3{
-font-size:20px
+font-size:20px;
 }
 
 .client-modal-header p{
 font-size:13px;
 opacity:.75;
-margin-top:4px
+margin-top:4px;
 }
 
 .close-modal{
-width:38px;
-height:38px;
+width:40px;
+height:40px;
 border:none;
 border-radius:50%;
-background:rgba(255,255,255,.12);
+background:rgba(255,255,255,.14);
 color:#fff;
-font-size:25px;
+font-size:27px;
+line-height:1;
 cursor:pointer;
-flex-shrink:0
+flex-shrink:0;
 }
 
 .client-form{
-padding:20px
+padding:20px;
 }
 
 .form-group{
-margin-bottom:15px
+margin-bottom:15px;
 }
 
 .form-group label{
@@ -450,7 +507,7 @@ display:block;
 font-size:14px;
 font-weight:800;
 margin-bottom:7px;
-color:#374151
+color:#374151;
 }
 
 .form-group input,
@@ -461,25 +518,25 @@ border:2px solid #ddd;
 border-radius:11px;
 font-size:16px;
 font-family:inherit;
-background:#fff
+background:#fff;
 }
 
 .form-group textarea{
 min-height:80px;
-resize:vertical
+resize:vertical;
 }
 
 .form-group input:focus,
 .form-group textarea:focus{
 outline:none;
-border-color:#2563eb
+border-color:#2563eb;
 }
 
 .client-form-buttons{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:10px;
-margin-top:20px
+margin-top:20px;
 }
 
 .modal-cancel,
@@ -489,22 +546,22 @@ border-radius:11px;
 padding:14px;
 font-size:16px;
 font-weight:800;
-cursor:pointer
+cursor:pointer;
 }
 
 .modal-cancel{
 background:#f3f4f6;
-color:#374151
+color:#374151;
 }
 
 .modal-save{
 background:#2563eb;
-color:#fff
+color:#fff;
 }
 
 .modal-save:disabled{
 opacity:.6;
-cursor:wait
+cursor:wait;
 }
 
 .modal-error{
@@ -516,48 +573,89 @@ color:#991b1b;
 font-size:13px;
 font-weight:700;
 margin-bottom:15px;
-white-space:pre-line
+white-space:pre-line;
 }
 
 .modal-error.show{
-display:block
+display:block;
 }
 
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
 @media(max-width:950px){
-.navigation{grid-template-columns:repeat(3,1fr)}
+.navigation{
+grid-template-columns:repeat(3,1fr);
+}
 }
 
 @media(max-width:850px){
-.layout{grid-template-columns:1fr}
-.navigation{grid-template-columns:1fr 1fr}
+.layout{
+grid-template-columns:1fr;
+}
+
+.navigation{
+grid-template-columns:1fr 1fr;
+}
 }
 
 @media(max-width:500px){
-.container{padding:15px}
-header h1{font-size:25px}
-header p{font-size:14px}
-.navigation{grid-template-columns:1fr 1fr}
-.card{padding:16px}
-.products{grid-template-columns:1fr 1fr}
-.product{padding:15px 12px}
-.product-name{font-size:15px}
-.price{font-size:20px}
-.customer-row{flex-direction:column}
-.add-client{padding:12px}
-.client-modal{
-padding:12px
-}
-.client-modal-box{
-border-radius:18px
-}
-.client-form{
-padding:16px
-}
+.container{
+padding:15px;
 }
 
-@supports (-webkit-touch-callout:none){
-header{
-padding-top:calc(22px + env(safe-area-inset-top))
+header h1{
+font-size:25px;
+}
+
+header p{
+font-size:14px;
+}
+
+.navigation{
+grid-template-columns:1fr 1fr;
+}
+
+.card{
+padding:16px;
+}
+
+.products{
+grid-template-columns:1fr 1fr;
+}
+
+.product{
+padding:15px 12px;
+}
+
+.product-name{
+font-size:15px;
+}
+
+.price{
+font-size:20px;
+}
+
+.customer-row{
+flex-direction:column;
+}
+
+.add-client{
+padding:12px;
+}
+
+.client-modal{
+padding:10px;
+}
+
+.client-modal-box{
+border-radius:18px;
+}
+
+.client-form{
+padding:16px;
 }
 }
 </style>
@@ -654,7 +752,11 @@ placeholder="🔎 Buscar cliente por nombre o teléfono"
 autocomplete="off"
 >
 
-<button type="button"
+<!-- IMPORTANTE:
+     Este botón NO redirige a clientes.html.
+     Solamente abre el modal. -->
+<button
+type="button"
 id="addClientButton"
 class="add-client">
 + Cliente
@@ -681,13 +783,15 @@ style="display:none">
 <div class="empty">Cargando métodos de pago...</div>
 </div>
 
-<button type="button"
+<button
+type="button"
 id="chargeButton"
 class="charge">
 💵 COBRAR
 </button>
 
-<button type="button"
+<button
+type="button"
 id="accountButton"
 class="account">
 🟠 DEJAR A CUENTA
@@ -698,30 +802,27 @@ class="account">
 </div>
 </div>
 
-</div>
 
 <!-- =====================================================
-     MODAL AGREGAR CLIENTE
+     MODAL
 ====================================================== -->
 
 <div
 id="clientModal"
 class="client-modal"
-aria-hidden="true"
->
+aria-hidden="true">
 
 <div
 class="client-modal-box"
 role="dialog"
 aria-modal="true"
-aria-labelledby="clientModalTitle"
->
+aria-labelledby="clientModalTitle">
 
 <div class="client-modal-header">
 
 <div>
 <h3 id="clientModalTitle">👤 Agregar cliente</h3>
-<p id="clientModalBusiness">Cliente para BakeQuiri</p>
+<p id="clientModalBusiness">Nuevo cliente para BakeQuiri</p>
 </div>
 
 <button
@@ -737,8 +838,7 @@ aria-label="Cerrar">
 <form
 id="clientForm"
 class="client-form"
-autocomplete="off"
->
+autocomplete="off">
 
 <div
 id="clientModalError"
@@ -757,8 +857,7 @@ id="newClientName"
 name="name"
 placeholder="Ej. Juan Pérez"
 autocomplete="name"
-required
->
+required>
 
 </div>
 
@@ -773,8 +872,7 @@ type="tel"
 id="newClientPhone"
 name="phone"
 placeholder="Ej. 662 123 4567"
-autocomplete="tel"
->
+autocomplete="tel">
 
 </div>
 
@@ -787,8 +885,7 @@ Notas
 <textarea
 id="newClientNotes"
 name="notes"
-placeholder="Notas opcionales..."
-></textarea>
+placeholder="Notas opcionales..."></textarea>
 
 </div>
 
@@ -813,25 +910,26 @@ Guardar cliente
 </form>
 
 </div>
-
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 "use strict";
 
+
 /* =========================================================
    CONFIGURACIÓN
 ========================================================= */
 
-const SUPABASE_URL =
+const SUPABASE_URL=
 "https://jrxklpstlloeckihcduv.supabase.co";
 
-const SUPABASE_PUBLISHABLE_KEY =
+const SUPABASE_PUBLISHABLE_KEY=
 "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
-const BUSINESS_IDS = {
+const BUSINESS_IDS={
 BakeQuiri:"c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
 SpicyRoll:"ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
 };
@@ -847,6 +945,38 @@ let cart=[];
 
 let selectedPaymentId=null;
 let selectedCustomerId=null;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function $(id){
+return document.getElementById(id);
+}
+
+function money(value){
+return "$"+Number(value||0).toFixed(2);
+}
+
+function escapeHTML(value){
+return String(value??"")
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#039;");
+}
+
+function showStatus(message,type="error"){
+$("status").textContent=message;
+$("status").className="status "+type;
+}
+
+function clearStatus(){
+$("status").textContent="";
+$("status").className="status";
+}
 
 
 /* =========================================================
@@ -867,8 +997,7 @@ return dbPromise;
 
 dbPromise=new Promise((resolve,reject)=>{
 
-const request=
-indexedDB.open(
+const request=indexedDB.open(
 DB_NAME,
 DB_VERSION
 );
@@ -899,45 +1028,30 @@ reject(request.error);
 });
 
 return dbPromise;
-
 }
 
-async function saveOfflineData(
-business,
-data
-){
+async function saveOfflineData(business,data){
 
 try{
 
-const db=
-await openOfflineDB();
+const db=await openOfflineDB();
 
-return new Promise(
-(resolve,reject)=>{
+return new Promise((resolve,reject)=>{
 
-const transaction=
-db.transaction(
+const transaction=db.transaction(
 STORE_NAME,
 "readwrite"
 );
 
-const store=
-transaction.objectStore(
+const store=transaction.objectStore(
 STORE_NAME
 );
 
 store.put({
-
-key:
-"business_"+business,
-
+key:"business_"+business,
 business,
-
-savedAt:
-Date.now(),
-
+savedAt:Date.now(),
 ...data
-
 });
 
 transaction.oncomplete=()=>{
@@ -950,9 +1064,7 @@ reject(transaction.error);
 
 });
 
-}
-
-catch(error){
+}catch(error){
 
 console.error(
 "Error guardando datos offline:",
@@ -960,43 +1072,32 @@ error
 );
 
 return false;
-
+}
 }
 
-}
-
-async function getOfflineData(
-business
-){
+async function getOfflineData(business){
 
 try{
 
-const db=
-await openOfflineDB();
+const db=await openOfflineDB();
 
-return new Promise(
-(resolve,reject)=>{
+return new Promise((resolve,reject)=>{
 
-const transaction=
-db.transaction(
+const transaction=db.transaction(
 STORE_NAME,
 "readonly"
 );
 
-const store=
-transaction.objectStore(
+const store=transaction.objectStore(
 STORE_NAME
 );
 
-const request=
-store.get(
+const request=store.get(
 "business_"+business
 );
 
 request.onsuccess=()=>{
-resolve(
-request.result || null
-);
+resolve(request.result||null);
 };
 
 request.onerror=()=>{
@@ -1005,9 +1106,7 @@ reject(request.error);
 
 });
 
-}
-
-catch(error){
+}catch(error){
 
 console.error(
 "Error leyendo datos offline:",
@@ -1015,9 +1114,7 @@ error
 );
 
 return null;
-
 }
-
 }
 
 
@@ -1028,7 +1125,7 @@ return null;
 function initializeSupabase(){
 
 if(
-!window.supabase ||
+!window.supabase||
 typeof window.supabase.createClient!=="function"
 ){
 
@@ -1043,54 +1140,6 @@ window.supabase.createClient(
 SUPABASE_URL,
 SUPABASE_PUBLISHABLE_KEY
 );
-
-}
-
-
-/* =========================================================
-   HELPERS
-========================================================= */
-
-function $(id){
-return document.getElementById(id);
-}
-
-function money(value){
-
-return "$"+
-Number(value||0).toFixed(2);
-
-}
-
-function escapeHTML(value){
-
-return String(value??"")
-.replaceAll("&","&amp;")
-.replaceAll("<","&lt;")
-.replaceAll(">","&gt;")
-.replaceAll('"',"&quot;")
-.replaceAll("'","&#039;");
-
-}
-
-function showStatus(
-message,
-type="error"
-){
-
-$("status").textContent=
-message;
-
-$("status").className=
-"status "+type;
-
-}
-
-function clearStatus(){
-
-$("status").textContent="";
-$("status").className="status";
-
 }
 
 
@@ -1116,14 +1165,17 @@ updateViaCache:"none"
 );
 
 console.log(
-"[POS] SW:",
+"[POS] Service Worker:",
 registration.scope
 );
 
 try{
 await registration.update();
-}catch(e){
-console.warn("SW update:",e);
+}catch(error){
+console.warn(
+"[POS] Error actualizando SW:",
+error
+);
 }
 
 if(registration.waiting){
@@ -1142,21 +1194,17 @@ error
 );
 
 }
-
 }
 
 
 /* =========================================================
-   CARGAR DATOS ONLINE
+   DATOS ONLINE
 ========================================================= */
 
 async function loadOnlineData(){
 
 const businessId=
 BUSINESS_IDS[currentBusiness];
-
-
-/* PRODUCTOS */
 
 const productsResult=
 await supabaseClient
@@ -1177,9 +1225,6 @@ true
 if(productsResult.error){
 throw productsResult.error;
 }
-
-
-/* MÉTODOS DE PAGO */
 
 const paymentsResult=
 await supabaseClient
@@ -1202,9 +1247,15 @@ throw paymentsResult.error;
 }
 
 
-/* CLIENTES */
+/*
+ * Clientes.
+ *
+ * Intentamos primero con business_id.
+ * Si esa columna no existe, usamos la estructura
+ * anterior de la tabla.
+ */
 
-const customersResult=
+let customersResult=
 await supabaseClient
 .from("customers")
 .select(
@@ -1217,12 +1268,7 @@ await supabaseClient
 
 if(customersResult.error){
 
-/*
- * Compatibilidad con una tabla customers
- * que todavía no tenga business_id en el SELECT.
- */
-
-const fallbackCustomers=
+customersResult=
 await supabaseClient
 .from("customers")
 .select(
@@ -1230,31 +1276,14 @@ await supabaseClient
 )
 .order("name");
 
-if(fallbackCustomers.error){
+if(customersResult.error){
 throw customersResult.error;
 }
-
-customers=
-fallbackCustomers.data||[];
-
-}else{
-
-customers=
-customersResult.data||[];
-
 }
 
-products=
-productsResult.data||[];
-
-payments=
-paymentsResult.data||[];
-
-
-/*
- * GUARDAMOS LOS TRES CATÁLOGOS EN EL MISMO
- * REGISTRO LOCAL DEL NEGOCIO.
- */
+products=productsResult.data||[];
+payments=paymentsResult.data||[];
+customers=customersResult.data||[];
 
 await saveOfflineData(
 currentBusiness,
@@ -1265,30 +1294,17 @@ customers
 }
 );
 
-
-console.log(
-"[POS] Datos guardados offline:",
-currentBusiness,
-{
-products:products.length,
-payments:payments.length,
-customers:customers.length
-}
-);
-
 }
 
 
 /* =========================================================
-   CARGAR DATOS OFFLINE
+   DATOS OFFLINE
 ========================================================= */
 
 async function loadOfflineData(){
 
 const cached=
-await getOfflineData(
-currentBusiness
-);
+await getOfflineData(currentBusiness);
 
 if(!cached){
 
@@ -1302,12 +1318,11 @@ renderCart();
 renderSelectedCustomer();
 
 showStatus(
-"Este negocio todavía no tiene datos guardados en este dispositivo. Conéctate a Internet una vez para descargar productos, clientes y métodos de pago.",
+"Este negocio todavía no tiene datos guardados en este dispositivo. Conéctate a Internet una vez para descargar los datos.",
 "warn"
 );
 
 return false;
-
 }
 
 products=
@@ -1325,19 +1340,6 @@ Array.isArray(cached.customers)
 ?cached.customers
 :[];
 
-console.log(
-"[POS] Datos cargados desde IndexedDB:",
-{
-business:currentBusiness,
-products:products.length,
-payments:payments.length,
-customers:customers.length,
-savedAt:new Date(
-cached.savedAt
-).toLocaleString()
-}
-);
-
 renderProducts();
 renderPayments();
 renderCart();
@@ -1352,12 +1354,11 @@ showStatus(
 );
 
 return true;
-
 }
 
 
 /* =========================================================
-   CARGADOR PRINCIPAL
+   CARGAR NEGOCIO
 ========================================================= */
 
 async function loadBusinessData(){
@@ -1373,9 +1374,7 @@ $("payments").innerHTML=
 if(!navigator.onLine){
 
 await loadOfflineData();
-
 return;
-
 }
 
 try{
@@ -1394,11 +1393,10 @@ currentBusiness+
 "ok"
 );
 
-}
-catch(error){
+}catch(error){
 
 console.warn(
-"[POS] No se pudieron obtener datos online. Intentando caché local...",
+"[POS] Falló conexión online:",
 error
 );
 
@@ -1408,13 +1406,12 @@ await loadOfflineData();
 if(!loaded){
 
 showStatus(
-"No se pudieron cargar los datos desde Supabase ni desde el almacenamiento OFFLINE.\n\n"+
-"Conéctate a Internet y vuelve a abrir este negocio para guardar sus datos en el dispositivo.",
+"No se pudieron cargar los datos.",
 "error"
 );
 
 }
-
+}
 }
 
 
@@ -1431,12 +1428,9 @@ container.innerHTML="";
 if(!products.length){
 
 container.innerHTML=
-'<div class="empty">'+
-"No hay productos disponibles."+
-"</div>";
+'<div class="empty">No hay productos disponibles.</div>';
 
 return;
-
 }
 
 products.forEach(product=>{
@@ -1453,8 +1447,7 @@ button.className=
 "product"+
 (stock<=0?" disabled":"");
 
-button.disabled=
-stock<=0;
+button.disabled=stock<=0;
 
 button.innerHTML=
 '<div class="product-name">'+
@@ -1479,12 +1472,11 @@ button.addEventListener(
 container.appendChild(button);
 
 });
-
 }
 
 
 /* =========================================================
-   MÉTODOS DE PAGO
+   PAGOS
 ========================================================= */
 
 function renderPayments(){
@@ -1496,19 +1488,14 @@ container.innerHTML="";
 if(!payments.length){
 
 container.innerHTML=
-'<div class="empty">'+
-"No hay métodos de pago disponibles."+
-"</div>";
+'<div class="empty">No hay métodos de pago disponibles.</div>';
 
 return;
-
 }
 
-if(
-!payments.some(
+if(!payments.some(
 p=>p.id===selectedPaymentId
-)
-){
+)){
 
 selectedPaymentId=
 payments[0]?.id||null;
@@ -1542,12 +1529,12 @@ payment.id;
 
 renderPayments();
 
-});
+}
+);
 
 container.appendChild(button);
 
 });
-
 }
 
 
@@ -1567,13 +1554,10 @@ showStatus(
 );
 
 return;
-
 }
 
 const item=
-cart.find(
-i=>i.id===product.id
-);
+cart.find(i=>i.id===product.id);
 
 if(item){
 
@@ -1588,7 +1572,6 @@ showStatus(
 );
 
 return;
-
 }
 
 }else{
@@ -1601,25 +1584,17 @@ quantity:1
 }
 
 renderCart();
-
 }
 
-function changeQuantity(
-id,
-amount
-){
+function changeQuantity(id,amount){
 
 const item=
-cart.find(
-i=>i.id===id
-);
+cart.find(i=>i.id===id);
 
 if(!item)return;
 
 const product=
-products.find(
-p=>p.id===id
-);
+products.find(p=>p.id===id);
 
 const max=
 Number(
@@ -1638,23 +1613,18 @@ showStatus(
 );
 
 return;
-
 }
 
-item.quantity=
-newQuantity;
+item.quantity=newQuantity;
 
 if(item.quantity<=0){
 
 cart=
-cart.filter(
-i=>i.id!==id
-);
+cart.filter(i=>i.id!==id);
 
 }
 
 renderCart();
-
 }
 
 function getCartTotal(){
@@ -1666,13 +1636,11 @@ Number(item.price)*
 Number(item.quantity),
 0
 );
-
 }
 
 function renderCart(){
 
-const container=
-$("cart");
+const container=$("cart");
 
 container.innerHTML="";
 
@@ -1684,7 +1652,6 @@ container.innerHTML=
 $("total").textContent="$0.00";
 
 return;
-
 }
 
 cart.forEach(item=>{
@@ -1724,8 +1691,7 @@ minus.addEventListener(
 const quantity=
 document.createElement("span");
 
-quantity.textContent=
-item.quantity;
+quantity.textContent=item.quantity;
 
 const plus=
 document.createElement("button");
@@ -1766,7 +1732,6 @@ container.appendChild(row);
 
 $("total").textContent=
 money(getCartTotal());
-
 }
 
 
@@ -1797,7 +1762,6 @@ selectedElement.innerHTML="";
 general.style.display="block";
 
 return;
-
 }
 
 general.style.display="none";
@@ -1806,9 +1770,7 @@ selectedElement.style.display="block";
 
 selectedElement.innerHTML=
 "👤 <strong>"+
-escapeHTML(
-selected.name||"Cliente"
-)+
+escapeHTML(selected.name||"Cliente")+
 "</strong>"+
 (
 selected.phone
@@ -1817,11 +1779,8 @@ selected.phone
 )+
 '<button type="button" class="clear-customer" id="clearCustomer">Quitar</button>';
 
-$("clearCustomer").addEventListener(
-"click",
-clearSelectedCustomer
-);
-
+$("clearCustomer").onclick=
+clearSelectedCustomer;
 }
 
 function clearSelectedCustomer(){
@@ -1835,13 +1794,11 @@ $("customerResults").innerHTML="";
 $("customerResults").style.display="none";
 
 renderSelectedCustomer();
-
 }
 
 function renderCustomerResults(query){
 
-const container=
-$("customerResults");
+const container=$("customerResults");
 
 const search=
 String(query||"")
@@ -1852,8 +1809,8 @@ if(!search){
 
 container.innerHTML="";
 container.style.display="none";
-return;
 
+return;
 }
 
 const filtered=
@@ -1893,7 +1850,6 @@ container.appendChild(empty);
 container.style.display="block";
 
 return;
-
 }
 
 filtered.slice(0,20).forEach(customer=>{
@@ -1903,8 +1859,7 @@ document.createElement("button");
 
 button.type="button";
 
-button.className=
-"customer-result";
+button.className="customer-result";
 
 button.innerHTML=
 "<strong>"+
@@ -1921,9 +1876,7 @@ escapeHTML(customer.phone)+
 :""
 );
 
-button.addEventListener(
-"click",
-()=>{
+button.onclick=()=>{
 
 selectedCustomerId=
 customer.id;
@@ -1936,70 +1889,46 @@ container.style.display="none";
 
 renderSelectedCustomer();
 
-}
-);
+};
 
 container.appendChild(button);
 
 });
 
 container.style.display="block";
-
 }
-
-$("customerSearch").addEventListener(
-"input",
-event=>{
-renderCustomerResults(
-event.target.value
-);
-}
-);
-
-$("customerSearch").addEventListener(
-"focus",
-event=>{
-if(event.target.value.trim()){
-renderCustomerResults(
-event.target.value
-);
-}
-}
-);
-
-$("generalCustomer").addEventListener(
-"click",
-clearSelectedCustomer
-);
-
-document.addEventListener(
-"click",
-event=>{
-
-const box=
-document.querySelector(".customer-box");
-
-if(
-box &&
-!box.contains(event.target)
-){
-
-$("customerResults").style.display=
-"none";
-
-}
-
-});
 
 
 /* =========================================================
-   MODAL CLIENTE
+   MODAL - AGREGAR CLIENTE
 ========================================================= */
+
+/*
+ * IMPORTANTE:
+ *
+ * El botón + Cliente NO utiliza enlaces.
+ * No utiliza window.location.
+ * No utiliza clientes.html.
+ *
+ * Se abre mediante esta función.
+ */
 
 function openClientModal(){
 
-const modal=
-$("clientModal");
+console.log(
+"[POS] ABRIENDO MODAL DE CLIENTE"
+);
+
+const modal=$("clientModal");
+
+if(!modal){
+
+console.error(
+"[POS] ERROR: clientModal no existe."
+);
+
+return;
+}
 
 $("clientModalBusiness").textContent=
 "Nuevo cliente para "+currentBusiness;
@@ -2010,32 +1939,47 @@ $("clientModalError").classList.remove("show");
 $("clientForm").reset();
 
 modal.classList.add("show");
-modal.setAttribute("aria-hidden","false");
 
-document.body.classList.add("modal-open");
+modal.style.display="flex";
+
+modal.setAttribute(
+"aria-hidden",
+"false"
+);
+
+document.body.classList.add(
+"modal-open"
+);
 
 setTimeout(
 ()=>{
 $("newClientName").focus();
 },
-100
+150
 );
-
 }
 
 function closeClientModal(){
 
-const modal=
-$("clientModal");
+const modal=$("clientModal");
+
+if(!modal)return;
 
 modal.classList.remove("show");
-modal.setAttribute("aria-hidden","true");
 
-document.body.classList.remove("modal-open");
+modal.style.display="none";
+
+modal.setAttribute(
+"aria-hidden",
+"true"
+);
+
+document.body.classList.remove(
+"modal-open"
+);
 
 $("clientModalError").textContent="";
 $("clientModalError").classList.remove("show");
-
 }
 
 function showClientModalError(message){
@@ -2043,12 +1987,15 @@ function showClientModalError(message){
 const error=
 $("clientModalError");
 
-error.textContent=
-message;
+error.textContent=message;
 
 error.classList.add("show");
-
 }
+
+
+/* =========================================================
+   GUARDAR CLIENTE
+========================================================= */
 
 async function saveNewClient(){
 
@@ -2070,7 +2017,6 @@ showClientModalError(
 $("newClientName").focus();
 
 return;
-
 }
 
 const saveButton=
@@ -2080,9 +2026,7 @@ const originalText=
 saveButton.textContent;
 
 saveButton.disabled=true;
-
-saveButton.textContent=
-"Guardando...";
+saveButton.textContent="Guardando...";
 
 try{
 
@@ -2090,13 +2034,9 @@ const businessId=
 BUSINESS_IDS[currentBusiness];
 
 
-/*
- * =======================================================
- * MODO OFFLINE
- * =======================================================
- *
- * El cliente se agrega inmediatamente al catálogo local.
- */
+/* -------------------------
+   OFFLINE
+------------------------- */
 
 if(!navigator.onLine){
 
@@ -2133,8 +2073,7 @@ customers
 selectedCustomerId=
 temporaryId;
 
-$("customerSearch").value=
-name;
+$("customerSearch").value=name;
 
 renderSelectedCustomer();
 
@@ -2142,47 +2081,29 @@ closeClientModal();
 
 showStatus(
 "Cliente agregado correctamente en modo OFFLINE.\n"+
-"Se guardó en este dispositivo y quedó seleccionado para esta venta.",
+"Quedó seleccionado para esta venta.",
 "ok"
 );
 
 return;
-
 }
 
 
-/*
- * =======================================================
- * MODO ONLINE
- * =======================================================
- *
- * Se registra directamente en Supabase.
- */
+/* -------------------------
+   ONLINE
+------------------------- */
 
 if(!supabaseClient){
-
 initializeSupabase();
-
 }
-
-let insertPayload={
-name,
-phone:phone||null,
-notes:notes||null
-};
-
-
-/*
- * Primero intentamos registrar con business_id.
- * Esto permite que el cliente quede asociado
- * correctamente al negocio desde el POS.
- */
 
 let result=
 await supabaseClient
 .from("customers")
 .insert({
-...insertPayload,
+name,
+phone:phone||null,
+notes:notes||null,
 business_id:businessId
 })
 .select(
@@ -2192,15 +2113,15 @@ business_id:businessId
 
 
 /*
- * Si la tabla customers todavía no tiene
- * business_id, usamos el esquema anterior.
+ * Compatibilidad si customers
+ * todavía no tiene business_id.
  */
 
 if(
 result.error &&
 (
 String(result.error.message||"")
-.toLowerCase().includes("business_id") ||
+.toLowerCase().includes("business_id")||
 String(result.error.message||"")
 .toLowerCase().includes("column")
 )
@@ -2209,7 +2130,11 @@ String(result.error.message||"")
 result=
 await supabaseClient
 .from("customers")
-.insert(insertPayload)
+.insert({
+name,
+phone:phone||null,
+notes:notes||null
+})
 .select(
 "id,name,phone,notes"
 )
@@ -2218,30 +2143,19 @@ await supabaseClient
 }
 
 if(result.error){
-
 throw result.error;
-
 }
 
-const newClient=
-result.data;
-
-if(!newClient){
+if(!result.data){
 
 throw new Error(
 "Supabase no devolvió el cliente creado."
 );
-
 }
 
+const newClient=result.data;
 
-/*
- * Agregamos inmediatamente el cliente
- * al catálogo que usa el buscador del POS.
- */
-
-customers=
-[
+customers=[
 ...customers,
 newClient
 ].sort(
@@ -2251,13 +2165,6 @@ String(b.name||"")
 )
 );
 
-
-/*
- * Guardamos nuevamente el catálogo local.
- * Así el cliente recién creado también
- * queda disponible posteriormente OFFLINE.
- */
-
 await saveOfflineData(
 currentBusiness,
 {
@@ -2266,11 +2173,6 @@ payments,
 customers
 }
 );
-
-
-/*
- * Seleccionar automáticamente al nuevo cliente.
- */
 
 selectedCustomerId=
 newClient.id;
@@ -2288,8 +2190,7 @@ showStatus(
 "ok"
 );
 
-}
-catch(error){
+}catch(error){
 
 console.error(
 "[POS] Error creando cliente:",
@@ -2301,88 +2202,78 @@ showClientModalError(
 (error?.message||String(error))
 );
 
-}
-finally{
+}finally{
 
 saveButton.disabled=false;
-
-saveButton.textContent=
-originalText;
+saveButton.textContent=originalText;
 
 }
-
 }
 
+
+/* =========================================================
+   EVENTOS DEL MODAL
+========================================================= */
 
 /*
- * ESTE ES EL CAMBIO PRINCIPAL:
+ * Este listener se registra UNA SOLA VEZ.
  *
- * Ya NO existe:
- *
- * window.location.href = clientes.html...
- *
- * El botón abre directamente el modal.
+ * No hay ningún window.location.href aquí.
  */
 
-$("addClientButton").addEventListener(
-"click",
-event=>{
+$("addClientButton").onclick=
+function(event){
 
 event.preventDefault();
 event.stopPropagation();
 
 openClientModal();
 
-}
-);
+return false;
+};
 
-$("closeClientModal").addEventListener(
-"click",
-closeClientModal
-);
+$("closeClientModal").onclick=
+function(event){
 
-$("cancelClientModal").addEventListener(
-"click",
-closeClientModal
-);
+event.preventDefault();
+event.stopPropagation();
 
-$("clientForm").addEventListener(
-"submit",
-event=>{
+closeClientModal();
+};
+
+$("cancelClientModal").onclick=
+function(event){
+
+event.preventDefault();
+event.stopPropagation();
+
+closeClientModal();
+};
+
+$("clientForm").onsubmit=
+function(event){
 
 event.preventDefault();
 
 saveNewClient();
 
-}
-);
+return false;
+};
 
+$("clientModal").onclick=
+function(event{
 
-/*
- * Cerrar tocando fuera de la ventana.
- */
-
-$("clientModal").addEventListener(
-"click",
-event=>{
-
-if(event.target === $("clientModal")){
+if(event.target.id==="clientModal"){
 
 closeClientModal();
 
 }
 
-}
-);
-
-
-/*
- * Cerrar con ESC.
- */
+};
 
 document.addEventListener(
 "keydown",
-event=>{
+function(event){
 
 if(
 event.key==="Escape" &&
@@ -2398,17 +2289,77 @@ closeClientModal();
 
 
 /* =========================================================
+   BÚSQUEDA DE CLIENTES
+========================================================= */
+
+$("customerSearch").addEventListener(
+"input",
+event=>{
+
+renderCustomerResults(
+event.target.value
+);
+
+}
+);
+
+$("customerSearch").addEventListener(
+"focus",
+event=>{
+
+if(event.target.value.trim()){
+
+renderCustomerResults(
+event.target.value
+);
+
+}
+
+}
+);
+
+$("generalCustomer").addEventListener(
+"click",
+clearSelectedCustomer
+);
+
+document.addEventListener(
+"click",
+event=>{
+
+const box=
+document.querySelector(".customer-box");
+
+const modal=
+$("clientModal");
+
+if(
+box &&
+!box.contains(event.target)
+&&
+modal &&
+!modal.contains(event.target)
+){
+
+$("customerResults").style.display="none";
+
+}
+
+}
+);
+
+
+/* =========================================================
    CAMBIO DE NEGOCIO
 ========================================================= */
 
-async function changeBusiness(
-name,
-button
-){
+async function changeBusiness(name,button){
 
 if(name===currentBusiness){
 return;
 }
+
+closeClientModal();
 
 currentBusiness=name;
 
@@ -2433,7 +2384,6 @@ b=>b.classList.remove("active")
 button.classList.add("active");
 
 await loadBusinessData();
-
 }
 
 
@@ -2452,7 +2402,6 @@ showStatus(
 );
 
 return;
-
 }
 
 if(!isPending&&!selectedPaymentId){
@@ -2462,7 +2411,6 @@ showStatus(
 );
 
 return;
-
 }
 
 if(isPending&&!selectedCustomerId){
@@ -2472,20 +2420,17 @@ showStatus(
 );
 
 return;
-
 }
 
 if(!navigator.onLine){
 
 showStatus(
 "Estás OFFLINE.\n\n"+
-"Los productos, clientes y métodos de pago están disponibles porque fueron guardados en el dispositivo.\n\n"+
 "El registro de la venta offline se habilitará en la siguiente etapa.",
 "warn"
 );
 
 return;
-
 }
 
 const button=
@@ -2509,13 +2454,9 @@ const items=
 cart.map(item=>({
 
 product_id:item.id,
-
 description:item.name,
-
 quantity:Number(item.quantity),
-
 unit_price:Number(item.price),
-
 subtotal:
 Number(item.price)*
 Number(item.quantity)
@@ -2571,8 +2512,7 @@ isPending
 "ok"
 );
 
-}
-catch(error){
+}catch(error){
 
 console.error(
 "registerSale:",
@@ -2584,88 +2524,83 @@ showStatus(
 (error?.message||String(error))
 );
 
-}
-finally{
+}finally{
 
 button.disabled=false;
 button.textContent=originalText;
 
 }
-
 }
 
 
 /* =========================================================
-   EVENTOS DE NAVEGACIÓN
+   NAVEGACIÓN
 ========================================================= */
 
-$("chargeButton").addEventListener(
-"click",
-()=>registerSale(false)
-);
+$("chargeButton").onclick=
+()=>registerSale(false);
 
-$("accountButton").addEventListener(
-"click",
-()=>registerSale(true)
-);
+$("accountButton").onclick=
+()=>registerSale(true);
 
-$("accountsButton").addEventListener(
-"click",
+$("accountsButton").onclick=
 ()=>{
+
 window.location.href=
 "cuentas.html?business="+
 encodeURIComponent(currentBusiness);
-}
-);
 
-$("clientsButton").addEventListener(
-"click",
+};
+
+$("clientsButton").onclick=
 ()=>{
+
 window.location.href=
 "clientes.html?business="+
 encodeURIComponent(currentBusiness);
-}
-);
 
-$("historyButton").addEventListener(
-"click",
+};
+
+$("historyButton").onclick=
 ()=>{
+
 window.location.href=
 "historial.html?business="+
 encodeURIComponent(currentBusiness);
-}
-);
 
-$("inventoryButton").addEventListener(
-"click",
+};
+
+$("inventoryButton").onclick=
 ()=>{
+
 window.location.href=
 "inventario.html?business="+
 encodeURIComponent(currentBusiness);
-}
-);
 
-$("dashboardButton").addEventListener(
-"click",
+};
+
+$("dashboardButton").onclick=
 ()=>{
+
 window.location.href=
 "dashboard.html?business="+
 encodeURIComponent(currentBusiness);
-}
-);
+
+};
+
+
+/* =========================================================
+   NEGOCIOS
+========================================================= */
 
 document
 .querySelectorAll(".business-btn")
 .forEach(button=>{
 
-button.addEventListener(
-"click",
-()=>{
-changeBusiness(
+button.onclick=
+()=>changeBusiness(
 button.dataset.business,
 button
-);
-}
 );
 
 });
@@ -2724,8 +2659,7 @@ initializeSupabase();
 
 await loadBusinessData();
 
-}
-catch(error){
+}catch(error){
 
 console.error(
 "[POS] Error inicial:",
