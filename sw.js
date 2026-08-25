@@ -1,134 +1,83 @@
 "use strict";
 
 /*
-=========================================================
- SISTEMA DE VENTAS POS
- SERVICE WORKER — OFFLINE / ONLINE
-=========================================================
+  =========================================================
+  SISTEMA DE VENTAS POS
+  SERVICE WORKER v6
 
- v5
-
- • Evita páginas HTML antiguas.
- • ONLINE  → obtiene la versión actual.
- • OFFLINE → utiliza la versión almacenada.
- • Dashboard disponible offline.
- • POS disponible offline.
- • Clientes disponible offline.
- • Cuentas disponible offline.
- • Historial disponible offline.
- • Inventario disponible offline.
- • Supabase JS disponible offline.
- • Elimina cachés anteriores.
-=========================================================
+  Objetivos:
+  - Mantener index.html disponible offline.
+  - Mantener dashboard.html disponible offline.
+  - Mantener clientes.html disponible offline.
+  - Mantener cuentas.html disponible offline.
+  - Mantener historial.html disponible offline.
+  - Mantener inventario.html disponible offline.
+  - No depender de manifest.json.
+  - No borrar páginas del caché anterior durante una actualización.
+  - Funcionar correctamente en GitHub Pages y Vercel.
+  =========================================================
 */
 
+const CACHE_NAME = "pos-cache-v6";
 
-/* ========================================================
-   VERSIÓN DEL CACHÉ
-======================================================== */
-
-const CACHE_VERSION =
-  "pos-offline-v5";
-
-
-const APP_CACHE =
-  CACHE_VERSION + "-app";
-
-
-/* ========================================================
-   PÁGINAS PRINCIPALES
-======================================================== */
-
+/*
+  Archivos que forman parte de la aplicación.
+  NO agregamos manifest.json porque actualmente no existe.
+*/
 const APP_SHELL = [
-
   "./",
-
   "./index.html",
-
   "./dashboard.html",
-
   "./clientes.html",
-
   "./cuentas.html",
-
   "./historial.html",
-
   "./inventario.html",
-
-  "./manifest.json",
-
   "./sw.js"
-
 ];
 
 
-/* ========================================================
-   RECURSOS EXTERNOS
-======================================================== */
-
-const EXTERNAL_RESOURCES = [
-
-  "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-
-];
-
-
-/* ========================================================
+/* =========================================================
    INSTALL
-======================================================== */
+========================================================= */
 
-self.addEventListener(
-  "install",
-  event => {
+self.addEventListener("install", event => {
 
-    event.waitUntil(
+  console.log(
+    "[SW v6] Instalando Service Worker..."
+  );
 
-      (async () => {
+  event.waitUntil(
 
-        const cache =
-          await caches.open(
-            APP_CACHE
-          );
+    caches.open(CACHE_NAME)
 
+      .then(async cache => {
 
-        /* ==================================================
-           GUARDAR PÁGINAS
-        ================================================== */
+        /*
+          Agregamos los archivos uno por uno.
 
-        for(
-          const resource
-          of APP_SHELL
-        ){
+          Esto es intencional:
+          si un archivo no existe, no queremos que
+          falle TODO el proceso de instalación.
+        */
 
-          try{
+        for (const file of APP_SHELL) {
 
-            const response =
-              await fetch(
-                resource,
-                {
-                  cache:"no-store"
-                }
-              );
+          try {
 
+            await cache.add(file);
 
-            if(
-              response.ok
-            ){
-
-              await cache.put(
-                resource,
-                response.clone()
-              );
-
-            }
+            console.log(
+              "[SW v6] Cacheado:",
+              file
+            );
 
           }
 
-          catch(error){
+          catch(error) {
 
             console.warn(
-              "[SW] No se pudo precargar:",
-              resource,
+              "[SW v6] No se pudo cachear:",
+              file,
               error
             );
 
@@ -136,665 +85,332 @@ self.addEventListener(
 
         }
 
+      })
 
-        /* ==================================================
-           GUARDAR SUPABASE JS
-        ================================================== */
-
-        for(
-          const resource
-          of EXTERNAL_RESOURCES
-        ){
-
-          try{
-
-            const response =
-              await fetch(
-                resource,
-                {
-                  cache:"no-store"
-                }
-              );
-
-
-            if(
-              response.ok
-            ){
-
-              await cache.put(
-                resource,
-                response.clone()
-              );
-
-            }
-
-          }
-
-          catch(error){
-
-            console.warn(
-              "[SW] No se pudo guardar recurso externo:",
-              resource,
-              error
-            );
-
-          }
-
-        }
-
-
-        /* ==================================================
-           ACTIVACIÓN INMEDIATA
-        ================================================== */
-
-        await self.skipWaiting();
-
-      })()
-
-    );
-
-  }
-);
-
-
-/* ========================================================
-   ACTIVATE
-======================================================== */
-
-self.addEventListener(
-  "activate",
-  event => {
-
-    event.waitUntil(
-
-      (async () => {
-
-        const cacheNames =
-          await caches.keys();
-
+      .then(() => {
 
         /*
-        ----------------------------------------------------
-        BORRAR CACHÉS ANTERIORES
-        ----------------------------------------------------
+          Activa inmediatamente la nueva versión.
         */
 
-        await Promise.all(
+        return self.skipWaiting();
 
-          cacheNames
-            .filter(
-              cacheName =>
-                cacheName !== APP_CACHE
-            )
-            .map(
-              cacheName =>
-                caches.delete(
-                  cacheName
-                )
-            )
-
-        );
-
-
-        /*
-        ----------------------------------------------------
-        TOMAR CONTROL DE LAS PÁGINAS
-        ----------------------------------------------------
-        */
-
-        await self.clients.claim();
-
-
-        console.log(
-          "[SW] Activado:",
-          CACHE_VERSION
-        );
-
-      })()
-
-    );
-
-  }
-);
-
-
-/* ========================================================
-   FETCH
-======================================================== */
-
-self.addEventListener(
-  "fetch",
-  event => {
-
-    const request =
-      event.request;
-
-
-    /*
-    --------------------------------------------------------
-    Solo GET
-    --------------------------------------------------------
-    */
-
-    if(
-      request.method !==
-      "GET"
-    ){
-
-      return;
-
-    }
-
-
-    const url =
-      new URL(
-        request.url
-      );
-
-
-    /* ======================================================
-       SUPABASE JS
-       CACHE FIRST
-    ====================================================== */
-
-    if(
-      url.origin ===
-      "https://cdn.jsdelivr.net"
-    ){
-
-      event.respondWith(
-
-        cacheFirst(
-          request
-        )
-
-      );
-
-      return;
-
-    }
-
-
-    /* ======================================================
-       ARCHIVOS DEL POS
-    ====================================================== */
-
-    if(
-      url.origin ===
-      self.location.origin
-    ){
-
-      /*
-      ------------------------------------------------------
-      NAVEGACIÓN HTML
-
-      ONLINE:
-      siempre intenta obtener la versión nueva.
-
-      OFFLINE:
-      utiliza caché.
-
-      Esto evita que el POS quede atrapado en
-      un index.html antiguo.
-      ------------------------------------------------------
-      */
-
-      if(
-        request.mode ===
-        "navigate"
-      ){
-
-        event.respondWith(
-
-          navigationHandler(
-            request
-          )
-
-        );
-
-        return;
-
-      }
-
-
-      /*
-      ------------------------------------------------------
-      CSS / JS / IMÁGENES / MANIFEST
-      ------------------------------------------------------
-      */
-
-      event.respondWith(
-
-        cacheFirst(
-          request
-        )
-
-      );
-
-      return;
-
-    }
-
-  }
-);
-
-
-/* ========================================================
-   CACHE FIRST
-======================================================== */
-
-async function cacheFirst(
-  request
-){
-
-  /*
-  ----------------------------------------------------------
-  BUSCAR PRIMERO EN CACHÉ
-  ----------------------------------------------------------
-  */
-
-  const cached =
-    await caches.match(
-      request
-    );
-
-
-  if(
-    cached
-  ){
-
-    return cached;
-
-  }
-
-
-  /*
-  ----------------------------------------------------------
-  SI NO EXISTE, BUSCAR EN INTERNET
-  ----------------------------------------------------------
-  */
-
-  try{
-
-    const response =
-      await fetch(
-        request
-      );
-
-
-    if(
-      response &&
-      response.ok
-    ){
-
-      const cache =
-        await caches.open(
-          APP_CACHE
-        );
-
-
-      await cache.put(
-        request,
-        response.clone()
-      );
-
-    }
-
-
-    return response;
-
-  }
-
-  catch(error){
-
-    console.warn(
-      "[SW] Recurso no disponible:",
-      request.url
-    );
-
-
-    return new Response(
-      "Recurso no disponible offline",
-      {
-        status:503,
-        statusText:"Offline"
-      }
-    );
-
-  }
-
-}
-
-
-/* ========================================================
-   NAVEGACIÓN NETWORK FIRST
-======================================================== */
-
-async function navigationHandler(
-  request
-){
-
-  /*
-  ========================================================
-   1. INTENTAR INTERNET
-  ========================================================
-  */
-
-  try{
-
-    const response =
-      await fetch(
-        request,
-        {
-          cache:"no-store"
-        }
-      );
-
-
-    if(
-      response &&
-      response.ok
-    ){
-
-      const cache =
-        await caches.open(
-          APP_CACHE
-        );
-
-
-      /*
-      ------------------------------------------------------
-      Guardar la URL exacta
-      ------------------------------------------------------
-      */
-
-      await cache.put(
-        request,
-        response.clone()
-      );
-
-
-      /*
-      ------------------------------------------------------
-      Guardar también el archivo por nombre
-      ------------------------------------------------------
-      */
-
-      const url =
-        new URL(
-          request.url
-        );
-
-
-      const pathname =
-        url.pathname;
-
-
-      const filename =
-        pathname
-          .split("/")
-          .pop();
-
-
-      if(
-        filename
-      ){
-
-        try{
-
-          await cache.put(
-            "./" + filename,
-            response.clone()
-          );
-
-        }
-
-        catch(error){
-
-          console.warn(
-            "[SW] No se pudo guardar copia relativa:",
-            filename
-          );
-
-        }
-
-      }
-
-
-      return response;
-
-    }
-
-  }
-
-  catch(error){
-
-    console.log(
-      "[SW] Sin Internet. Buscando página en caché."
-    );
-
-  }
-
-
-  /*
-  ========================================================
-   2. OFFLINE — URL EXACTA
-  ========================================================
-  */
-
-  const exactCached =
-    await caches.match(
-      request
-    );
-
-
-  if(
-    exactCached
-  ){
-
-    return exactCached;
-
-  }
-
-
-  /*
-  ========================================================
-   3. OFFLINE — BUSCAR POR NOMBRE
-  ========================================================
-  */
-
-  const url =
-    new URL(
-      request.url
-    );
-
-
-  const pathname =
-    url.pathname;
-
-
-  const filename =
-    pathname
-      .split("/")
-      .pop();
-
-
-  if(
-    filename
-  ){
-
-    const filenameCached =
-      await caches.match(
-        "./" + filename
-      );
-
-
-    if(
-      filenameCached
-    ){
-
-      return filenameCached;
-
-    }
-
-  }
-
-
-  /*
-  ========================================================
-   4. DASHBOARD OFFLINE
-  ========================================================
-  */
-
-  if(
-    pathname
-      .toLowerCase()
-      .includes(
-        "dashboard"
-      )
-  ){
-
-    const dashboardCached =
-      await caches.match(
-        "./dashboard.html"
-      );
-
-
-    if(
-      dashboardCached
-    ){
-
-      return dashboardCached;
-
-    }
-
-  }
-
-
-  /*
-  ========================================================
-   5. POS PRINCIPAL OFFLINE
-  ========================================================
-  */
-
-  const offlineHome =
-    await caches.match(
-      "./index.html"
-    );
-
-
-  if(
-    offlineHome
-  ){
-
-    return offlineHome;
-
-  }
-
-
-  /*
-  ========================================================
-   6. ÚLTIMO RECURSO
-  ========================================================
-  */
-
-  return new Response(
-
-`<!DOCTYPE html>
-
-<html lang="es">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1"
->
-
-<title>Sistema de Ventas POS</title>
-
-<style>
-
-body{
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-
-  background:#f5f5f5;
-
-  padding:30px;
-
-  text-align:center;
-
-  color:#111827;
-}
-
-.card{
-  background:white;
-
-  border-radius:18px;
-
-  padding:30px;
-
-  max-width:500px;
-
-  margin:40px auto;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="card">
-
-<h1>
-📱 Sistema de Ventas POS
-</h1>
-
-<p>
-La aplicación está funcionando sin conexión.
-</p>
-
-<p>
-Necesitas abrir la aplicación al menos una vez con Internet para guardar sus páginas en el dispositivo.
-</p>
-
-</div>
-
-</body>
-
-</html>`,
-
-    {
-      status:200,
-
-      headers:{
-        "Content-Type":
-          "text/html; charset=utf-8"
-      }
-    }
+      })
 
   );
 
+});
+
+
+/* =========================================================
+   ACTIVATE
+========================================================= */
+
+self.addEventListener("activate", event => {
+
+  console.log(
+    "[SW v6] Activando Service Worker..."
+  );
+
+  event.waitUntil(
+
+    caches.keys()
+
+      .then(cacheNames => {
+
+        return Promise.all(
+
+          cacheNames.map(cacheName => {
+
+            /*
+              Solamente eliminamos cachés POS
+              que sean versiones anteriores.
+
+              NO tocamos otros cachés del navegador.
+            */
+
+            if(
+              cacheName.startsWith("pos-cache-") &&
+              cacheName !== CACHE_NAME
+            ){
+
+              console.log(
+                "[SW v6] Eliminando caché anterior:",
+                cacheName
+              );
+
+              return caches.delete(
+                cacheName
+              );
+
+            }
+
+            return Promise.resolve(false);
+
+          })
+
+        );
+
+      })
+
+      .then(() => {
+
+        /*
+          Permite que el nuevo Service Worker
+          tome control de las páginas abiertas.
+        */
+
+        return self.clients.claim();
+
+      })
+
+  );
+
+});
+
+
+/* =========================================================
+   FETCH
+========================================================= */
+
+self.addEventListener("fetch", event => {
+
+  const request =
+  event.request;
+
+
+  /*
+    Solo manejamos solicitudes GET.
+  */
+
+  if(
+    request.method !== "GET"
+  ){
+
+    return;
+
+  }
+
+
+  const url =
+  new URL(
+    request.url
+  );
+
+
+  /*
+    No interceptamos directamente las solicitudes
+    de Supabase/API.
+
+    Esto es importante:
+    si estamos offline, dejamos que el código
+    de la aplicación maneje el fallback local.
+  */
+
+  if(
+    url.hostname.includes(
+      "supabase.co"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  event.respondWith(
+
+    caches.match(
+      request
+    )
+
+    .then(cachedResponse => {
+
+      /*
+        Si ya existe en caché, usamos el archivo
+        inmediatamente.
+      */
+
+      if(cachedResponse){
+
+        /*
+          Para documentos HTML podemos intentar
+          actualizar el caché en segundo plano
+          cuando exista conexión.
+        */
+
+        if(
+          request.mode === "navigate" ||
+          request.destination === "document"
+        ){
+
+          updateCacheInBackground(
+            request
+          );
+
+        }
+
+        return cachedResponse;
+
+      }
+
+
+      /*
+        Si no está en caché, intentamos Internet.
+      */
+
+      return fetch(
+        request
+      )
+
+      .then(networkResponse => {
+
+        /*
+          Solo guardamos respuestas válidas.
+        */
+
+        if(
+          networkResponse &&
+          networkResponse.status === 200 &&
+          networkResponse.type !== "opaque"
+        ){
+
+          const responseClone =
+          networkResponse.clone();
+
+          caches.open(
+            CACHE_NAME
+          )
+          .then(cache => {
+
+            cache.put(
+              request,
+              responseClone
+            );
+
+          });
+
+        }
+
+        return networkResponse;
+
+      })
+
+      .catch(() => {
+
+        /*
+          Si estamos offline y el navegador
+          está intentando abrir una página,
+          devolvemos index.html como último recurso.
+
+          Esto evita una pantalla completamente vacía
+          cuando una ruta todavía no fue cacheada.
+        */
+
+        if(
+          request.mode === "navigate"
+        ){
+
+          return caches.match(
+            "./index.html"
+          );
+
+        }
+
+
+        /*
+          Para otros recursos no inventamos
+          una respuesta.
+        */
+
+        return new Response(
+          "",
+          {
+            status: 503,
+            statusText: "Offline"
+          }
+        );
+
+      });
+
+    })
+
+  );
+
+});
+
+
+/* =========================================================
+   ACTUALIZACIÓN EN SEGUNDO PLANO
+========================================================= */
+
+function updateCacheInBackground(
+  request
+){
+
+  /*
+    No esperamos esta operación.
+    La página continúa funcionando con el
+    archivo almacenado.
+  */
+
+  fetch(
+    request
+  )
+
+  .then(response => {
+
+    if(
+      !response ||
+      response.status !== 200
+    ){
+
+      return;
+
+    }
+
+
+    return caches.open(
+      CACHE_NAME
+    )
+
+    .then(cache => {
+
+      return cache.put(
+        request,
+        response
+      );
+
+    });
+
+  })
+
+  .catch(() => {
+
+    /*
+      Sin Internet:
+      no hacemos nada.
+
+      El archivo que ya estaba en caché
+      permanece intacto.
+    */
+
+  });
+
 }
 
 
-/* ========================================================
-   MENSAJES
-======================================================== */
+/* =========================================================
+   MESSAGE
+========================================================= */
 
 self.addEventListener(
   "message",
   event => {
 
     if(
-      event.data ===
+      event.data &&
+      event.data.type ===
       "SKIP_WAITING"
     ){
 
@@ -806,11 +422,31 @@ self.addEventListener(
 );
 
 
-/* ========================================================
-   DEBUG
-======================================================== */
+/* =========================================================
+   ERROR GLOBAL
+========================================================= */
 
-console.log(
-  "[SW] Sistema POS Offline cargado:",
-  CACHE_VERSION
+self.addEventListener(
+  "error",
+  event => {
+
+    console.error(
+      "[SW v6] Error:",
+      event.error || event.message
+    );
+
+  }
+);
+
+
+self.addEventListener(
+  "unhandledrejection",
+  event => {
+
+    console.error(
+      "[SW v6] Promise rechazada:",
+      event.reason
+    );
+
+  }
 );
