@@ -12,159 +12,85 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{width:100%;min-height:100%}
-body{
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:#f5f5f5;color:#222;min-height:100vh
-}
-header{
-  background:#111827;color:#fff;
-  padding:calc(22px + env(safe-area-inset-top)) 20px 22px
-}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f5f5;color:#222;min-height:100vh}
+header{background:#111827;color:#fff;padding:calc(22px + env(safe-area-inset-top)) 20px 22px}
 header h1{font-size:28px;line-height:1.15}
 header p{font-size:15px;opacity:.75;margin-top:8px}
 .container{width:100%;max-width:1100px;margin:auto;padding:20px}
-
-.status{
-  margin:0 0 15px;padding:14px 16px;border-radius:12px;
-  font-size:14px;display:none;font-weight:700;white-space:pre-line
-}
+.status{margin:0 0 15px;padding:14px 16px;border-radius:12px;font-size:14px;display:none;font-weight:700;white-space:pre-line}
 .status.error{display:block;background:#fee2e2;color:#991b1b}
 .status.ok{display:block;background:#dcfce7;color:#166534}
 .status.warn{display:block;background:#fef3c7;color:#92400e}
-
 .businesses{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
-.business-btn,.nav-btn{
-  border:none;padding:13px 20px;border-radius:12px;background:#fff;
-  border:2px solid #ddd;font-weight:700;cursor:pointer;font-size:16px
-}
+.business-btn,.nav-btn{border:none;padding:13px 20px;border-radius:12px;background:#fff;border:2px solid #ddd;font-weight:700;cursor:pointer;font-size:16px}
 .business-btn{flex:1}
 .business-btn.active{background:#111827;color:#fff;border-color:#111827}
-
-.navigation{
-  display:grid;grid-template-columns:repeat(5,1fr);
-  gap:10px;margin-bottom:20px
-}
+.navigation{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
 .nav-btn{color:#2563eb}
 .nav-btn.accounts{background:#fff7ed;border-color:#f59e0b;color:#b45309}
 .nav-btn.clients{background:#ecfdf5;border-color:#10b981;color:#047857}
 .nav-btn.history{background:#f5f3ff;border-color:#7c3aed;color:#6d28d9}
 .nav-btn.inventory{background:#eff6ff;border-color:#2563eb;color:#1d4ed8}
-
 .layout{display:grid;grid-template-columns:1fr 390px;gap:20px}
-.card{
-  background:#fff;border-radius:18px;padding:20px;
-  box-shadow:0 3px 14px rgba(0,0,0,.06)
-}
+.card{background:#fff;border-radius:18px;padding:20px;box-shadow:0 3px 14px rgba(0,0,0,.06)}
 .card h2{font-size:21px;margin-bottom:16px}
-
 .products{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.product{
-  border:2px solid #ddd;border-radius:14px;padding:18px 14px;
-  cursor:pointer;background:#fff;text-align:left;transition:.15s
-}
+.product{border:2px solid #ddd;border-radius:14px;padding:18px 14px;cursor:pointer;background:#fff;text-align:left;transition:.15s}
 .product:hover{border-color:#2563eb;transform:translateY(-1px)}
 .product:active{transform:scale(.98)}
 .product.disabled{opacity:.5;cursor:not-allowed}
 .product-name{font-weight:700;font-size:17px;margin-bottom:9px}
 .price{font-size:23px;font-weight:800;color:#2563eb}
 .stock{font-size:14px;color:#666;margin-top:7px}
-
-.cart-item{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:13px 0;border-bottom:1px solid #eee;gap:12px
-}
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid #eee;gap:12px}
 .cart-name{font-weight:700}
 .cart-price{font-size:13px;color:#666;margin-top:4px}
 .quantity{display:flex;align-items:center;gap:8px;margin-top:8px}
-.quantity button{
-  width:32px;height:32px;border:none;border-radius:7px;
-  background:#eee;cursor:pointer;font-size:18px
-}
-.total{
-  display:flex;justify-content:space-between;font-size:25px;
-  font-weight:800;margin-top:20px;padding-top:18px;border-top:2px solid #eee
-}
+.quantity button{width:32px;height:32px;border:none;border-radius:7px;background:#eee;cursor:pointer;font-size:18px}
+.total{display:flex;justify-content:space-between;font-size:25px;font-weight:800;margin-top:20px;padding-top:18px;border-top:2px solid #eee}
 .payment-title,.customer-title{margin-top:20px;margin-bottom:10px;font-weight:800;font-size:17px}
 .payments{display:grid;gap:9px}
-.payment{
-  padding:14px;border:2px solid #ddd;border-radius:11px;
-  background:#fff;cursor:pointer;text-align:left;font-size:16px;font-weight:700
-}
+.payment{padding:14px;border:2px solid #ddd;border-radius:11px;background:#fff;cursor:pointer;text-align:left;font-size:16px;font-weight:700}
 .payment.active{background:#111827;color:#fff;border-color:#111827}
-
 .customer-box{position:relative}
 .customer-row{display:flex;gap:8px}
-.customer-search{
-  flex:1;padding:13px;border:2px solid #ddd;border-radius:11px;
-  font-size:15px;min-width:0;background:#fff
-}
+.customer-search{flex:1;padding:13px;border:2px solid #ddd;border-radius:11px;font-size:15px;min-width:0;background:#fff}
 .customer-search:focus{outline:none;border-color:#2563eb}
-.add-client{
-  border:none;background:#2563eb;color:#fff;padding:0 14px;
-  border-radius:11px;font-weight:800;cursor:pointer;white-space:nowrap
-}
-.customer-results{
-  margin-top:8px;display:none;border:2px solid #ddd;border-radius:11px;
-  overflow:hidden;background:#fff;box-shadow:0 8px 25px rgba(0,0,0,.12);
-  position:absolute;left:0;right:0;z-index:100
-}
-.customer-result{
-  display:block;width:100%;border:none;border-bottom:1px solid #eee;
-  background:#fff;padding:13px;text-align:left;cursor:pointer
-}
+.add-client{border:none;background:#2563eb;color:#fff;padding:0 14px;border-radius:11px;font-weight:800;cursor:pointer;white-space:nowrap}
+.customer-results{margin-top:8px;display:none;border:2px solid #ddd;border-radius:11px;overflow:hidden;background:#fff;box-shadow:0 8px 25px rgba(0,0,0,.12);position:absolute;left:0;right:0;z-index:100}
+.customer-result{display:block;width:100%;border:none;border-bottom:1px solid #eee;background:#fff;padding:13px;text-align:left;cursor:pointer}
 .customer-result:last-child{border-bottom:none}
 .customer-result:hover{background:#f3f4f6}
 .customer-result strong{display:block;font-size:15px}
 .customer-result small{display:block;color:#6b7280;margin-top:4px}
-.selected-customer{
-  margin-top:8px;padding:12px;border-radius:9px;background:#eff6ff;
-  border:2px solid #bfdbfe;color:#1d4ed8;font-size:14px;font-weight:600
-}
-.clear-customer{
-  border:none;background:none;color:#dc2626;font-weight:700;
-  cursor:pointer;margin-left:8px;padding:0
-}
-.general-customer{
-  margin-top:8px;padding:13px;border-radius:9px;background:#f3f4f6;
-  color:#555;font-weight:700;cursor:pointer;border:2px solid transparent
-}
+.selected-customer{margin-top:8px;padding:12px;border-radius:9px;background:#eff6ff;border:2px solid #bfdbfe;color:#1d4ed8;font-size:14px;font-weight:600}
+.clear-customer{border:none;background:none;color:#dc2626;font-weight:700;cursor:pointer;margin-left:8px;padding:0}
+.general-customer{margin-top:8px;padding:13px;border-radius:9px;background:#f3f4f6;color:#555;font-weight:700;cursor:pointer;border:2px solid transparent}
 .general-customer:hover{background:#e5e7eb;border-color:#d1d5db}
-
-.charge,.account{
-  width:100%;margin-top:15px;padding:16px;border:none;border-radius:12px;
-  color:#fff;font-size:18px;font-weight:800;cursor:pointer
-}
+.charge,.account{width:100%;margin-top:15px;padding:16px;border:none;border-radius:12px;color:#fff;font-size:18px;font-weight:800;cursor:pointer}
 .charge{background:#16a34a}
 .account{margin-top:10px;background:#f59e0b}
 .charge:disabled,.account:disabled{opacity:.6;cursor:wait}
-
 .empty{color:#777;text-align:center;padding:30px 10px}
-.loading{opacity:.65;pointer-events:none}
 button{-webkit-tap-highlight-color:transparent}
-
-@media(max-width:950px){
-  .navigation{grid-template-columns:repeat(3,1fr)}
-}
-@media(max-width:850px){
-  .layout{grid-template-columns:1fr}
-  .navigation{grid-template-columns:1fr 1fr}
-  .products{grid-template-columns:1fr 1fr}
-}
+@media(max-width:950px){.navigation{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.navigation{grid-template-columns:1fr 1fr}.products{grid-template-columns:1fr 1fr}}
 @media(max-width:500px){
-  .container{padding:15px}
-  header h1{font-size:25px}
-  header p{font-size:14px}
-  .navigation{grid-template-columns:1fr 1fr}
-  .business-btn{flex:1;min-width:0}
-  .layout{gap:15px}
-  .card{padding:16px}
-  .products{grid-template-columns:1fr 1fr}
-  .product{padding:15px 12px}
-  .product-name{font-size:15px}
-  .price{font-size:20px}
-  .customer-row{flex-direction:column}
-  .add-client{padding:12px}
+.container{padding:15px}
+header h1{font-size:25px}
+header p{font-size:14px}
+.navigation{grid-template-columns:1fr 1fr}
+.business-btn{flex:1;min-width:0}
+.layout{gap:15px}
+.card{padding:16px}
+.products{grid-template-columns:1fr 1fr}
+.product{padding:15px 12px}
+.product-name{font-size:15px}
+.price{font-size:20px}
+.customer-row{flex-direction:column}
+.add-client{padding:12px}
 }
+@supports (-webkit-touch-callout:none){header{padding-top:calc(22px + env(safe-area-inset-top))}}
 </style>
 </head>
 
@@ -185,20 +111,25 @@ button{-webkit-tap-highlight-color:transparent}
 </div>
 
 <div class="navigation">
+
 <button type="button" class="nav-btn accounts" id="accountsButton">💰 Cuentas pendientes</button>
 <button type="button" class="nav-btn clients" id="clientsButton">👥 Clientes</button>
 <button type="button" class="nav-btn history" id="historyButton">🧾 Historial</button>
 <button type="button" class="nav-btn inventory" id="inventoryButton">📦 Inventario</button>
 <button type="button" class="nav-btn" id="dashboardButton">📊 Dashboard</button>
+
 </div>
 
 <div class="layout">
 
 <div class="card">
+
 <h2>Productos</h2>
+
 <div id="products">
-<div class="loading">Cargando productos...</div>
+<div class="empty">Cargando productos...</div>
 </div>
+
 </div>
 
 <div class="card">
@@ -246,7 +177,7 @@ autocomplete="off"
 
 <div class="payment-title">Método de pago</div>
 
-<div id="payments" class="payments">
+<div id="payments">
 <div class="empty">Cargando métodos de pago...</div>
 </div>
 
@@ -268,42 +199,7 @@ autocomplete="off"
 "use strict";
 
 /* =========================================================
-   SERVICE WORKER
-========================================================= */
-
-if("serviceWorker" in navigator){
-
-  window.addEventListener("load",async()=>{
-
-    try{
-
-      const registration =
-        await navigator.serviceWorker.register("./sw.js",{
-          scope:"./",
-          updateViaCache:"none"
-        });
-
-      console.log("[POS] SW:",registration.scope);
-
-      await registration.update().catch(()=>{});
-
-      if(registration.waiting){
-        registration.waiting.postMessage("SKIP_WAITING");
-      }
-
-    }catch(error){
-
-      console.warn("[POS] SW:",error);
-
-    }
-
-  });
-
-}
-
-
-/* =========================================================
-   SUPABASE
+   CONFIGURACIÓN
 ========================================================= */
 
 const SUPABASE_URL =
@@ -312,48 +208,141 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
-let supabaseClient=null;
-
-
-/* =========================================================
-   NEGOCIOS
-========================================================= */
-
-const BUSINESS_IDS={
-
-  BakeQuiri:
-  "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
-
-  SpicyRoll:
-  "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
-
+const BUSINESS_IDS = {
+  BakeQuiri:"c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+  SpicyRoll:"ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
 };
 
+const OFFLINE_CACHE_KEY =
+"POS_OFFLINE_DATA_V5";
+
+const OFFLINE_VERSION =
+5;
+
+let supabaseClient = null;
+
+let currentBusiness =
+"BakeQuiri";
+
+let products = [];
+let payments = [];
+let customers = [];
+let cart = [];
+let selectedPaymentId = null;
+let selectedCustomerId = null;
+
 
 /* =========================================================
-   ESTADO
+   HELPERS
 ========================================================= */
 
-let currentBusiness="BakeQuiri";
+function $(id){
+  return document.getElementById(id);
+}
 
-let products=[];
-let payments=[];
-let customers=[];
-let cart=[];
+function money(value){
+  return "$" + Number(value || 0).toFixed(2);
+}
 
-let selectedPaymentId=null;
-let selectedCustomerId=null;
+function escapeHTML(value){
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function showStatus(message,type="error"){
+  $("status").textContent = message;
+  $("status").className = "status " + type;
+}
+
+function clearStatus(){
+  $("status").textContent = "";
+  $("status").className = "status";
+}
+
+
+/* =========================================================
+   SERVICE WORKER
+========================================================= */
+
+async function registerServiceWorker(){
+
+  if(!("serviceWorker" in navigator)){
+    return;
+  }
+
+  try{
+
+    const registration =
+      await navigator.serviceWorker.register(
+        "./sw.js",
+        {
+          scope:"./",
+          updateViaCache:"none"
+        }
+      );
+
+    console.log(
+      "[POS] SW:",
+      registration.scope
+    );
+
+    try{
+      await registration.update();
+    }catch(error){
+      console.warn(
+        "[POS] SW update:",
+        error
+      );
+    }
+
+    if(registration.waiting){
+      registration.waiting.postMessage(
+        "SKIP_WAITING"
+      );
+    }
+
+  }catch(error){
+
+    console.warn(
+      "[POS] No se pudo registrar SW:",
+      error
+    );
+
+  }
+
+}
 
 
 /* =========================================================
    CACHE OFFLINE
 ========================================================= */
 
-const OFFLINE_CACHE_KEY =
-"POS_OFFLINE_DATA_V3";
+/*
+ * Guardamos TODOS los datos necesarios para vender.
+ *
+ * Estructura:
+ *
+ * {
+ *   version: 5,
+ *   businesses: {
+ *      BakeQuiri: {
+ *         products: [],
+ *         payments: []
+ *      },
+ *      SpicyRoll: {
+ *         products: [],
+ *         payments: []
+ *      }
+ *   },
+ *   customers: []
+ * }
+ */
 
-
-function getOfflineData(){
+function getOfflineCache(){
 
   try{
 
@@ -366,12 +355,22 @@ function getOfflineData(){
       return null;
     }
 
-    return JSON.parse(raw);
+    const data =
+      JSON.parse(raw);
+
+    if(
+      !data ||
+      data.version !== OFFLINE_VERSION
+    ){
+      return null;
+    }
+
+    return data;
 
   }catch(error){
 
     console.warn(
-      "[POS] Cache offline dañada:",
+      "[POS] Error leyendo caché:",
       error
     );
 
@@ -382,100 +381,86 @@ function getOfflineData(){
 }
 
 
-function saveOfflineData(){
+function saveOfflineCache(){
 
   try{
 
-    const payload={
+    const existing =
+      getOfflineCache() || {
+        version:OFFLINE_VERSION,
+        businesses:{},
+        customers:[]
+      };
 
-      version:3,
+    existing.version =
+      OFFLINE_VERSION;
 
-      savedAt:
-        new Date().toISOString(),
+    if(!existing.businesses){
+      existing.businesses = {};
+    }
 
-      businesses:{}
+    existing.businesses[
+      currentBusiness
+    ] = {
+
+      products:
+        products.map(
+          product => ({
+            id:product.id,
+            name:product.name,
+            price:product.price,
+            cost:product.cost,
+            stock:product.stock,
+            active:product.active,
+            business_id:product.business_id
+          })
+        ),
+
+      payments:
+        payments.map(
+          payment => ({
+            id:payment.id,
+            name:payment.name,
+            provider:payment.provider,
+            active:payment.active,
+            business_id:payment.business_id
+          })
+        )
 
     };
 
-
-    Object.keys(BUSINESS_IDS)
-      .forEach(
-        business=>{
-
-          payload.businesses[business]={
-
-            products:
-              business === currentBusiness
-              ? products
-              : [],
-
-            payments:
-              business === currentBusiness
-              ? payments
-              : []
-
-          };
-
-        }
-      );
-
-
     /*
-     * Clientes son compartidos.
+     * Los clientes son compartidos.
      */
-
-    payload.customers =
-      customers;
-
-
-    /*
-     * Si ya había información de otro
-     * negocio almacenada, conservarla.
-     */
-
-    const previous =
-      getOfflineData();
-
-
-    if(previous?.businesses){
-
-      Object.keys(
-        previous.businesses
-      ).forEach(
-        business=>{
-
-          if(
-            business !==
-            currentBusiness &&
-            previous.businesses[business]
-          ){
-
-            payload.businesses[business]=
-              previous.businesses[business];
-
-          }
-
-        }
+    existing.customers =
+      customers.map(
+        customer => ({
+          id:customer.id,
+          name:customer.name,
+          phone:customer.phone,
+          notes:customer.notes
+        })
       );
-
-    }
-
 
     localStorage.setItem(
       OFFLINE_CACHE_KEY,
-      JSON.stringify(payload)
+      JSON.stringify(existing)
     );
 
-
     console.log(
-      "[POS] Datos offline guardados:",
-      new Date().toLocaleString()
+      "[POS] Datos guardados offline:",
+      {
+        negocio:currentBusiness,
+        productos:products.length,
+        pagos:payments.length,
+        clientes:customers.length
+      }
     );
 
   }catch(error){
 
     console.error(
-      "[POS] No se pudieron guardar datos offline:",
+      "[POS] No se pudo guardar caché:",
       error
     );
 
@@ -484,47 +469,42 @@ function saveOfflineData(){
 }
 
 
-function loadOfflineData(){
+/*
+ * Cargar exclusivamente desde almacenamiento local.
+ *
+ * Esta función NO toca Supabase.
+ */
+function loadFromOfflineCache(){
 
   const cache =
-    getOfflineData();
-
+    getOfflineCache();
 
   if(!cache){
-
     return false;
-
   }
 
-
-  const businessData =
+  const businessCache =
     cache.businesses?.[
       currentBusiness
     ];
 
-
-  if(!businessData){
-
+  if(!businessCache){
     return false;
-
   }
-
 
   products =
     Array.isArray(
-      businessData.products
+      businessCache.products
     )
-    ? businessData.products
+    ? businessCache.products
     : [];
-
 
   payments =
     Array.isArray(
-      businessData.payments
+      businessCache.payments
     )
-    ? businessData.payments
+    ? businessCache.payments
     : [];
-
 
   customers =
     Array.isArray(
@@ -536,7 +516,9 @@ function loadOfflineData(){
 
   if(
     !payments.some(
-      p=>p.id===selectedPaymentId
+      payment =>
+        payment.id ===
+        selectedPaymentId
     )
   ){
 
@@ -549,11 +531,14 @@ function loadOfflineData(){
 
   if(
     !customers.some(
-      c=>c.id===selectedCustomerId
+      customer =>
+        customer.id ===
+        selectedCustomerId
     )
   ){
 
-    selectedCustomerId=null;
+    selectedCustomerId =
+      null;
 
   }
 
@@ -564,79 +549,7 @@ function loadOfflineData(){
   renderSelectedCustomer();
 
 
-  const savedAt =
-    cache.savedAt
-    ? new Date(
-        cache.savedAt
-      ).toLocaleString("es-MX")
-    : "";
-
-
-  showStatus(
-    "Modo OFFLINE activo.\n" +
-    "Productos, clientes y métodos de pago cargados desde el dispositivo." +
-    (
-      savedAt
-      ? "\nÚltima actualización: "+savedAt
-      : ""
-    ),
-    "warn"
-  );
-
-
   return true;
-
-}
-
-
-/* =========================================================
-   HELPERS
-========================================================= */
-
-function $(id){
-  return document.getElementById(id);
-}
-
-
-function money(value){
-
-  return "$"+
-    Number(value||0)
-      .toFixed(2);
-
-}
-
-
-function escapeHTML(value){
-
-  return String(value??"")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-
-}
-
-
-function showStatus(
-  message,
-  type="error"
-){
-
-  $("status").textContent=
-    message;
-
-  $("status").className=
-    "status "+type;
-
-}
-
-
-function clearStatus(){
-
-  $("status").textContent="";
-  $("status").className="status";
 
 }
 
@@ -649,15 +562,15 @@ function initializeSupabase(){
 
   if(
     !window.supabase ||
-    typeof window.supabase.createClient!=="function"
+    typeof window.supabase.createClient !==
+    "function"
   ){
 
     throw new Error(
-      "No se pudo cargar Supabase."
+      "La librería de Supabase no está disponible."
     );
 
   }
-
 
   supabaseClient =
     window.supabase.createClient(
@@ -675,29 +588,57 @@ function initializeSupabase(){
 async function loadBusinessData(){
 
   /*
-   * PRIMERO:
-   * si no hay Internet, NO intentar Supabase.
-   * Cargar inmediatamente desde localStorage.
+   * =======================================================
+   * OFFLINE
+   * =======================================================
+   *
+   * Esta parte es la corrección importante.
+   *
+   * SI NO HAY INTERNET:
+   *
+   * NO hacemos ninguna consulta a Supabase.
+   *
+   * Cargamos productos, pagos y clientes
+   * directamente desde localStorage.
    */
 
   if(!navigator.onLine){
 
     const loaded =
-      loadOfflineData();
+      loadFromOfflineCache();
 
-
-    if(!loaded){
-
-      $("products").innerHTML=
-        '<div class="empty">No hay productos guardados para uso offline.</div>';
-
-      $("payments").innerHTML=
-        '<div class="empty">No hay métodos de pago guardados para uso offline.</div>';
-
-      customers=[];
+    if(loaded){
 
       showStatus(
-        "Estás sin Internet y todavía no existe una copia local de los datos.\n\nConéctate una vez a Internet, abre el POS y espera a que termine de cargar para preparar el modo offline.",
+        "📴 Modo OFFLINE\n\n" +
+        currentBusiness +
+        "\n" +
+        products.length +
+        " productos · " +
+        payments.length +
+        " métodos de pago · " +
+        customers.length +
+        " clientes cargados desde el dispositivo.",
+        "warn"
+      );
+
+    }else{
+
+      $("products").innerHTML =
+        '<div class="empty">' +
+        "No hay productos guardados para " +
+        escapeHTML(currentBusiness) +
+        " en este dispositivo." +
+        "</div>";
+
+      $("payments").innerHTML =
+        '<div class="empty">' +
+        "No hay métodos de pago guardados offline." +
+        "</div>";
+
+      showStatus(
+        "📴 Estás offline, pero todavía no existe una copia local de los datos.\n\n" +
+        "Conéctate una vez a Internet y abre el POS para guardar productos, clientes y métodos de pago.",
         "warn"
       );
 
@@ -708,118 +649,139 @@ async function loadBusinessData(){
   }
 
 
+  /*
+   * =======================================================
+   * ONLINE
+   * =======================================================
+   */
+
   clearStatus();
 
-
-  $("products").innerHTML=
+  $("products").innerHTML =
     '<div class="empty">Cargando productos...</div>';
 
-  $("payments").innerHTML=
+  $("payments").innerHTML =
     '<div class="empty">Cargando métodos de pago...</div>';
 
 
-  const businessId=
-    BUSINESS_IDS[
-      currentBusiness
-    ];
+  const businessId =
+    BUSINESS_IDS[currentBusiness];
+
+
+  if(!businessId){
+
+    showStatus(
+      "No existe la configuración del negocio."
+    );
+
+    return;
+
+  }
 
 
   try{
-
-    /*
-     * Hacer las consultas simultáneamente.
-     */
 
     const [
       productsResult,
       paymentsResult,
       customersResult
     ] =
-    await Promise.all([
+      await Promise.all([
 
-      supabaseClient
-        .from("products")
-        .select(
-          "id,name,price,cost,stock,active,business_id"
-        )
-        .eq(
-          "business_id",
-          businessId
-        )
-        .eq(
-          "active",
-          true
-        )
-        .order("name"),
+        supabaseClient
+          .from("products")
+          .select(
+            "id,name,price,cost,stock,active,business_id"
+          )
+          .eq(
+            "business_id",
+            businessId
+          )
+          .eq(
+            "active",
+            true
+          )
+          .order(
+            "name"
+          ),
 
-      supabaseClient
-        .from("payment_methods")
-        .select(
-          "id,name,provider,active,business_id"
-        )
-        .eq(
-          "business_id",
-          businessId
-        )
-        .eq(
-          "active",
-          true
-        )
-        .order("name"),
+        supabaseClient
+          .from("payment_methods")
+          .select(
+            "id,name,provider,active,business_id"
+          )
+          .eq(
+            "business_id",
+            businessId
+          )
+          .eq(
+            "active",
+            true
+          )
+          .order(
+            "name"
+          ),
 
-      /*
-       * customers NO tiene business_id.
-       */
+        supabaseClient
+          .from("customers")
+          .select(
+            "id,name,phone,notes"
+          )
+          .order(
+            "name"
+          )
 
-      supabaseClient
-        .from("customers")
-        .select(
-          "id,name,phone,notes"
-        )
-        .order("name")
-
-    ]);
+      ]);
 
 
-    if(productsResult.error)
+    if(productsResult.error){
       throw new Error(
-        "Productos: "+
+        "Productos: " +
         productsResult.error.message
       );
+    }
 
-
-    if(paymentsResult.error)
+    if(paymentsResult.error){
       throw new Error(
-        "Métodos de pago: "+
+        "Métodos de pago: " +
         paymentsResult.error.message
       );
+    }
 
-
-    if(customersResult.error)
+    if(customersResult.error){
       throw new Error(
-        "Clientes: "+
+        "Clientes: " +
         customersResult.error.message
       );
+    }
 
 
     products =
-      productsResult.data||[];
+      productsResult.data || [];
 
     payments =
-      paymentsResult.data||[];
+      paymentsResult.data || [];
 
     customers =
-      customersResult.data||[];
+      customersResult.data || [];
+
+
+    /*
+     * Guardar inmediatamente.
+     */
+    saveOfflineCache();
 
 
     if(
       !payments.some(
-        p=>p.id===selectedPaymentId
+        payment =>
+          payment.id ===
+          selectedPaymentId
       )
     ){
 
       selectedPaymentId =
-        payments[0]?.id||
+        payments[0]?.id ||
         null;
 
     }
@@ -827,18 +789,17 @@ async function loadBusinessData(){
 
     if(
       !customers.some(
-        c=>c.id===selectedCustomerId
+        customer =>
+          customer.id ===
+          selectedCustomerId
       )
     ){
 
-      selectedCustomerId=null;
+      selectedCustomerId =
+        null;
 
     }
 
-
-    /*
-     * PINTAR LOS DATOS.
-     */
 
     renderProducts();
     renderPayments();
@@ -846,17 +807,16 @@ async function loadBusinessData(){
     renderSelectedCustomer();
 
 
-    /*
-     * ESTA ES LA PARTE IMPORTANTE:
-     * guardar inmediatamente una copia local.
-     */
-
-    saveOfflineData();
-
-
     showStatus(
-      currentBusiness+
-      " actualizado.\nLos productos, métodos de pago y clientes quedaron guardados para uso offline.",
+      "✓ " +
+      currentBusiness +
+      " actualizado.\n\n" +
+      products.length +
+      " productos · " +
+      payments.length +
+      " métodos de pago · " +
+      customers.length +
+      " clientes quedaron guardados para uso offline.",
       "ok"
     );
 
@@ -869,38 +829,39 @@ async function loadBusinessData(){
 
 
     /*
-     * Si la consulta falla aunque navigator.onLine
-     * diga que hay Internet, intentar la copia local.
+     * Si la conexión existe pero Supabase falla,
+     * intentamos inmediatamente el caché local.
      */
-
     const loaded =
-      loadOfflineData();
+      loadFromOfflineCache();
 
 
     if(loaded){
 
       showStatus(
-        "No se pudo contactar Supabase.\nSe cargaron los datos guardados localmente para continuar.",
+        "⚠️ Supabase no respondió.\n\n" +
+        "El POS está utilizando los últimos datos guardados en el dispositivo.",
         "warn"
       );
 
-      return;
+    }else{
+
+      showStatus(
+        "No se pudieron cargar los datos:\n" +
+        (
+          error?.message ||
+          String(error)
+        ),
+        "error"
+      );
+
+      $("products").innerHTML =
+        '<div class="empty">No se pudieron cargar los productos.</div>';
+
+      $("payments").innerHTML =
+        '<div class="empty">No se pudieron cargar los métodos de pago.</div>';
 
     }
-
-
-    $("products").innerHTML=
-      '<div class="empty">No se pudieron cargar los productos.</div>';
-
-    $("payments").innerHTML=
-      '<div class="empty">No se pudieron cargar los métodos de pago.</div>';
-
-
-    showStatus(
-      error?.message||
-      "No se pudo cargar el sistema.",
-      "error"
-    );
 
   }
 
@@ -913,16 +874,18 @@ async function loadBusinessData(){
 
 function renderProducts(){
 
-  const container=
+  const container =
     $("products");
 
-  container.innerHTML="";
-
+  container.innerHTML =
+    "";
 
   if(!products.length){
 
-    container.innerHTML=
-      '<div class="empty">No hay productos activos para este negocio.</div>';
+    container.innerHTML =
+      '<div class="empty">' +
+      "No hay productos activos para este negocio." +
+      "</div>";
 
     return;
 
@@ -930,49 +893,57 @@ function renderProducts(){
 
 
   products.forEach(
-    product=>{
+    product => {
 
-      const stock=
-        Number(product.stock||0);
-
-
-      const button=
-        document.createElement("button");
+      const stock =
+        Number(
+          product.stock || 0
+        );
 
 
-      button.type="button";
+      const button =
+        document.createElement(
+          "button"
+        );
 
-      button.className=
-        "product"+
+
+      button.type =
+        "button";
+
+      button.className =
+        "product" +
         (
-          stock<=0
+          stock <= 0
           ? " disabled"
           : ""
         );
 
-      button.disabled=
-        stock<=0;
+      button.disabled =
+        stock <= 0;
 
 
-      button.innerHTML=
-        '<div class="product-name">'+
-        escapeHTML(product.name)+
-        '</div>'+
-        '<div class="price">'+
-        money(product.price)+
-        '</div>'+
-        '<div class="stock">'+
+      button.innerHTML =
+        '<div class="product-name">' +
+        escapeHTML(product.name) +
+        "</div>" +
+
+        '<div class="price">' +
+        money(product.price) +
+        "</div>" +
+
+        '<div class="stock">' +
         (
-          stock>0
-          ? "Existencia: "+stock
+          stock > 0
+          ? "Existencia: " + stock
           : "Agotado"
-        )+
-        '</div>';
+        ) +
+        "</div>";
 
 
       button.addEventListener(
         "click",
-        ()=>addToCart(product)
+        () =>
+          addToCart(product)
       );
 
 
@@ -992,16 +963,18 @@ function renderProducts(){
 
 function renderPayments(){
 
-  const container=
+  const container =
     $("payments");
 
-  container.innerHTML="";
-
+  container.innerHTML =
+    "";
 
   if(!payments.length){
 
-    container.innerHTML=
-      '<div class="empty">No hay métodos de pago activos.</div>';
+    container.innerHTML =
+      '<div class="empty">' +
+      "No hay métodos de pago activos." +
+      "</div>";
 
     return;
 
@@ -1009,33 +982,34 @@ function renderPayments(){
 
 
   payments.forEach(
-    payment=>{
+    payment => {
 
-      const button=
-        document.createElement("button");
+      const button =
+        document.createElement(
+          "button"
+        );
 
+      button.type =
+        "button";
 
-      button.type="button";
-
-      button.className=
-        "payment"+
+      button.className =
+        "payment" +
         (
-          payment.id===
+          payment.id ===
           selectedPaymentId
           ? " active"
           : ""
         );
 
-
-      button.textContent=
+      button.textContent =
         payment.name;
 
 
       button.addEventListener(
         "click",
-        ()=>{
+        () => {
 
-          selectedPaymentId=
+          selectedPaymentId =
             payment.id;
 
           renderPayments();
@@ -1060,11 +1034,13 @@ function renderPayments(){
 
 function addToCart(product){
 
-  const stock=
-    Number(product.stock||0);
+  const stock =
+    Number(
+      product.stock || 0
+    );
 
 
-  if(stock<=0){
+  if(stock <= 0){
 
     showStatus(
       "Este producto está agotado."
@@ -1075,15 +1051,20 @@ function addToCart(product){
   }
 
 
-  const item=
+  const item =
     cart.find(
-      i=>i.id===product.id
+      i =>
+        i.id ===
+        product.id
     );
 
 
   if(item){
 
-    if(item.quantity<stock){
+    if(
+      item.quantity <
+      stock
+    ){
 
       item.quantity++;
 
@@ -1110,27 +1091,29 @@ function addToCart(product){
 }
 
 
-function changeQuantity(
-  id,
-  amount
-){
+function changeQuantity(id,amount){
 
-  const item=
+  const item =
     cart.find(
-      i=>i.id===id
+      i =>
+        i.id ===
+        id
     );
 
+  if(!item){
+    return;
+  }
 
-  if(!item)return;
 
-
-  const product=
+  const product =
     products.find(
-      p=>p.id===id
+      p =>
+        p.id ===
+        id
     );
 
 
-  const max=
+  const max =
     Number(
       product?.stock ??
       item.stock ??
@@ -1138,12 +1121,12 @@ function changeQuantity(
     );
 
 
-  const next=
-    item.quantity+
+  const newQuantity =
+    item.quantity +
     amount;
 
 
-  if(next>max){
+  if(newQuantity > max){
 
     showStatus(
       "No hay suficiente existencia disponible."
@@ -1154,15 +1137,17 @@ function changeQuantity(
   }
 
 
-  item.quantity=
-    next;
+  item.quantity =
+    newQuantity;
 
 
-  if(item.quantity<=0){
+  if(item.quantity <= 0){
 
-    cart=
+    cart =
       cart.filter(
-        i=>i.id!==id
+        i =>
+          i.id !==
+          id
       );
 
   }
@@ -1176,10 +1161,12 @@ function changeQuantity(
 function getCartTotal(){
 
   return cart.reduce(
-    (sum,item)=>
-      sum+
-      Number(item.price)*
-      Number(item.quantity),
+    (sum,item) =>
+      sum +
+      (
+        Number(item.price) *
+        Number(item.quantity)
+      ),
     0
   );
 
@@ -1188,18 +1175,19 @@ function getCartTotal(){
 
 function renderCart(){
 
-  const container=
+  const container =
     $("cart");
 
-  container.innerHTML="";
+  container.innerHTML =
+    "";
 
 
   if(!cart.length){
 
-    container.innerHTML=
+    container.innerHTML =
       '<div class="empty">El carrito está vacío</div>';
 
-    $("total").textContent=
+    $("total").textContent =
       "$0.00";
 
     return;
@@ -1208,63 +1196,95 @@ function renderCart(){
 
 
   cart.forEach(
-    item=>{
+    item => {
 
-      const row=
-        document.createElement("div");
+      const subtotal =
+        Number(item.price) *
+        Number(item.quantity);
 
-      row.className=
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+      row.className =
         "cart-item";
 
 
-      const info=
-        document.createElement("div");
+      const info =
+        document.createElement(
+          "div"
+        );
 
 
-      info.innerHTML=
-        '<div class="cart-name">'+
-        escapeHTML(item.name)+
-        '</div>'+
-        '<div class="cart-price">'+
-        money(item.price)+
-        ' c/u</div>';
+      info.innerHTML =
+        '<div class="cart-name">' +
+        escapeHTML(item.name) +
+        "</div>" +
+
+        '<div class="cart-price">' +
+        money(item.price) +
+        " c/u</div>";
 
 
-      const controls=
-        document.createElement("div");
+      const controls =
+        document.createElement(
+          "div"
+        );
 
-      controls.className=
+      controls.className =
         "quantity";
 
 
-      const minus=
-        document.createElement("button");
+      const minus =
+        document.createElement(
+          "button"
+        );
 
-      minus.type="button";
-      minus.textContent="−";
+      minus.type =
+        "button";
+
+      minus.textContent =
+        "−";
 
       minus.addEventListener(
         "click",
-        ()=>changeQuantity(item.id,-1)
+        () =>
+          changeQuantity(
+            item.id,
+            -1
+          )
       );
 
 
-      const quantity=
-        document.createElement("span");
+      const quantity =
+        document.createElement(
+          "span"
+        );
 
-      quantity.textContent=
+      quantity.textContent =
         item.quantity;
 
 
-      const plus=
-        document.createElement("button");
+      const plus =
+        document.createElement(
+          "button"
+        );
 
-      plus.type="button";
-      plus.textContent="+";
+      plus.type =
+        "button";
+
+      plus.textContent =
+        "+";
 
       plus.addEventListener(
         "click",
-        ()=>changeQuantity(item.id,1)
+        () =>
+          changeQuantity(
+            item.id,
+            1
+          )
       );
 
 
@@ -1274,25 +1294,23 @@ function renderCart(){
         plus
       );
 
-
       info.appendChild(
         controls
       );
 
 
-      const subtotal=
-        document.createElement("strong");
-
-      subtotal.textContent=
-        money(
-          Number(item.price)*
-          Number(item.quantity)
+      const subtotalElement =
+        document.createElement(
+          "strong"
         );
+
+      subtotalElement.textContent =
+        money(subtotal);
 
 
       row.append(
         info,
-        subtotal
+        subtotalElement
       );
 
 
@@ -1304,7 +1322,7 @@ function renderCart(){
   );
 
 
-  $("total").textContent=
+  $("total").textContent =
     money(
       getCartTotal()
     );
@@ -1318,49 +1336,62 @@ function renderCart(){
 
 function renderSelectedCustomer(){
 
-  const selected=
+  const selected =
     customers.find(
-      c=>c.id===selectedCustomerId
+      customer =>
+        customer.id ===
+        selectedCustomerId
     );
 
 
-  const element=
+  const selectedElement =
     $("selectedCustomer");
 
-  const general=
+  const general =
     $("generalCustomer");
 
 
   if(!selected){
 
-    selectedCustomerId=null;
+    selectedCustomerId =
+      null;
 
-    element.style.display="none";
-    element.innerHTML="";
+    selectedElement.style.display =
+      "none";
 
-    general.style.display="block";
+    selectedElement.innerHTML =
+      "";
+
+    general.style.display =
+      "block";
 
     return;
 
   }
 
 
-  general.style.display="none";
+  general.style.display =
+    "none";
 
-  element.style.display="block";
+  selectedElement.style.display =
+    "block";
 
-  element.innerHTML=
-    "👤 <strong>"+
+
+  selectedElement.innerHTML =
+    "👤 <strong>" +
     escapeHTML(
-      selected.name||"Cliente"
-    )+
-    "</strong>"+
+      selected.name ||
+      "Cliente"
+    ) +
+    "</strong>" +
+
     (
       selected.phone
-      ? " · 📱 "+
+      ? " · 📱 " +
         escapeHTML(selected.phone)
       : ""
-    )+
+    ) +
+
     '<button type="button" class="clear-customer" id="clearCustomer">Quitar</button>';
 
 
@@ -1375,60 +1406,75 @@ function renderSelectedCustomer(){
 
 function clearSelectedCustomer(){
 
-  selectedCustomerId=null;
+  selectedCustomerId =
+    null;
 
-  $("customerSearch").value="";
+  $("customerSearch").value =
+    "";
 
-  $("customerResults").innerHTML="";
+  $("customerResults").innerHTML =
+    "";
 
-  $("customerResults").style.display="none";
+  $("customerResults").style.display =
+    "none";
 
   renderSelectedCustomer();
 
 }
 
 
+/* =========================================================
+   BUSCAR CLIENTES
+========================================================= */
+
 function renderCustomerResults(query){
 
-  const container=
+  const container =
     $("customerResults");
 
 
-  const search=
-    String(query||"")
+  const search =
+    String(query || "")
       .trim()
       .toLowerCase();
 
 
   if(!search){
 
-    container.innerHTML="";
-    container.style.display="none";
+    container.innerHTML =
+      "";
+
+    container.style.display =
+      "none";
 
     return;
 
   }
 
 
-  const filtered=
+  const filtered =
     customers.filter(
-      customer=>{
+      customer => {
 
-        const name=
-          String(customer.name||"")
-            .toLowerCase();
+        const name =
+          String(
+            customer.name || ""
+          ).toLowerCase();
 
-        const phone=
-          String(customer.phone||"")
-            .toLowerCase();
+        const phone =
+          String(
+            customer.phone || ""
+          ).toLowerCase();
 
-        const notes=
-          String(customer.notes||"")
-            .toLowerCase();
+        const notes =
+          String(
+            customer.notes || ""
+          ).toLowerCase();
 
-        return(
-          name.includes(search)||
-          phone.includes(search)||
+
+        return (
+          name.includes(search) ||
+          phone.includes(search) ||
           notes.includes(search)
         );
 
@@ -1436,22 +1482,29 @@ function renderCustomerResults(query){
     );
 
 
-  container.innerHTML="";
+  container.innerHTML =
+    "";
 
 
   if(!filtered.length){
 
-    const empty=
-      document.createElement("div");
+    const empty =
+      document.createElement(
+        "div"
+      );
 
-    empty.className="empty";
+    empty.className =
+      "empty";
 
-    empty.textContent=
+    empty.textContent =
       "No encontramos ese cliente.";
 
-    container.appendChild(empty);
+    container.appendChild(
+      empty
+    );
 
-    container.style.display="block";
+    container.style.display =
+      "block";
 
     return;
 
@@ -1461,27 +1514,32 @@ function renderCustomerResults(query){
   filtered
     .slice(0,10)
     .forEach(
-      customer=>{
+      customer => {
 
-        const button=
-          document.createElement("button");
+        const button =
+          document.createElement(
+            "button"
+          );
 
-        button.type="button";
+        button.type =
+          "button";
 
-        button.className=
+        button.className =
           "customer-result";
 
-        button.innerHTML=
-          "<strong>"+
+
+        button.innerHTML =
+          "<strong>" +
           escapeHTML(
-            customer.name||
+            customer.name ||
             "Cliente sin nombre"
-          )+
-          "</strong>"+
+          ) +
+          "</strong>" +
+
           (
             customer.phone
-            ? "<small>📱 "+
-              escapeHTML(customer.phone)+
+            ? "<small>📱 " +
+              escapeHTML(customer.phone) +
               "</small>"
             : ""
           );
@@ -1489,16 +1547,19 @@ function renderCustomerResults(query){
 
         button.addEventListener(
           "click",
-          ()=>{
+          () => {
 
-            selectedCustomerId=
+            selectedCustomerId =
               customer.id;
 
-            $("customerSearch").value=
-              customer.name||"";
+            $("customerSearch").value =
+              customer.name || "";
 
-            container.innerHTML="";
-            container.style.display="none";
+            container.innerHTML =
+              "";
+
+            container.style.display =
+              "none";
 
             renderSelectedCustomer();
 
@@ -1514,7 +1575,7 @@ function renderCustomerResults(query){
     );
 
 
-  container.style.display=
+  container.style.display =
     "block";
 
 }
@@ -1527,7 +1588,7 @@ function renderCustomerResults(query){
 $("customerSearch")
 .addEventListener(
   "input",
-  event=>
+  event =>
     renderCustomerResults(
       event.target.value
     )
@@ -1537,7 +1598,7 @@ $("customerSearch")
 $("customerSearch")
 .addEventListener(
   "focus",
-  event=>{
+  event => {
 
     if(event.target.value.trim()){
 
@@ -1561,10 +1622,10 @@ $("generalCustomer")
 $("addClientButton")
 .addEventListener(
   "click",
-  ()=>{
+  () => {
 
-    window.location.href=
-      "clientes.html?business="+
+    window.location.href =
+      "clientes.html?business=" +
       encodeURIComponent(
         currentBusiness
       );
@@ -1575,20 +1636,23 @@ $("addClientButton")
 
 document.addEventListener(
   "click",
-  event=>{
+  event => {
 
-    const box=
+    const box =
       document.querySelector(
         ".customer-box"
       );
 
     if(
       box &&
-      !box.contains(event.target)
+      !box.contains(
+        event.target
+      )
     ){
 
       $("customerResults")
-        .style.display="none";
+        .style.display =
+        "none";
 
     }
 
@@ -1605,42 +1669,57 @@ async function changeBusiness(
   button
 ){
 
-  if(name===currentBusiness)return;
+  if(
+    name ===
+    currentBusiness
+  ){
+    return;
+  }
 
 
-  currentBusiness=name;
+  currentBusiness =
+    name;
 
-  cart=[];
+  cart =
+    [];
 
-  selectedPaymentId=null;
+  selectedPaymentId =
+    null;
 
-  selectedCustomerId=null;
+  selectedCustomerId =
+    null;
 
+  $("customerSearch").value =
+    "";
 
-  $("customerSearch").value="";
+  $("customerResults").innerHTML =
+    "";
 
-  $("customerResults").innerHTML="";
-
-  $("customerResults").style.display="none";
+  $("customerResults").style.display =
+    "none";
 
 
   document
-    .querySelectorAll(".business-btn")
+    .querySelectorAll(
+      ".business-btn"
+    )
     .forEach(
-      b=>
-        b.classList.remove("active")
+      b =>
+        b.classList.remove(
+          "active"
+        )
     );
 
 
-  button.classList.add("active");
+  button.classList.add(
+    "active"
+  );
 
 
   /*
-   * Si estamos offline, loadBusinessData()
-   * cargará automáticamente el cache
-   * correspondiente al negocio.
+   * Si estamos offline, esto cambia
+   * inmediatamente a la copia local.
    */
-
   await loadBusinessData();
 
 }
@@ -1650,9 +1729,7 @@ async function changeBusiness(
    REGISTRAR VENTA
 ========================================================= */
 
-async function registerSale(
-  isPending
-){
+async function registerSale(isPending){
 
   clearStatus();
 
@@ -1697,19 +1774,24 @@ async function registerSale(
 
 
   /*
-   * IMPORTANTE:
-   * Esta versión conserva el registro remoto
-   * cuando hay Internet.
+   * =======================================================
+   * IMPORTANTE
+   * =======================================================
    *
-   * Offline todavía NO envía la venta a Supabase.
-   * Primero aseguramos que productos/clientes/pagos
-   * funcionen correctamente offline.
+   * Esta versión NO intenta fingir que una venta offline
+   * fue enviada a Supabase.
+   *
+   * Los datos sí están disponibles offline.
+   *
+   * El registro remoto todavía requiere Internet.
    */
 
   if(!navigator.onLine){
 
     showStatus(
-      "Estás en modo OFFLINE.\n\nLos productos, clientes y métodos de pago están disponibles, pero el registro de la venta requiere conexión a Internet en esta versión.",
+      "📴 La venta está lista, pero no hay Internet.\n\n" +
+      "Los productos, cliente y método de pago sí están disponibles offline.\n\n" +
+      "Conéctate a Internet para enviar la venta a Supabase.",
       "warn"
     );
 
@@ -1718,138 +1800,109 @@ async function registerSale(
   }
 
 
-  const button=
+  const button =
     isPending
-    ? $("accountButton")
-    : $("chargeButton");
+      ? $("accountButton")
+      : $("chargeButton");
 
 
-  const originalText=
+  const originalText =
     button.textContent;
 
 
-  button.disabled=true;
+  button.disabled =
+    true;
 
-  button.textContent=
+  button.textContent =
     isPending
-    ? "GUARDANDO..."
-    : "REGISTRANDO...";
+      ? "GUARDANDO..."
+      : "REGISTRANDO...";
 
 
   try{
 
-    const items=
+    const items =
       cart.map(
-        item=>({
+        item => ({
 
-          product_id:item.id,
+          product_id:
+            item.id,
 
-          description:item.name,
+          description:
+            item.name,
 
-          quantity:Number(
-            item.quantity
-          ),
+          quantity:
+            Number(item.quantity),
 
-          unit_price:Number(
-            item.price
-          ),
+          unit_price:
+            Number(item.price),
 
           subtotal:
-            Number(item.price)*
+            Number(item.price) *
             Number(item.quantity)
 
         })
       );
 
 
-    const businessId=
+    const businessId =
       BUSINESS_IDS[
         currentBusiness
       ];
 
 
-    const result=
+    const result =
       await supabaseClient
         .rpc(
           "register_sale",
           {
-
             p_business_id:
               businessId,
 
             p_customer_id:
-              selectedCustomerId||
+              selectedCustomerId ||
               null,
 
             p_payment_method_id:
               isPending
-              ? null
-              : selectedPaymentId,
+                ? null
+                : selectedPaymentId,
 
             p_items:
               items,
 
             p_is_pending:
               isPending
-
           }
         );
 
 
     if(result.error){
-
       throw result.error;
-
     }
 
 
-    const customer=
-      customers.find(
-        c=>c.id===selectedCustomerId
-      );
-
-
-    const paymentName=
-      payments.find(
-        p=>p.id===selectedPaymentId
-      )?.name||
-      "Pago";
-
-
     alert(
-      (
-        isPending
-        ? "Cuenta registrada"
-        : "Venta registrada"
-      )+
-      "\n\n"+
-      currentBusiness+
-      "\nCliente: "+
-      (
-        customer?.name||
-        "Consumidor general"
-      )+
-      "\nTotal: "+
-      money(
-        getCartTotal()
-      )+
-      (
-        isPending
-        ? ""
-        : "\nPago: "+paymentName
-      )
+      isPending
+        ? "Cuenta registrada correctamente."
+        : "Venta registrada correctamente."
     );
 
 
-    cart=[];
+    cart = [];
 
-    selectedCustomerId=null;
+    selectedCustomerId =
+      null;
 
-    $("customerSearch").value="";
+    $("customerSearch").value =
+      "";
 
-    $("customerResults").innerHTML="";
+    $("customerResults").innerHTML =
+      "";
 
-    $("customerResults").style.display="none";
+    $("customerResults").style.display =
+      "none";
+
 
     renderSelectedCustomer();
 
@@ -1857,24 +1910,18 @@ async function registerSale(
     await loadBusinessData();
 
 
-    showStatus(
-      isPending
-      ? "Cuenta guardada correctamente."
-      : "Venta guardada correctamente.",
-      "ok"
-    );
-
   }catch(error){
 
     console.error(
-      "registerSale:",
+      "[POS] registerSale:",
       error
     );
 
+
     showStatus(
-      "No se pudo registrar la operación:\n"+
+      "No se pudo registrar la operación:\n" +
       (
-        error?.message||
+        error?.message ||
         String(error)
       ),
       "error"
@@ -1882,9 +1929,10 @@ async function registerSale(
 
   }finally{
 
-    button.disabled=false;
+    button.disabled =
+      false;
 
-    button.textContent=
+    button.textContent =
       originalText;
 
   }
@@ -1899,26 +1947,30 @@ async function registerSale(
 $("chargeButton")
 .addEventListener(
   "click",
-  ()=>registerSale(false)
+  () =>
+    registerSale(false)
 );
 
 
 $("accountButton")
 .addEventListener(
   "click",
-  ()=>registerSale(true)
+  () =>
+    registerSale(true)
 );
 
 
 $("accountsButton")
 .addEventListener(
   "click",
-  ()=>{
-    window.location.href=
-      "cuentas.html?business="+
+  () => {
+
+    window.location.href =
+      "cuentas.html?business=" +
       encodeURIComponent(
         currentBusiness
       );
+
   }
 );
 
@@ -1926,12 +1978,14 @@ $("accountsButton")
 $("clientsButton")
 .addEventListener(
   "click",
-  ()=>{
-    window.location.href=
-      "clientes.html?business="+
+  () => {
+
+    window.location.href =
+      "clientes.html?business=" +
       encodeURIComponent(
         currentBusiness
       );
+
   }
 );
 
@@ -1939,12 +1993,14 @@ $("clientsButton")
 $("historyButton")
 .addEventListener(
   "click",
-  ()=>{
-    window.location.href=
-      "historial.html?business="+
+  () => {
+
+    window.location.href =
+      "historial.html?business=" +
       encodeURIComponent(
         currentBusiness
       );
+
   }
 );
 
@@ -1952,12 +2008,14 @@ $("historyButton")
 $("inventoryButton")
 .addEventListener(
   "click",
-  ()=>{
-    window.location.href=
-      "inventario.html?business="+
+  () => {
+
+    window.location.href =
+      "inventario.html?business=" +
       encodeURIComponent(
         currentBusiness
       );
+
   }
 );
 
@@ -1965,12 +2023,14 @@ $("inventoryButton")
 $("dashboardButton")
 .addEventListener(
   "click",
-  ()=>{
-    window.location.href=
-      "dashboard.html?business="+
+  () => {
+
+    window.location.href =
+      "dashboard.html?business=" +
       encodeURIComponent(
         currentBusiness
       );
+
   }
 );
 
@@ -1980,20 +2040,26 @@ $("dashboardButton")
 ========================================================= */
 
 document
-.querySelectorAll(".business-btn")
-.forEach(
-  button=>{
+  .querySelectorAll(
+    ".business-btn"
+  )
+  .forEach(
+    button => {
 
-    button.addEventListener(
-      "click",
-      ()=>changeBusiness(
-        button.dataset.business,
-        button
-      )
-    );
+      button.addEventListener(
+        "click",
+        () => {
 
-  }
-);
+          changeBusiness(
+            button.dataset.business,
+            button
+          );
+
+        }
+      );
+
+    }
+  );
 
 
 /* =========================================================
@@ -2001,30 +2067,27 @@ document
 ========================================================= */
 
 window.addEventListener(
-  "offline",
-  ()=>{
+  "online",
+  async () => {
 
-    /*
-     * No borrar datos.
-     * Cambiar inmediatamente al cache.
-     */
+    console.log(
+      "[POS] Internet restaurado."
+    );
 
-    loadOfflineData();
+    await loadBusinessData();
 
   }
 );
 
 
 window.addEventListener(
-  "online",
-  async()=>{
+  "offline",
+  () => {
 
-    showStatus(
-      "Internet restaurado. Actualizando datos...",
-      "ok"
-    );
-
-    await loadBusinessData();
+    /*
+     * Cambiar inmediatamente a caché.
+     */
+    loadBusinessData();
 
   }
 );
@@ -2037,63 +2100,49 @@ window.addEventListener(
 async function startApp(){
 
   /*
-   * Inicializar Supabase si la librería está disponible.
+   * Registrar SW sin bloquear el POS.
    */
+  registerServiceWorker();
 
-  try{
 
-    initializeSupabase();
+  /*
+   * Inicializar Supabase solamente si está disponible.
+   */
+  if(navigator.onLine){
 
-  }catch(error){
+    try{
 
-    console.warn(
-      "[POS] Supabase no disponible:",
-      error
-    );
+      initializeSupabase();
+
+    }catch(error){
+
+      console.warn(
+        "[POS] Supabase no disponible:",
+        error
+      );
+
+    }
 
   }
 
 
   /*
-   * SI ESTÁ OFFLINE:
-   * cargar directamente desde localStorage.
+   * Si estamos online:
+   *    descargar y guardar datos.
+   *
+   * Si estamos offline:
+   *    usar directamente el caché.
    */
-
-  if(!navigator.onLine){
-
-    loadOfflineData();
-
-    return;
-
-  }
-
-
-  /*
-   * SI ESTÁ ONLINE:
-   * descargar datos y guardar copia local.
-   */
-
-  if(supabaseClient){
+  if(
+    navigator.onLine &&
+    supabaseClient
+  ){
 
     await loadBusinessData();
 
   }else{
 
-    /*
-     * Fallback por si el CDN no cargó.
-     */
-
-    const loaded=
-      loadOfflineData();
-
-    if(!loaded){
-
-      showStatus(
-        "No se pudo cargar Supabase y tampoco existe una copia local de los datos.",
-        "error"
-      );
-
-    }
+    loadBusinessData();
 
   }
 
