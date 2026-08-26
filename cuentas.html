@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Cuentas pendientes | Sistema de Ventas POS</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -20,7 +25,9 @@ header{
   padding:25px 20px;
 }
 
-header h1{font-size:30px}
+header h1{
+  font-size:30px;
+}
 
 header p{
   font-size:17px;
@@ -46,7 +53,9 @@ header p{
   margin-bottom:20px;
 }
 
-.customer-banner.visible{display:block}
+.customer-banner.visible{
+  display:block;
+}
 
 .customer-banner-title{
   font-size:14px;
@@ -83,14 +92,18 @@ button{
   cursor:pointer;
 }
 
-button:active{transform:scale(.98)}
+button:active{
+  transform:scale(.98);
+}
 
 button:disabled{
   opacity:.7;
   cursor:not-allowed;
 }
 
-.business{color:#2680eb}
+.business{
+  color:#2680eb;
+}
 
 .business.active{
   background:#111827;
@@ -104,7 +117,9 @@ button:disabled{
   border-color:#2680eb;
 }
 
-.back{color:#111827}
+.back{
+  color:#111827;
+}
 
 /* FILTROS */
 
@@ -174,7 +189,9 @@ button:disabled{
   background:#fff;
 }
 
-.account:last-child{margin-bottom:0}
+.account:last-child{
+  margin-bottom:0;
+}
 
 .top{
   display:flex;
@@ -182,7 +199,9 @@ button:disabled{
   gap:15px;
 }
 
-.date{font-weight:800}
+.date{
+  font-weight:800;
+}
 
 .total{
   font-weight:800;
@@ -236,17 +255,12 @@ button:disabled{
   margin-top:4px;
 }
 
-/* BOTONES CUENTA */
-
-.account-actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-top:12px;
-}
+/* BOTONES DE CUENTA */
 
 .balance-button{
+  display:block;
   width:100%;
+  margin-top:12px;
   padding:14px 15px;
   border-radius:12px;
   border:2px solid #f59e0b;
@@ -262,11 +276,13 @@ button:disabled{
 }
 
 .cancel-button{
+  display:block;
   width:100%;
+  margin-top:12px;
   padding:14px 15px;
   border-radius:12px;
   border:2px solid #dc2626;
-  background:#fff;
+  background:#fff5f5;
   color:#b91c1c;
   text-align:center;
   font-size:15px;
@@ -303,7 +319,9 @@ button:disabled{
   border-bottom:1px solid #e2e8f0;
 }
 
-.payment-row:last-child{border-bottom:0}
+.payment-row:last-child{
+  border-bottom:0;
+}
 
 .payment-date{
   color:#64748b;
@@ -331,7 +349,7 @@ button:disabled{
   color:#334155;
 }
 
-/* MODAL */
+/* MODALES */
 
 .modal-overlay{
   display:none;
@@ -342,13 +360,18 @@ button:disabled{
   padding:20px;
   align-items:center;
   justify-content:center;
+  overflow-y:auto;
 }
 
-.modal-overlay.visible{display:flex}
+.modal-overlay.visible{
+  display:flex;
+}
 
 .modal{
   width:100%;
   max-width:430px;
+  max-height:92vh;
+  overflow-y:auto;
   background:#fff;
   border-radius:22px;
   padding:25px;
@@ -397,16 +420,17 @@ button:disabled{
   padding:15px;
   border:2px solid #ddd;
   border-radius:12px;
-  font-size:17px;
-  font-weight:600;
+  font-size:18px;
+  font-weight:700;
   margin-bottom:15px;
   background:#fff;
-  font-family:inherit;
 }
 
 .modal textarea{
-  min-height:110px;
+  min-height:120px;
   resize:vertical;
+  line-height:1.4;
+  font-family:inherit;
 }
 
 .modal input:focus,
@@ -422,7 +446,9 @@ button:disabled{
   gap:10px;
 }
 
-.modal-buttons button{padding:14px}
+.modal-buttons button{
+  padding:14px;
+}
 
 .btn-save{
   background:#16a34a;
@@ -443,36 +469,6 @@ button:disabled{
   border-color:#e2e8f0;
 }
 
-/* MODAL CANCELACIÓN */
-
-.cancel-warning{
-  background:#fff7ed;
-  border:2px solid #fed7aa;
-  color:#9a3412;
-  border-radius:14px;
-  padding:14px;
-  margin-bottom:18px;
-  font-size:14px;
-  line-height:1.4;
-}
-
-.required{
-  color:#dc2626;
-}
-
-.btn-danger{
-  width:100%;
-  background:#dc2626;
-  border-color:#dc2626;
-  color:#fff;
-}
-
-.cancel-modal-buttons{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
 .modal-error{
   display:none;
   background:#fee2e2;
@@ -484,7 +480,71 @@ button:disabled{
   font-weight:700;
 }
 
-.modal-error.visible{display:block}
+.modal-error.visible{
+  display:block;
+}
+
+/* CANCELACIÓN */
+
+.cancel-warning{
+  background:#fff7ed;
+  border:2px solid #fed7aa;
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:18px;
+  color:#9a3412;
+  line-height:1.5;
+}
+
+.cancel-warning strong{
+  display:block;
+  font-size:17px;
+  margin-bottom:10px;
+}
+
+.cancel-info{
+  background:#f8fafc;
+  border-radius:14px;
+  padding:15px;
+  margin-bottom:18px;
+  line-height:1.5;
+}
+
+.cancel-info strong{
+  display:block;
+  margin-bottom:5px;
+}
+
+.cancel-info .cancel-balance{
+  color:#dc2626;
+  font-size:25px;
+  font-weight:900;
+}
+
+.required{
+  color:#dc2626;
+}
+
+.btn-confirm-cancel{
+  width:100%;
+  background:#dc2626;
+  border-color:#dc2626;
+  color:#fff;
+  padding:16px;
+  font-size:17px;
+}
+
+.btn-confirm-cancel:hover{
+  background:#b91c1c;
+}
+
+.btn-return{
+  width:100%;
+  margin-top:10px;
+  background:#f1f5f9;
+  border-color:#e2e8f0;
+  color:#2563eb;
+}
 
 /* MENSAJES */
 
@@ -511,70 +571,92 @@ button:disabled{
   font-weight:700;
 }
 
-.warning-message{
-  background:#fef3c7;
-  color:#92400e;
-  padding:14px;
-  border-radius:12px;
-  margin-bottom:18px;
-  font-weight:700;
-}
-
 /* RESPONSIVE */
 
 @media(max-width:700px){
 
-  .filters{grid-template-columns:1fr}
+  .filters{
+    grid-template-columns:1fr;
+  }
 
-  .summary{grid-template-columns:1fr}
+  .summary{
+    grid-template-columns:1fr;
+  }
 
-  .top{flex-direction:column}
+  .top{
+    flex-direction:column;
+  }
 
   .container{
     padding:18px 15px 35px;
   }
 
-  .modal{padding:20px}
+  .modal{
+    padding:20px;
+  }
 
-  .modal-buttons,
-  .cancel-modal-buttons,
-  .account-actions{
+  .modal-buttons{
     grid-template-columns:1fr;
   }
+
 }
+
 </style>
 </head>
 
 <body>
 
 <header>
+
 <h1>💰 Cuentas pendientes</h1>
-<p>Aquí aparecen únicamente las cuentas que tienen saldo por cobrar</p>
+
+<p>
+Aquí aparecen únicamente las cuentas que tienen saldo por cobrar
+</p>
+
 </header>
 
 <div class="container">
 
 <div id="customerBanner" class="customer-banner">
-<div class="customer-banner-title">CUENTA PENDIENTE DEL CLIENTE</div>
+
+<div class="customer-banner-title">
+CUENTA PENDIENTE DEL CLIENTE
+</div>
+
 <div id="customerBannerName" class="customer-banner-name"></div>
+
 <div id="customerBannerPhone" class="customer-banner-phone"></div>
+
 </div>
 
 <div class="toolbar">
 
-<button type="button" class="business active" data-business="BakeQuiri">
+<button
+type="button"
+class="business active"
+data-business="BakeQuiri">
 BakeQuiri
 </button>
 
-<button type="button" class="business" data-business="SpicyRoll">
+<button
+type="button"
+class="business"
+data-business="SpicyRoll">
 SpicyRoll
 </button>
 
-<button type="button" class="refresh" id="refresh">
+<button
+type="button"
+class="refresh"
+id="refresh">
 🔄 Actualizar
 </button>
 
-<button type="button" class="back" id="back">
+<button
+type="button"
+class="back"
+id="back">
 ← Dashboard
 </button>
 
@@ -588,26 +670,52 @@ type="search"
 placeholder="🔎 Buscar cliente o cuenta"
 autocomplete="off">
 
-<input id="from" type="date">
-<input id="to" type="date">
+<input
+id="from"
+type="date">
+
+<input
+id="to"
+type="date">
 
 </div>
 
 <div class="summary">
 
 <div class="summary-card">
-<div class="label">CUENTAS PENDIENTES</div>
-<div id="count" class="value">0</div>
+
+<div class="label">
+CUENTAS PENDIENTES
+</div>
+
+<div id="count" class="value">
+0
+</div>
+
 </div>
 
 <div class="summary-card">
-<div class="label">TOTAL DE VENTAS A CRÉDITO</div>
-<div id="total" class="value">$0.00</div>
+
+<div class="label">
+TOTAL DE VENTAS A CRÉDITO
+</div>
+
+<div id="total" class="value">
+$0.00
+</div>
+
 </div>
 
 <div class="summary-card">
-<div class="label">SALDO POR COBRAR</div>
-<div id="balance" class="value">$0.00</div>
+
+<div class="label">
+SALDO POR COBRAR
+</div>
+
+<div id="balance" class="value">
+$0.00
+</div>
+
 </div>
 
 </div>
@@ -617,29 +725,42 @@ autocomplete="off">
 <div id="message"></div>
 
 <div id="sales">
-<div class="empty">Cargando cuentas pendientes...</div>
+
+<div class="empty">
+Cargando cuentas pendientes...
 </div>
 
 </div>
 
 </div>
 
+</div>
 
-<!-- ================================
+
+<!-- =====================================================
      MODAL ABONO
-================================ -->
+===================================================== -->
 
 <div id="paymentModal" class="modal-overlay">
 
 <div class="modal">
 
-<h2>💰 Registrar abono</h2>
+<h2>
+💰 Registrar abono
+</h2>
 
 <div id="paymentSubtitle" class="modal-subtitle"></div>
 
 <div class="modal-info">
-<strong>Saldo pendiente actual</strong>
-<div id="modalBalance" class="modal-balance">$0.00</div>
+
+<strong>
+Saldo pendiente actual
+</strong>
+
+<div id="modalBalance" class="modal-balance">
+$0.00
+</div>
+
 </div>
 
 <div id="modalError" class="modal-error"></div>
@@ -661,58 +782,91 @@ Método de pago del abono
 </label>
 
 <select id="paymentMethod">
-<option value="">Cargando métodos de pago...</option>
+
+<option value="">
+Cargando métodos de pago...
+</option>
+
 </select>
 
 <div class="modal-buttons">
 
-<button type="button" class="btn-save" id="savePayment">
+<button
+type="button"
+class="btn-save"
+id="savePayment">
 💵 Registrar abono
 </button>
 
-<button type="button" class="btn-liquidar" id="payFull">
+<button
+type="button"
+class="btn-liquidar"
+id="payFull">
 ✓ Liquidar cuenta
 </button>
 
 </div>
 
-<button type="button" class="btn-cancel" id="cancelPayment">
+<button
+type="button"
+class="btn-cancel"
+id="cancelPayment">
 Cancelar
 </button>
 
 </div>
+
 </div>
 
 
-<!-- ================================
-     MODAL CANCELACIÓN
-================================ -->
+<!-- =====================================================
+     MODAL CANCELAR CUENTA
+===================================================== -->
 
 <div id="cancelModal" class="modal-overlay">
 
 <div class="modal">
 
-<h2>⚠️ Cancelar cuenta</h2>
+<h2>
+🗑️ Cancelar cuenta
+</h2>
 
 <div id="cancelSubtitle" class="modal-subtitle"></div>
 
 <div class="cancel-warning">
-<strong>Esta acción devolverá los productos al inventario.</strong>
-<br><br>
-La cancelación quedará registrada. Para proteger el sistema,
-debes indicar obligatoriamente el motivo de la cancelación.
+
+<strong>
+⚠️ Esta acción devolverá los productos al inventario.
+</strong>
+
+La cancelación quedará registrada y la cuenta
+<strong>no se eliminará del historial.</strong>
+
+Para proteger el sistema debes indicar
+<strong>obligatoriamente el motivo de la cancelación.</strong>
+
 </div>
 
-<div class="modal-info">
-<strong>Cuenta</strong>
-<div id="cancelSaleInfo"></div>
+<div class="cancel-info">
+
+<strong>
+Cuenta
+</strong>
+
+<div id="cancelSaleId"></div>
 
 <br>
 
-<strong>Saldo pendiente</strong>
-<div id="cancelBalance" class="modal-balance">
+<strong>
+Saldo pendiente
+</strong>
+
+<div
+id="cancelBalance"
+class="cancel-balance">
 $0.00
 </div>
+
 </div>
 
 <div id="cancelError" class="modal-error"></div>
@@ -724,28 +878,36 @@ Motivo de cancelación <span class="required">*</span>
 <textarea
 id="cancelReason"
 maxlength="500"
-placeholder="Escribe el motivo de la cancelación..."
+placeholder="Escribe el motivo por el que se cancela esta cuenta..."
 required></textarea>
 
-<div class="cancel-modal-buttons">
+<div
+style="
+text-align:right;
+color:#64748b;
+font-size:12px;
+margin-top:-10px;
+margin-bottom:15px;
+">
+Máximo 500 caracteres
+</div>
 
 <button
 type="button"
-class="btn-danger"
+class="btn-confirm-cancel"
 id="confirmCancel">
 ⚠️ Confirmar cancelación
 </button>
 
 <button
 type="button"
-class="btn-cancel"
-id="closeCancelModal">
-No cancelar
+class="btn-return"
+id="cancelCancel">
+No, regresar
 </button>
 
 </div>
 
-</div>
 </div>
 
 
@@ -756,9 +918,9 @@ No cancelar
 "use strict";
 
 
-/* =========================================
+/* =====================================================
    SUPABASE
-========================================= */
+===================================================== */
 
 const SUPABASE_URL =
 "https://jrxklpstlloeckihcduv.supabase.co";
@@ -773,9 +935,9 @@ window.supabase.createClient(
 );
 
 
-/* =========================================
+/* =====================================================
    NEGOCIOS
-========================================= */
+===================================================== */
 
 const BUSINESS_IDS = {
 
@@ -788,9 +950,9 @@ const BUSINESS_IDS = {
 };
 
 
-/* =========================================
+/* =====================================================
    URL
-========================================= */
+===================================================== */
 
 const urlParams =
 new URLSearchParams(
@@ -809,16 +971,19 @@ BUSINESS_IDS[requestedBusiness]
 : "BakeQuiri";
 
 let sales = [];
+
 let payments = [];
+
 let paymentMethods = [];
 
 let selectedSaleForPayment = null;
+
 let selectedSaleForCancel = null;
 
 
-/* =========================================
+/* =====================================================
    UTILIDADES
-========================================= */
+===================================================== */
 
 const $ =
 id => document.getElementById(id);
@@ -879,24 +1044,33 @@ function getDateForFilter(sale){
   if(isNaN(date.getTime()))
     return "";
 
-  return (
-    date.getFullYear() +
-    "-" +
+  const year =
+    date.getFullYear();
+
+  const month =
     String(
       date.getMonth() + 1
-    ).padStart(2,"0") +
-    "-" +
+    ).padStart(2,"0");
+
+  const day =
     String(
       date.getDate()
-    ).padStart(2,"0")
+    ).padStart(2,"0");
+
+  return (
+    year +
+    "-" +
+    month +
+    "-" +
+    day
   );
 
 }
 
 
-/* =========================================
+/* =====================================================
    NEGOCIO
-========================================= */
+===================================================== */
 
 function updateBusinessButtons(){
 
@@ -917,9 +1091,9 @@ function updateBusinessButtons(){
 }
 
 
-/* =========================================
+/* =====================================================
    MÉTODOS DE PAGO
-========================================= */
+===================================================== */
 
 async function loadPaymentMethods(){
 
@@ -996,9 +1170,9 @@ function renderPaymentMethods(){
 }
 
 
-/* =========================================
+/* =====================================================
    CLIENTE
-========================================= */
+===================================================== */
 
 async function loadSelectedCustomer(){
 
@@ -1061,14 +1235,16 @@ async function loadSelectedCustomer(){
 }
 
 
-/* =========================================
+/* =====================================================
    CARGAR CUENTAS PENDIENTES
-========================================= */
+===================================================== */
 
 async function loadSales(){
 
   $("sales").innerHTML =
-    '<div class="empty">Cargando cuentas pendientes...</div>';
+    '<div class="empty">' +
+    "Cargando cuentas pendientes..." +
+    "</div>";
 
   try{
 
@@ -1088,6 +1264,10 @@ async function loadSales(){
         .gt(
           "balance",
           0
+        )
+        .neq(
+          "status",
+          "cancelled"
         )
         .order(
           "created_at",
@@ -1163,9 +1343,9 @@ async function loadSales(){
 }
 
 
-/* =========================================
-   RENDERIZAR
-========================================= */
+/* =====================================================
+   RENDERIZAR CUENTAS
+===================================================== */
 
 async function renderAccounts(){
 
@@ -1186,15 +1366,25 @@ async function renderAccounts(){
     sales.filter(
       sale => {
 
-        if(
+        const balance =
           Number(
             sale.balance || 0
-          ) <= 0
+          );
+
+        if(balance <= 0)
+          return false;
+
+        if(
+          String(sale.status || "")
+            .toLowerCase() ===
+          "cancelled"
         )
           return false;
 
         const date =
-          getDateForFilter(sale);
+          getDateForFilter(
+            sale
+          );
 
         if(from && date < from)
           return false;
@@ -1214,6 +1404,10 @@ async function renderAccounts(){
       }
     );
 
+
+  /* =====================================================
+     CLIENTES
+  ===================================================== */
 
   const customerMap =
     new Map();
@@ -1262,6 +1456,10 @@ async function renderAccounts(){
   }
 
 
+  /* =====================================================
+     BÚSQUEDA
+  ===================================================== */
+
   rows =
     rows.filter(
       sale => {
@@ -1291,6 +1489,10 @@ async function renderAccounts(){
       }
     );
 
+
+  /* =====================================================
+     RESUMEN
+  ===================================================== */
 
   $("count").textContent =
     rows.length;
@@ -1359,13 +1561,16 @@ async function renderAccounts(){
         );
 
 
+      /* =================================================
+         ABONOS
+      ================================================= */
+
       const salePayments =
         payments.filter(
           payment =>
             payment.sale_id ===
             sale.id
         );
-
 
       const totalPaid =
         salePayments.reduce(
@@ -1378,8 +1583,14 @@ async function renderAccounts(){
         );
 
 
+      /* =================================================
+         TARJETA
+      ================================================= */
+
       const element =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
       element.className =
         "account";
@@ -1431,12 +1642,16 @@ async function renderAccounts(){
         "</div>";
 
 
-      /* HISTORIAL */
+      /* =================================================
+         HISTORIAL DE ABONOS
+      ================================================= */
 
       if(salePayments.length){
 
         const history =
-          document.createElement("div");
+          document.createElement(
+            "div"
+          );
 
         history.className =
           "payment-history";
@@ -1451,7 +1666,9 @@ async function renderAccounts(){
           payment => {
 
             const row =
-              document.createElement("div");
+              document.createElement(
+                "div"
+              );
 
             row.className =
               "payment-row";
@@ -1494,14 +1711,18 @@ async function renderAccounts(){
               ) +
               "</div>";
 
-            history.appendChild(row);
+            history.appendChild(
+              row
+            );
 
           }
         );
 
 
         const totalRow =
-          document.createElement("div");
+          document.createElement(
+            "div"
+          );
 
         totalRow.className =
           "payment-total";
@@ -1512,24 +1733,25 @@ async function renderAccounts(){
           money(totalPaid) +
           "</span>";
 
-        history.appendChild(totalRow);
+        history.appendChild(
+          totalRow
+        );
 
-        element.appendChild(history);
+        element.appendChild(
+          history
+        );
 
       }
 
 
-      /* ACCIONES */
-
-      const actions =
-        document.createElement("div");
-
-      actions.className =
-        "account-actions";
-
+      /* =================================================
+         BOTÓN ABONO
+      ================================================= */
 
       const balanceButton =
-        document.createElement("button");
+        document.createElement(
+          "button"
+        );
 
       balanceButton.type =
         "button";
@@ -1538,7 +1760,8 @@ async function renderAccounts(){
         "balance-button";
 
       balanceButton.innerHTML =
-        "💰 Registrar abono";
+        "💰 Registrar abono · Saldo " +
+        money(balance);
 
       balanceButton.addEventListener(
         "click",
@@ -1552,9 +1775,19 @@ async function renderAccounts(){
         }
       );
 
+      element.appendChild(
+        balanceButton
+      );
+
+
+      /* =================================================
+         BOTÓN CANCELAR
+      ================================================= */
 
       const cancelButton =
-        document.createElement("button");
+        document.createElement(
+          "button"
+        );
 
       cancelButton.type =
         "button";
@@ -1563,7 +1796,7 @@ async function renderAccounts(){
         "cancel-button";
 
       cancelButton.innerHTML =
-        "⚠️ Cancelar cuenta";
+        "🗑️ Cancelar cuenta";
 
       cancelButton.addEventListener(
         "click",
@@ -1577,19 +1810,15 @@ async function renderAccounts(){
         }
       );
 
-
-      actions.appendChild(
-        balanceButton
-      );
-
-      actions.appendChild(
+      element.appendChild(
         cancelButton
       );
 
-      element.appendChild(actions);
 
       $("sales")
-        .appendChild(element);
+        .appendChild(
+          element
+        );
 
     }
   );
@@ -1597,9 +1826,9 @@ async function renderAccounts(){
 }
 
 
-/* =========================================
+/* =====================================================
    MODAL ABONO
-========================================= */
+===================================================== */
 
 function openPaymentModal(
   sale,
@@ -1620,13 +1849,17 @@ function openPaymentModal(
       money(sale.balance);
 
   $("paymentAmount")
-    .value = "";
+    .value =
+      "";
 
   $("modalError")
-    .textContent = "";
+    .textContent =
+      "";
 
   $("modalError")
-    .classList.remove("visible");
+    .classList.remove(
+      "visible"
+    );
 
   renderPaymentMethods();
 
@@ -1639,11 +1872,16 @@ function openPaymentModal(
   }
 
   $("paymentModal")
-    .classList.add("visible");
+    .classList.add(
+      "visible"
+    );
 
   setTimeout(
     () => {
-      $("paymentAmount").focus();
+
+      $("paymentAmount")
+        .focus();
+
     },
     100
   );
@@ -1657,253 +1895,36 @@ function closePaymentModal(){
     null;
 
   $("paymentModal")
-    .classList.remove("visible");
+    .classList.remove(
+      "visible"
+    );
 
 }
 
 
-/* =========================================
-   MODAL CANCELACIÓN
-========================================= */
-
-function openCancelModal(
-  sale,
-  customerName
+function showPaymentError(
+  message
 ){
 
-  selectedSaleForCancel =
-    sale;
-
-  $("cancelSubtitle")
-    .textContent =
-      customerName +
-      " · Venta de " +
-      money(sale.total);
-
-  $("cancelSaleInfo")
-    .textContent =
-      "ID: " +
-      sale.id;
-
-  $("cancelBalance")
-    .textContent =
-      money(sale.balance);
-
-  $("cancelReason")
-    .value = "";
-
-  $("cancelError")
-    .textContent = "";
-
-  $("cancelError")
-    .classList.remove("visible");
-
-  $("cancelModal")
-    .classList.add("visible");
-
-  setTimeout(
-    () => {
-      $("cancelReason").focus();
-    },
-    100
-  );
-
-}
-
-
-function closeCancelModal(){
-
-  selectedSaleForCancel =
-    null;
-
-  $("cancelModal")
-    .classList.remove("visible");
-
-}
-
-
-/* =========================================
-   ERROR CANCELACIÓN
-========================================= */
-
-function showCancelError(message){
-
-  $("cancelError")
+  $("modalError")
     .textContent =
     message;
 
-  $("cancelError")
-    .classList.add("visible");
+  $("modalError")
+    .classList.add(
+      "visible"
+    );
 
 }
 
 
-/* =========================================
-   CANCELAR CUENTA
-========================================= */
-
-async function cancelSale(){
-
-  if(!selectedSaleForCancel)
-    return;
-
-  const sale =
-    selectedSaleForCancel;
-
-  /*
-   * EL MOTIVO ES OBLIGATORIO.
-   */
-
-  const reason =
-    $("cancelReason")
-      .value
-      .trim();
-
-
-  if(!reason){
-
-    showCancelError(
-      "Debes escribir el motivo de cancelación antes de continuar."
-    );
-
-    $("cancelReason").focus();
-
-    return;
-
-  }
-
-
-  if(reason.length < 3){
-
-    showCancelError(
-      "El motivo debe contener al menos 3 caracteres."
-    );
-
-    $("cancelReason").focus();
-
-    return;
-
-  }
-
-
-  const confirmation =
-    window.confirm(
-      "¿Confirmas la cancelación de esta cuenta?\n\n" +
-      "Motivo:\n" +
-      reason +
-      "\n\n" +
-      "Los productos serán devueltos al inventario."
-    );
-
-
-  if(!confirmation)
-    return;
-
-
-  $("confirmCancel").disabled =
-    true;
-
-  $("closeCancelModal").disabled =
-    true;
-
-  $("confirmCancel").textContent =
-    "⏳ Cancelando...";
-
-
-  try{
-
-    /*
-     * LA FUNCIÓN SQL RECIBE:
-     *
-     * p_sale_id
-     * p_cancel_reason
-     *
-     * El motivo también debe validarse
-     * dentro de PostgreSQL.
-     */
-
-    const rpcResult =
-      await supabaseClient
-        .rpc(
-          "cancel_sale_and_restore_inventory",
-          {
-            p_sale_id:
-              sale.id,
-
-            p_cancel_reason:
-              reason
-          }
-        );
-
-
-    if(rpcResult.error)
-      throw rpcResult.error;
-
-
-    closeCancelModal();
-
-
-    $("message").innerHTML =
-      '<div class="success-message">' +
-      "✅ Cuenta cancelada correctamente. " +
-      "El motivo quedó registrado y el inventario fue restaurado." +
-      "</div>";
-
-
-    await loadSales();
-
-
-    setTimeout(
-      () => {
-        $("message").innerHTML = "";
-      },
-      6000
-    );
-
-  }
-  catch(error){
-
-    console.error(
-      "Error cancelando cuenta:",
-      error
-    );
-
-
-    /*
-     * Si PostgreSQL detecta que ya fue
-     * cancelada, también lo mostramos.
-     */
-
-    showCancelError(
-      "No se pudo cancelar la cuenta: " +
-      (
-        error.message ||
-        "Error desconocido."
-      )
-    );
-
-  }
-  finally{
-
-    $("confirmCancel").disabled =
-      false;
-
-    $("closeCancelModal").disabled =
-      false;
-
-    $("confirmCancel").textContent =
-      "⚠️ Confirmar cancelación";
-
-  }
-
-}
-
-
-/* =========================================
+/* =====================================================
    REGISTRAR ABONO
-========================================= */
+===================================================== */
 
-async function registerPayment(amount){
+async function registerPayment(
+  amount
+){
 
   if(!selectedSaleForPayment)
     return;
@@ -1925,61 +1946,58 @@ async function registerPayment(amount){
 
   if(!Number.isFinite(amount)){
 
-    $("modalError").textContent =
-      "Escribe una cantidad válida.";
-
-    $("modalError")
-      .classList.add("visible");
+    showPaymentError(
+      "Escribe una cantidad válida."
+    );
 
     return;
 
   }
-
 
   if(amount <= 0){
 
-    $("modalError").textContent =
-      "El abono debe ser mayor a $0.00.";
-
-    $("modalError")
-      .classList.add("visible");
+    showPaymentError(
+      "El abono debe ser mayor a $0.00."
+    );
 
     return;
 
   }
 
+  if(
+    amount >
+    currentBalance + 0.001
+  ){
 
-  if(amount > currentBalance + 0.001){
-
-    $("modalError").textContent =
+    showPaymentError(
       "El abono no puede ser mayor al saldo pendiente de " +
       money(currentBalance) +
-      ".";
-
-    $("modalError")
-      .classList.add("visible");
+      "."
+    );
 
     return;
 
   }
-
 
   if(!paymentMethodId){
 
-    $("modalError").textContent =
-      "Selecciona el método de pago del abono.";
-
-    $("modalError")
-      .classList.add("visible");
+    showPaymentError(
+      "Selecciona el método de pago del abono."
+    );
 
     return;
 
   }
 
 
-  $("savePayment").disabled = true;
-  $("payFull").disabled = true;
-  $("paymentMethod").disabled = true;
+  $("savePayment").disabled =
+    true;
+
+  $("payFull").disabled =
+    true;
+
+  $("paymentMethod").disabled =
+    true;
 
   $("savePayment").textContent =
     "⏳ Procesando...";
@@ -2019,10 +2037,13 @@ async function registerPayment(amount){
       : rpcResult.data;
 
 
-    if(!result)
+    if(!result){
+
       throw new Error(
         "Supabase no devolvió el resultado del abono."
       );
+
+    }
 
 
     const newBalance =
@@ -2076,7 +2097,10 @@ async function registerPayment(amount){
 
     setTimeout(
       () => {
-        $("message").innerHTML = "";
+
+        $("message").innerHTML =
+          "";
+
       },
       5000
     );
@@ -2089,22 +2113,25 @@ async function registerPayment(amount){
       error
     );
 
-    $("modalError").textContent =
+    showPaymentError(
       "No se pudo registrar el abono: " +
       (
         error.message ||
         "Error desconocido."
-      );
-
-    $("modalError")
-      .classList.add("visible");
+      )
+    );
 
   }
   finally{
 
-    $("savePayment").disabled = false;
-    $("payFull").disabled = false;
-    $("paymentMethod").disabled = false;
+    $("savePayment").disabled =
+      false;
+
+    $("payFull").disabled =
+      false;
+
+    $("paymentMethod").disabled =
+      false;
 
     $("savePayment").textContent =
       "💵 Registrar abono";
@@ -2117,9 +2144,304 @@ async function registerPayment(amount){
 }
 
 
-/* =========================================
+/* =====================================================
+   MODAL CANCELACIÓN
+===================================================== */
+
+function openCancelModal(
+  sale,
+  customerName
+){
+
+  selectedSaleForCancel =
+    sale;
+
+  $("cancelSubtitle")
+    .textContent =
+      customerName +
+      " · Venta de " +
+      money(sale.total);
+
+  $("cancelSaleId")
+    .textContent =
+      sale.id;
+
+  $("cancelBalance")
+    .textContent =
+      money(sale.balance);
+
+  $("cancelReason")
+    .value =
+      "";
+
+  $("cancelError")
+    .textContent =
+      "";
+
+  $("cancelError")
+    .classList.remove(
+      "visible"
+    );
+
+  $("cancelModal")
+    .classList.add(
+      "visible"
+    );
+
+  setTimeout(
+    () => {
+
+      $("cancelReason")
+        .focus();
+
+    },
+    100
+  );
+
+}
+
+
+function closeCancelModal(){
+
+  selectedSaleForCancel =
+    null;
+
+  $("cancelModal")
+    .classList.remove(
+      "visible"
+    );
+
+}
+
+
+function showCancelError(
+  message
+){
+
+  $("cancelError")
+    .textContent =
+      message;
+
+  $("cancelError")
+    .classList.add(
+      "visible"
+    );
+
+}
+
+
+/* =====================================================
+   CANCELAR CUENTA
+===================================================== */
+
+async function cancelSale(){
+
+  if(!selectedSaleForCancel)
+    return;
+
+  const sale =
+    selectedSaleForCancel;
+
+  const reason =
+    $("cancelReason")
+      .value
+      .trim();
+
+
+  /* ===================================================
+     MOTIVO OBLIGATORIO
+  =================================================== */
+
+  if(!reason){
+
+    showCancelError(
+      "Debes escribir el motivo de cancelación. Este campo es obligatorio."
+    );
+
+    $("cancelReason")
+      .focus();
+
+    return;
+
+  }
+
+
+  if(reason.length < 3){
+
+    showCancelError(
+      "El motivo debe tener al menos 3 caracteres."
+    );
+
+    $("cancelReason")
+      .focus();
+
+    return;
+
+  }
+
+
+  if(reason.length > 500){
+
+    showCancelError(
+      "El motivo no puede superar 500 caracteres."
+    );
+
+    return;
+
+  }
+
+
+  /* ===================================================
+     CONFIRMACIÓN
+  =================================================== */
+
+  const confirmed =
+    window.confirm(
+      "¿Confirmas la cancelación de esta cuenta?\n\n" +
+      "Venta: " +
+      money(sale.total) +
+      "\n" +
+      "Saldo: " +
+      money(sale.balance) +
+      "\n\n" +
+      "Motivo:\n" +
+      reason +
+      "\n\n" +
+      "Los productos regresarán al inventario."
+    );
+
+
+  if(!confirmed)
+    return;
+
+
+  $("confirmCancel").disabled =
+    true;
+
+  $("cancelCancel").disabled =
+    true;
+
+  $("cancelReason").disabled =
+    true;
+
+  $("confirmCancel").textContent =
+    "⏳ Cancelando cuenta...";
+
+
+  try{
+
+    /*
+     * IMPORTANTE:
+     *
+     * La función de Supabase ahora recibe:
+     *
+     * p_sale_id
+     * p_cancel_reason
+     */
+
+    const rpcResult =
+      await supabaseClient
+        .rpc(
+          "cancel_sale_and_restore_inventory",
+          {
+            p_sale_id:
+              sale.id,
+
+            p_cancel_reason:
+              reason
+          }
+        );
+
+
+    if(rpcResult.error)
+      throw rpcResult.error;
+
+
+    closeCancelModal();
+
+
+    $("message").innerHTML =
+      '<div class="success-message">' +
+      "✅ Cuenta cancelada correctamente. " +
+      "Los productos fueron devueltos al inventario " +
+      "y la cancelación quedó registrada." +
+      "</div>";
+
+
+    await loadSales();
+
+
+    setTimeout(
+      () => {
+
+        $("message").innerHTML =
+          "";
+
+      },
+      6000
+    );
+
+  }
+  catch(error){
+
+    console.error(
+      "Error cancelando cuenta:",
+      error
+    );
+
+
+    let message =
+      error?.message ||
+      "Error desconocido.";
+
+
+    /*
+     * Mensaje amigable para doble cancelación
+     */
+
+    if(
+      message
+        .toLowerCase()
+        .includes(
+          "ya fue cancelada"
+        )
+    ){
+
+      message =
+        "Esta cuenta ya fue cancelada anteriormente. " +
+        "No se realizó ninguna devolución adicional.";
+
+    }
+
+
+    showCancelError(
+      "No se pudo cancelar la cuenta: " +
+      message
+    );
+
+  }
+  finally{
+
+    $("confirmCancel").disabled =
+      false;
+
+    $("cancelCancel").disabled =
+      false;
+
+    $("cancelReason").disabled =
+      false;
+
+    $("confirmCancel").textContent =
+      "⚠️ Confirmar cancelación";
+
+  }
+
+}
+
+
+/* =====================================================
    BOTONES ABONO
-========================================= */
+===================================================== */
 
 $("savePayment")
 .addEventListener(
@@ -2164,9 +2486,9 @@ $("cancelPayment")
 );
 
 
-/* =========================================
-   BOTÓN CANCELAR CUENTA
-========================================= */
+/* =====================================================
+   BOTONES CANCELACIÓN
+===================================================== */
 
 $("confirmCancel")
 .addEventListener(
@@ -2174,16 +2496,17 @@ $("confirmCancel")
   cancelSale
 );
 
-$("closeCancelModal")
+
+$("cancelCancel")
 .addEventListener(
   "click",
   closeCancelModal
 );
 
 
-/* =========================================
+/* =====================================================
    CERRAR MODALES
-========================================= */
+===================================================== */
 
 $("paymentModal")
 .addEventListener(
@@ -2225,20 +2548,23 @@ document.addEventListener(
   "keydown",
   event => {
 
-    if(event.key === "Escape"){
+    if(
+      event.key !==
+      "Escape"
+    )
+      return;
 
-      closePaymentModal();
-      closeCancelModal();
+    closePaymentModal();
 
-    }
+    closeCancelModal();
 
   }
 );
 
 
-/* =========================================
+/* =====================================================
    CAMBIAR NEGOCIO
-========================================= */
+===================================================== */
 
 document
 .querySelectorAll(".business")
@@ -2299,9 +2625,9 @@ document
 );
 
 
-/* =========================================
+/* =====================================================
    FILTROS
-========================================= */
+===================================================== */
 
 $("search")
 .addEventListener(
@@ -2322,9 +2648,9 @@ $("to")
 );
 
 
-/* =========================================
+/* =====================================================
    ACTUALIZAR
-========================================= */
+===================================================== */
 
 $("refresh")
 .addEventListener(
@@ -2333,9 +2659,9 @@ $("refresh")
 );
 
 
-/* =========================================
+/* =====================================================
    DASHBOARD
-========================================= */
+===================================================== */
 
 $("back")
 .addEventListener(
@@ -2353,9 +2679,9 @@ $("back")
 );
 
 
-/* =========================================
+/* =====================================================
    INICIO
-========================================= */
+===================================================== */
 
 updateBusinessButtons();
 
