@@ -7,6 +7,7 @@
 <title>Cuentas pendientes | Sistema de Ventas POS</title>
 
 <style>
+
 *{
   box-sizing:border-box;
   margin:0;
@@ -41,7 +42,10 @@ header p{
   padding:25px 20px 40px;
 }
 
-/* CLIENTE */
+
+/* =====================================================
+   CLIENTE
+===================================================== */
 
 .customer-banner{
   display:none;
@@ -73,7 +77,10 @@ header p{
   color:#64748b;
 }
 
-/* BOTONES */
+
+/* =====================================================
+   BOTONES
+===================================================== */
 
 .toolbar{
   display:flex;
@@ -121,7 +128,10 @@ button:disabled{
   color:#111827;
 }
 
-/* FILTROS */
+
+/* =====================================================
+   FILTROS
+===================================================== */
 
 .filters{
   display:grid;
@@ -144,7 +154,10 @@ button:disabled{
   border-color:#2680eb;
 }
 
-/* RESUMEN */
+
+/* =====================================================
+   RESUMEN
+===================================================== */
 
 .summary{
   display:grid;
@@ -172,13 +185,24 @@ button:disabled{
   margin-top:7px;
 }
 
-/* CUENTAS */
+
+/* =====================================================
+   CUENTAS
+===================================================== */
 
 .card{
   background:#fff;
   border-radius:20px;
   padding:25px;
   box-shadow:0 5px 20px rgba(0,0,0,.06);
+  margin-bottom:20px;
+}
+
+.section-title{
+  font-size:21px;
+  font-weight:900;
+  margin-bottom:18px;
+  color:#111827;
 }
 
 .account{
@@ -232,7 +256,10 @@ button:disabled{
   font-size:13px;
 }
 
-/* SALDO */
+
+/* =====================================================
+   SALDO
+===================================================== */
 
 .balance-box{
   margin-top:14px;
@@ -255,7 +282,10 @@ button:disabled{
   margin-top:4px;
 }
 
-/* BOTONES DE CUENTA */
+
+/* =====================================================
+   BOTONES DE CUENTA
+===================================================== */
 
 .balance-button{
   display:block;
@@ -293,7 +323,10 @@ button:disabled{
   background:#fee2e2;
 }
 
-/* HISTORIAL */
+
+/* =====================================================
+   HISTORIAL ABONOS
+===================================================== */
 
 .payment-history{
   margin-top:15px;
@@ -349,7 +382,71 @@ button:disabled{
   color:#334155;
 }
 
-/* MODALES */
+
+/* =====================================================
+   HISTORIAL CANCELADAS
+===================================================== */
+
+.cancelled-card{
+  border:2px solid #fecaca;
+  background:#fff;
+}
+
+.cancelled-account{
+  border:2px solid #fee2e2;
+  background:#fffafa;
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:14px;
+}
+
+.cancelled-account:last-child{
+  margin-bottom:0;
+}
+
+.cancelled-status{
+  display:inline-block;
+  margin-top:10px;
+  padding:6px 10px;
+  border-radius:9px;
+  background:#fee2e2;
+  color:#991b1b;
+  font-weight:800;
+  font-size:13px;
+}
+
+.cancellation-reason{
+  margin-top:15px;
+  padding:15px;
+  background:#fff;
+  border:2px solid #fecaca;
+  border-radius:14px;
+}
+
+.cancellation-reason-title{
+  font-size:13px;
+  font-weight:900;
+  color:#991b1b;
+  margin-bottom:7px;
+}
+
+.cancellation-reason-text{
+  color:#334155;
+  line-height:1.5;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+
+.cancelled-info{
+  margin-top:12px;
+  color:#64748b;
+  font-size:13px;
+}
+
+
+/* =====================================================
+   MODALES
+===================================================== */
 
 .modal-overlay{
   display:none;
@@ -484,7 +581,10 @@ button:disabled{
   display:block;
 }
 
-/* CANCELACIÓN */
+
+/* =====================================================
+   CANCELACIÓN
+===================================================== */
 
 .cancel-warning{
   background:#fff7ed;
@@ -546,7 +646,10 @@ button:disabled{
   color:#2563eb;
 }
 
-/* MENSAJES */
+
+/* =====================================================
+   MENSAJES
+===================================================== */
 
 .empty{
   text-align:center;
@@ -571,7 +674,10 @@ button:disabled{
   font-weight:700;
 }
 
-/* RESPONSIVE */
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
 
 @media(max-width:700px){
 
@@ -616,7 +722,13 @@ Aquí aparecen únicamente las cuentas que tienen saldo por cobrar
 
 </header>
 
+
 <div class="container">
+
+
+<!-- =====================================================
+     CLIENTE
+===================================================== -->
 
 <div id="customerBanner" class="customer-banner">
 
@@ -629,6 +741,11 @@ CUENTA PENDIENTE DEL CLIENTE
 <div id="customerBannerPhone" class="customer-banner-phone"></div>
 
 </div>
+
+
+<!-- =====================================================
+     TOOLBAR
+===================================================== -->
 
 <div class="toolbar">
 
@@ -662,6 +779,11 @@ id="back">
 
 </div>
 
+
+<!-- =====================================================
+     FILTROS
+===================================================== -->
+
 <div class="filters">
 
 <input
@@ -679,6 +801,11 @@ id="to"
 type="date">
 
 </div>
+
+
+<!-- =====================================================
+     RESUMEN
+===================================================== -->
 
 <div class="summary">
 
@@ -720,9 +847,18 @@ $0.00
 
 </div>
 
+
+<!-- =====================================================
+     CUENTAS PENDIENTES
+===================================================== -->
+
 <div class="card">
 
 <div id="message"></div>
+
+<div class="section-title">
+📋 Cuentas pendientes
+</div>
 
 <div id="sales">
 
@@ -733,6 +869,28 @@ Cargando cuentas pendientes...
 </div>
 
 </div>
+
+
+<!-- =====================================================
+     HISTORIAL CANCELADAS
+===================================================== -->
+
+<div class="card cancelled-card">
+
+<div class="section-title">
+🗂️ Historial de cuentas canceladas
+</div>
+
+<div id="cancelledSales">
+
+<div class="empty">
+Cargando historial de cancelaciones...
+</div>
+
+</div>
+
+</div>
+
 
 </div>
 
@@ -971,6 +1129,8 @@ BUSINESS_IDS[requestedBusiness]
 : "BakeQuiri";
 
 let sales = [];
+
+let cancelledSales = [];
 
 let payments = [];
 
@@ -1236,7 +1396,7 @@ async function loadSelectedCustomer(){
 
 
 /* =====================================================
-   CARGAR CUENTAS PENDIENTES
+   CARGAR CUENTAS
 ===================================================== */
 
 async function loadSales(){
@@ -1246,16 +1406,26 @@ async function loadSales(){
     "Cargando cuentas pendientes..." +
     "</div>";
 
+  $("cancelledSales").innerHTML =
+    '<div class="empty">' +
+    "Cargando historial de cancelaciones..." +
+    "</div>";
+
   try{
 
     const businessId =
       BUSINESS_IDS[currentBusiness];
 
-    const result =
+
+    /* =================================================
+       CUENTAS PENDIENTES
+    ================================================= */
+
+    const pendingResult =
       await supabaseClient
         .from("sales")
         .select(
-          "id,business_id,customer_id,sale_date,total,balance,status,created_at"
+          "id,business_id,customer_id,sale_date,total,balance,status,created_at,cancellation_reason"
         )
         .eq(
           "business_id",
@@ -1276,20 +1446,64 @@ async function loadSales(){
           }
         );
 
-    if(result.error)
-      throw result.error;
+    if(pendingResult.error)
+      throw pendingResult.error;
 
     sales =
-      result.data || [];
+      pendingResult.data || [];
 
-    const saleIds =
-      sales.map(
-        sale => sale.id
-      );
+
+    /* =================================================
+       CUENTAS CANCELADAS
+    ================================================= */
+
+    const cancelledResult =
+      await supabaseClient
+        .from("sales")
+        .select(
+          "id,business_id,customer_id,sale_date,total,balance,status,created_at,cancellation_reason"
+        )
+        .eq(
+          "business_id",
+          businessId
+        )
+        .eq(
+          "status",
+          "cancelled"
+        )
+        .order(
+          "created_at",
+          {
+            ascending:false
+          }
+        );
+
+    if(cancelledResult.error)
+      throw cancelledResult.error;
+
+    cancelledSales =
+      cancelledResult.data || [];
+
+
+    /* =================================================
+       ABONOS
+    ================================================= */
+
+    const allSaleIds =
+      [
+        ...sales.map(
+          sale => sale.id
+        ),
+        ...cancelledSales.map(
+          sale => sale.id
+        )
+      ];
+
 
     payments = [];
 
-    if(saleIds.length){
+
+    if(allSaleIds.length){
 
       const paymentsResult =
         await supabaseClient
@@ -1299,7 +1513,7 @@ async function loadSales(){
           )
           .in(
             "sale_id",
-            saleIds
+            allSaleIds
           )
           .order(
             "paid_at",
@@ -1316,6 +1530,7 @@ async function loadSales(){
 
     }
 
+
     await loadPaymentMethods();
 
     renderPaymentMethods();
@@ -1323,6 +1538,8 @@ async function loadSales(){
     await loadSelectedCustomer();
 
     await renderAccounts();
+
+    await renderCancelledAccounts();
 
   }
   catch(error){
@@ -1338,13 +1555,79 @@ async function loadSales(){
       ) +
       "</div>";
 
+    $("cancelledSales").innerHTML =
+      '<div class="error">' +
+      "No se pudo cargar el historial de cancelaciones: " +
+      (
+        error.message ||
+        error
+      ) +
+      "</div>";
+
   }
 
 }
 
 
 /* =====================================================
-   RENDERIZAR CUENTAS
+   OBTENER CLIENTES
+===================================================== */
+
+async function getCustomersForSales(rows){
+
+  const customerMap =
+    new Map();
+
+  const customerIds =
+    [
+      ...new Set(
+        rows
+          .map(
+            sale =>
+              sale.customer_id
+          )
+          .filter(Boolean)
+      )
+    ];
+
+
+  if(customerIds.length){
+
+    const result =
+      await supabaseClient
+        .from("customers")
+        .select(
+          "id,name,phone"
+        )
+        .in(
+          "id",
+          customerIds
+        );
+
+    if(result.error)
+      throw result.error;
+
+    (result.data || [])
+      .forEach(
+        customer => {
+
+          customerMap.set(
+            customer.id,
+            customer
+          );
+
+        }
+      );
+
+  }
+
+  return customerMap;
+
+}
+
+
+/* =====================================================
+   RENDERIZAR CUENTAS PENDIENTES
 ===================================================== */
 
 async function renderAccounts(){
@@ -1405,60 +1688,11 @@ async function renderAccounts(){
     );
 
 
-  /* =====================================================
-     CLIENTES
-  ===================================================== */
-
   const customerMap =
-    new Map();
+    await getCustomersForSales(
+      rows
+    );
 
-  const customerIds =
-    [
-      ...new Set(
-        rows
-          .map(
-            sale =>
-              sale.customer_id
-          )
-          .filter(Boolean)
-      )
-    ];
-
-
-  if(customerIds.length){
-
-    const result =
-      await supabaseClient
-        .from("customers")
-        .select(
-          "id,name,phone"
-        )
-        .in(
-          "id",
-          customerIds
-        );
-
-    if(result.error)
-      throw result.error;
-
-    (result.data || [])
-      .forEach(
-        customer => {
-
-          customerMap.set(
-            customer.id,
-            customer
-          );
-
-        }
-      );
-
-  }
-
-
-  /* =====================================================
-     BÚSQUEDA
-  ===================================================== */
 
   rows =
     rows.filter(
@@ -1489,10 +1723,6 @@ async function renderAccounts(){
       }
     );
 
-
-  /* =====================================================
-     RESUMEN
-  ===================================================== */
 
   $("count").textContent =
     rows.length;
@@ -1561,10 +1791,6 @@ async function renderAccounts(){
         );
 
 
-      /* =================================================
-         ABONOS
-      ================================================= */
-
       const salePayments =
         payments.filter(
           payment =>
@@ -1582,10 +1808,6 @@ async function renderAccounts(){
           0
         );
 
-
-      /* =================================================
-         TARJETA
-      ================================================= */
 
       const element =
         document.createElement(
@@ -1641,10 +1863,6 @@ async function renderAccounts(){
 
         "</div>";
 
-
-      /* =================================================
-         HISTORIAL DE ABONOS
-      ================================================= */
 
       if(salePayments.length){
 
@@ -1744,10 +1962,6 @@ async function renderAccounts(){
       }
 
 
-      /* =================================================
-         BOTÓN ABONO
-      ================================================= */
-
       const balanceButton =
         document.createElement(
           "button"
@@ -1779,10 +1993,6 @@ async function renderAccounts(){
         balanceButton
       );
 
-
-      /* =================================================
-         BOTÓN CANCELAR
-      ================================================= */
 
       const cancelButton =
         document.createElement(
@@ -1822,6 +2032,229 @@ async function renderAccounts(){
 
     }
   );
+
+}
+
+
+/* =====================================================
+   RENDERIZAR HISTORIAL CANCELADAS
+===================================================== */
+
+async function renderCancelledAccounts(){
+
+  const searchText =
+    $("search")
+      .value
+      .trim()
+      .toLowerCase();
+
+  const from =
+    $("from").value;
+
+  const to =
+    $("to").value;
+
+
+  let rows =
+    cancelledSales.filter(
+      sale => {
+
+        const date =
+          getDateForFilter(
+            sale
+          );
+
+        if(from && date < from)
+          return false;
+
+        if(to && date > to)
+          return false;
+
+        if(
+          selectedCustomerId &&
+          sale.customer_id !==
+          selectedCustomerId
+        )
+          return false;
+
+        return true;
+
+      }
+    );
+
+
+  const customerMap =
+    await getCustomersForSales(
+      rows
+    );
+
+
+  rows =
+    rows.filter(
+      sale => {
+
+        if(!searchText)
+          return true;
+
+        const customer =
+          customerMap.get(
+            sale.customer_id
+          );
+
+        const text =
+          [
+            customer?.name,
+            customer?.phone,
+            sale.id,
+            sale.cancellation_reason
+          ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+
+        return text.includes(
+          searchText
+        );
+
+      }
+    );
+
+
+  if(!rows.length){
+
+    $("cancelledSales").innerHTML =
+      '<div class="empty">' +
+      "No hay cuentas canceladas para mostrar." +
+      "</div>";
+
+    return;
+
+  }
+
+
+  $("cancelledSales").innerHTML = "";
+
+
+  rows.forEach(
+    sale => {
+
+      const customer =
+        customerMap.get(
+          sale.customer_id
+        );
+
+      const customerName =
+        customer?.name ||
+        "Consumidor general";
+
+      const phone =
+        customer?.phone
+        ? " · 📱 " +
+          customer.phone
+        : "";
+
+
+      const element =
+        document.createElement(
+          "div"
+        );
+
+      element.className =
+        "cancelled-account";
+
+
+      element.innerHTML =
+
+        '<div class="top">' +
+
+        '<div class="date">' +
+        "Cuenta · " +
+        formatDate(
+          getSaleDate(sale)
+        ) +
+        "</div>" +
+
+        '<div class="total">' +
+        "Venta: " +
+        money(sale.total) +
+        "</div>" +
+
+        "</div>" +
+
+        '<div class="customer">' +
+        "👤 " +
+        customerName +
+        phone +
+        "</div>" +
+
+        '<div class="details">' +
+        "ID: " +
+        sale.id +
+        "</div>" +
+
+        '<span class="cancelled-status">' +
+        "❌ Cuenta cancelada" +
+        "</span>" +
+
+        '<div class="cancelled-info">' +
+        "💰 Saldo al momento de la cancelación: " +
+        money(sale.balance) +
+        "</div>" +
+
+        '<div class="cancellation-reason">' +
+
+        '<div class="cancellation-reason-title">' +
+        "📝 Motivo de cancelación" +
+        "</div>" +
+
+        '<div class="cancellation-reason-text">' +
+        escapeHtml(
+          sale.cancellation_reason ||
+          "Sin motivo registrado"
+        ) +
+        "</div>" +
+
+        "</div>";
+
+
+      $("cancelledSales")
+        .appendChild(
+          element
+        );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   SEGURIDAD HTML
+===================================================== */
+
+function escapeHtml(value){
+
+  return String(value || "")
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 
 }
 
@@ -2164,19 +2597,19 @@ function openCancelModal(
 
   $("cancelSaleId")
     .textContent =
-      sale.id;
+    sale.id;
 
   $("cancelBalance")
     .textContent =
-      money(sale.balance);
+    money(sale.balance);
 
   $("cancelReason")
     .value =
-      "";
+    "";
 
   $("cancelError")
     .textContent =
-      "";
+    "";
 
   $("cancelError")
     .classList.remove(
@@ -2220,7 +2653,7 @@ function showCancelError(
 
   $("cancelError")
     .textContent =
-      message;
+    message;
 
   $("cancelError")
     .classList.add(
@@ -2291,10 +2724,6 @@ async function cancelSale(){
   }
 
 
-  /* ===================================================
-     CONFIRMACIÓN
-  =================================================== */
-
   const confirmed =
     window.confirm(
       "¿Confirmas la cancelación de esta cuenta?\n\n" +
@@ -2330,15 +2759,6 @@ async function cancelSale(){
 
   try{
 
-    /*
-     * IMPORTANTE:
-     *
-     * La función de Supabase ahora recibe:
-     *
-     * p_sale_id
-     * p_cancel_reason
-     */
-
     const rpcResult =
       await supabaseClient
         .rpc(
@@ -2364,7 +2784,7 @@ async function cancelSale(){
       '<div class="success-message">' +
       "✅ Cuenta cancelada correctamente. " +
       "Los productos fueron devueltos al inventario " +
-      "y la cancelación quedó registrada." +
+      "y el motivo quedó guardado en el historial de cancelaciones." +
       "</div>";
 
 
@@ -2394,10 +2814,6 @@ async function cancelSale(){
       error?.message ||
       "Error desconocido.";
 
-
-    /*
-     * Mensaje amigable para doble cancelación
-     */
 
     if(
       message
@@ -2632,19 +3048,34 @@ document
 $("search")
 .addEventListener(
   "input",
-  renderAccounts
+  async () => {
+
+    await renderAccounts();
+    await renderCancelledAccounts();
+
+  }
 );
 
 $("from")
 .addEventListener(
   "change",
-  renderAccounts
+  async () => {
+
+    await renderAccounts();
+    await renderCancelledAccounts();
+
+  }
 );
 
 $("to")
 .addEventListener(
   "change",
-  renderAccounts
+  async () => {
+
+    await renderAccounts();
+    await renderCancelledAccounts();
+
+  }
 );
 
 
