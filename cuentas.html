@@ -586,61 +586,8 @@ button:disabled{
   font-weight:700;
 }
 
-/* RESPONSIVE */
-
-@media(max-width:700px){
-
-  .filters{
-    grid-template-columns:1fr;
-  }
-
-  .summary{
-    grid-template-columns:1fr;
-  }
-
-  .top{
-    flex-direction:column;
-  }
-
-  .container{
-    padding:18px 15px 35px;
-  }
-
-  .modal{
-    padding:20px;
-  }
-
-  .modal-buttons{
-    grid-template-columns:1fr;
-  }
-
-  /* CUADRÍCULA 2 x 2 */
-
-  .toolbar{
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-  }
-
-  .toolbar .business,
-  .toolbar .refresh,
-  .toolbar .cancelled-history{
-    min-height:52px;
-    padding:12px 8px;
-    font-size:15px;
-  }
-
-  /* DASHBOARD RECTANGULAR */
-
-  .toolbar .back{
-    grid-column:1 / -1;
-    min-height:52px;
-    margin-top:2px;
-  }
-
-}
-
 /* =====================================================
-   HISTORIAL DE CANCELADAS
+   HISTORIAL DE CUENTAS CANCELADAS
 ===================================================== */
 
 .cancelled-history-panel{
@@ -652,23 +599,27 @@ button:disabled{
   display:block;
 }
 
+/* ENCABEZADO IGUAL AL HEADER PRINCIPAL */
+
 .cancelled-history-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  margin-bottom:15px;
-  flex-wrap:wrap;
+  background:#111827;
+  color:#fff;
+  padding:25px 20px;
+  border-radius:18px;
+  margin-bottom:20px;
 }
 
 .cancelled-history-header h2{
-  font-size:22px;
+  font-size:30px;
+  margin:0;
+  color:#fff;
 }
 
 .cancelled-history-subtitle{
-  color:#64748b;
-  font-size:14px;
-  margin-top:4px;
+  color:#fff;
+  opacity:.75;
+  font-size:17px;
+  margin-top:8px;
 }
 
 .cancelled-account{
@@ -752,7 +703,68 @@ button:disabled{
   font-weight:700;
 }
 
+/* RESPONSIVE */
+
 @media(max-width:700px){
+
+  .filters{
+    grid-template-columns:1fr;
+  }
+
+  .summary{
+    grid-template-columns:1fr;
+  }
+
+  .top{
+    flex-direction:column;
+  }
+
+  .container{
+    padding:18px 15px 35px;
+  }
+
+  .modal{
+    padding:20px;
+  }
+
+  .modal-buttons{
+    grid-template-columns:1fr;
+  }
+
+  /* CUADRÍCULA 2 x 2 */
+
+  .toolbar{
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+
+  .toolbar .business,
+  .toolbar .refresh,
+  .toolbar .cancelled-history{
+    min-height:52px;
+    padding:12px 8px;
+    font-size:15px;
+  }
+
+  /* DASHBOARD RECTANGULAR */
+
+  .toolbar .back{
+    grid-column:1 / -1;
+    min-height:52px;
+    margin-top:2px;
+  }
+
+  .cancelled-history-header{
+    padding:20px 18px;
+  }
+
+  .cancelled-history-header h2{
+    font-size:24px;
+  }
+
+  .cancelled-history-subtitle{
+    font-size:15px;
+  }
 
   .cancelled-top{
     flex-direction:column;
@@ -907,8 +919,6 @@ class="cancelled-history-panel">
 
 <div class="cancelled-history-header">
 
-<div>
-
 <h2>
 🗂️ Historial de cuentas canceladas
 </h2>
@@ -916,8 +926,6 @@ class="cancelled-history-panel">
 <div
 id="cancelledHistorySubtitle"
 class="cancelled-history-subtitle">
-</div>
-
 </div>
 
 </div>
@@ -2814,11 +2822,6 @@ async function cancelSale(){
 
 
     await loadSales();
-
-    /*
-     * Si el historial estaba abierto,
-     * actualizarlo automáticamente.
-     */
 
     if(
       $("cancelledHistoryPanel")
