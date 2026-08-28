@@ -27,10 +27,10 @@
 
 <meta
   name="apple-mobile-web-app-title"
-  content="Cierre de Caja"
+  content="Sistema POS"
 >
 
-<title>Cierre de Caja - Sistema POS</title>
+<title>Sistema de Ventas POS</title>
 
 <style>
 
@@ -77,548 +77,326 @@ header{
   color:#fff;
 
   padding-top:
-    calc(20px + env(safe-area-inset-top));
+    calc(18px + env(safe-area-inset-top));
 
-  padding-right:20px;
-  padding-bottom:22px;
-  padding-left:20px;
+  padding-right:18px;
+  padding-bottom:18px;
+  padding-left:18px;
+
+  position:sticky;
+  top:0;
+  z-index:10;
 }
 
 header h1{
-  font-size:27px;
-  line-height:1.15;
+  font-size:22px;
 }
 
 header p{
-  margin-top:7px;
-  font-size:14px;
-  opacity:.75;
+  font-size:13px;
+  opacity:.7;
+  margin-top:4px;
 }
 
 .container{
   width:100%;
-  max-width:900px;
-  margin:0 auto;
-  padding:18px;
-}
-
-.card{
-  background:#fff;
-
-  border-radius:18px;
-
+  max-width:1100px;
+  margin:auto;
   padding:20px;
-
-  margin-bottom:16px;
-
-  box-shadow:
-    0 3px 14px rgba(0,0,0,.06);
 }
-
-.card h2{
-  font-size:20px;
-  margin-bottom:16px;
-}
-
-/* =====================================================
-   STATUS
-===================================================== */
 
 .status{
+  margin:0 0 15px;
+
+  padding:10px 12px;
+
+  border-radius:9px;
+
+  font-size:13px;
+
   display:none;
-
-  margin-bottom:15px;
-
-  padding:14px 16px;
-
-  border-radius:12px;
-
-  font-size:14px;
-
-  font-weight:700;
 
   white-space:pre-line;
 }
 
-.status.show{
-  display:block;
-}
-
-.status.ok{
-  background:#dcfce7;
-  color:#166534;
-}
-
 .status.error{
+  display:block;
+
   background:#fee2e2;
   color:#991b1b;
 }
 
+.status.ok{
+  display:block;
+
+  background:#dcfce7;
+  color:#166534;
+}
+
 .status.warn{
+  display:block;
+
   background:#fef3c7;
   color:#92400e;
 }
 
-/* =====================================================
-   NEGOCIO
-===================================================== */
-
-.business-selector{
-  display:grid;
-
-  grid-template-columns:1fr 1fr;
+.businesses{
+  display:flex;
 
   gap:10px;
+
+  margin-bottom:20px;
+
+  flex-wrap:wrap;
 }
 
 .business-btn{
-  border:2px solid #ddd;
+  border:none;
+
+  padding:12px 18px;
+
+  border-radius:10px;
 
   background:#fff;
 
-  border-radius:12px;
+  border:1px solid #ddd;
 
-  padding:15px;
-
-  font-size:16px;
-
-  font-weight:800;
+  font-weight:600;
 
   cursor:pointer;
+}
 
-  transition:
-    .15s ease;
+.business-btn.active{
+  background:#111827;
+  color:#fff;
 }
 
 .business-btn:active{
   transform:scale(.98);
 }
 
-.business-btn.active{
-  background:#111827;
-
-  border-color:#111827;
-
-  color:#fff;
-}
-
-/* =====================================================
-   FECHA
-===================================================== */
-
-.date-box{
-  background:#f8fafc;
-
-  border:2px solid #e5e7eb;
-
-  border-radius:15px;
-
-  padding:18px;
-}
-
-.date-box label{
-  display:block;
-
-  font-size:16px;
-
-  font-weight:800;
-
-  color:#374151;
-
-  margin-bottom:10px;
-}
-
-.date-box input{
-  width:100%;
-
-  border:2px solid #d1d5db;
-
-  border-radius:13px;
-
-  background:#fff;
-
-  padding:15px;
-
-  font-size:18px;
-
-  color:#111827;
-}
-
-.date-box input:focus{
-  outline:none;
-
-  border-color:#2563eb;
-}
-
-.date-buttons{
+.layout{
   display:grid;
 
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:
+    1fr 380px;
 
-  gap:10px;
-
-  margin-top:10px;
+  gap:20px;
 }
 
-.date-btn{
-  border:2px solid #d1d5db;
-
+.card{
   background:#fff;
 
-  border-radius:12px;
+  border-radius:14px;
 
-  padding:14px;
+  padding:18px;
 
-  font-size:16px;
-
-  font-weight:800;
-
-  color:#2563eb;
-
-  cursor:pointer;
+  box-shadow:
+    0 2px 8px rgba(0,0,0,.06);
 }
 
-.date-btn:active{
-  transform:scale(.98);
+.card h2{
+  font-size:18px;
+
+  margin-bottom:15px;
 }
 
-.selected-date{
-  margin-top:14px;
-
-  font-size:16px;
-
-  line-height:1.35;
-
-  font-weight:800;
-
-  color:#374151;
-}
-
-/* =====================================================
-   RESUMEN
-===================================================== */
-
-.info-grid{
+.products{
   display:grid;
 
   grid-template-columns:
     repeat(2,1fr);
 
-  gap:10px;
+  gap:12px;
 }
 
-.info-box{
-  background:#f8fafc;
+.product{
+  border:1px solid #ddd;
 
-  border:2px solid #e5e7eb;
-
-  border-radius:13px;
+  border-radius:12px;
 
   padding:15px;
-}
 
-.info-label{
-  font-size:13px;
-
-  color:#6b7280;
-
-  font-weight:700;
-}
-
-.info-value{
-  margin-top:5px;
-
-  font-size:20px;
-
-  font-weight:800;
-}
-
-.info-value.green{
-  color:#16a34a;
-}
-
-.info-value.blue{
-  color:#2563eb;
-}
-
-.info-value.orange{
-  color:#d97706;
-}
-
-.payment-row{
-  display:flex;
-
-  justify-content:space-between;
-
-  align-items:center;
-
-  padding:13px 0;
-
-  border-bottom:1px solid #eee;
-}
-
-.payment-row:last-child{
-  border-bottom:none;
-}
-
-.payment-name{
-  font-weight:700;
-}
-
-.payment-total{
-  font-weight:800;
-
-  font-size:17px;
-}
-
-.empty{
-  text-align:center;
-
-  color:#777;
-
-  padding:25px 10px;
-}
-
-.grand-total{
-  display:flex;
-
-  justify-content:space-between;
-
-  align-items:center;
-
-  margin-top:15px;
-
-  padding-top:18px;
-
-  border-top:
-    2px solid #111827;
-
-  font-size:24px;
-
-  font-weight:900;
-}
-
-/* =====================================================
-   FORMULARIOS
-===================================================== */
-
-.form-group{
-  margin-bottom:16px;
-}
-
-.form-group label{
-  display:block;
-
-  margin-bottom:7px;
-
-  font-size:14px;
-
-  font-weight:800;
-
-  color:#374151;
-}
-
-.form-group input,
-.form-group textarea{
-  width:100%;
-
-  border:2px solid #ddd;
-
-  border-radius:11px;
-
-  padding:14px;
-
-  font-size:17px;
+  cursor:pointer;
 
   background:#fff;
 }
 
-.form-group input:focus,
-.form-group textarea:focus{
-  outline:none;
-
-  border-color:#2563eb;
+.product:active{
+  transform:scale(.98);
 }
 
-.form-group textarea{
-  min-height:90px;
+.product.disabled{
+  opacity:.5;
 
-  resize:vertical;
+  cursor:not-allowed;
 }
 
-/* =====================================================
-   EFECTIVO
-===================================================== */
+.product-name{
+  font-weight:600;
 
-.expected{
+  margin-bottom:8px;
+}
+
+.price{
+  font-size:18px;
+
+  font-weight:700;
+}
+
+.stock{
+  font-size:12px;
+
+  color:#666;
+
+  margin-top:5px;
+}
+
+.cart-item{
   display:flex;
 
   justify-content:space-between;
 
   align-items:center;
 
-  font-size:17px;
+  padding:12px 0;
 
-  font-weight:700;
+  border-bottom:1px solid #eee;
 
-  margin-bottom:12px;
+  gap:12px;
 }
 
-.expected strong{
-  font-size:22px;
+.cart-name{
+  font-weight:600;
 }
 
-.difference{
-  margin-top:15px;
-
-  padding:17px;
-
-  border-radius:13px;
-
-  text-align:center;
-}
-
-.difference.neutral{
-  background:#f3f4f6;
-
-  color:#374151;
-}
-
-.difference.ok{
-  background:#dcfce7;
-
-  color:#166534;
-}
-
-.difference.short{
-  background:#fee2e2;
-
-  color:#991b1b;
-}
-
-.difference.over{
-  background:#fef3c7;
-
-  color:#92400e;
-}
-
-.difference-label{
+.cart-price{
   font-size:13px;
 
-  font-weight:800;
+  color:#666;
 }
 
-.difference-value{
-  margin-top:5px;
+.quantity{
+  display:flex;
 
-  font-size:28px;
+  align-items:center;
 
-  font-weight:900;
+  gap:8px;
+
+  margin-top:6px;
 }
 
-/* =====================================================
-   BOTONES
-===================================================== */
+.quantity button{
+  width:28px;
 
-.close-button{
-  width:100%;
-
-  margin-top:10px;
-
-  padding:17px;
+  height:28px;
 
   border:none;
 
-  border-radius:13px;
+  border-radius:6px;
+
+  background:#eee;
+
+  cursor:pointer;
+
+  font-size:18px;
+}
+
+.quantity button:active{
+  transform:scale(.92);
+}
+
+.total{
+  display:flex;
+
+  justify-content:space-between;
+
+  font-size:22px;
+
+  font-weight:700;
+
+  margin-top:20px;
+
+  padding-top:15px;
+
+  border-top:2px solid #eee;
+}
+
+.payment-title{
+  margin-top:20px;
+
+  margin-bottom:10px;
+
+  font-weight:600;
+}
+
+.payments{
+  display:grid;
+
+  gap:8px;
+}
+
+.payment{
+  padding:12px;
+
+  border:1px solid #ddd;
+
+  border-radius:9px;
+
+  background:#fff;
+
+  cursor:pointer;
+
+  text-align:left;
+
+  font-weight:600;
+}
+
+.payment.active{
+  background:#111827;
+
+  color:#fff;
+}
+
+.charge{
+  width:100%;
+
+  margin-top:15px;
+
+  padding:15px;
+
+  border:none;
+
+  border-radius:10px;
 
   background:#16a34a;
 
   color:#fff;
 
-  font-size:18px;
+  font-size:17px;
 
-  font-weight:900;
+  font-weight:700;
 
   cursor:pointer;
 }
 
-.close-button:active{
+.charge:active{
   transform:scale(.98);
 }
 
-.close-button:disabled{
-  opacity:.55;
+.charge:disabled{
+  opacity:.6;
 
   cursor:wait;
 }
 
-.back-button{
-  width:100%;
+.empty{
+  color:#777;
 
-  margin-top:10px;
-
-  padding:15px;
-
-  border:2px solid #ddd;
-
-  border-radius:12px;
-
-  background:#fff;
-
-  color:#374151;
-
-  font-size:16px;
-
-  font-weight:800;
-
-  cursor:pointer;
-}
-
-.back-button:active{
-  transform:scale(.98);
-}
-
-/* =====================================================
-   CAJA CERRADA
-===================================================== */
-
-.closed-box{
   text-align:center;
 
-  padding:20px;
-
-  border-radius:14px;
-
-  background:#ecfdf5;
-
-  border:2px solid #86efac;
-
-  color:#166534;
+  padding:30px 10px;
 }
-
-.closed-box .icon{
-  font-size:40px;
-
-  margin-bottom:8px;
-}
-
-.closed-box h3{
-  font-size:21px;
-}
-
-.closed-box p{
-  margin-top:6px;
-
-  font-size:14px;
-
-  line-height:1.4;
-
-  white-space:pre-line;
-}
-
-/* =====================================================
-   LOADING
-===================================================== */
 
 .loading{
   text-align:center;
@@ -627,35 +405,45 @@ header p{
 
   color:#666;
 
-  font-weight:700;
+  font-weight:600;
 }
 
-/* =====================================================
-   MÓVIL
-===================================================== */
-
-@media(max-width:600px){
+@media(max-width:800px){
 
   .container{
     padding:14px;
   }
 
-  .card{
-    padding:16px;
-
-    border-radius:16px;
+  .layout{
+    grid-template-columns:1fr;
   }
 
-  .info-grid{
+  .products{
     grid-template-columns:1fr 1fr;
   }
 
-  .info-value{
-    font-size:18px;
+  .card{
+    border-radius:16px;
   }
 
-  .grand-total{
-    font-size:22px;
+}
+
+@media(max-width:420px){
+
+  .products{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .product{
+    padding:13px;
+  }
+
+  .product-name{
+    font-size:14px;
+  }
+
+  .price{
+    font-size:17px;
   }
 
 }
@@ -669,10 +457,12 @@ header p{
 
 <header>
 
-<h1>🔐 Cierre de Caja</h1>
+<h1>
+🧾 Sistema de Ventas POS
+</h1>
 
-<p id="businessSubtitle">
-Cierre de caja · BakeQuiri
+<p>
+Administración de negocios y ventas
 </p>
 
 </header>
@@ -681,32 +471,22 @@ Cierre de caja · BakeQuiri
 <div class="container">
 
 
-<!-- =====================================================
-     STATUS
-===================================================== -->
-
 <div
   id="status"
   class="status">
 </div>
 
 
-<!-- =====================================================
-     NEGOCIO
-===================================================== -->
+<!-- NEGOCIOS -->
 
-<div class="card">
-
-<h2>🏪 Negocio</h2>
-
-<div class="business-selector">
+<div class="businesses">
 
 <button
   type="button"
-  class="business-btn"
+  class="business-btn active"
   data-business="BakeQuiri">
 
-🧁 BakeQuiri
+BakeQuiri
 
 </button>
 
@@ -716,61 +496,32 @@ Cierre de caja · BakeQuiri
   class="business-btn"
   data-business="SpicyRoll">
 
-🍣 SpicyRoll
+SpicyRoll
 
 </button>
 
 </div>
 
-</div>
+
+<!-- POS -->
+
+<div class="layout">
 
 
-<!-- =====================================================
-     FECHA
-===================================================== -->
+<!-- PRODUCTOS -->
 
 <div class="card">
 
-<h2>📅 Fecha del corte</h2>
-
-<div class="date-box">
-
-<label for="selectedDate">
-Selecciona la fecha que deseas consultar
-</label>
-
-<input
-  type="date"
-  id="selectedDate"
->
-
-<div class="date-buttons">
-
-<button
-  type="button"
-  id="todayButton"
-  class="date-btn">
-
-Hoy
-
-</button>
-
-
-<button
-  type="button"
-  id="yesterdayButton"
-  class="date-btn">
-
-Ayer
-
-</button>
-
-</div>
-
+<h2>
+Productos
+</h2>
 
 <div
-  id="selectedDateText"
-  class="selected-date">
+  id="products"
+  class="products">
+
+<div class="loading">
+Cargando productos...
 </div>
 
 </div>
@@ -778,264 +529,62 @@ Ayer
 </div>
 
 
-<!-- =====================================================
-     RESUMEN
-===================================================== -->
+<!-- CARRITO -->
 
 <div class="card">
 
-<h2>📊 Resumen de ventas</h2>
+<h2>
+🛒 Carrito
+</h2>
 
-<div
-  id="loadingSummary"
-  class="loading">
+<div id="cart">
 
-Cargando información...
-
-</div>
-
-
-<div
-  id="summaryContent"
-  style="display:none">
-
-
-<div class="info-grid">
-
-
-<div class="info-box">
-
-<div class="info-label">
-Ventas
-</div>
-
-<div
-  id="salesCount"
-  class="info-value blue">
-
-0
-
+<div class="empty">
+El carrito está vacío
 </div>
 
 </div>
 
 
-<div class="info-box">
-
-<div class="info-label">
-Productos vendidos
-</div>
-
-<div
-  id="itemsCount"
-  class="info-value">
-
-0
-
-</div>
-
-</div>
-
-
-<div class="info-box">
-
-<div class="info-label">
-Ventas cobradas
-</div>
-
-<div
-  id="paidTotal"
-  class="info-value green">
-
-$0.00
-
-</div>
-
-</div>
-
-
-<div class="info-box">
-
-<div class="info-label">
-Cuentas pendientes
-</div>
-
-<div
-  id="pendingTotal"
-  class="info-value orange">
-
-$0.00
-
-</div>
-
-</div>
-
-</div>
-
-
-<div
-  id="paymentSummary"
-  style="margin-top:20px">
-</div>
-
-
-<div class="grand-total">
+<div class="total">
 
 <span>
-Total vendido
+Total
 </span>
 
-<span id="grandTotal">
+<span id="total">
 $0.00
 </span>
 
 </div>
 
-</div>
 
-</div>
-
-
-<!-- =====================================================
-     EFECTIVO
-===================================================== -->
-
-<div class="card">
-
-<h2>💵 Arqueo de efectivo</h2>
-
-
-<div id="cashSection">
-
-
-<div class="expected">
-
-<span>
-Efectivo esperado
-</span>
-
-<strong id="expectedCash">
-$0.00
-</strong>
-
-</div>
-
-
-<div class="form-group">
-
-<label for="countedCash">
-Efectivo contado físicamente
-</label>
-
-<input
-  type="number"
-  id="countedCash"
-  min="0"
-  step="0.01"
-  inputmode="decimal"
-  placeholder="0.00"
->
-
+<div class="payment-title">
+Método de pago
 </div>
 
 
 <div
-  id="differenceBox"
-  class="difference neutral">
+  id="payments"
+  class="payments">
 
-<div class="difference-label">
-Diferencia
+<div class="loading">
+Cargando métodos de pago...
 </div>
-
-<div
-  id="differenceValue"
-  class="difference-value">
-
-$0.00
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- =====================================================
-     NOTAS
-===================================================== -->
-
-<div class="card">
-
-<h2>📝 Observaciones</h2>
-
-
-<div class="form-group">
-
-<label for="notes">
-Notas del cierre
-</label>
-
-
-<textarea
-  id="notes"
-  placeholder="Ej. Todo correcto, faltaron $20, se dejó cambio en caja..."
-></textarea>
-
-</div>
-
-</div>
-
-
-<!-- =====================================================
-     ACCIONES
-===================================================== -->
-
-<div class="card">
-
-
-<div
-  id="closedBox"
-  class="closed-box"
-  style="display:none">
-
-
-<div class="icon">
-✅
-</div>
-
-
-<h3>
-Caja cerrada
-</h3>
-
-
-<p id="closedMessage">
-El cierre se registró correctamente.
-</p>
 
 </div>
 
 
 <button
   type="button"
-  id="closeButton"
-  class="close-button">
+  id="chargeButton"
+  class="charge">
 
-🔒 CERRAR CAJA
-
-</button>
-
-
-<button
-  type="button"
-  id="backButton"
-  class="back-button">
-
-← REGRESAR AL POS
+COBRAR
 
 </button>
+
+</div>
 
 </div>
 
@@ -1051,7 +600,7 @@ El cierre se registró correctamente.
 
 
 /* =====================================================
-   CONFIGURACIÓN SUPABASE
+   CONFIGURACIÓN
 ===================================================== */
 
 const SUPABASE_URL =
@@ -1062,9 +611,12 @@ const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
 
-/* =====================================================
-   NEGOCIOS
-===================================================== */
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
 
 const BUSINESS_IDS = {
 
@@ -1077,41 +629,22 @@ const BUSINESS_IDS = {
 };
 
 
-/* =====================================================
-   ESTADO
-===================================================== */
-
-let supabaseClient = null;
-
 let currentBusiness =
   "BakeQuiri";
 
-let selectedDate = "";
 
-let alreadyClosed =
-  false;
+let products = [];
 
-let currentSummary = {
+let payments = [];
 
-  salesCount:0,
+let cart = [];
 
-  itemsCount:0,
-
-  paidTotal:0,
-
-  pendingTotal:0,
-
-  grandTotal:0,
-
-  expectedCash:0,
-
-  payments:[]
-
-};
+let selectedPaymentId =
+  null;
 
 
 /* =====================================================
-   HELPER $
+   HELPERS
 ===================================================== */
 
 function $(id){
@@ -1121,93 +654,13 @@ function $(id){
 }
 
 
-/* =====================================================
-   DINERO
-===================================================== */
-
 function money(value){
 
   return "$" +
-    Number(value || 0)
-      .toFixed(2);
+    Number(value || 0).toFixed(2);
 
 }
 
-
-/* =====================================================
-   FECHA LOCAL
-===================================================== */
-
-function localDateString(
-  date = new Date()
-){
-
-  const year =
-    date.getFullYear();
-
-  const month =
-    String(
-      date.getMonth() + 1
-    ).padStart(2,"0");
-
-  const day =
-    String(
-      date.getDate()
-    ).padStart(2,"0");
-
-  return (
-    year +
-    "-" +
-    month +
-    "-" +
-    day
-  );
-
-}
-
-
-/* =====================================================
-   FECHA LEGIBLE
-===================================================== */
-
-function formatSelectedDate(
-  value
-){
-
-  if(!value){
-    return "";
-  }
-
-  const parts =
-    value.split("-");
-
-  if(parts.length !== 3){
-    return value;
-  }
-
-  const date =
-    new Date(
-      Number(parts[0]),
-      Number(parts[1]) - 1,
-      Number(parts[2])
-    );
-
-  return date.toLocaleDateString(
-    "es-MX",
-    {
-      weekday:"long",
-      day:"numeric",
-      month:"long",
-      year:"numeric"
-    }
-  );
-
-}
-
-
-/* =====================================================
-   STATUS
-===================================================== */
 
 function showStatus(
   message,
@@ -1221,1256 +674,59 @@ function showStatus(
     message;
 
   element.className =
-    "status show " +
-    type;
+    "status " + type;
 
 }
 
 
 function clearStatus(){
 
-  $("status").textContent =
+  const element =
+    $("status");
+
+  element.textContent =
     "";
 
-  $("status").className =
+  element.className =
     "status";
 
 }
 
 
 /* =====================================================
-   TIMEOUT
+   SEGURIDAD HTML
 ===================================================== */
 
-function withTimeout(
-  promise,
-  milliseconds,
-  message
-){
+function esc(value){
 
-  let timeoutId;
+  return String(value)
 
-  const timeout =
-    new Promise(
-      (_,reject) => {
-
-        timeoutId =
-          setTimeout(
-            () => {
-
-              reject(
-                new Error(
-                  message ||
-                  "La operación tardó demasiado."
-                )
-              );
-
-            },
-            milliseconds
-          );
-
-      }
-    );
-
-  return Promise.race([
-    promise,
-    timeout
-  ]).finally(
-    () => clearTimeout(timeoutId)
-  );
-
-}
-
-
-/* =====================================================
-   SUPABASE
-===================================================== */
-
-function initializeSupabase(){
-
-  if(
-    !window.supabase ||
-    typeof window.supabase.createClient !==
-      "function"
-  ){
-
-    throw new Error(
-      "No se pudo cargar Supabase."
-    );
-
-  }
-
-
-  if(!supabaseClient){
-
-    supabaseClient =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
-      );
-
-  }
-
-}
-
-
-/* =====================================================
-   FECHA
-===================================================== */
-
-function initializeDate(){
-
-  selectedDate =
-    localDateString();
-
-  $("selectedDate").value =
-    selectedDate;
-
-  updateDateText();
-
-}
-
-
-function updateDateText(){
-
-  $("selectedDateText")
-    .textContent =
-      "Corte seleccionado: " +
-      formatSelectedDate(
-        selectedDate
-      );
-
-}
-
-
-function setDate(
-  value
-){
-
-  if(!value){
-    return;
-  }
-
-  selectedDate =
-    value;
-
-  $("selectedDate").value =
-    selectedDate;
-
-  updateDateText();
-
-  $("countedCash").value =
-    "";
-
-  $("notes").value =
-    "";
-
-  loadSummary();
-
-}
-
-
-/* =====================================================
-   BOTÓN HOY
-===================================================== */
-
-$("todayButton")
-  .addEventListener(
-    "click",
-    function(){
-
-      setDate(
-        localDateString()
-      );
-
-    }
-  );
-
-
-/* =====================================================
-   BOTÓN AYER
-===================================================== */
-
-$("yesterdayButton")
-  .addEventListener(
-    "click",
-    function(){
-
-      const date =
-        new Date();
-
-      date.setDate(
-        date.getDate() - 1
-      );
-
-      setDate(
-        localDateString(date)
-      );
-
-    }
-  );
-
-
-/* =====================================================
-   CAMBIO FECHA
-===================================================== */
-
-$("selectedDate")
-  .addEventListener(
-    "change",
-    function(event){
-
-      setDate(
-        event.target.value
-      );
-
-    }
-  );
-
-
-/* =====================================================
-   CARGAR RESUMEN
-===================================================== */
-
-async function loadSummary(){
-
-  clearStatus();
-
-  alreadyClosed =
-    false;
-
-
-  $("loadingSummary")
-    .style.display =
-    "block";
-
-
-  $("summaryContent")
-    .style.display =
-    "none";
-
-
-  $("closedBox")
-    .style.display =
-    "none";
-
-
-  $("closeButton")
-    .style.display =
-    "block";
-
-
-  try{
-
-    initializeSupabase();
-
-
-    const businessId =
-      BUSINESS_IDS[
-        currentBusiness
-      ];
-
-
-    if(!businessId){
-
-      throw new Error(
-        "No se encontró el negocio seleccionado."
-      );
-
-    }
-
-
-    const result =
-      await withTimeout(
-
-        supabaseClient.rpc(
-          "get_cash_register_summary",
-          {
-            p_business_id:
-              businessId,
-
-            p_date:
-              selectedDate
-          }
-        ),
-
-        10000,
-
-        "La consulta del cierre tardó demasiado."
-
-      );
-
-
-    if(result.error){
-
-      throw result.error;
-
-    }
-
-
-    processSummaryData(
-      result.data
-    );
-
-  }
-
-  catch(error){
-
-    console.error(
-      "[CIERRE] Error cargando resumen:",
-      error
-    );
-
-
-    $("loadingSummary")
-      .style.display =
-      "none";
-
-
-    showStatus(
-
-      "No se pudo cargar el resumen.\n\n" +
-      (
-        error?.message ||
-        String(error)
-      ),
-
-      "error"
-
-    );
-
-  }
-
-}
-
-
-/* =====================================================
-   PROCESAR RESUMEN
-===================================================== */
-
-function processSummaryData(
-  data
-){
-
-  let summary =
-    data;
-
-
-  if(Array.isArray(data)){
-
-    summary =
-      data[0] ||
-      {};
-
-  }
-
-
-  if(!summary){
-
-    summary = {};
-
-  }
-
-
-  const salesCount =
-    Number(
-      summary.sales_count ??
-      summary.sale_count ??
-      summary.total_sales ??
-      0
-    );
-
-
-  const itemsCount =
-    Number(
-      summary.items_count ??
-      summary.total_items ??
-      summary.products_sold ??
-      0
-    );
-
-
-  const paidTotal =
-    Number(
-      summary.paid_total ??
-      summary.total_paid ??
-      summary.sales_total ??
-      0
-    );
-
-
-  const pendingTotal =
-    Number(
-      summary.pending_total ??
-      summary.total_pending ??
-      summary.pending_sales_total ??
-      0
-    );
-
-
-  const grandTotal =
-    Number(
-      summary.grand_total ??
-      summary.total_amount ??
-      summary.total_sales_amount ??
-      (
-        paidTotal +
-        pendingTotal
-      )
-    );
-
-
-  const expectedCash =
-    Number(
-      summary.expected_cash ??
-      summary.cash_total ??
-      summary.total_cash ??
-      0
-    );
-
-
-  let payments =
-    summary.payments ??
-    summary.payment_methods ??
-    [];
-
-
-  if(
-    typeof payments === "string"
-  ){
-
-    try{
-
-      payments =
-        JSON.parse(
-          payments
-        );
-
-    }
-
-    catch(error){
-
-      payments = [];
-
-    }
-
-  }
-
-
-  if(!Array.isArray(payments)){
-
-    payments = [];
-
-  }
-
-
-  currentSummary = {
-
-    salesCount,
-
-    itemsCount,
-
-    paidTotal,
-
-    pendingTotal,
-
-    grandTotal,
-
-    expectedCash,
-
-    payments
-
-  };
-
-
-  renderSummary();
-
-
-  $("loadingSummary")
-    .style.display =
-    "none";
-
-
-  $("summaryContent")
-    .style.display =
-    "block";
-
-
-  updateDifference();
-
-
-  if(
-    summary.is_closed === true ||
-    summary.closed === true ||
-    summary.status === "closed"
-  ){
-
-    showAlreadyClosed(
-      summary
-    );
-
-  }
-
-}
-
-
-/* =====================================================
-   RENDER RESUMEN
-===================================================== */
-
-function renderSummary(){
-
-  $("salesCount")
-    .textContent =
-    currentSummary.salesCount;
-
-
-  $("itemsCount")
-    .textContent =
-    currentSummary.itemsCount;
-
-
-  $("paidTotal")
-    .textContent =
-    money(
-      currentSummary.paidTotal
-    );
-
-
-  $("pendingTotal")
-    .textContent =
-    money(
-      currentSummary.pendingTotal
-    );
-
-
-  $("grandTotal")
-    .textContent =
-    money(
-      currentSummary.grandTotal
-    );
-
-
-  $("expectedCash")
-    .textContent =
-    money(
-      currentSummary.expectedCash
-    );
-
-
-  renderPaymentSummary();
-
-}
-
-
-/* =====================================================
-   MÉTODOS DE PAGO
-===================================================== */
-
-function renderPaymentSummary(){
-
-  const container =
-    $("paymentSummary");
-
-
-  container.innerHTML =
-    "";
-
-
-  if(
-    !currentSummary.payments.length
-  ){
-
-    container.innerHTML =
-      '<div class="empty">' +
-      'No hay desglose por método de pago disponible.' +
-      '</div>';
-
-    return;
-
-  }
-
-
-  currentSummary.payments.forEach(
-    function(payment){
-
-      const row =
-        document.createElement(
-          "div"
-        );
-
-
-      row.className =
-        "payment-row";
-
-
-      const name =
-        document.createElement(
-          "div"
-        );
-
-
-      name.className =
-        "payment-name";
-
-
-      name.textContent =
-        payment.name ??
-        payment.payment_method ??
-        payment.payment_method_name ??
-        "Método de pago";
-
-
-      const total =
-        document.createElement(
-          "div"
-        );
-
-
-      total.className =
-        "payment-total";
-
-
-      total.textContent =
-        money(
-          payment.total ??
-          payment.amount ??
-          payment.total_amount ??
-          0
-        );
-
-
-      row.append(
-        name,
-        total
-      );
-
-
-      container.appendChild(
-        row
-      );
-
-    }
-  );
-
-}
-
-
-/* =====================================================
-   DIFERENCIA EFECTIVO
-===================================================== */
-
-$("countedCash")
-  .addEventListener(
-    "input",
-    updateDifference
-  );
-
-
-function updateDifference(){
-
-  const expected =
-    Number(
-      currentSummary.expectedCash ||
-      0
-    );
-
-
-  const input =
-    $("countedCash");
-
-
-  const counted =
-    Number(
-      input.value ||
-      0
-    );
-
-
-  const difference =
-    counted -
-    expected;
-
-
-  const box =
-    $("differenceBox");
-
-
-  const value =
-    $("differenceValue");
-
-
-  box.className =
-    "difference";
-
-
-  if(
-    input.value === ""
-  ){
-
-    value.textContent =
-      "$0.00";
-
-
-    box.classList.add(
-      "neutral"
-    );
-
-
-    return;
-
-  }
-
-
-  if(
-    Math.abs(difference) <
-    0.005
-  ){
-
-    box.classList.add(
-      "ok"
-    );
-
-
-    value.textContent =
-      "$0.00 — CORRECTO";
-
-
-    return;
-
-  }
-
-
-  if(
-    difference < 0
-  ){
-
-    box.classList.add(
-      "short"
-    );
-
-
-    value.textContent =
-      money(difference) +
-      " — FALTANTE";
-
-
-    return;
-
-  }
-
-
-  box.classList.add(
-    "over"
-  );
-
-
-  value.textContent =
-    "+" +
-    money(difference) +
-    " — SOBRANTE";
-
-}
-
-
-/* =====================================================
-   CERRAR CAJA
-===================================================== */
-
-async function closeCashRegister(){
-
-  clearStatus();
-
-
-  if(alreadyClosed){
-
-    showStatus(
-      "Esta caja ya está cerrada.",
-      "warn"
-    );
-
-    return;
-
-  }
-
-
-  const countedInput =
-    $("countedCash").value;
-
-
-  if(
-    countedInput === ""
-  ){
-
-    showStatus(
-      "Ingresa primero el efectivo contado físicamente.",
-      "warn"
-    );
-
-
-    $("countedCash").focus();
-
-    return;
-
-  }
-
-
-  const countedCash =
-    Number(
-      countedInput
-    );
-
-
-  if(
-    !Number.isFinite(
-      countedCash
-    ) ||
-    countedCash < 0
-  ){
-
-    showStatus(
-      "El efectivo contado no es válido.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  const expectedCash =
-    Number(
-      currentSummary.expectedCash ||
-      0
-    );
-
-
-  const difference =
-    countedCash -
-    expectedCash;
-
-
-  const notes =
-    $("notes")
-      .value
-      .trim();
-
-
-  const confirmed =
-    window.confirm(
-
-      "¿Deseas cerrar la caja de " +
-      currentBusiness +
-      "?\n\n" +
-
-      "Fecha: " +
-      formatSelectedDate(
-        selectedDate
-      ) +
-      "\n\n" +
-
-      "Efectivo esperado: " +
-      money(expectedCash) +
-      "\n" +
-
-      "Efectivo contado: " +
-      money(countedCash) +
-      "\n" +
-
-      "Diferencia: " +
-      money(difference)
-
-    );
-
-
-  if(!confirmed){
-
-    return;
-
-  }
-
-
-  const button =
-    $("closeButton");
-
-
-  const originalText =
-    button.textContent;
-
-
-  button.disabled =
-    true;
-
-
-  button.textContent =
-    "CERRANDO CAJA...";
-
-
-  try{
-
-    initializeSupabase();
-
-
-    const businessId =
-      BUSINESS_IDS[
-        currentBusiness
-      ];
-
-
-    /*
-     * IMPORTANTE:
-     * Se conserva p_date porque es el
-     * parámetro que estamos utilizando
-     * actualmente en la función RPC.
-     */
-
-    const result =
-      await withTimeout(
-
-        supabaseClient.rpc(
-          "close_cash_register",
-          {
-
-            p_business_id:
-              businessId,
-
-            p_counted_cash:
-              countedCash,
-
-            p_notes:
-              notes || null,
-
-            p_date:
-              selectedDate
-
-          }
-        ),
-
-        15000,
-
-        "El cierre de caja tardó demasiado."
-
-      );
-
-
-    if(result.error){
-
-      throw result.error;
-
-    }
-
-
-    alreadyClosed =
-      true;
-
-
-    $("closeButton")
-      .style.display =
-      "none";
-
-
-    $("closedBox")
-      .style.display =
-      "block";
-
-
-    $("closedMessage")
-      .textContent =
-
-      "El cierre de " +
-      currentBusiness +
-      " del " +
-      formatSelectedDate(
-        selectedDate
-      ) +
-      " se registró correctamente.";
-
-
-    showStatus(
-      "✅ Caja cerrada correctamente.",
-      "ok"
-    );
-
-  }
-
-  catch(error){
-
-    console.error(
-      "[CIERRE] Error cerrando caja:",
-      error
-    );
-
-
-    showStatus(
-
-      "No se pudo cerrar la caja.\n\n" +
-
-      (
-        error?.message ||
-        String(error)
-      ),
-
-      "error"
-
-    );
-
-  }
-
-  finally{
-
-    button.disabled =
-      false;
-
-
-    button.textContent =
-      originalText;
-
-  }
-
-}
-
-
-/* =====================================================
-   CAJA YA CERRADA
-===================================================== */
-
-function showAlreadyClosed(
-  summary
-){
-
-  alreadyClosed =
-    true;
-
-
-  $("closeButton")
-    .style.display =
-    "none";
-
-
-  $("closedBox")
-    .style.display =
-    "block";
-
-
-  let message =
-    "Esta caja ya fue cerrada.";
-
-
-  if(
-    summary.closed_at
-  ){
-
-    message +=
-      "\n" +
-      new Date(
-        summary.closed_at
-      ).toLocaleString(
-        "es-MX",
-        {
-          dateStyle:"medium",
-          timeStyle:"short"
-        }
-      );
-
-  }
-
-
-  $("closedMessage")
-    .textContent =
-    message;
-
-
-  showStatus(
-    "La caja de " +
-    currentBusiness +
-    " ya está cerrada.",
-    "warn"
-  );
-
-}
-
-
-/* =====================================================
-   CAMBIO DE NEGOCIO
-===================================================== */
-
-async function changeBusiness(
-  business
-){
-
-  if(
-    !BUSINESS_IDS[business]
-  ){
-
-    return;
-
-  }
-
-
-  if(
-    business === currentBusiness
-  ){
-
-    return;
-
-  }
-
-
-  currentBusiness =
-    business;
-
-
-  document
-    .querySelectorAll(
-      ".business-btn"
+    .replaceAll(
+      "&",
+      "&amp;"
     )
-    .forEach(
-      function(button){
 
-        button.classList.toggle(
-          "active",
-          button.dataset.business ===
-            currentBusiness
-        );
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
 
-      }
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
     );
 
-
-  $("businessSubtitle")
-    .textContent =
-      "Cierre de caja · " +
-      currentBusiness;
-
-
-  $("countedCash").value =
-    "";
-
-
-  $("notes").value =
-    "";
-
-
-  await loadSummary();
-
 }
-
-
-/* =====================================================
-   BOTONES NEGOCIO
-===================================================== */
-
-document
-  .querySelectorAll(
-    ".business-btn"
-  )
-  .forEach(
-    function(button){
-
-      button.addEventListener(
-        "click",
-        function(){
-
-          changeBusiness(
-            button.dataset.business
-          );
-
-        }
-      );
-
-    }
-  );
-
-
-/* =====================================================
-   BOTÓN CERRAR
-===================================================== */
-
-$("closeButton")
-  .addEventListener(
-    "click",
-    closeCashRegister
-  );
-
-
-/* =====================================================
-   REGRESAR AL POS
-===================================================== */
-
-$("backButton")
-  .addEventListener(
-    "click",
-    function(event){
-
-      event.preventDefault();
-
-
-      /*
-       * Recuperamos el negocio actual.
-       */
-
-      const business =
-        encodeURIComponent(
-          currentBusiness ||
-          "BakeQuiri"
-        );
-
-
-      /*
-       * Obtenemos la carpeta donde está
-       * este archivo.
-       */
-
-      const currentUrl =
-        window.location.href
-          .split("?")[0]
-          .split("#")[0];
-
-
-      const lastSlash =
-        currentUrl.lastIndexOf("/");
-
-
-      let basePath =
-        "";
-
-
-      if(lastSlash >= 0){
-
-        basePath =
-          currentUrl.substring(
-            0,
-            lastSlash + 1
-          );
-
-      }
-
-
-      /*
-       * Construimos la dirección del POS.
-       */
-
-      const posUrl =
-        basePath +
-        "index.html?business=" +
-        business;
-
-
-      console.log(
-        "[CIERRE] Regresando a:",
-        posUrl
-      );
-
-
-      /*
-       * Navegación directa.
-       */
-
-      window.location.href =
-        posUrl;
-
-    }
-  );
 
 
 /* =====================================================
@@ -2484,11 +740,8 @@ function getBusinessFromURL(){
       window.location.search
     );
 
-
   const business =
-    params.get(
-      "business"
-    );
+    params.get("business");
 
 
   if(
@@ -2507,6 +760,940 @@ function getBusinessFromURL(){
 
 
 /* =====================================================
+   ACTUALIZAR URL
+===================================================== */
+
+function updateBusinessURL(){
+
+  const url =
+    new URL(
+      window.location.href
+    );
+
+  url.searchParams.set(
+    "business",
+    currentBusiness
+  );
+
+  window.history.replaceState(
+    {},
+    "",
+    url
+  );
+
+}
+
+
+/* =====================================================
+   CARGAR NEGOCIO
+===================================================== */
+
+async function loadBusinessData(){
+
+  clearStatus();
+
+
+  const businessId =
+    BUSINESS_IDS[currentBusiness];
+
+
+  $("products").innerHTML =
+    '<div class="loading">' +
+    'Cargando productos...' +
+    '</div>';
+
+
+  $("payments").innerHTML =
+    '<div class="loading">' +
+    'Cargando métodos de pago...' +
+    '</div>';
+
+
+  const [
+
+    productsResult,
+
+    paymentsResult
+
+  ] = await Promise.all([
+
+    supabaseClient
+
+      .from("products")
+
+      .select(
+        "id,name,price,cost,stock,active"
+      )
+
+      .eq(
+        "business_id",
+        businessId
+      )
+
+      .eq(
+        "active",
+        true
+      )
+
+      .order(
+        "name"
+      ),
+
+
+    supabaseClient
+
+      .from("payment_methods")
+
+      .select(
+        "id,name,provider,active"
+      )
+
+      .eq(
+        "business_id",
+        businessId
+      )
+
+      .eq(
+        "active",
+        true
+      )
+
+      .order(
+        "name"
+      )
+
+  ]);
+
+
+  if(productsResult.error){
+
+    throw new Error(
+      "No pude cargar los productos: " +
+      productsResult.error.message
+    );
+
+  }
+
+
+  if(paymentsResult.error){
+
+    throw new Error(
+      "No pude cargar los métodos de pago: " +
+      paymentsResult.error.message
+    );
+
+  }
+
+
+  products =
+    productsResult.data || [];
+
+
+  payments =
+    paymentsResult.data || [];
+
+
+  if(
+    !payments.some(
+      payment =>
+        payment.id ===
+        selectedPaymentId
+    )
+  ){
+
+    selectedPaymentId =
+      payments[0]?.id ||
+      null;
+
+  }
+
+
+  renderProducts();
+
+  renderPayments();
+
+  renderCart();
+
+}
+
+
+/* =====================================================
+   PRODUCTOS
+===================================================== */
+
+function renderProducts(){
+
+  const container =
+    $("products");
+
+
+  container.innerHTML =
+    "";
+
+
+  if(!products.length){
+
+    container.innerHTML =
+      '<div class="empty">' +
+      'No hay productos activos para este negocio.' +
+      '</div>';
+
+    return;
+
+  }
+
+
+  products.forEach(
+    product => {
+
+      const stock =
+        Number(
+          product.stock || 0
+        );
+
+
+      const element =
+        document.createElement(
+          "div"
+        );
+
+
+      element.className =
+        "product" +
+        (
+          stock <= 0
+            ? " disabled"
+            : ""
+        );
+
+
+      element.innerHTML =
+
+        '<div class="product-name">' +
+
+        esc(product.name) +
+
+        '</div>' +
+
+        '<div class="price">' +
+
+        money(product.price) +
+
+        '</div>' +
+
+        '<div class="stock">' +
+
+        'Existencia: ' +
+
+        stock +
+
+        '</div>';
+
+
+      element.addEventListener(
+        "click",
+        function(){
+
+          if(stock > 0){
+
+            addToCart(
+              product
+            );
+
+          }
+
+        }
+      );
+
+
+      container.appendChild(
+        element
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   MÉTODOS DE PAGO
+===================================================== */
+
+function renderPayments(){
+
+  const container =
+    $("payments");
+
+
+  container.innerHTML =
+    "";
+
+
+  if(!payments.length){
+
+    container.innerHTML =
+      '<div class="empty">' +
+      'No hay métodos de pago activos.' +
+      '</div>';
+
+    return;
+
+  }
+
+
+  payments.forEach(
+    payment => {
+
+      const button =
+        document.createElement(
+          "button"
+        );
+
+
+      button.type =
+        "button";
+
+
+      button.className =
+        "payment " +
+        (
+          payment.id ===
+          selectedPaymentId
+            ? "active"
+            : ""
+        );
+
+
+      button.textContent =
+        payment.name;
+
+
+      button.addEventListener(
+        "click",
+        function(){
+
+          selectedPaymentId =
+            payment.id;
+
+          renderPayments();
+
+        }
+      );
+
+
+      container.appendChild(
+        button
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   CARRITO
+===================================================== */
+
+function addToCart(product){
+
+  const existing =
+    cart.find(
+      item =>
+        item.id ===
+        product.id
+    );
+
+
+  const stock =
+    Number(
+      product.stock || 0
+    );
+
+
+  if(existing){
+
+    if(
+      existing.quantity <
+      stock
+    ){
+
+      existing.quantity++;
+
+    }
+
+    else{
+
+      showStatus(
+        "No puedes agregar más unidades que la existencia disponible.",
+        "warn"
+      );
+
+    }
+
+  }
+
+  else{
+
+    cart.push({
+
+      ...product,
+
+      quantity:1
+
+    });
+
+  }
+
+
+  renderCart();
+
+}
+
+
+/* =====================================================
+   CANTIDAD
+===================================================== */
+
+function changeQuantity(
+  id,
+  amount
+){
+
+  const item =
+    cart.find(
+      x =>
+        x.id === id
+    );
+
+
+  if(!item){
+    return;
+  }
+
+
+  const product =
+    products.find(
+      x =>
+        x.id === id
+    );
+
+
+  const max =
+    Number(
+      product?.stock ||
+      item.stock ||
+      0
+    );
+
+
+  item.quantity +=
+    amount;
+
+
+  if(
+    item.quantity >
+    max
+  ){
+
+    item.quantity =
+      max;
+
+  }
+
+
+  if(
+    item.quantity <= 0
+  ){
+
+    cart =
+      cart.filter(
+        x =>
+          x.id !== id
+      );
+
+  }
+
+
+  renderCart();
+
+}
+
+
+/* =====================================================
+   RENDER CARRITO
+===================================================== */
+
+function renderCart(){
+
+  const container =
+    $("cart");
+
+
+  container.innerHTML =
+    "";
+
+
+  if(!cart.length){
+
+    container.innerHTML =
+      '<div class="empty">' +
+      'El carrito está vacío' +
+      '</div>';
+
+
+    $("total").textContent =
+      "$0.00";
+
+
+    return;
+
+  }
+
+
+  let total =
+    0;
+
+
+  cart.forEach(
+    item => {
+
+      const subtotal =
+        Number(item.price) *
+        Number(item.quantity);
+
+
+      total +=
+        subtotal;
+
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+
+      row.className =
+        "cart-item";
+
+
+      row.innerHTML =
+
+        '<div>' +
+
+        '<div class="cart-name">' +
+
+        esc(item.name) +
+
+        '</div>' +
+
+        '<div class="cart-price">' +
+
+        money(item.price) +
+
+        ' c/u' +
+
+        '</div>' +
+
+        '<div class="quantity">' +
+
+        '<button type="button" ' +
+
+        'data-action="minus">' +
+
+        '−' +
+
+        '</button>' +
+
+        '<span>' +
+
+        item.quantity +
+
+        '</span>' +
+
+        '<button type="button" ' +
+
+        'data-action="plus">' +
+
+        '+' +
+
+        '</button>' +
+
+        '</div>' +
+
+        '</div>' +
+
+        '<strong>' +
+
+        money(subtotal) +
+
+        '</strong>';
+
+
+      row
+        .querySelector(
+          '[data-action="minus"]'
+        )
+        .addEventListener(
+          "click",
+          function(){
+
+            changeQuantity(
+              item.id,
+              -1
+            );
+
+          }
+        );
+
+
+      row
+        .querySelector(
+          '[data-action="plus"]'
+        )
+        .addEventListener(
+          "click",
+          function(){
+
+            changeQuantity(
+              item.id,
+              1
+            );
+
+          }
+        );
+
+
+      container.appendChild(
+        row
+      );
+
+    }
+  );
+
+
+  $("total").textContent =
+    money(total);
+
+}
+
+
+/* =====================================================
+   CAMBIAR NEGOCIO
+===================================================== */
+
+async function changeBusiness(
+  business
+){
+
+  if(
+    business ===
+    currentBusiness
+  ){
+
+    return;
+
+  }
+
+
+  currentBusiness =
+    business;
+
+
+  cart = [];
+
+  selectedPaymentId =
+    null;
+
+
+  document
+    .querySelectorAll(
+      ".business-btn"
+    )
+    .forEach(
+      button => {
+
+        button.classList.toggle(
+
+          "active",
+
+          button.dataset.business ===
+          currentBusiness
+
+        );
+
+      }
+    );
+
+
+  updateBusinessURL();
+
+
+  renderCart();
+
+
+  try{
+
+    await loadBusinessData();
+
+  }
+
+  catch(error){
+
+    console.error(
+      error
+    );
+
+    showStatus(
+      error.message ||
+      "No se pudo cargar el negocio."
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   COBRAR
+===================================================== */
+
+async function chargeSale(){
+
+  clearStatus();
+
+
+  if(!cart.length){
+
+    showStatus(
+      "Agrega al menos un producto.",
+      "warn"
+    );
+
+    return;
+
+  }
+
+
+  if(!selectedPaymentId){
+
+    showStatus(
+      "Selecciona un método de pago.",
+      "warn"
+    );
+
+    return;
+
+  }
+
+
+  const button =
+    $("chargeButton");
+
+
+  button.disabled =
+    true;
+
+
+  button.textContent =
+    "REGISTRANDO...";
+
+
+  try{
+
+    const items =
+      cart.map(
+        item => ({
+
+          product_id:
+            item.id,
+
+          description:
+            item.name,
+
+          quantity:
+            Number(
+              item.quantity
+            ),
+
+          unit_price:
+            Number(
+              item.price
+            ),
+
+          subtotal:
+            Number(
+              item.price
+            ) *
+            Number(
+              item.quantity
+            )
+
+        })
+      );
+
+
+    const result =
+      await supabaseClient.rpc(
+        "register_sale",
+        {
+
+          p_business_id:
+            BUSINESS_IDS[
+              currentBusiness
+            ],
+
+          p_customer_id:
+            null,
+
+          p_payment_method_id:
+            selectedPaymentId,
+
+          p_items:
+            items,
+
+          p_is_pending:
+            false
+
+        }
+      );
+
+
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+
+    const payment =
+      payments.find(
+        p =>
+          p.id ===
+          selectedPaymentId
+      );
+
+
+    const paymentName =
+      payment?.name ||
+      "Pago";
+
+
+    const total =
+      items.reduce(
+        (
+          sum,
+          item
+        ) =>
+          sum +
+          item.subtotal,
+        0
+      );
+
+
+    alert(
+
+      "Venta registrada\n\n" +
+
+      currentBusiness +
+
+      "\nTotal: " +
+
+      money(total) +
+
+      "\nPago: " +
+
+      paymentName
+
+    );
+
+
+    cart = [];
+
+
+    await loadBusinessData();
+
+
+    showStatus(
+      "Venta guardada correctamente en Supabase.",
+      "ok"
+    );
+
+
+    console.log(
+      "register_sale response:",
+      result.data
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "[POS] Error:",
+      error
+    );
+
+
+    showStatus(
+      "No se pudo registrar la venta:\n\n" +
+      (
+        error.message ||
+        String(error)
+      ),
+      "error"
+    );
+
+  }
+
+  finally{
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "COBRAR";
+
+  }
+
+}
+
+
+/* =====================================================
+   EVENTOS
+===================================================== */
+
+document
+  .querySelectorAll(
+    ".business-btn"
+  )
+  .forEach(
+    button => {
+
+      button.addEventListener(
+        "click",
+        function(){
+
+          changeBusiness(
+            button.dataset.business
+          );
+
+        }
+      );
+
+    }
+  );
+
+
+$("chargeButton")
+  .addEventListener(
+    "click",
+    chargeSale
+  );
+
+
+/* =====================================================
    INICIO
 ===================================================== */
 
@@ -2518,47 +1705,44 @@ async function start(){
       getBusinessFromURL();
 
 
-    initializeDate();
-
-
     document
       .querySelectorAll(
         ".business-btn"
       )
       .forEach(
-        function(button){
+        button => {
 
           button.classList.toggle(
+
             "active",
+
             button.dataset.business ===
-              currentBusiness
+            currentBusiness
+
           );
 
         }
       );
 
 
-    $("businessSubtitle")
-      .textContent =
-        "Cierre de caja · " +
-        currentBusiness;
+    updateBusinessURL();
 
 
-    await loadSummary();
+    await loadBusinessData();
 
   }
 
   catch(error){
 
     console.error(
-      "[CIERRE] Error inicializando:",
+      "[POS] Error inicializando:",
       error
     );
 
 
     showStatus(
-      error?.message ||
-      "No se pudo iniciar el cierre de caja.",
+      error.message ||
+      "No se pudo conectar con Supabase.",
       "error"
     );
 
@@ -2566,10 +1750,6 @@ async function start(){
 
 }
 
-
-/* =====================================================
-   ARRANCAR
-===================================================== */
 
 start();
 
