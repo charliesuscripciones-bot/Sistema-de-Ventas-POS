@@ -10,10 +10,7 @@
   content="width=device-width,initial-scale=1.0,viewport-fit=cover"
 >
 
-<meta
-  name="theme-color"
-  content="#111827"
->
+<meta name="theme-color" content="#111827">
 
 <meta
   name="apple-mobile-web-app-capable"
@@ -32,7 +29,6 @@
 
 <title>Cierre de Caja - Sistema POS</title>
 
-
 <style>
 
 *{
@@ -41,737 +37,486 @@
   padding:0;
 }
 
-
 html{
   width:100%;
   min-height:100%;
 }
 
-
 body{
-
   font-family:
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-
   background:#f5f5f5;
-
   color:#222;
-
   min-height:100vh;
-
-  padding-bottom:
-    env(safe-area-inset-bottom);
-
+  padding-bottom:env(safe-area-inset-bottom);
 }
-
 
 header{
-
   background:#111827;
-
   color:#fff;
-
-  padding-top:
-    calc(20px + env(safe-area-inset-top));
-
+  padding-top:calc(20px + env(safe-area-inset-top));
   padding-right:20px;
-
   padding-bottom:22px;
-
   padding-left:20px;
-
 }
-
 
 header h1{
-
   font-size:27px;
-
   line-height:1.15;
-
 }
-
 
 header p{
-
   margin-top:7px;
-
   font-size:14px;
-
   opacity:.75;
-
 }
-
 
 .container{
-
   width:100%;
-
   max-width:900px;
-
   margin:auto;
-
   padding:18px;
-
 }
-
 
 .card{
-
   background:#fff;
-
   border-radius:18px;
-
   padding:20px;
-
   margin-bottom:16px;
-
-  box-shadow:
-    0 3px 14px rgba(0,0,0,.06);
-
+  box-shadow:0 3px 14px rgba(0,0,0,.06);
 }
-
 
 .card h2{
-
   font-size:20px;
-
   margin-bottom:16px;
-
 }
-
 
 .business-selector{
-
   display:grid;
-
   grid-template-columns:1fr 1fr;
-
   gap:10px;
-
-  margin-bottom:18px;
-
+  margin-bottom:0;
 }
-
 
 .business-btn{
-
   border:2px solid #ddd;
-
   background:#fff;
-
   border-radius:12px;
-
   padding:15px;
-
   font-size:16px;
-
   font-weight:800;
-
   cursor:pointer;
-
 }
-
 
 .business-btn.active{
-
   background:#111827;
-
   border-color:#111827;
-
   color:#fff;
-
 }
-
 
 .status{
-
   display:none;
-
   margin-bottom:15px;
-
   padding:14px 16px;
-
   border-radius:12px;
-
   font-size:14px;
-
   font-weight:700;
-
   white-space:pre-line;
-
 }
-
 
 .status.show{
-
   display:block;
-
 }
-
 
 .status.ok{
-
   background:#dcfce7;
-
   color:#166534;
-
 }
-
 
 .status.error{
-
   background:#fee2e2;
-
   color:#991b1b;
-
 }
-
 
 .status.warn{
-
   background:#fef3c7;
-
   color:#92400e;
-
 }
 
+/* =====================================================
+   FECHA DEL CORTE
+===================================================== */
+
+.date-box{
+  background:#f8fafc;
+  border:2px solid #e5e7eb;
+  border-radius:14px;
+  padding:15px;
+}
+
+.date-label{
+  display:block;
+  margin-bottom:8px;
+  font-size:14px;
+  font-weight:800;
+  color:#374151;
+}
+
+.date-input{
+  width:100%;
+  border:2px solid #d1d5db;
+  border-radius:11px;
+  padding:13px;
+  font-family:inherit;
+  font-size:17px;
+  background:#fff;
+  color:#111827;
+}
+
+.date-input:focus{
+  outline:none;
+  border-color:#2563eb;
+}
+
+.date-shortcuts{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-top:10px;
+}
+
+.date-btn{
+  border:2px solid #ddd;
+  background:#fff;
+  border-radius:10px;
+  padding:11px;
+  font-size:14px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.date-btn.active{
+  background:#2563eb;
+  border-color:#2563eb;
+  color:#fff;
+}
+
+.selected-date{
+  margin-top:10px;
+  font-size:14px;
+  font-weight:800;
+  color:#374151;
+}
 
 .info-grid{
-
   display:grid;
-
-  grid-template-columns:
-    repeat(2,1fr);
-
+  grid-template-columns:repeat(2,1fr);
   gap:10px;
-
 }
-
 
 .info-box{
-
   background:#f8fafc;
-
   border:2px solid #e5e7eb;
-
   border-radius:13px;
-
   padding:15px;
-
 }
-
 
 .info-label{
-
   font-size:13px;
-
   color:#6b7280;
-
   font-weight:700;
-
 }
-
 
 .info-value{
-
   margin-top:5px;
-
   font-size:20px;
-
   font-weight:800;
-
 }
-
 
 .info-value.green{
-
   color:#16a34a;
-
 }
-
 
 .info-value.blue{
-
   color:#2563eb;
-
 }
-
 
 .info-value.orange{
-
   color:#d97706;
-
 }
-
 
 .info-value.red{
-
   color:#dc2626;
-
 }
-
 
 .summary-list{
-
   display:grid;
-
   gap:10px;
-
 }
-
 
 .summary-row{
-
   display:flex;
-
   justify-content:space-between;
-
   align-items:center;
-
   gap:15px;
-
   padding:13px 0;
-
   border-bottom:1px solid #eee;
-
 }
-
 
 .summary-row:last-child{
-
   border-bottom:none;
-
 }
-
 
 .summary-label{
-
   font-weight:700;
-
 }
-
 
 .summary-value{
-
   font-weight:800;
-
 }
-
 
 .grand-total{
-
   display:flex;
-
   justify-content:space-between;
-
   align-items:center;
-
   margin-top:15px;
-
   padding-top:18px;
-
   border-top:2px solid #111827;
-
   font-size:24px;
-
   font-weight:900;
-
 }
-
 
 .payment-row{
-
   display:flex;
-
   justify-content:space-between;
-
   align-items:center;
-
   padding:13px 0;
-
   border-bottom:1px solid #eee;
-
 }
-
 
 .payment-row:last-child{
-
   border-bottom:none;
-
 }
-
 
 .payment-name{
-
   font-weight:700;
-
 }
-
 
 .payment-total{
-
   font-weight:800;
-
   font-size:17px;
-
 }
-
 
 .empty{
-
   text-align:center;
-
   color:#777;
-
   padding:25px 10px;
-
 }
-
 
 .form-group{
-
   margin-bottom:16px;
-
 }
-
 
 .form-group label{
-
   display:block;
-
   margin-bottom:7px;
-
   font-size:14px;
-
   font-weight:800;
-
   color:#374151;
-
 }
-
 
 .form-group input,
 .form-group textarea{
-
   width:100%;
-
   border:2px solid #ddd;
-
   border-radius:11px;
-
   padding:14px;
-
   font-family:inherit;
-
   font-size:17px;
-
   background:#fff;
-
 }
-
 
 .form-group input:focus,
 .form-group textarea:focus{
-
   outline:none;
-
   border-color:#2563eb;
-
 }
-
 
 .form-group textarea{
-
   min-height:90px;
-
   resize:vertical;
-
 }
-
 
 .counted-box{
-
   background:#eff6ff;
-
   border:2px solid #bfdbfe;
-
   border-radius:15px;
-
   padding:18px;
-
   margin-top:18px;
-
 }
-
 
 .counted-box h3{
-
   font-size:17px;
-
   margin-bottom:14px;
-
   color:#1d4ed8;
-
 }
-
 
 .expected{
-
   display:flex;
-
   justify-content:space-between;
-
   align-items:center;
-
   font-size:17px;
-
   font-weight:700;
-
   margin-bottom:12px;
-
 }
-
 
 .expected strong{
-
   font-size:22px;
-
 }
-
 
 .difference{
-
   margin-top:15px;
-
   padding:17px;
-
   border-radius:13px;
-
   text-align:center;
-
 }
-
 
 .difference.neutral{
-
   background:#f3f4f6;
-
   color:#374151;
-
 }
-
 
 .difference.ok{
-
   background:#dcfce7;
-
   color:#166534;
-
 }
-
 
 .difference.short{
-
   background:#fee2e2;
-
   color:#991b1b;
-
 }
-
 
 .difference.over{
-
   background:#fef3c7;
-
   color:#92400e;
-
 }
-
 
 .difference-label{
-
   font-size:13px;
-
   font-weight:800;
-
 }
-
 
 .difference-value{
-
   margin-top:5px;
-
   font-size:28px;
-
   font-weight:900;
-
 }
-
 
 .close-button{
-
   width:100%;
-
   margin-top:10px;
-
   padding:17px;
-
   border:none;
-
   border-radius:13px;
-
   background:#16a34a;
-
   color:#fff;
-
   font-size:18px;
-
   font-weight:900;
-
   cursor:pointer;
-
 }
-
 
 .close-button:disabled{
-
   opacity:.55;
-
   cursor:wait;
-
 }
-
 
 .back-button{
-
   width:100%;
-
   padding:15px;
-
   border:2px solid #ddd;
-
   border-radius:12px;
-
   background:#fff;
-
   color:#374151;
-
   font-size:16px;
-
   font-weight:800;
-
   cursor:pointer;
-
 }
-
 
 .closed-box{
-
   text-align:center;
-
   padding:20px;
-
   border-radius:14px;
-
   background:#ecfdf5;
-
   border:2px solid #86efac;
-
   color:#166534;
-
 }
-
 
 .closed-box .icon{
-
   font-size:40px;
-
   margin-bottom:8px;
-
 }
-
 
 .closed-box h3{
-
   font-size:21px;
-
 }
-
 
 .closed-box p{
-
   margin-top:6px;
-
   font-size:14px;
-
 }
-
 
 .loading{
-
   text-align:center;
-
   padding:25px;
-
   color:#666;
-
   font-weight:700;
-
 }
 
+.date-warning{
+  display:none;
+  margin-top:12px;
+  padding:12px;
+  border-radius:10px;
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+  color:#9a3412;
+  font-size:13px;
+  font-weight:700;
+}
 
 @media(max-width:600px){
 
   .container{
-
     padding:14px;
-
   }
-
 
   .card{
-
     padding:16px;
-
     border-radius:16px;
-
   }
-
 
   .info-grid{
-
     grid-template-columns:1fr 1fr;
-
   }
-
 
   .info-value{
-
     font-size:18px;
-
   }
 
-
   .grand-total{
-
     font-size:22px;
-
   }
 
 }
-
 
 </style>
 
 </head>
 
-
 <body>
-
 
 <header>
 
@@ -783,9 +528,7 @@ Sistema de Ventas POS
 
 </header>
 
-
 <div class="container">
-
 
 <div
   id="status"
@@ -801,9 +544,7 @@ Sistema de Ventas POS
 
 <h2>🏪 Negocio</h2>
 
-
 <div class="business-selector">
-
 
 <button
   type="button"
@@ -814,7 +555,6 @@ Sistema de Ventas POS
 
 </button>
 
-
 <button
   type="button"
   class="business-btn"
@@ -824,6 +564,70 @@ Sistema de Ventas POS
 
 </button>
 
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     FECHA
+====================================================== -->
+
+<div class="card">
+
+<h2>📅 Fecha del corte</h2>
+
+<div class="date-box">
+
+<label
+  class="date-label"
+  for="cutoffDate">
+
+Selecciona la fecha que deseas consultar
+
+</label>
+
+<input
+  type="date"
+  id="cutoffDate"
+  class="date-input"
+>
+
+<div class="date-shortcuts">
+
+<button
+  type="button"
+  id="todayBtn"
+  class="date-btn">
+
+Hoy
+
+</button>
+
+<button
+  type="button"
+  id="yesterdayBtn"
+  class="date-btn">
+
+Ayer
+
+</button>
+
+</div>
+
+<div
+  id="selectedDateText"
+  class="selected-date">
+
+</div>
+
+<div
+  id="dateWarning"
+  class="date-warning">
+
+⚠️ Estás consultando una fecha anterior. El botón de cierre solo cerrará la caja actual cuando la fecha seleccionada corresponda a hoy.
+
+</div>
 
 </div>
 
@@ -838,7 +642,6 @@ Sistema de Ventas POS
 
 <h2>📊 Resumen de ventas</h2>
 
-
 <div
   id="loadingSummary"
   class="loading">
@@ -847,14 +650,11 @@ Cargando información...
 
 </div>
 
-
 <div
   id="summaryContent"
   style="display:none">
 
-
 <div class="info-grid">
-
 
 <div class="info-box">
 
@@ -872,7 +672,6 @@ Ventas
 
 </div>
 
-
 <div class="info-box">
 
 <div class="info-label">
@@ -888,7 +687,6 @@ Productos vendidos
 </div>
 
 </div>
-
 
 <div class="info-box">
 
@@ -906,7 +704,6 @@ $0.00
 
 </div>
 
-
 <div class="info-box">
 
 <div class="info-label">
@@ -923,16 +720,13 @@ $0.00
 
 </div>
 
-
 </div>
-
 
 <div
   id="paymentSummary"
   style="margin-top:20px">
 
 </div>
-
 
 <div class="grand-total">
 
@@ -945,7 +739,6 @@ $0.00
 </span>
 
 </div>
-
 
 </div>
 
@@ -960,9 +753,7 @@ $0.00
 
 <h2>💵 Arqueo de efectivo</h2>
 
-
 <div id="cashSection">
-
 
 <div class="expected">
 
@@ -976,7 +767,6 @@ $0.00
 
 </div>
 
-
 <div class="form-group">
 
 <label for="countedCash">
@@ -984,7 +774,6 @@ $0.00
 Efectivo contado físicamente
 
 </label>
-
 
 <input
   type="number"
@@ -995,21 +784,17 @@ Efectivo contado físicamente
   placeholder="0.00"
 >
 
-
 </div>
-
 
 <div
   id="differenceBox"
   class="difference neutral">
-
 
 <div class="difference-label">
 
 Diferencia
 
 </div>
-
 
 <div
   id="differenceValue"
@@ -1019,9 +804,7 @@ $0.00
 
 </div>
 
-
 </div>
-
 
 </div>
 
@@ -1036,7 +819,6 @@ $0.00
 
 <h2>📝 Observaciones</h2>
 
-
 <div class="form-group">
 
 <label for="notes">
@@ -1045,14 +827,12 @@ Notas del cierre
 
 </label>
 
-
 <textarea
   id="notes"
   placeholder="Ej. Todo correcto, faltaron $20, se dejó cambio en caja..."
 ></textarea>
 
 </div>
-
 
 </div>
 
@@ -1063,30 +843,24 @@ Notas del cierre
 
 <div class="card">
 
-
 <div
   id="closedBox"
   class="closed-box"
   style="display:none">
 
-
 <div class="icon">
 ✅
 </div>
-
 
 <h3>
 Caja cerrada
 </h3>
 
-
 <p id="closedMessage">
 El cierre se registró correctamente.
 </p>
 
-
 </div>
-
 
 <button
   type="button"
@@ -1097,7 +871,6 @@ El cierre se registró correctamente.
 
 </button>
 
-
 <button
   type="button"
   id="backButton"
@@ -1107,9 +880,7 @@ El cierre se registró correctamente.
 
 </button>
 
-
 </div>
-
 
 </div>
 
@@ -1120,7 +891,6 @@ El cierre se registró correctamente.
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
 <script>
 
 "use strict";
@@ -1129,7 +899,6 @@ El cierre se registró correctamente.
 /* =========================================================
    CONFIGURACIÓN
 ========================================================= */
-
 
 const SUPABASE_URL =
   "https://jrxklpstlloeckihcduv.supabase.co";
@@ -1152,29 +921,23 @@ const BUSINESS_IDS = {
 
 let supabaseClient = null;
 
-
 let currentBusiness =
   "BakeQuiri";
 
+let currentRegisterId =
+  null;
 
 let currentSummary = {
 
   salesCount:0,
-
   itemsCount:0,
-
   paidTotal:0,
-
   pendingTotal:0,
-
   grandTotal:0,
-
   expectedCash:0,
-
   payments:[]
 
 };
-
 
 let alreadyClosed =
   false;
@@ -1183,7 +946,6 @@ let alreadyClosed =
 /* =========================================================
    HELPERS
 ========================================================= */
-
 
 function $(id){
 
@@ -1209,10 +971,8 @@ function showStatus(
   const element =
     $("status");
 
-
   element.textContent =
     message;
-
 
   element.className =
     "status show " +
@@ -1225,7 +985,6 @@ function clearStatus(){
 
   $("status").textContent =
     "";
-
 
   $("status").className =
     "status";
@@ -1240,7 +999,6 @@ function withTimeout(
 ){
 
   let timeoutId;
-
 
   const timeout =
     new Promise(
@@ -1264,7 +1022,6 @@ function withTimeout(
       }
     );
 
-
   return Promise.race([
     promise,
     timeout
@@ -1281,7 +1038,6 @@ function withTimeout(
    SUPABASE
 ========================================================= */
 
-
 function initializeSupabase(){
 
   if(
@@ -1295,7 +1051,6 @@ function initializeSupabase(){
     );
 
   }
-
 
   if(!supabaseClient){
 
@@ -1311,11 +1066,72 @@ function initializeSupabase(){
 
 
 /* =========================================================
-   FECHA
+   FECHAS
 ========================================================= */
 
+function getTodayString(){
 
-function formatDate(
+  const now =
+    new Date();
+
+  const year =
+    now.getFullYear();
+
+  const month =
+    String(
+      now.getMonth() + 1
+    ).padStart(2,"0");
+
+  const day =
+    String(
+      now.getDate()
+    ).padStart(2,"0");
+
+  return (
+    year +
+    "-" +
+    month +
+    "-" +
+    day
+  );
+
+}
+
+
+function getYesterdayString(){
+
+  const date =
+    new Date();
+
+  date.setDate(
+    date.getDate() - 1
+  );
+
+  const year =
+    date.getFullYear();
+
+  const month =
+    String(
+      date.getMonth() + 1
+    ).padStart(2,"0");
+
+  const day =
+    String(
+      date.getDate()
+    ).padStart(2,"0");
+
+  return (
+    year +
+    "-" +
+    month +
+    "-" +
+    day
+  );
+
+}
+
+
+function formatSelectedDate(
   value
 ){
 
@@ -1325,25 +1141,166 @@ function formatDate(
 
   }
 
+  const parts =
+    value.split("-");
 
-  try{
+  if(parts.length !== 3){
 
-    return new Date(value)
-      .toLocaleString(
-        "es-MX",
-        {
-          dateStyle:"medium",
-          timeStyle:"short"
-        }
-      );
+    return value;
 
   }
 
-  catch(error){
+  const year =
+    Number(parts[0]);
 
-    return String(value);
+  const month =
+    Number(parts[1]);
+
+  const day =
+    Number(parts[2]);
+
+  const date =
+    new Date(
+      year,
+      month - 1,
+      day
+    );
+
+  return date.toLocaleDateString(
+    "es-MX",
+    {
+      weekday:"long",
+      year:"numeric",
+      month:"long",
+      day:"numeric"
+    }
+  );
+
+}
+
+
+function isToday(){
+
+  return (
+    $("cutoffDate").value ===
+    getTodayString()
+  );
+
+}
+
+
+function updateDateUI(){
+
+  const selected =
+    $("cutoffDate").value;
+
+  $("selectedDateText")
+    .textContent =
+      selected
+        ? "Corte seleccionado: " +
+          formatSelectedDate(selected)
+        : "";
+
+  const today =
+    getTodayString();
+
+  const yesterday =
+    getYesterdayString();
+
+  $("todayBtn")
+    .classList.toggle(
+      "active",
+      selected === today
+    );
+
+  $("yesterdayBtn")
+    .classList.toggle(
+      "active",
+      selected === yesterday
+    );
+
+  $("dateWarning")
+    .style.display =
+      selected &&
+      selected !== today
+        ? "block"
+        : "none";
+
+}
+
+
+/* =========================================================
+   OBTENER CAJA ABIERTA
+========================================================= */
+
+async function getOpenRegister(){
+
+  const businessId =
+    BUSINESS_IDS[
+      currentBusiness
+    ];
+
+  /*
+   * Buscamos la caja abierta del negocio.
+   */
+
+  const result =
+    await withTimeout(
+
+      supabaseClient
+        .from("cash_registers")
+        .select(
+          "id,opening_amount,status,opened_at,closed_at"
+        )
+        .eq(
+          "business_id",
+          businessId
+        )
+        .eq(
+          "status",
+          "open"
+        )
+        .order(
+          "opened_at",
+          {
+            ascending:false
+          }
+        )
+        .limit(1),
+
+      10000,
+
+      "No se pudo localizar la caja abierta."
+
+    );
+
+
+  if(result.error){
+
+    throw result.error;
 
   }
+
+
+  const registers =
+    result.data || [];
+
+
+  if(!registers.length){
+
+    currentRegisterId =
+      null;
+
+    return null;
+
+  }
+
+
+  currentRegisterId =
+    registers[0].id;
+
+
+  return registers[0];
 
 }
 
@@ -1352,30 +1309,36 @@ function formatDate(
    CARGAR RESUMEN
 ========================================================= */
 
-
 async function loadSummary(){
 
   clearStatus();
 
-
   alreadyClosed =
     false;
 
+  currentSummary = {
+
+    salesCount:0,
+    itemsCount:0,
+    paidTotal:0,
+    pendingTotal:0,
+    grandTotal:0,
+    expectedCash:0,
+    payments:[]
+
+  };
 
   $("loadingSummary")
     .style.display =
     "block";
 
-
   $("summaryContent")
     .style.display =
     "none";
 
-
   $("closedBox")
     .style.display =
     "none";
-
 
   $("closeButton")
     .style.display =
@@ -1387,20 +1350,55 @@ async function loadSummary(){
     initializeSupabase();
 
 
-    const businessId =
-      BUSINESS_IDS[
-        currentBusiness
-      ];
+    const selectedDate =
+      $("cutoffDate").value;
+
+
+    if(!selectedDate){
+
+      throw new Error(
+        "Selecciona una fecha para el corte."
+      );
+
+    }
 
 
     /*
-     * Intentamos utilizar la función SQL
-     * get_cash_register_summary.
-     *
-     * Esta función debe devolver el resumen
-     * de la caja/turno actual.
+     * Primero localizamos la caja abierta.
      */
 
+    const register =
+      await getOpenRegister();
+
+
+    if(!register){
+
+      $("loadingSummary")
+        .style.display =
+        "none";
+
+      showStatus(
+        "No hay una caja abierta actualmente para " +
+        currentBusiness +
+        ".",
+        "warn"
+      );
+
+      return;
+
+    }
+
+
+    /*
+     * IMPORTANTE:
+     *
+     * La función SQL que acabamos de crear
+     * recibe:
+     *
+     * p_register_id
+     * p_date
+     *
+     */
 
     const result =
       await withTimeout(
@@ -1408,8 +1406,11 @@ async function loadSummary(){
         supabaseClient.rpc(
           "get_cash_register_summary",
           {
-            p_business_id:
-              businessId
+            p_register_id:
+              currentRegisterId,
+
+            p_date:
+              selectedDate
           }
         ),
 
@@ -1446,12 +1447,6 @@ async function loadSummary(){
     );
 
 
-    /*
-     * Si la función de resumen no existe
-     * o todavía no está configurada,
-     * mostramos el error claramente.
-     */
-
     $("loadingSummary")
       .style.display =
       "none";
@@ -1479,21 +1474,12 @@ async function loadSummary(){
    PROCESAR RESUMEN
 ========================================================= */
 
-
 function processSummaryData(
   data
 ){
 
-  /*
-   * Supabase puede devolver:
-   *
-   * objeto
-   * arreglo de un objeto
-   * arreglo vacío
-   */
-
-
-  let summary = data;
+  let summary =
+    data;
 
 
   if(Array.isArray(data)){
@@ -1505,17 +1491,11 @@ function processSummaryData(
   }
 
 
-  /*
-   * Intentamos soportar nombres comunes
-   * de columnas para que el cierre sea
-   * más resistente.
-   */
-
-
   const salesCount =
     Number(
       summary.sales_count ??
-      summary.total_sales ??
+      summary.total_transactions ??
+      summary.total_sales_count ??
       summary.sale_count ??
       0
     );
@@ -1530,20 +1510,29 @@ function processSummaryData(
     );
 
 
+  /*
+   * La función SQL nueva devuelve total_sales.
+   */
+
+  const totalSales =
+    Number(
+      summary.total_sales ??
+      summary.grand_total ??
+      summary.total_amount ??
+      0
+    );
+
+
   const paidTotal =
     Number(
       summary.paid_total ??
-      summary.total_paid ??
-      summary.sales_total ??
-      0
+      totalSales
     );
 
 
   const pendingTotal =
     Number(
       summary.pending_total ??
-      summary.total_pending ??
-      summary.pending_sales_total ??
       0
     );
 
@@ -1551,8 +1540,8 @@ function processSummaryData(
   const grandTotal =
     Number(
       summary.grand_total ??
+      summary.total_sales ??
       summary.total_amount ??
-      summary.total_sales_amount ??
       (
         paidTotal +
         pendingTotal
@@ -1575,29 +1564,74 @@ function processSummaryData(
     [];
 
 
-  if(typeof paymentData === "string"){
+  /*
+   * Si la función SQL devuelve los métodos
+   * directamente en columnas, construimos
+   * el desglose.
+   */
 
-    try{
-
-      paymentData =
-        JSON.parse(
-          paymentData
-        );
-
-    }
-
-    catch(error){
-
-      paymentData = [];
-
-    }
-
-  }
-
-
-  if(!Array.isArray(paymentData)){
+  if(
+    !Array.isArray(paymentData) ||
+    !paymentData.length
+  ){
 
     paymentData = [];
+
+    if(
+      Number(summary.cash_sales || 0) !== 0
+    ){
+
+      paymentData.push({
+        name:"Efectivo",
+        total:
+          Number(
+            summary.cash_sales
+          )
+      });
+
+    }
+
+    if(
+      Number(summary.card_sales || 0) !== 0
+    ){
+
+      paymentData.push({
+        name:"Tarjeta",
+        total:
+          Number(
+            summary.card_sales
+          )
+      });
+
+    }
+
+    if(
+      Number(summary.transfer_sales || 0) !== 0
+    ){
+
+      paymentData.push({
+        name:"Transferencia",
+        total:
+          Number(
+            summary.transfer_sales
+          )
+      });
+
+    }
+
+    if(
+      Number(summary.other_sales || 0) !== 0
+    ){
+
+      paymentData.push({
+        name:"Otros",
+        total:
+          Number(
+            summary.other_sales
+          )
+      });
+
+    }
 
   }
 
@@ -1638,12 +1672,6 @@ function processSummaryData(
   updateDifference();
 
 
-  /*
-   * Si el SQL devuelve información
-   * indicando que la caja ya está cerrada.
-   */
-
-
   if(
     summary.is_closed === true ||
     summary.closed === true ||
@@ -1662,7 +1690,6 @@ function processSummaryData(
 /* =========================================================
    RENDER RESUMEN
 ========================================================= */
-
 
 function renderSummary(){
 
@@ -1713,7 +1740,6 @@ function renderSummary(){
    MÉTODOS DE PAGO
 ========================================================= */
 
-
 function renderPaymentSummary(){
 
   const container =
@@ -1732,7 +1758,7 @@ function renderPaymentSummary(){
 
       '<div class="empty">' +
 
-      'No hay desglose por método de pago disponible.' +
+      'No hay ventas registradas por método de pago para esta fecha.' +
 
       '</div>';
 
@@ -1810,7 +1836,6 @@ function renderPaymentSummary(){
 /* =========================================================
    DIFERENCIA
 ========================================================= */
-
 
 $("countedCash")
   .addEventListener(
@@ -1920,16 +1945,55 @@ function updateDifference(){
    CERRAR CAJA
 ========================================================= */
 
-
 async function closeCashRegister(){
 
   clearStatus();
+
+
+  /*
+   * MUY IMPORTANTE:
+   *
+   * Una fecha anterior sirve para consultar
+   * el corte histórico, pero no vamos a cerrar
+   * accidentalmente la caja actual con una
+   * fecha diferente.
+   */
+
+  if(!isToday()){
+
+    showStatus(
+
+      "Estás consultando un corte histórico.\n\n" +
+
+      "Puedes revisar el resumen de esa fecha, " +
+      "pero el cierre físico de caja solamente " +
+      "se realiza seleccionando HOY.",
+
+      "warn"
+
+    );
+
+    return;
+
+  }
 
 
   if(alreadyClosed){
 
     showStatus(
       "Esta caja ya está cerrada.",
+      "warn"
+    );
+
+    return;
+
+  }
+
+
+  if(!currentRegisterId){
+
+    showStatus(
+      "No se encontró una caja abierta.",
       "warn"
     );
 
@@ -2007,6 +2071,12 @@ async function closeCashRegister(){
       currentBusiness +
       "?\n\n" +
 
+      "Fecha: " +
+      formatSelectedDate(
+        $("cutoffDate").value
+      ) +
+      "\n\n" +
+
       "Efectivo esperado: " +
       money(expectedCash) +
       "\n" +
@@ -2056,10 +2126,12 @@ async function closeCashRegister(){
 
 
     /*
-     * Registramos el cierre utilizando
-     * la función SQL.
+     * Conservamos la función actual
+     * close_cash_register.
+     *
+     * El cierre real solamente se permite
+     * para HOY.
      */
-
 
     const result =
       await withTimeout(
@@ -2136,9 +2208,15 @@ async function closeCashRegister(){
       ){
 
         closedText +=
-          "\n" +
-          formatDate(
+          " " +
+          new Date(
             resultData.closed_at
+          ).toLocaleString(
+            "es-MX",
+            {
+              dateStyle:"medium",
+              timeStyle:"short"
+            }
           );
 
       }
@@ -2187,7 +2265,6 @@ async function closeCashRegister(){
     button.disabled =
       false;
 
-
     button.textContent =
       originalText;
 
@@ -2199,7 +2276,6 @@ async function closeCashRegister(){
 /* =========================================================
    CAJA YA CERRADA
 ========================================================= */
-
 
 function showAlreadyClosed(
   summary
@@ -2229,8 +2305,14 @@ function showAlreadyClosed(
 
     message +=
       " " +
-      formatDate(
+      new Date(
         summary.closed_at
+      ).toLocaleString(
+        "es-MX",
+        {
+          dateStyle:"medium",
+          timeStyle:"short"
+        }
       );
 
   }
@@ -2254,7 +2336,6 @@ function showAlreadyClosed(
 /* =========================================================
    CAMBIO DE NEGOCIO
 ========================================================= */
-
 
 async function changeBusiness(
   business
@@ -2306,7 +2387,6 @@ async function changeBusiness(
    BOTONES DE NEGOCIO
 ========================================================= */
 
-
 document
   .querySelectorAll(
     ".business-btn"
@@ -2330,9 +2410,57 @@ document
 
 
 /* =========================================================
-   BOTÓN CERRAR
+   FECHA
 ========================================================= */
 
+$("cutoffDate")
+  .addEventListener(
+    "change",
+    async () => {
+
+      updateDateUI();
+
+      await loadSummary();
+
+    }
+  );
+
+
+$("todayBtn")
+  .addEventListener(
+    "click",
+    async () => {
+
+      $("cutoffDate").value =
+        getTodayString();
+
+      updateDateUI();
+
+      await loadSummary();
+
+    }
+  );
+
+
+$("yesterdayBtn")
+  .addEventListener(
+    "click",
+    async () => {
+
+      $("cutoffDate").value =
+        getYesterdayString();
+
+      updateDateUI();
+
+      await loadSummary();
+
+    }
+  );
+
+
+/* =========================================================
+   BOTÓN CERRAR
+========================================================= */
 
 $("closeButton")
   .addEventListener(
@@ -2344,7 +2472,6 @@ $("closeButton")
 /* =========================================================
    REGRESAR
 ========================================================= */
-
 
 $("backButton")
   .addEventListener(
@@ -2362,9 +2489,8 @@ $("backButton")
 
 
 /* =========================================================
-   INICIO
+   NEGOCIO DESDE URL
 ========================================================= */
-
 
 function getBusinessFromURL(){
 
@@ -2395,10 +2521,21 @@ function getBusinessFromURL(){
 }
 
 
+/* =========================================================
+   INICIO
+========================================================= */
+
 async function start(){
 
   currentBusiness =
     getBusinessFromURL();
+
+
+  $("cutoffDate").value =
+    getTodayString();
+
+
+  updateDateUI();
 
 
   document
@@ -2432,7 +2569,6 @@ async function start(){
 /* =========================================================
    ARRANCAR
 ========================================================= */
-
 
 start();
 
