@@ -272,36 +272,51 @@ button:disabled{
 
 /* BOTONES DE CUENTA */
 
-.balance-button{
-  display:block;
-  width:100%;
-  margin-top:12px;
-  padding:14px 15px;
-  border-radius:12px;
-  border:2px solid #f59e0b;
-  background:#fffbeb;
-  color:#92400e;
-  text-align:center;
-  font-size:15px;
-  font-weight:800;
-}
-
-.balance-button:hover{
-  background:#fef3c7;
-}
-
+.balance-button,
+.whatsapp-button,
 .cancel-button{
   display:block;
   width:100%;
   margin-top:12px;
   padding:14px 15px;
   border-radius:12px;
-  border:2px solid #dc2626;
-  background:#fff5f5;
-  color:#b91c1c;
   text-align:center;
   font-size:15px;
   font-weight:800;
+}
+
+.balance-button{
+  border:2px solid #f59e0b;
+  background:#fffbeb;
+  color:#92400e;
+}
+
+.balance-button:hover{
+  background:#fef3c7;
+}
+
+/* WHATSAPP */
+
+.whatsapp-button{
+  border:2px solid #25D366;
+  background:#f0fdf4;
+  color:#15803d;
+}
+
+.whatsapp-button:hover{
+  background:#dcfce7;
+}
+
+.whatsapp-button.no-phone{
+  border-color:#cbd5e1;
+  background:#f8fafc;
+  color:#64748b;
+}
+
+.cancel-button{
+  border:2px solid #dc2626;
+  background:#fff5f5;
+  color:#b91c1c;
 }
 
 .cancel-button:hover{
@@ -586,9 +601,7 @@ button:disabled{
   font-weight:700;
 }
 
-/* =====================================================
-   HISTORIAL DE CUENTAS CANCELADAS
-===================================================== */
+/* HISTORIAL DE CUENTAS CANCELADAS */
 
 .cancelled-history-panel{
   display:none;
@@ -598,8 +611,6 @@ button:disabled{
 .cancelled-history-panel.visible{
   display:block;
 }
-
-/* ENCABEZADO IGUAL AL HEADER PRINCIPAL */
 
 .cancelled-history-header{
   background:#111827;
@@ -731,8 +742,6 @@ button:disabled{
     grid-template-columns:1fr;
   }
 
-  /* CUADRÍCULA 2 x 2 */
-
   .toolbar{
     grid-template-columns:1fr 1fr;
     gap:10px;
@@ -745,8 +754,6 @@ button:disabled{
     padding:12px 8px;
     font-size:15px;
   }
-
-  /* DASHBOARD RECTANGULAR */
 
   .toolbar .back{
     grid-column:1 / -1;
@@ -909,10 +916,6 @@ Cargando cuentas pendientes...
 
 </div>
 
-<!-- =====================================================
-     HISTORIAL DE CUENTAS CANCELADAS
-===================================================== -->
-
 <div
 id="cancelledHistoryPanel"
 class="cancelled-history-panel">
@@ -945,9 +948,7 @@ Cargando historial...
 </div>
 
 
-<!-- =====================================================
-     MODAL ABONO
-===================================================== -->
+<!-- MODAL ABONO -->
 
 <div id="paymentModal" class="modal-overlay">
 
@@ -1027,9 +1028,7 @@ Cancelar
 </div>
 
 
-<!-- =====================================================
-     MODAL CANCELAR CUENTA
-===================================================== -->
+<!-- MODAL CANCELAR CUENTA -->
 
 <div id="cancelModal" class="modal-overlay">
 
@@ -1095,8 +1094,7 @@ text-align:right;
 color:#64748b;
 font-size:12px;
 margin-top:-10px;
-margin-bottom:15px;
-">
+margin-bottom:15px;">
 Máximo 500 caracteres
 </div>
 
@@ -1271,6 +1269,143 @@ function getDateForFilter(sale){
     month +
     "-" +
     day
+  );
+
+}
+
+
+/* =====================================================
+   WHATSAPP
+===================================================== */
+
+function getWhatsAppPhone(phone){
+
+  if(!phone)
+    return null;
+
+  let clean =
+    String(phone)
+      .trim()
+      .replace(
+        /[^\d+]/g,
+        ""
+      );
+
+  if(!clean)
+    return null;
+
+  /*
+     Si ya viene con +52, lo conservamos.
+  */
+
+  if(clean.startsWith("+52")){
+
+    clean =
+      clean.replace(
+        /^\+52/,
+        ""
+      );
+
+  }
+
+  /*
+     Si viene como 52XXXXXXXXXX,
+     eliminamos el prefijo.
+  */
+
+  if(
+    clean.startsWith("52") &&
+    clean.length >= 12
+  ){
+
+    clean =
+      clean.substring(2);
+
+  }
+
+  /*
+     Para México utilizamos 52
+     como prefijo internacional.
+  */
+
+  if(clean.length === 10){
+
+    return "52" + clean;
+
+  }
+
+  /*
+     Si no tiene exactamente 10 dígitos,
+     intentamos utilizar el número
+     recibido sin caracteres especiales.
+  */
+
+  if(clean.length >= 10){
+
+    return clean;
+
+  }
+
+  return null;
+
+}
+
+
+function sendWhatsAppReminder(
+  customer,
+  sale
+){
+
+  const phone =
+    getWhatsAppPhone(
+      customer?.phone
+    );
+
+  if(!phone){
+
+    alert(
+      "Este cliente no tiene un número telefónico válido registrado."
+    );
+
+    return;
+
+  }
+
+  const customerName =
+    customer?.name ||
+    "cliente";
+
+  const balance =
+    Number(
+      sale.balance || 0
+    );
+
+  const date =
+    formatDate(
+      getSaleDate(sale)
+    );
+
+  const message =
+    "Hola " +
+    customerName +
+    " 👋\n\n" +
+    "Te recordamos que tienes un saldo pendiente de " +
+    money(balance) +
+    " correspondiente a tu cuenta del " +
+    date +
+    ".\n\n" +
+    "Cuando tengas oportunidad, ¿nos apoyas con tu pago? 💰\n\n" +
+    "¡Muchas gracias! 🙏";
+
+  const url =
+    "https://wa.me/" +
+    phone +
+    "?text=" +
+    encodeURIComponent(message);
+
+  window.open(
+    url,
+    "_blank"
   );
 
 }
@@ -1613,9 +1748,7 @@ async function renderAccounts(){
     );
 
 
-  /* =====================================================
-     CLIENTES
-  ===================================================== */
+  /* CLIENTES */
 
   const customerMap =
     new Map();
@@ -1664,9 +1797,7 @@ async function renderAccounts(){
   }
 
 
-  /* =====================================================
-     BÚSQUEDA
-  ===================================================== */
+  /* BÚSQUEDA */
 
   rows =
     rows.filter(
@@ -1698,9 +1829,7 @@ async function renderAccounts(){
     );
 
 
-  /* =====================================================
-     RESUMEN
-  ===================================================== */
+  /* RESUMEN */
 
   $("count").textContent =
     rows.length;
@@ -1769,9 +1898,7 @@ async function renderAccounts(){
         );
 
 
-      /* =================================================
-         ABONOS
-      ================================================= */
+      /* ABONOS */
 
       const salePayments =
         payments.filter(
@@ -1791,9 +1918,7 @@ async function renderAccounts(){
         );
 
 
-      /* =================================================
-         TARJETA
-      ================================================= */
+      /* TARJETA */
 
       const element =
         document.createElement(
@@ -1850,9 +1975,7 @@ async function renderAccounts(){
         "</div>";
 
 
-      /* =================================================
-         HISTORIAL DE ABONOS
-      ================================================= */
+      /* HISTORIAL DE ABONOS */
 
       if(salePayments.length){
 
@@ -1952,9 +2075,7 @@ async function renderAccounts(){
       }
 
 
-      /* =================================================
-         BOTÓN ABONO
-      ================================================= */
+      /* BOTÓN ABONO */
 
       const balanceButton =
         document.createElement(
@@ -1988,9 +2109,54 @@ async function renderAccounts(){
       );
 
 
-      /* =================================================
-         BOTÓN CANCELAR
-      ================================================= */
+      /* BOTÓN WHATSAPP */
+
+      const whatsappButton =
+        document.createElement(
+          "button"
+        );
+
+      whatsappButton.type =
+        "button";
+
+      whatsappButton.className =
+        "whatsapp-button";
+
+      if(!customer?.phone){
+
+        whatsappButton.classList.add(
+          "no-phone"
+        );
+
+        whatsappButton.innerHTML =
+          "💬 WhatsApp · Sin teléfono";
+
+      }
+      else{
+
+        whatsappButton.innerHTML =
+          "💬 Enviar recordatorio por WhatsApp";
+
+      }
+
+      whatsappButton.addEventListener(
+        "click",
+        () => {
+
+          sendWhatsAppReminder(
+            customer,
+            sale
+          );
+
+        }
+      );
+
+      element.appendChild(
+        whatsappButton
+      );
+
+
+      /* BOTÓN CANCELAR */
 
       const cancelButton =
         document.createElement(
@@ -2106,9 +2272,7 @@ async function loadCancelledSales(){
     }
 
 
-    /* ===============================================
-       CLIENTES
-    =============================================== */
+    /* CLIENTES */
 
     const customerMap =
       new Map();
@@ -2316,15 +2480,15 @@ function openPaymentModal(
 
   $("modalBalance")
     .textContent =
-      money(sale.balance);
+    money(sale.balance);
 
   $("paymentAmount")
     .value =
-      "";
+    "";
 
   $("modalError")
     .textContent =
-      "";
+    "";
 
   $("modalError")
     .classList.remove(
@@ -2378,7 +2542,7 @@ function showPaymentError(
 
   $("modalError")
     .textContent =
-      message;
+    message;
 
   $("modalError")
     .classList.add(
@@ -2408,7 +2572,7 @@ async function registerPayment(
     );
 
   amount =
-    Number(amount);
+  Number(amount);
 
   const paymentMethodId =
     $("paymentMethod").value;
@@ -2634,19 +2798,19 @@ function openCancelModal(
 
   $("cancelSaleId")
     .textContent =
-      sale.id;
+    sale.id;
 
   $("cancelBalance")
     .textContent =
-      money(sale.balance);
+    money(sale.balance);
 
   $("cancelReason")
     .value =
-      "";
+    "";
 
   $("cancelError")
     .textContent =
-      "";
+    "";
 
   $("cancelError")
     .classList.remove(
@@ -2690,7 +2854,7 @@ function showCancelError(
 
   $("cancelError")
     .textContent =
-      message;
+    message;
 
   $("cancelError")
     .classList.add(
@@ -2945,9 +3109,7 @@ $("cancelPayment")
 );
 
 
-/* =====================================================
-   BOTONES CANCELACIÓN
-===================================================== */
+/* BOTONES CANCELACIÓN */
 
 $("confirmCancel")
 .addEventListener(
@@ -2963,9 +3125,7 @@ $("cancelCancel")
 );
 
 
-/* =====================================================
-   HISTORIAL CANCELADAS
-===================================================== */
+/* HISTORIAL CANCELADAS */
 
 $("cancelledHistoryButton")
 .addEventListener(
@@ -2999,9 +3159,7 @@ $("cancelledHistoryButton")
 );
 
 
-/* =====================================================
-   CERRAR MODALES
-===================================================== */
+/* CERRAR MODALES */
 
 $("paymentModal")
 .addEventListener(
@@ -3057,9 +3215,7 @@ document.addEventListener(
 );
 
 
-/* =====================================================
-   CAMBIAR NEGOCIO
-===================================================== */
+/* CAMBIAR NEGOCIO */
 
 document
 .querySelectorAll(".business")
@@ -3124,9 +3280,7 @@ document
 );
 
 
-/* =====================================================
-   FILTROS
-===================================================== */
+/* FILTROS */
 
 $("search")
 .addEventListener(
@@ -3147,9 +3301,7 @@ $("to")
 );
 
 
-/* =====================================================
-   ACTUALIZAR
-===================================================== */
+/* ACTUALIZAR */
 
 $("refresh")
 .addEventListener(
@@ -3172,9 +3324,7 @@ $("refresh")
 );
 
 
-/* =====================================================
-   DASHBOARD
-===================================================== */
+/* DASHBOARD */
 
 $("back")
 .addEventListener(
@@ -3192,9 +3342,7 @@ $("back")
 );
 
 
-/* =====================================================
-   INICIO
-===================================================== */
+/* INICIO */
 
 updateBusinessButtons();
 
