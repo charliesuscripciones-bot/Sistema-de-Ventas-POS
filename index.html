@@ -119,7 +119,7 @@ header p{
 
 .navigation{
   display:grid;
-  grid-template-columns:repeat(5,1fr);
+  grid-template-columns:repeat(3,1fr);
   gap:10px;
   margin-bottom:20px
 }
@@ -133,6 +133,12 @@ header p{
   background:#fff7ed;
   border-color:#f59e0b;
   color:#b45309
+}
+
+.nav-btn.closing{
+  background:#fef2f2;
+  border-color:#dc2626;
+  color:#b91c1c
 }
 
 .nav-btn.clients{
@@ -674,7 +680,6 @@ header p{
     padding:16px
   }
 
-  /* DOS PRODUCTOS POR FILA EN IPHONE */
   .products{
     grid-template-columns:repeat(2,minmax(0,1fr));
     gap:10px
@@ -742,11 +747,9 @@ Administración de negocios y ventas
 
 </header>
 
-
 <div class="container">
 
 <div id="status" class="status"></div>
-
 
 <!-- =====================================================
      NEGOCIOS
@@ -774,12 +777,20 @@ Administración de negocios y ventas
 
 </div>
 
-
 <!-- =====================================================
      NAVEGACIÓN
 ====================================================== -->
 
 <div class="navigation">
+
+<button
+  type="button"
+  class="nav-btn closing"
+  id="closingButton">
+
+  🔐 Cierre de caja
+
+</button>
 
 <button
   type="button"
@@ -828,17 +839,11 @@ Administración de negocios y ventas
 
 </div>
 
-
 <!-- =====================================================
      POS
 ====================================================== -->
 
 <div class="layout">
-
-
-<!-- =====================================================
-     PRODUCTOS
-====================================================== -->
 
 <div class="card">
 
@@ -856,7 +861,6 @@ Administración de negocios y ventas
 
 </div>
 
-
 <!-- =====================================================
      CARRITO
 ====================================================== -->
@@ -873,7 +877,6 @@ El carrito está vacío
 
 </div>
 
-
 <div class="total">
 
 <span>Total</span>
@@ -883,7 +886,6 @@ $0.00
 </span>
 
 </div>
-
 
 <!-- =====================================================
      CLIENTE
@@ -916,19 +918,16 @@ $0.00
 
 </div>
 
-
 <div
   id="customerResults"
   class="customer-results">
 </div>
-
 
 <div
   id="selectedCustomer"
   class="selected-customer"
   style="display:none">
 </div>
-
 
 <div
   id="generalCustomer"
@@ -939,7 +938,6 @@ $0.00
 </div>
 
 </div>
-
 
 <!-- =====================================================
      MÉTODO DE PAGO
@@ -959,7 +957,6 @@ Método de pago
 
 </div>
 
-
 <button
   type="button"
   id="chargeButton"
@@ -968,7 +965,6 @@ Método de pago
   💵 COBRAR
 
 </button>
-
 
 <button
   type="button"
@@ -984,7 +980,6 @@ Método de pago
 </div>
 
 </div>
-
 
 <!-- =====================================================
      MODAL CLIENTE
@@ -1027,18 +1022,15 @@ Cliente para BakeQuiri
 
 </div>
 
-
 <form
   id="clientForm"
   class="client-form"
   autocomplete="off">
 
-
 <div
   id="clientModalError"
   class="modal-error">
 </div>
-
 
 <div class="form-group">
 
@@ -1056,7 +1048,6 @@ Nombre del cliente *
 
 </div>
 
-
 <div class="form-group">
 
 <label for="newClientPhone">
@@ -1072,7 +1063,6 @@ Teléfono
 
 </div>
 
-
 <div class="form-group">
 
 <label for="newClientNotes">
@@ -1085,7 +1075,6 @@ Notas
   placeholder="Notas opcionales..."></textarea>
 
 </div>
-
 
 <div class="client-form-buttons">
 
@@ -1115,17 +1104,14 @@ Notas
 
 </div>
 
-
 <!-- =====================================================
      SUPABASE
 ====================================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
 <script>
 "use strict";
-
 
 /* =========================================================
    CONFIGURACIÓN
@@ -1137,7 +1123,6 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
-
 const BUSINESS_IDS = {
 
   BakeQuiri:
@@ -1147,7 +1132,6 @@ const BUSINESS_IDS = {
     "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
 
 };
-
 
 let supabaseClient = null;
 
@@ -1162,7 +1146,6 @@ let cart = [];
 let selectedPaymentId = null;
 let selectedCustomerId = null;
 
-
 /* =========================================================
    HELPERS
 ========================================================= */
@@ -1171,14 +1154,12 @@ function $(id){
   return document.getElementById(id);
 }
 
-
 function money(value){
 
   return "$" +
     Number(value || 0).toFixed(2);
 
 }
-
 
 function escapeHTML(value){
 
@@ -1190,7 +1171,6 @@ function escapeHTML(value){
     .replaceAll("'","&#039;");
 
 }
-
 
 function showStatus(
   message,
@@ -1205,7 +1185,6 @@ function showStatus(
 
 }
 
-
 function clearStatus(){
 
   $("status").textContent = "";
@@ -1214,7 +1193,6 @@ function clearStatus(){
     "status";
 
 }
-
 
 /* =========================================================
    TIMEOUT
@@ -1247,7 +1225,6 @@ function withTimeout(
       }
     );
 
-
   return Promise.race([
     promise,
     timeout
@@ -1257,7 +1234,6 @@ function withTimeout(
   );
 
 }
-
 
 /* =========================================================
    INDEXED DB
@@ -1273,13 +1249,11 @@ const STORE_NAME =
 
 let dbPromise = null;
 
-
 function openOfflineDB(){
 
   if(dbPromise){
     return dbPromise;
   }
-
 
   dbPromise =
     new Promise(
@@ -1291,13 +1265,11 @@ function openOfflineDB(){
             DB_VERSION
           );
 
-
         request.onupgradeneeded =
           event => {
 
             const db =
               event.target.result;
-
 
             if(
               !db.objectStoreNames.contains(
@@ -1316,7 +1288,6 @@ function openOfflineDB(){
 
           };
 
-
         request.onsuccess =
           () => {
 
@@ -1325,7 +1296,6 @@ function openOfflineDB(){
             );
 
           };
-
 
         request.onerror =
           () => {
@@ -1339,11 +1309,9 @@ function openOfflineDB(){
       }
     );
 
-
   return dbPromise;
 
 }
-
 
 async function saveOfflineData(
   business,
@@ -1355,7 +1323,6 @@ async function saveOfflineData(
     const db =
       await openOfflineDB();
 
-
     return new Promise(
       (resolve,reject) => {
 
@@ -1365,12 +1332,10 @@ async function saveOfflineData(
             "readwrite"
           );
 
-
         const store =
           transaction.objectStore(
             STORE_NAME
           );
-
 
         store.put({
 
@@ -1387,10 +1352,8 @@ async function saveOfflineData(
 
         });
 
-
         transaction.oncomplete =
           () => resolve(true);
-
 
         transaction.onerror =
           () => reject(
@@ -1415,7 +1378,6 @@ async function saveOfflineData(
 
 }
 
-
 async function getOfflineData(
   business
 ){
@@ -1424,7 +1386,6 @@ async function getOfflineData(
 
     const db =
       await openOfflineDB();
-
 
     return new Promise(
       (resolve,reject) => {
@@ -1435,19 +1396,16 @@ async function getOfflineData(
             "readonly"
           );
 
-
         const store =
           transaction.objectStore(
             STORE_NAME
           );
-
 
         const request =
           store.get(
             "business_" +
             business
           );
-
 
         request.onsuccess =
           () => {
@@ -1457,7 +1415,6 @@ async function getOfflineData(
             );
 
           };
-
 
         request.onerror =
           () => {
@@ -1486,7 +1443,6 @@ async function getOfflineData(
 
 }
 
-
 /* =========================================================
    SUPABASE
 ========================================================= */
@@ -1505,7 +1461,6 @@ function initializeSupabase(){
 
   }
 
-
   if(!supabaseClient){
 
     supabaseClient =
@@ -1518,7 +1473,6 @@ function initializeSupabase(){
 
 }
 
-
 /* =========================================================
    DATOS OFFLINE
 ========================================================= */
@@ -1529,7 +1483,6 @@ async function loadOfflineData(){
     await getOfflineData(
       currentBusiness
     );
-
 
   if(!cached){
 
@@ -1542,7 +1495,6 @@ async function loadOfflineData(){
     renderCart();
     renderSelectedCustomer();
 
-
     showStatus(
       "No hay datos locales para " +
       currentBusiness +
@@ -1550,35 +1502,29 @@ async function loadOfflineData(){
       "warn"
     );
 
-
     return false;
 
   }
-
 
   products =
     Array.isArray(cached.products)
       ? cached.products
       : [];
 
-
   payments =
     Array.isArray(cached.payments)
       ? cached.payments
       : [];
-
 
   customers =
     Array.isArray(cached.customers)
       ? cached.customers
       : [];
 
-
   renderProducts();
   renderPayments();
   renderCart();
   renderSelectedCustomer();
-
 
   showStatus(
     "Modo OFFLINE activo.\n" +
@@ -1590,11 +1536,9 @@ async function loadOfflineData(){
     "warn"
   );
 
-
   return true;
 
 }
-
 
 /* =========================================================
    CARGAR PRODUCTOS
@@ -1604,7 +1548,6 @@ async function fetchProducts(){
 
   const businessId =
     BUSINESS_IDS[currentBusiness];
-
 
   const result =
     await withTimeout(
@@ -1630,16 +1573,13 @@ async function fetchProducts(){
 
     );
 
-
   if(result.error){
     throw result.error;
   }
 
-
   return result.data || [];
 
 }
-
 
 /* =========================================================
    CARGAR PAGOS
@@ -1649,7 +1589,6 @@ async function fetchPayments(){
 
   const businessId =
     BUSINESS_IDS[currentBusiness];
-
 
   const result =
     await withTimeout(
@@ -1675,16 +1614,13 @@ async function fetchPayments(){
 
     );
 
-
   if(result.error){
     throw result.error;
   }
 
-
   return result.data || [];
 
 }
-
 
 /* =========================================================
    CARGAR CLIENTES
@@ -1694,7 +1630,6 @@ async function fetchCustomers(){
 
   const businessId =
     BUSINESS_IDS[currentBusiness];
-
 
   try{
 
@@ -1718,7 +1653,6 @@ async function fetchCustomers(){
 
       );
 
-
     if(!result.error){
 
       return result.data || [];
@@ -1736,9 +1670,6 @@ async function fetchCustomers(){
 
   }
 
-
-  /* Compatibilidad con tabla antigua */
-
   const fallback =
     await withTimeout(
 
@@ -1755,16 +1686,13 @@ async function fetchCustomers(){
 
     );
 
-
   if(fallback.error){
     throw fallback.error;
   }
 
-
   return fallback.data || [];
 
 }
-
 
 /* =========================================================
    CARGA ONLINE ROBUSTA
@@ -1773,21 +1701,6 @@ async function fetchCustomers(){
 async function loadOnlineData(){
 
   initializeSupabase();
-
-
-  /*
-   * IMPORTANTE:
-   *
-   * Los tres catálogos se cargan por separado.
-   *
-   * Si clientes falla, NO bloquea productos.
-   *
-   * Si pagos falla, NO bloquea productos.
-   *
-   * Esto corrige el problema de quedarse eternamente
-   * en "Cargando productos..."
-   */
-
 
   const results =
     await Promise.allSettled([
@@ -1800,7 +1713,6 @@ async function loadOnlineData(){
 
     ]);
 
-
   const productResult =
     results[0];
 
@@ -1810,13 +1722,7 @@ async function loadOnlineData(){
   const customerResult =
     results[2];
 
-
   const problems = [];
-
-
-  /*
-   * PRODUCTOS
-   */
 
   if(
     productResult.status === "fulfilled"
@@ -1835,11 +1741,6 @@ async function loadOnlineData(){
 
   }
 
-
-  /*
-   * PAGOS
-   */
-
   if(
     paymentResult.status === "fulfilled"
   ){
@@ -1856,11 +1757,6 @@ async function loadOnlineData(){
     );
 
   }
-
-
-  /*
-   * CLIENTES
-   */
 
   if(
     customerResult.status === "fulfilled"
@@ -1879,19 +1775,12 @@ async function loadOnlineData(){
 
   }
 
-
-  /*
-   * Si alguno falló, intentamos recuperar
-   * específicamente desde IndexedDB.
-   */
-
   if(problems.length){
 
     const cached =
       await getOfflineData(
         currentBusiness
       );
-
 
     if(cached){
 
@@ -1907,7 +1796,6 @@ async function loadOnlineData(){
 
       }
 
-
       if(
         paymentResult.status !==
         "fulfilled"
@@ -1919,7 +1807,6 @@ async function loadOnlineData(){
             : [];
 
       }
-
 
       if(
         customerResult.status !==
@@ -1937,11 +1824,6 @@ async function loadOnlineData(){
 
   }
 
-
-  /*
-   * Guardamos lo que sí tenemos.
-   */
-
   await saveOfflineData(
     currentBusiness,
     {
@@ -1951,19 +1833,10 @@ async function loadOnlineData(){
     }
   );
 
-
-  /*
-   * Renderizamos SIEMPRE.
-   *
-   * Ya no dependemos de que las tres consultas
-   * terminen correctamente.
-   */
-
   renderProducts();
   renderPayments();
   renderCart();
   renderSelectedCustomer();
-
 
   if(problems.length){
 
@@ -1990,7 +1863,6 @@ async function loadOnlineData(){
 
 }
 
-
 /* =========================================================
    CARGADOR PRINCIPAL
 ========================================================= */
@@ -1999,25 +1871,16 @@ async function loadBusinessData(){
 
   clearStatus();
 
-
   $("products").innerHTML =
     '<div class="empty">Cargando productos...</div>';
 
-
   $("payments").innerHTML =
     '<div class="empty">Cargando métodos de pago...</div>';
-
-
-  /*
-   * Primero mostramos inmediatamente lo que exista
-   * localmente. Esto evita que el POS parezca congelado.
-   */
 
   const cached =
     await getOfflineData(
       currentBusiness
     );
-
 
   if(cached){
 
@@ -2026,18 +1889,15 @@ async function loadBusinessData(){
         ? cached.products
         : [];
 
-
     payments =
       Array.isArray(cached.payments)
         ? cached.payments
         : [];
 
-
     customers =
       Array.isArray(cached.customers)
         ? cached.customers
         : [];
-
 
     renderProducts();
     renderPayments();
@@ -2045,12 +1905,6 @@ async function loadBusinessData(){
     renderSelectedCustomer();
 
   }
-
-
-  /*
-   * Si no hay Internet:
-   * usamos directamente el almacenamiento local.
-   */
 
   if(!navigator.onLine){
 
@@ -2081,11 +1935,6 @@ async function loadBusinessData(){
 
   }
 
-
-  /*
-   * ONLINE
-   */
-
   try{
 
     await loadOnlineData();
@@ -2099,19 +1948,12 @@ async function loadBusinessData(){
       error
     );
 
-
-    /*
-     * Si ya mostramos caché arriba,
-     * simplemente dejamos el POS funcionando.
-     */
-
     if(cached){
 
       renderProducts();
       renderPayments();
       renderCart();
       renderSelectedCustomer();
-
 
       showStatus(
         "⚠️ No se pudo actualizar desde Internet.\n" +
@@ -2124,7 +1966,6 @@ async function loadBusinessData(){
 
       renderProducts();
       renderPayments();
-
 
       showStatus(
         "No se pudieron cargar los datos.\n\n" +
@@ -2141,7 +1982,6 @@ async function loadBusinessData(){
 
 }
 
-
 /* =========================================================
    PRODUCTOS
 ========================================================= */
@@ -2151,9 +1991,7 @@ function renderProducts(){
   const container =
     $("products");
 
-
   container.innerHTML = "";
-
 
   if(!products.length){
 
@@ -2164,14 +2002,6 @@ function renderProducts(){
 
   }
 
-
-  /*
-   * MUY IMPORTANTE:
-   *
-   * Cada producto se crea como botón.
-   * No hay navegación.
-   */
-
   products.forEach(
     product => {
 
@@ -2180,16 +2010,13 @@ function renderProducts(){
           product.stock || 0
         );
 
-
       const button =
         document.createElement(
           "button"
         );
 
-
       button.type =
         "button";
-
 
       button.className =
         "product" +
@@ -2199,10 +2026,8 @@ function renderProducts(){
             : ""
         );
 
-
       button.disabled =
         stock <= 0;
-
 
       button.innerHTML =
 
@@ -2224,12 +2049,10 @@ function renderProducts(){
 
         '</div>';
 
-
       button.addEventListener(
         "click",
         () => addToCart(product)
       );
-
 
       container.appendChild(
         button
@@ -2240,7 +2063,6 @@ function renderProducts(){
 
 }
 
-
 /* =========================================================
    PAGOS
 ========================================================= */
@@ -2250,9 +2072,7 @@ function renderPayments(){
   const container =
     $("payments");
 
-
   container.innerHTML = "";
-
 
   if(!payments.length){
 
@@ -2262,7 +2082,6 @@ function renderPayments(){
     return;
 
   }
-
 
   if(
     !payments.some(
@@ -2278,7 +2097,6 @@ function renderPayments(){
 
   }
 
-
   payments.forEach(
     payment => {
 
@@ -2287,10 +2105,8 @@ function renderPayments(){
           "button"
         );
 
-
       button.type =
         "button";
-
 
       button.className =
         "payment" +
@@ -2301,10 +2117,8 @@ function renderPayments(){
             : ""
         );
 
-
       button.textContent =
         payment.name;
-
 
       button.addEventListener(
         "click",
@@ -2318,7 +2132,6 @@ function renderPayments(){
         }
       );
 
-
       container.appendChild(
         button
       );
@@ -2327,7 +2140,6 @@ function renderPayments(){
   );
 
 }
-
 
 /* =========================================================
    CARRITO
@@ -2340,7 +2152,6 @@ function addToCart(product){
       product.stock || 0
     );
 
-
   if(stock <= 0){
 
     showStatus(
@@ -2351,14 +2162,12 @@ function addToCart(product){
 
   }
 
-
   const item =
     cart.find(
       i =>
         String(i.id) ===
         String(product.id)
     );
-
 
   if(item){
 
@@ -2394,11 +2203,9 @@ function addToCart(product){
 
   }
 
-
   renderCart();
 
 }
-
 
 function changeQuantity(
   id,
@@ -2412,11 +2219,9 @@ function changeQuantity(
         String(id)
     );
 
-
   if(!item){
     return;
   }
-
 
   const product =
     products.find(
@@ -2425,7 +2230,6 @@ function changeQuantity(
         String(id)
     );
 
-
   const max =
     Number(
       product?.stock ??
@@ -2433,11 +2237,9 @@ function changeQuantity(
       0
     );
 
-
   const newQuantity =
     item.quantity +
     amount;
-
 
   if(newQuantity > max){
 
@@ -2449,10 +2251,8 @@ function changeQuantity(
 
   }
 
-
   item.quantity =
     newQuantity;
-
 
   if(item.quantity <= 0){
 
@@ -2465,11 +2265,9 @@ function changeQuantity(
 
   }
 
-
   renderCart();
 
 }
-
 
 function getCartTotal(){
 
@@ -2483,15 +2281,12 @@ function getCartTotal(){
 
 }
 
-
 function renderCart(){
 
   const container =
     $("cart");
 
-
   container.innerHTML = "";
-
 
   if(!cart.length){
 
@@ -2505,7 +2300,6 @@ function renderCart(){
 
   }
 
-
   cart.forEach(
     item => {
 
@@ -2514,16 +2308,13 @@ function renderCart(){
           "div"
         );
 
-
       row.className =
         "cart-item";
-
 
       const info =
         document.createElement(
           "div"
         );
-
 
       info.innerHTML =
 
@@ -2535,29 +2326,24 @@ function renderCart(){
         money(item.price) +
         " c/u</div>";
 
-
       const controls =
         document.createElement(
           "div"
         );
 
-
       controls.className =
         "quantity";
-
 
       const minus =
         document.createElement(
           "button"
         );
 
-
       minus.type =
         "button";
 
       minus.textContent =
         "−";
-
 
       minus.addEventListener(
         "click",
@@ -2568,29 +2354,24 @@ function renderCart(){
           )
       );
 
-
       const quantity =
         document.createElement(
           "span"
         );
 
-
       quantity.textContent =
         item.quantity;
-
 
       const plus =
         document.createElement(
           "button"
         );
 
-
       plus.type =
         "button";
 
       plus.textContent =
         "+";
-
 
       plus.addEventListener(
         "click",
@@ -2601,24 +2382,20 @@ function renderCart(){
           )
       );
 
-
       controls.append(
         minus,
         quantity,
         plus
       );
 
-
       info.appendChild(
         controls
       );
-
 
       const subtotal =
         document.createElement(
           "strong"
         );
-
 
       subtotal.textContent =
         money(
@@ -2626,12 +2403,10 @@ function renderCart(){
           Number(item.quantity)
         );
 
-
       row.append(
         info,
         subtotal
       );
-
 
       container.appendChild(
         row
@@ -2640,14 +2415,12 @@ function renderCart(){
     }
   );
 
-
   $("total").textContent =
     money(
       getCartTotal()
     );
 
 }
-
 
 /* =========================================================
    CLIENTES
@@ -2662,45 +2435,35 @@ function renderSelectedCustomer(){
         String(selectedCustomerId)
     );
 
-
   const selectedElement =
     $("selectedCustomer");
 
-
   const general =
     $("generalCustomer");
-
 
   if(!selected){
 
     selectedCustomerId =
       null;
 
-
     selectedElement.style.display =
       "none";
-
 
     selectedElement.innerHTML =
       "";
 
-
     general.style.display =
       "block";
-
 
     return;
 
   }
 
-
   general.style.display =
     "none";
 
-
   selectedElement.style.display =
     "block";
-
 
   selectedElement.innerHTML =
 
@@ -2724,7 +2487,6 @@ function renderSelectedCustomer(){
 
     '<button type="button" class="clear-customer" id="clearCustomer">Quitar</button>';
 
-
   $("clearCustomer").addEventListener(
     "click",
     clearSelectedCustomer
@@ -2732,29 +2494,23 @@ function renderSelectedCustomer(){
 
 }
 
-
 function clearSelectedCustomer(){
 
   selectedCustomerId =
     null;
 
-
   $("customerSearch").value =
     "";
-
 
   $("customerResults").innerHTML =
     "";
 
-
   $("customerResults").style.display =
     "none";
-
 
   renderSelectedCustomer();
 
 }
-
 
 function renderCustomerResults(
   query
@@ -2763,14 +2519,12 @@ function renderCustomerResults(
   const container =
     $("customerResults");
 
-
   const search =
     String(
       query || ""
     )
     .trim()
     .toLowerCase();
-
 
   if(!search){
 
@@ -2784,7 +2538,6 @@ function renderCustomerResults(
 
   }
 
-
   const filtered =
     customers.filter(
       customer => {
@@ -2794,18 +2547,15 @@ function renderCustomerResults(
             customer.name || ""
           ).toLowerCase();
 
-
         const phone =
           String(
             customer.phone || ""
           ).toLowerCase();
 
-
         const notes =
           String(
             customer.notes || ""
           ).toLowerCase();
-
 
         return(
           name.includes(search) ||
@@ -2816,10 +2566,8 @@ function renderCustomerResults(
       }
     );
 
-
   container.innerHTML =
     "";
-
 
   if(!filtered.length){
 
@@ -2828,28 +2576,22 @@ function renderCustomerResults(
         "div"
       );
 
-
     empty.className =
       "empty";
 
-
     empty.textContent =
       "No encontramos ese cliente.";
-
 
     container.appendChild(
       empty
     );
 
-
     container.style.display =
       "block";
-
 
     return;
 
   }
-
 
   filtered
     .slice(0,20)
@@ -2861,14 +2603,11 @@ function renderCustomerResults(
             "button"
           );
 
-
         button.type =
           "button";
 
-
         button.className =
           "customer-result";
-
 
         button.innerHTML =
 
@@ -2891,7 +2630,6 @@ function renderCustomerResults(
               : ""
           );
 
-
         button.addEventListener(
           "click",
           () => {
@@ -2899,24 +2637,19 @@ function renderCustomerResults(
             selectedCustomerId =
               customer.id;
 
-
             $("customerSearch").value =
               customer.name || "";
-
 
             container.innerHTML =
               "";
 
-
             container.style.display =
               "none";
-
 
             renderSelectedCustomer();
 
           }
         );
-
 
         container.appendChild(
           button
@@ -2925,12 +2658,10 @@ function renderCustomerResults(
       }
     );
 
-
   container.style.display =
     "block";
 
 }
-
 
 $("customerSearch").addEventListener(
   "input",
@@ -2942,7 +2673,6 @@ $("customerSearch").addEventListener(
 
   }
 );
-
 
 $("customerSearch").addEventListener(
   "focus",
@@ -2961,12 +2691,10 @@ $("customerSearch").addEventListener(
   }
 );
 
-
 $("generalCustomer").addEventListener(
   "click",
   clearSelectedCustomer
 );
-
 
 document.addEventListener(
   "click",
@@ -2976,7 +2704,6 @@ document.addEventListener(
       document.querySelector(
         ".customer-box"
       );
-
 
     if(
       box &&
@@ -2991,7 +2718,6 @@ document.addEventListener(
   }
 );
 
-
 /* =========================================================
    MODAL CLIENTE
 ========================================================= */
@@ -3001,40 +2727,32 @@ function openClientModal(){
   const modal =
     $("clientModal");
 
-
   $("clientModalBusiness").textContent =
     "Nuevo cliente para " +
     currentBusiness;
 
-
   $("clientModalError").textContent =
     "";
-
 
   $("clientModalError")
     .classList.remove(
       "show"
     );
 
-
   $("clientForm").reset();
-
 
   modal.classList.add(
     "show"
   );
-
 
   modal.setAttribute(
     "aria-hidden",
     "false"
   );
 
-
   document.body.classList.add(
     "modal-open"
   );
-
 
   setTimeout(
     () => {
@@ -3047,32 +2765,26 @@ function openClientModal(){
 
 }
 
-
 function closeClientModal(){
 
   const modal =
     $("clientModal");
 
-
   modal.classList.remove(
     "show"
   );
-
 
   modal.setAttribute(
     "aria-hidden",
     "true"
   );
 
-
   document.body.classList.remove(
     "modal-open"
   );
 
-
   $("clientModalError").textContent =
     "";
-
 
   $("clientModalError")
     .classList.remove(
@@ -3081,7 +2793,6 @@ function closeClientModal(){
 
 }
 
-
 function showClientModalError(
   message
 ){
@@ -3089,17 +2800,14 @@ function showClientModalError(
   const error =
     $("clientModalError");
 
-
   error.textContent =
     message;
-
 
   error.classList.add(
     "show"
   );
 
 }
-
 
 async function saveNewClient(){
 
@@ -3108,18 +2816,15 @@ async function saveNewClient(){
       .value
       .trim();
 
-
   const phone =
     $("newClientPhone")
       .value
       .trim();
 
-
   const notes =
     $("newClientNotes")
       .value
       .trim();
-
 
   if(!name){
 
@@ -3127,30 +2832,23 @@ async function saveNewClient(){
       "Escribe el nombre del cliente."
     );
 
-
     $("newClientName").focus();
-
 
     return;
 
   }
 
-
   const saveButton =
     $("saveClientButton");
-
 
   const originalText =
     saveButton.textContent;
 
-
   saveButton.disabled =
     true;
 
-
   saveButton.textContent =
     "Guardando...";
-
 
   try{
 
@@ -3159,17 +2857,11 @@ async function saveNewClient(){
         currentBusiness
       ];
 
-
-    /*
-     * OFFLINE
-     */
-
     if(!navigator.onLine){
 
       const temporaryId =
         "offline-client-" +
         Date.now();
-
 
       const newClient = {
 
@@ -3192,11 +2884,9 @@ async function saveNewClient(){
 
       };
 
-
       customers.push(
         newClient
       );
-
 
       customers.sort(
         (a,b) =>
@@ -3205,7 +2895,6 @@ async function saveNewClient(){
               String(b.name || "")
             )
       );
-
 
       await saveOfflineData(
         currentBusiness,
@@ -3216,20 +2905,15 @@ async function saveNewClient(){
         }
       );
 
-
       selectedCustomerId =
         temporaryId;
-
 
       $("customerSearch").value =
         name;
 
-
       renderSelectedCustomer();
 
-
       closeClientModal();
-
 
       showStatus(
         "Cliente agregado correctamente en modo OFFLINE.\n" +
@@ -3237,18 +2921,11 @@ async function saveNewClient(){
         "ok"
       );
 
-
       return;
 
     }
 
-
-    /*
-     * ONLINE
-     */
-
     initializeSupabase();
-
 
     let result =
       await withTimeout(
@@ -3279,11 +2956,6 @@ async function saveNewClient(){
         "Guardar el cliente tardó demasiado."
 
       );
-
-
-    /*
-     * Compatibilidad con tabla sin business_id
-     */
 
     if(
       result.error &&
@@ -3331,13 +3003,11 @@ async function saveNewClient(){
 
     }
 
-
     if(result.error){
 
       throw result.error;
 
     }
-
 
     if(!result.data){
 
@@ -3347,10 +3017,8 @@ async function saveNewClient(){
 
     }
 
-
     const newClient =
       result.data;
-
 
     customers =
       [
@@ -3365,7 +3033,6 @@ async function saveNewClient(){
             )
       );
 
-
     await saveOfflineData(
       currentBusiness,
       {
@@ -3375,21 +3042,16 @@ async function saveNewClient(){
       }
     );
 
-
     selectedCustomerId =
       newClient.id;
-
 
     $("customerSearch").value =
       newClient.name ||
       name;
 
-
     renderSelectedCustomer();
 
-
     closeClientModal();
-
 
     showStatus(
       "Cliente agregado correctamente.\n" +
@@ -3405,7 +3067,6 @@ async function saveNewClient(){
       "[POS] Error creando cliente:",
       error
     );
-
 
     showClientModalError(
 
@@ -3425,14 +3086,12 @@ async function saveNewClient(){
     saveButton.disabled =
       false;
 
-
     saveButton.textContent =
       originalText;
 
   }
 
 }
-
 
 /* =========================================================
    BOTÓN + CLIENTE
@@ -3450,18 +3109,15 @@ $("addClientButton").addEventListener(
   }
 );
 
-
 $("closeClientModal").addEventListener(
   "click",
   closeClientModal
 );
 
-
 $("cancelClientModal").addEventListener(
   "click",
   closeClientModal
 );
-
 
 $("clientForm").addEventListener(
   "submit",
@@ -3473,7 +3129,6 @@ $("clientForm").addEventListener(
 
   }
 );
-
 
 $("clientModal").addEventListener(
   "click",
@@ -3490,7 +3145,6 @@ $("clientModal").addEventListener(
 
   }
 );
-
 
 document.addEventListener(
   "keydown",
@@ -3510,7 +3164,6 @@ document.addEventListener(
   }
 );
 
-
 /* =========================================================
    CAMBIO DE NEGOCIO
 ========================================================= */
@@ -3529,33 +3182,25 @@ async function changeBusiness(
 
   }
 
-
   currentBusiness =
     name;
 
-
   cart = [];
-
 
   selectedPaymentId =
     null;
 
-
   selectedCustomerId =
     null;
-
 
   $("customerSearch").value =
     "";
 
-
   $("customerResults").innerHTML =
     "";
 
-
   $("customerResults").style.display =
     "none";
-
 
   document
     .querySelectorAll(
@@ -3568,16 +3213,13 @@ async function changeBusiness(
         )
     );
 
-
   button.classList.add(
     "active"
   );
 
-
   await loadBusinessData();
 
 }
-
 
 /* =========================================================
    REGISTRAR VENTA
@@ -3589,7 +3231,6 @@ async function registerSale(
 
   clearStatus();
 
-
   if(!cart.length){
 
     showStatus(
@@ -3599,7 +3240,6 @@ async function registerSale(
     return;
 
   }
-
 
   if(
     !isPending &&
@@ -3614,7 +3254,6 @@ async function registerSale(
 
   }
 
-
   if(
     isPending &&
     !selectedCustomerId
@@ -3628,7 +3267,6 @@ async function registerSale(
 
   }
 
-
   if(!navigator.onLine){
 
     showStatus(
@@ -3641,29 +3279,23 @@ async function registerSale(
 
   }
 
-
   initializeSupabase();
-
 
   const button =
     isPending
       ? $("accountButton")
       : $("chargeButton");
 
-
   const originalText =
     button.textContent;
 
-
   button.disabled =
     true;
-
 
   button.textContent =
     isPending
       ? "GUARDANDO..."
       : "REGISTRANDO...";
-
 
   try{
 
@@ -3690,12 +3322,10 @@ async function registerSale(
         })
       );
 
-
     const businessId =
       BUSINESS_IDS[
         currentBusiness
       ];
-
 
     const result =
       await withTimeout(
@@ -3731,13 +3361,11 @@ async function registerSale(
 
       );
 
-
     if(result.error){
 
       throw result.error;
 
     }
-
 
     alert(
       isPending
@@ -3745,31 +3373,23 @@ async function registerSale(
         : "Venta registrada correctamente."
     );
 
-
     cart = [];
-
 
     selectedCustomerId =
       null;
 
-
     $("customerSearch").value =
       "";
-
 
     $("customerResults").innerHTML =
       "";
 
-
     $("customerResults").style.display =
       "none";
 
-
     renderSelectedCustomer();
 
-
     await loadBusinessData();
-
 
     showStatus(
       isPending
@@ -3786,7 +3406,6 @@ async function registerSale(
       "registerSale:",
       error
     );
-
 
     showStatus(
 
@@ -3806,7 +3425,6 @@ async function registerSale(
     button.disabled =
       false;
 
-
     button.textContent =
       originalText;
 
@@ -3814,10 +3432,27 @@ async function registerSale(
 
 }
 
-
 /* =========================================================
    NAVEGACIÓN
 ========================================================= */
+
+/*
+ * NUEVO:
+ * Botón de Cierre de Caja
+ */
+
+$("closingButton").addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+      "cierre.html?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
+
+  }
+);
 
 $("chargeButton").addEventListener(
   "click",
@@ -3825,13 +3460,11 @@ $("chargeButton").addEventListener(
     registerSale(false)
 );
 
-
 $("accountButton").addEventListener(
   "click",
   () =>
     registerSale(true)
 );
-
 
 $("accountsButton").addEventListener(
   "click",
@@ -3846,7 +3479,6 @@ $("accountsButton").addEventListener(
   }
 );
 
-
 $("clientsButton").addEventListener(
   "click",
   () => {
@@ -3859,7 +3491,6 @@ $("clientsButton").addEventListener(
 
   }
 );
-
 
 $("historyButton").addEventListener(
   "click",
@@ -3874,7 +3505,6 @@ $("historyButton").addEventListener(
   }
 );
 
-
 $("inventoryButton").addEventListener(
   "click",
   () => {
@@ -3888,7 +3518,6 @@ $("inventoryButton").addEventListener(
   }
 );
 
-
 $("dashboardButton").addEventListener(
   "click",
   () => {
@@ -3901,7 +3530,6 @@ $("dashboardButton").addEventListener(
 
   }
 );
-
 
 /* =========================================================
    BOTONES DE NEGOCIO
@@ -3929,7 +3557,6 @@ document
     }
   );
 
-
 /* =========================================================
    CONEXIÓN
 ========================================================= */
@@ -3941,12 +3568,10 @@ window.addEventListener(
     $("offlineBadge").innerHTML =
       "";
 
-
     await loadBusinessData();
 
   }
 );
-
 
 window.addEventListener(
   "offline",
@@ -3955,12 +3580,10 @@ window.addEventListener(
     $("offlineBadge").innerHTML =
       '<span class="offline-badge">📴 MODO OFFLINE</span>';
 
-
     await loadBusinessData();
 
   }
 );
-
 
 /* =========================================================
    INICIO
@@ -3975,7 +3598,6 @@ async function startApp(){
 
   }
 
-
   try{
 
     await loadBusinessData();
@@ -3989,13 +3611,11 @@ async function startApp(){
       error
     );
 
-
     await loadOfflineData();
 
   }
 
 }
-
 
 /* =========================================================
    ARRANCAR
