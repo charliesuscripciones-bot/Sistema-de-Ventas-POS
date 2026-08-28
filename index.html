@@ -51,16 +51,22 @@ body{
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
+
   background:#f5f5f5;
   color:#222;
   min-height:100vh;
-  padding-bottom:env(safe-area-inset-bottom);
+
+  padding-bottom:
+    env(safe-area-inset-bottom);
 }
 
 header{
   background:#111827;
   color:#fff;
-  padding-top:calc(20px + env(safe-area-inset-top));
+
+  padding-top:
+    calc(20px + env(safe-area-inset-top));
+
   padding-right:20px;
   padding-bottom:22px;
   padding-left:20px;
@@ -89,13 +95,17 @@ header p{
   border-radius:18px;
   padding:20px;
   margin-bottom:16px;
-  box-shadow:0 3px 14px rgba(0,0,0,.06);
+
+  box-shadow:
+    0 3px 14px rgba(0,0,0,.06);
 }
 
 .card h2{
   font-size:20px;
   margin-bottom:16px;
 }
+
+/* NEGOCIO */
 
 .business-selector{
   display:grid;
@@ -108,8 +118,10 @@ header p{
   background:#fff;
   border-radius:12px;
   padding:15px;
+
   font-size:16px;
   font-weight:800;
+
   cursor:pointer;
 }
 
@@ -119,9 +131,7 @@ header p{
   color:#fff;
 }
 
-/* =========================
-   FECHA
-========================= */
+/* FECHA */
 
 .date-box{
   background:#f8fafc;
@@ -140,12 +150,17 @@ header p{
 
 .date-box input{
   width:100%;
+
   border:2px solid #d1d5db;
   border-radius:13px;
+
   background:#fff;
+
   padding:15px;
+
   font-size:18px;
   color:#111827;
+
   font-family:inherit;
 }
 
@@ -158,17 +173,22 @@ header p{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:10px;
+
   margin-top:10px;
 }
 
 .date-btn{
   border:2px solid #d1d5db;
   background:#fff;
+
   border-radius:12px;
   padding:14px;
+
   font-size:16px;
   font-weight:800;
+
   color:#2563eb;
+
   cursor:pointer;
 }
 
@@ -180,23 +200,28 @@ header p{
 
 .selected-date{
   margin-top:14px;
+
   font-size:16px;
   line-height:1.35;
+
   font-weight:800;
   color:#374151;
 }
 
-/* =========================
-   STATUS
-========================= */
+/* STATUS */
 
 .status{
   display:none;
+
   margin-bottom:15px;
+
   padding:14px 16px;
+
   border-radius:12px;
+
   font-size:14px;
   font-weight:700;
+
   white-space:pre-line;
 }
 
@@ -219,20 +244,24 @@ header p{
   color:#92400e;
 }
 
-/* =========================
-   RESUMEN
-========================= */
+/* RESUMEN */
 
 .info-grid{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
+
+  grid-template-columns:
+    repeat(2,1fr);
+
   gap:10px;
 }
 
 .info-box{
   background:#f8fafc;
+
   border:2px solid #e5e7eb;
+
   border-radius:13px;
+
   padding:15px;
 }
 
@@ -244,6 +273,7 @@ header p{
 
 .info-value{
   margin-top:5px;
+
   font-size:20px;
   font-weight:800;
 }
@@ -262,9 +292,12 @@ header p{
 
 .payment-row{
   display:flex;
+
   justify-content:space-between;
   align-items:center;
+
   padding:13px 0;
+
   border-bottom:1px solid #eee;
 }
 
@@ -283,24 +316,31 @@ header p{
 
 .empty{
   text-align:center;
+
   color:#777;
+
   padding:25px 10px;
 }
 
 .grand-total{
   display:flex;
+
   justify-content:space-between;
   align-items:center;
+
   margin-top:15px;
+
   padding-top:18px;
-  border-top:2px solid #111827;
+
+  border-top:
+    2px solid #111827;
+
   font-size:24px;
+
   font-weight:900;
 }
 
-/* =========================
-   FORMULARIOS
-========================= */
+/* FORMULARIOS */
 
 .form-group{
   margin-bottom:16px;
@@ -308,26 +348,36 @@ header p{
 
 .form-group label{
   display:block;
+
   margin-bottom:7px;
+
   font-size:14px;
   font-weight:800;
+
   color:#374151;
 }
 
 .form-group input,
 .form-group textarea{
   width:100%;
+
   border:2px solid #ddd;
+
   border-radius:11px;
+
   padding:14px;
+
   font-family:inherit;
+
   font-size:17px;
+
   background:#fff;
 }
 
 .form-group input:focus,
 .form-group textarea:focus{
   outline:none;
+
   border-color:#2563eb;
 }
 
@@ -336,16 +386,17 @@ header p{
   resize:vertical;
 }
 
-/* =========================
-   EFECTIVO
-========================= */
+/* EFECTIVO */
 
 .expected{
   display:flex;
+
   justify-content:space-between;
   align-items:center;
+
   font-size:17px;
   font-weight:700;
+
   margin-bottom:12px;
 }
 
@@ -355,8 +406,11 @@ header p{
 
 .difference{
   margin-top:15px;
+
   padding:17px;
+
   border-radius:13px;
+
   text-align:center;
 }
 
@@ -387,24 +441,33 @@ header p{
 
 .difference-value{
   margin-top:5px;
+
   font-size:28px;
+
   font-weight:900;
 }
 
-/* =========================
-   BOTONES
-========================= */
+/* BOTONES */
 
 .close-button{
   width:100%;
+
   margin-top:10px;
+
   padding:17px;
+
   border:none;
+
   border-radius:13px;
+
   background:#16a34a;
+
   color:#fff;
+
   font-size:18px;
+
   font-weight:900;
+
   cursor:pointer;
 }
 
@@ -415,27 +478,43 @@ header p{
 
 .back-button{
   width:100%;
+
   margin-top:10px;
+
   padding:15px;
+
   border:2px solid #ddd;
+
   border-radius:12px;
+
   background:#fff;
+
   color:#374151;
+
   font-size:16px;
+
   font-weight:800;
+
   cursor:pointer;
 }
 
-/* =========================
-   CAJA CERRADA
-========================= */
+.back-button:active{
+  transform:scale(.98);
+}
+
+/* CAJA CERRADA */
 
 .closed-box{
   text-align:center;
+
   padding:20px;
+
   border-radius:14px;
+
   background:#ecfdf5;
+
   border:2px solid #86efac;
+
   color:#166534;
 }
 
@@ -453,14 +532,15 @@ header p{
   font-size:14px;
 }
 
-/* =========================
-   LOADING
-========================= */
+/* LOADING */
 
 .loading{
   text-align:center;
+
   padding:25px;
+
   color:#666;
+
   font-weight:700;
 }
 
@@ -508,16 +588,13 @@ Cierre de caja · BakeQuiri
 
 <div class="container">
 
-
 <div
   id="status"
   class="status">
 </div>
 
 
-<!-- =========================
-     NEGOCIO
-========================= -->
+<!-- NEGOCIO -->
 
 <div class="card">
 
@@ -529,14 +606,18 @@ Cierre de caja · BakeQuiri
   type="button"
   class="business-btn"
   data-business="BakeQuiri">
+
 🧁 BakeQuiri
+
 </button>
 
 <button
   type="button"
   class="business-btn"
   data-business="SpicyRoll">
+
 🍣 SpicyRoll
+
 </button>
 
 </div>
@@ -544,9 +625,7 @@ Cierre de caja · BakeQuiri
 </div>
 
 
-<!-- =========================
-     FECHA DEL CORTE
-========================= -->
+<!-- FECHA -->
 
 <div class="card">
 
@@ -569,14 +648,18 @@ Selecciona la fecha que deseas consultar
   type="button"
   id="todayButton"
   class="date-btn">
+
 Hoy
+
 </button>
 
 <button
   type="button"
   id="yesterdayButton"
   class="date-btn">
+
 Ayer
+
 </button>
 
 </div>
@@ -591,9 +674,7 @@ Ayer
 </div>
 
 
-<!-- =========================
-     RESUMEN
-========================= -->
+<!-- RESUMEN -->
 
 <div class="card">
 
@@ -602,7 +683,9 @@ Ayer
 <div
   id="loadingSummary"
   class="loading">
+
 Cargando información...
+
 </div>
 
 <div
@@ -696,9 +779,7 @@ $0.00
 </div>
 
 
-<!-- =========================
-     EFECTIVO
-========================= -->
+<!-- EFECTIVO -->
 
 <div class="card">
 
@@ -758,9 +839,7 @@ $0.00
 </div>
 
 
-<!-- =========================
-     NOTAS
-========================= -->
+<!-- NOTAS -->
 
 <div class="card">
 
@@ -782,9 +861,7 @@ Notas del cierre
 </div>
 
 
-<!-- =========================
-     CERRAR
-========================= -->
+<!-- CERRAR -->
 
 <div class="card">
 
@@ -834,15 +911,14 @@ El cierre se registró correctamente.
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
 <script>
 
 "use strict";
 
 
-/* =========================================================
+/* =====================================================
    CONFIGURACIÓN
-========================================================= */
+===================================================== */
 
 const SUPABASE_URL =
   "https://jrxklpstlloeckihcduv.supabase.co";
@@ -864,10 +940,11 @@ const BUSINESS_IDS = {
 
 let supabaseClient = null;
 
-let currentBusiness =
-  "BakeQuiri";
+let currentBusiness = "BakeQuiri";
 
 let selectedDate = "";
+
+let alreadyClosed = false;
 
 let currentSummary = {
 
@@ -887,13 +964,10 @@ let currentSummary = {
 
 };
 
-let alreadyClosed =
-  false;
 
-
-/* =========================================================
+/* =====================================================
    HELPERS
-========================================================= */
+===================================================== */
 
 function $(id){
 
@@ -905,13 +979,14 @@ function $(id){
 function money(value){
 
   return "$" +
-    Number(value || 0)
-      .toFixed(2);
+    Number(value || 0).toFixed(2);
 
 }
 
 
-function localDateString(date = new Date()){
+function localDateString(
+  date = new Date()
+){
 
   const year =
     date.getFullYear();
@@ -940,18 +1015,14 @@ function localDateString(date = new Date()){
 function formatSelectedDate(value){
 
   if(!value){
-
     return "";
-
   }
 
   const parts =
     value.split("-");
 
   if(parts.length !== 3){
-
     return value;
-
   }
 
   const date =
@@ -979,26 +1050,21 @@ function showStatus(
   type = "error"
 ){
 
-  const element =
-    $("status");
+  const element = $("status");
 
-  element.textContent =
-    message;
+  element.textContent = message;
 
   element.className =
-    "status show " +
-    type;
+    "status show " + type;
 
 }
 
 
 function clearStatus(){
 
-  $("status").textContent =
-    "";
+  $("status").textContent = "";
 
-  $("status").className =
-    "status";
+  $("status").className = "status";
 
 }
 
@@ -1013,7 +1079,7 @@ function withTimeout(
 
   const timeout =
     new Promise(
-      (_,reject) => {
+      (_, reject) => {
 
         timeoutId =
           setTimeout(
@@ -1036,18 +1102,16 @@ function withTimeout(
   return Promise.race([
     promise,
     timeout
-  ])
-  .finally(
-    () =>
-      clearTimeout(timeoutId)
+  ]).finally(
+    () => clearTimeout(timeoutId)
   );
 
 }
 
 
-/* =========================================================
+/* =====================================================
    SUPABASE
-========================================================= */
+===================================================== */
 
 function initializeSupabase(){
 
@@ -1076,9 +1140,9 @@ function initializeSupabase(){
 }
 
 
-/* =========================================================
+/* =====================================================
    FECHA
-========================================================= */
+===================================================== */
 
 function initializeDate(){
 
@@ -1095,12 +1159,11 @@ function initializeDate(){
 
 function updateDateText(){
 
-  $("selectedDateText")
-    .textContent =
-      "Corte seleccionado: " +
-      formatSelectedDate(
-        selectedDate
-      );
+  $("selectedDateText").textContent =
+    "Corte seleccionado: " +
+    formatSelectedDate(
+      selectedDate
+    );
 
 }
 
@@ -1108,103 +1171,88 @@ function updateDateText(){
 function setDate(value){
 
   if(!value){
-
     return;
-
   }
 
-  selectedDate =
-    value;
+  selectedDate = value;
 
   $("selectedDate").value =
     selectedDate;
 
   updateDateText();
 
-  clearStatus();
-
   loadSummary();
 
 }
 
 
-/* =========================================================
-   BOTONES HOY / AYER
-========================================================= */
+/* =====================================================
+   BOTONES DE FECHA
+===================================================== */
 
-$("todayButton")
-  .addEventListener(
-    "click",
-    () => {
+$("todayButton").addEventListener(
+  "click",
+  () => {
 
-      setDate(
-        localDateString()
-      );
+    setDate(
+      localDateString()
+    );
 
-    }
-  );
-
-
-$("yesterdayButton")
-  .addEventListener(
-    "click",
-    () => {
-
-      const yesterday =
-        new Date();
-
-      yesterday.setDate(
-        yesterday.getDate() - 1
-      );
-
-      setDate(
-        localDateString(
-          yesterday
-        )
-      );
-
-    }
-  );
+  }
+);
 
 
-$("selectedDate")
-  .addEventListener(
-    "change",
-    event => {
+$("yesterdayButton").addEventListener(
+  "click",
+  () => {
 
-      setDate(
-        event.target.value
-      );
+    const date =
+      new Date();
 
-    }
-  );
+    date.setDate(
+      date.getDate() - 1
+    );
+
+    setDate(
+      localDateString(date)
+    );
+
+  }
+);
 
 
-/* =========================================================
+$("selectedDate").addEventListener(
+  "change",
+  event => {
+
+    setDate(
+      event.target.value
+    );
+
+  }
+);
+
+
+/* =====================================================
    CARGAR RESUMEN
-========================================================= */
+===================================================== */
 
 async function loadSummary(){
 
   clearStatus();
 
-  alreadyClosed =
-    false;
+  alreadyClosed = false;
 
-  $("loadingSummary")
-    .style.display =
+  $("loadingSummary").style.display =
     "block";
 
-  $("summaryContent")
-    .style.display =
+  $("summaryContent").style.display =
     "none";
 
-  $("closedBox")
-    .style.display =
+  $("closedBox").style.display =
     "none";
 
-  $("closeButton")
-    .style.display =
+  $("closeButton").style.display =
     "block";
 
 
@@ -1212,17 +1260,9 @@ async function loadSummary(){
 
     initializeSupabase();
 
-
     const businessId =
-      BUSINESS_IDS[
-        currentBusiness
-      ];
+      BUSINESS_IDS[currentBusiness];
 
-
-    /*
-     * IMPORTANTE:
-     * Ahora enviamos también p_date.
-     */
 
     const result =
       await withTimeout(
@@ -1246,9 +1286,7 @@ async function loadSummary(){
 
 
     if(result.error){
-
       throw result.error;
-
     }
 
 
@@ -1261,24 +1299,20 @@ async function loadSummary(){
   catch(error){
 
     console.error(
-      "[CIERRE] Error cargando resumen:",
+      "[CIERRE] Error:",
       error
     );
 
-    $("loadingSummary")
-      .style.display =
+    $("loadingSummary").style.display =
       "none";
 
     showStatus(
-
-      "No se pudo cargar el resumen de la caja.\n\n" +
+      "No se pudo cargar el resumen.\n\n" +
       (
         error?.message ||
         String(error)
       ),
-
       "error"
-
     );
 
   }
@@ -1286,30 +1320,26 @@ async function loadSummary(){
 }
 
 
-/* =========================================================
+/* =====================================================
    PROCESAR RESUMEN
-========================================================= */
+===================================================== */
 
-function processSummaryData(
-  data
-){
+function processSummaryData(data){
 
-  let summary =
-    data;
+  let summary = data;
 
   if(Array.isArray(data)){
 
     summary =
-      data[0] ||
-      {};
+      data[0] || {};
 
   }
 
   const salesCount =
     Number(
       summary.sales_count ??
-      summary.total_sales ??
       summary.sale_count ??
+      summary.total_sales ??
       0
     );
 
@@ -1346,10 +1376,7 @@ function processSummaryData(
       summary.grand_total ??
       summary.total_amount ??
       summary.total_sales_amount ??
-      (
-        paidTotal +
-        pendingTotal
-      )
+      paidTotal + pendingTotal
     );
 
 
@@ -1362,35 +1389,33 @@ function processSummaryData(
     );
 
 
-  let paymentData =
+  let payments =
     summary.payments ??
     summary.payment_methods ??
     [];
 
 
-  if(typeof paymentData === "string"){
+  if(typeof payments === "string"){
 
     try{
 
-      paymentData =
-        JSON.parse(
-          paymentData
-        );
+      payments =
+        JSON.parse(payments);
 
     }
 
     catch(error){
 
-      paymentData = [];
+      payments = [];
 
     }
 
   }
 
 
-  if(!Array.isArray(paymentData)){
+  if(!Array.isArray(payments)){
 
-    paymentData = [];
+    payments = [];
 
   }
 
@@ -1409,8 +1434,7 @@ function processSummaryData(
 
     expectedCash,
 
-    payments:
-      paymentData
+    payments
 
   };
 
@@ -1418,12 +1442,10 @@ function processSummaryData(
   renderSummary();
 
 
-  $("loadingSummary")
-    .style.display =
+  $("loadingSummary").style.display =
     "none";
 
-  $("summaryContent")
-    .style.display =
+  $("summaryContent").style.display =
     "block";
 
 
@@ -1445,40 +1467,34 @@ function processSummaryData(
 }
 
 
-/* =========================================================
-   RENDER
-========================================================= */
+/* =====================================================
+   RENDER RESUMEN
+===================================================== */
 
 function renderSummary(){
 
-  $("salesCount")
-    .textContent =
+  $("salesCount").textContent =
     currentSummary.salesCount;
 
-  $("itemsCount")
-    .textContent =
+  $("itemsCount").textContent =
     currentSummary.itemsCount;
 
-  $("paidTotal")
-    .textContent =
+  $("paidTotal").textContent =
     money(
       currentSummary.paidTotal
     );
 
-  $("pendingTotal")
-    .textContent =
+  $("pendingTotal").textContent =
     money(
       currentSummary.pendingTotal
     );
 
-  $("grandTotal")
-    .textContent =
+  $("grandTotal").textContent =
     money(
       currentSummary.grandTotal
     );
 
-  $("expectedCash")
-    .textContent =
+  $("expectedCash").textContent =
     money(
       currentSummary.expectedCash
     );
@@ -1488,17 +1504,17 @@ function renderSummary(){
 }
 
 
-/* =========================================================
+/* =====================================================
    MÉTODOS DE PAGO
-========================================================= */
+===================================================== */
 
 function renderPaymentSummary(){
 
   const container =
     $("paymentSummary");
 
-  container.innerHTML =
-    "";
+  container.innerHTML = "";
+
 
   if(
     !currentSummary.payments.length
@@ -1514,94 +1530,82 @@ function renderPaymentSummary(){
   }
 
 
-  currentSummary.payments
-    .forEach(
-      payment => {
+  currentSummary.payments.forEach(
+    payment => {
 
-        const row =
-          document.createElement(
-            "div"
-          );
+      const row =
+        document.createElement("div");
 
-        row.className =
-          "payment-row";
+      row.className =
+        "payment-row";
 
 
-        const name =
-          document.createElement(
-            "div"
-          );
+      const name =
+        document.createElement("div");
 
-        name.className =
-          "payment-name";
+      name.className =
+        "payment-name";
 
-        name.textContent =
-          payment.name ??
-          payment.payment_method ??
-          payment.payment_method_name ??
-          "Método de pago";
+      name.textContent =
+        payment.name ??
+        payment.payment_method ??
+        payment.payment_method_name ??
+        "Método de pago";
 
 
-        const total =
-          document.createElement(
-            "div"
-          );
+      const total =
+        document.createElement("div");
 
-        total.className =
-          "payment-total";
+      total.className =
+        "payment-total";
 
-        total.textContent =
-          money(
-            payment.total ??
-            payment.amount ??
-            payment.total_amount ??
-            0
-          );
-
-
-        row.append(
-          name,
-          total
+      total.textContent =
+        money(
+          payment.total ??
+          payment.amount ??
+          payment.total_amount ??
+          0
         );
 
-        container.appendChild(
-          row
-        );
 
-      }
-    );
+      row.append(
+        name,
+        total
+      );
+
+      container.appendChild(row);
+
+    }
+  );
 
 }
 
 
-/* =========================================================
+/* =====================================================
    DIFERENCIA
-========================================================= */
+===================================================== */
 
-$("countedCash")
-  .addEventListener(
-    "input",
-    updateDifference
-  );
+$("countedCash").addEventListener(
+  "input",
+  updateDifference
+);
 
 
 function updateDifference(){
 
   const expected =
     Number(
-      currentSummary.expectedCash ||
-      0
+      currentSummary.expectedCash || 0
     );
+
+  const input =
+    $("countedCash");
 
   const counted =
-    Number(
-      $("countedCash").value ||
-      0
-    );
+    Number(input.value || 0);
 
   const difference =
-    counted -
-    expected;
+    counted - expected;
 
   const box =
     $("differenceBox");
@@ -1610,18 +1614,14 @@ function updateDifference(){
     $("differenceValue");
 
 
-  value.textContent =
-    money(
-      difference
-    );
-
   box.className =
     "difference";
 
 
-  if(
-    $("countedCash").value === ""
-  ){
+  if(input.value === ""){
+
+    value.textContent =
+      "$0.00";
 
     box.classList.add(
       "neutral"
@@ -1633,13 +1633,10 @@ function updateDifference(){
 
 
   if(
-    Math.abs(difference) <
-    0.005
+    Math.abs(difference) < 0.005
   ){
 
-    box.classList.add(
-      "ok"
-    );
+    box.classList.add("ok");
 
     value.textContent =
       "$0.00 — CORRECTO";
@@ -1651,9 +1648,7 @@ function updateDifference(){
 
   if(difference < 0){
 
-    box.classList.add(
-      "short"
-    );
+    box.classList.add("short");
 
     value.textContent =
       money(difference) +
@@ -1664,9 +1659,7 @@ function updateDifference(){
   }
 
 
-  box.classList.add(
-    "over"
-  );
+  box.classList.add("over");
 
   value.textContent =
     "+" +
@@ -1676,9 +1669,9 @@ function updateDifference(){
 }
 
 
-/* =========================================================
+/* =====================================================
    CERRAR CAJA
-========================================================= */
+===================================================== */
 
 async function closeCashRegister(){
 
@@ -1701,9 +1694,7 @@ async function closeCashRegister(){
     $("countedCash").value;
 
 
-  if(
-    countedInput === ""
-  ){
+  if(countedInput === ""){
 
     showStatus(
       "Ingresa primero el efectivo contado físicamente.",
@@ -1718,15 +1709,11 @@ async function closeCashRegister(){
 
 
   const countedCash =
-    Number(
-      countedInput
-    );
+    Number(countedInput);
 
 
   if(
-    !Number.isFinite(
-      countedCash
-    ) ||
+    !Number.isFinite(countedCash) ||
     countedCash < 0
   ){
 
@@ -1742,30 +1729,26 @@ async function closeCashRegister(){
 
   const expectedCash =
     Number(
-      currentSummary.expectedCash ||
-      0
+      currentSummary.expectedCash || 0
     );
 
 
   const difference =
-    countedCash -
-    expectedCash;
+    countedCash - expectedCash;
 
 
   const notes =
-    $("notes")
-      .value
-      .trim();
+    $("notes").value.trim();
 
 
   const confirmed =
-    confirm(
+    window.confirm(
 
       "¿Deseas cerrar la caja de " +
       currentBusiness +
       "?\n\n" +
 
-      "Fecha del corte: " +
+      "Fecha: " +
       formatSelectedDate(
         selectedDate
       ) +
@@ -1786,9 +1769,7 @@ async function closeCashRegister(){
 
 
   if(!confirmed){
-
     return;
-
   }
 
 
@@ -1798,8 +1779,8 @@ async function closeCashRegister(){
   const originalText =
     button.textContent;
 
-  button.disabled =
-    true;
+
+  button.disabled = true;
 
   button.textContent =
     "CERRANDO CAJA...";
@@ -1811,23 +1792,15 @@ async function closeCashRegister(){
 
 
     const businessId =
-      BUSINESS_IDS[
-        currentBusiness
-      ];
+      BUSINESS_IDS[currentBusiness];
 
 
     /*
-     * IMPORTANTE:
-     *
-     * El resumen ya trabaja por fecha.
-     *
-     * El cierre actual utiliza la función
-     * close_cash_register existente.
-     *
-     * La fecha seleccionada se envía también
-     * para que la función nueva pueda utilizarla
-     * cuando esté configurada.
-     */
+      IMPORTANTE:
+      Se mantienen los cuatro parámetros
+      que está utilizando actualmente
+      tu sistema.
+    */
 
     const result =
       await withTimeout(
@@ -1859,75 +1832,26 @@ async function closeCashRegister(){
 
 
     if(result.error){
-
       throw result.error;
-
     }
 
 
-    alreadyClosed =
-      true;
+    alreadyClosed = true;
 
 
-    $("closeButton")
-      .style.display =
+    $("closeButton").style.display =
       "none";
 
-
-    $("closedBox")
-      .style.display =
+    $("closedBox").style.display =
       "block";
 
 
-    let closedText =
+    $("closedMessage").textContent =
       "El cierre de " +
       currentBusiness +
       " del " +
-      formatSelectedDate(
-        selectedDate
-      ) +
+      formatSelectedDate(selectedDate) +
       " se registró correctamente.";
-
-
-    if(result.data){
-
-      let resultData =
-        result.data;
-
-
-      if(Array.isArray(resultData)){
-
-        resultData =
-          resultData[0] ||
-          {};
-
-      }
-
-
-      if(
-        resultData.closed_at
-      ){
-
-        closedText +=
-          "\n" +
-          new Date(
-            resultData.closed_at
-          ).toLocaleString(
-            "es-MX",
-            {
-              dateStyle:"medium",
-              timeStyle:"short"
-            }
-          );
-
-      }
-
-    }
-
-
-    $("closedMessage")
-      .textContent =
-      closedText;
 
 
     showStatus(
@@ -1946,24 +1870,19 @@ async function closeCashRegister(){
 
 
     showStatus(
-
       "No se pudo cerrar la caja.\n\n" +
-
       (
         error?.message ||
         String(error)
       ),
-
       "error"
-
     );
 
   }
 
   finally{
 
-    button.disabled =
-      false;
+    button.disabled = false;
 
     button.textContent =
       originalText;
@@ -1973,25 +1892,19 @@ async function closeCashRegister(){
 }
 
 
-/* =========================================================
+/* =====================================================
    CAJA YA CERRADA
-========================================================= */
+===================================================== */
 
-function showAlreadyClosed(
-  summary
-){
+function showAlreadyClosed(summary){
 
-  alreadyClosed =
-    true;
+  alreadyClosed = true;
 
 
-  $("closeButton")
-    .style.display =
+  $("closeButton").style.display =
     "none";
 
-
-  $("closedBox")
-    .style.display =
+  $("closedBox").style.display =
     "block";
 
 
@@ -1999,9 +1912,7 @@ function showAlreadyClosed(
     "Esta caja ya fue cerrada.";
 
 
-  if(
-    summary.closed_at
-  ){
+  if(summary.closed_at){
 
     message +=
       " " +
@@ -2018,8 +1929,7 @@ function showAlreadyClosed(
   }
 
 
-  $("closedMessage")
-    .textContent =
+  $("closedMessage").textContent =
     message;
 
 
@@ -2033,17 +1943,16 @@ function showAlreadyClosed(
 }
 
 
-/* =========================================================
+/* =====================================================
    CAMBIO DE NEGOCIO
-========================================================= */
+===================================================== */
 
 async function changeBusiness(
   business
 ){
 
   if(
-    business ===
-    currentBusiness
+    business === currentBusiness
   ){
 
     return;
@@ -2056,9 +1965,7 @@ async function changeBusiness(
 
 
   document
-    .querySelectorAll(
-      ".business-btn"
-    )
+    .querySelectorAll(".business-btn")
     .forEach(
       button => {
 
@@ -2072,10 +1979,14 @@ async function changeBusiness(
     );
 
 
-  $("businessSubtitle")
-    .textContent =
-      "Cierre de caja · " +
-      currentBusiness;
+  $("businessSubtitle").textContent =
+    "Cierre de caja · " +
+    currentBusiness;
+
+
+  $("countedCash").value = "";
+
+  $("notes").value = "";
 
 
   await loadSummary();
@@ -2083,14 +1994,12 @@ async function changeBusiness(
 }
 
 
-/* =========================================================
-   NEGOCIOS
-========================================================= */
+/* =====================================================
+   BOTONES DE NEGOCIO
+===================================================== */
 
 document
-  .querySelectorAll(
-    ".business-btn"
-  )
+  .querySelectorAll(".business-btn")
   .forEach(
     button => {
 
@@ -2109,39 +2018,46 @@ document
   );
 
 
-/* =========================================================
-   CERRAR
-========================================================= */
+/* =====================================================
+   BOTÓN CERRAR
+===================================================== */
 
-$("closeButton")
-  .addEventListener(
-    "click",
-    closeCashRegister
-  );
-
-
-/* =========================================================
-   REGRESAR
-========================================================= */
-
-$("backButton")
-  .addEventListener(
-    "click",
-    () => {
-
-      window.location.href =
-        "index.html?business=" +
-        encodeURIComponent(
-          currentBusiness
-        );
-
-    }
-  );
+$("closeButton").addEventListener(
+  "click",
+  closeCashRegister
+);
 
 
-/* =========================================================
-   INICIO
-========================================================= */
+/* =====================================================
+   REGRESAR AL POS
+===================================================== */
+
+$("backButton").addEventListener(
+  "click",
+  function(){
+
+    /*
+      Usamos replace para evitar que
+      Cierre de Caja quede en el historial
+      del navegador y vuelva a abrirse
+      accidentalmente al presionar atrás.
+    */
+
+    const url =
+      "index.html?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
+
+    window.location.replace(url);
+
+  }
+);
+
+
+/* =====================================================
+   NEGOCIO DESDE URL
+===================================================== */
 
 function getBusinessFromURL(){
 
@@ -2151,9 +2067,7 @@ function getBusinessFromURL(){
     );
 
   const business =
-    params.get(
-      "business"
-    );
+    params.get("business");
 
 
   if(
@@ -2171,39 +2085,59 @@ function getBusinessFromURL(){
 }
 
 
+/* =====================================================
+   INICIO
+===================================================== */
+
 async function start(){
 
-  currentBusiness =
-    getBusinessFromURL();
+  try{
+
+    currentBusiness =
+      getBusinessFromURL();
 
 
-  initializeDate();
+    initializeDate();
 
 
-  document
-    .querySelectorAll(
-      ".business-btn"
-    )
-    .forEach(
-      button => {
+    document
+      .querySelectorAll(".business-btn")
+      .forEach(
+        button => {
 
-        button.classList.toggle(
-          "active",
-          button.dataset.business ===
-            currentBusiness
-        );
+          button.classList.toggle(
+            "active",
+            button.dataset.business ===
+              currentBusiness
+          );
 
-      }
-    );
+        }
+      );
 
 
-  $("businessSubtitle")
-    .textContent =
+    $("businessSubtitle").textContent =
       "Cierre de caja · " +
       currentBusiness;
 
 
-  await loadSummary();
+    await loadSummary();
+
+  }
+
+  catch(error){
+
+    console.error(
+      "[CIERRE] Error inicializando:",
+      error
+    );
+
+    showStatus(
+      error?.message ||
+      "No se pudo iniciar el cierre de caja.",
+      "error"
+    );
+
+  }
 
 }
 
