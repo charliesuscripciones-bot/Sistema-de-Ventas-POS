@@ -40,7 +40,8 @@
   padding:0;
 }
 
-html{
+html,
+body{
   width:100%;
   min-height:100%;
 }
@@ -54,10 +55,21 @@ body{
 
   background:#f5f5f5;
   color:#222;
+
   min-height:100vh;
 
   padding-bottom:
     env(safe-area-inset-bottom);
+}
+
+button,
+input,
+textarea{
+  font-family:inherit;
+}
+
+button{
+  -webkit-tap-highlight-color:transparent;
 }
 
 header{
@@ -86,14 +98,17 @@ header p{
 .container{
   width:100%;
   max-width:900px;
-  margin:auto;
+  margin:0 auto;
   padding:18px;
 }
 
 .card{
   background:#fff;
+
   border-radius:18px;
+
   padding:20px;
+
   margin-bottom:16px;
 
   box-shadow:
@@ -105,110 +120,9 @@ header p{
   margin-bottom:16px;
 }
 
-/* NEGOCIO */
-
-.business-selector{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.business-btn{
-  border:2px solid #ddd;
-  background:#fff;
-  border-radius:12px;
-  padding:15px;
-
-  font-size:16px;
-  font-weight:800;
-
-  cursor:pointer;
-}
-
-.business-btn.active{
-  background:#111827;
-  border-color:#111827;
-  color:#fff;
-}
-
-/* FECHA */
-
-.date-box{
-  background:#f8fafc;
-  border:2px solid #e5e7eb;
-  border-radius:15px;
-  padding:18px;
-}
-
-.date-box label{
-  display:block;
-  font-size:16px;
-  font-weight:800;
-  color:#374151;
-  margin-bottom:10px;
-}
-
-.date-box input{
-  width:100%;
-
-  border:2px solid #d1d5db;
-  border-radius:13px;
-
-  background:#fff;
-
-  padding:15px;
-
-  font-size:18px;
-  color:#111827;
-
-  font-family:inherit;
-}
-
-.date-box input:focus{
-  outline:none;
-  border-color:#2563eb;
-}
-
-.date-buttons{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-
-  margin-top:10px;
-}
-
-.date-btn{
-  border:2px solid #d1d5db;
-  background:#fff;
-
-  border-radius:12px;
-  padding:14px;
-
-  font-size:16px;
-  font-weight:800;
-
-  color:#2563eb;
-
-  cursor:pointer;
-}
-
-.date-btn.active{
-  background:#2563eb;
-  border-color:#2563eb;
-  color:#fff;
-}
-
-.selected-date{
-  margin-top:14px;
-
-  font-size:16px;
-  line-height:1.35;
-
-  font-weight:800;
-  color:#374151;
-}
-
-/* STATUS */
+/* =====================================================
+   STATUS
+===================================================== */
 
 .status{
   display:none;
@@ -220,6 +134,7 @@ header p{
   border-radius:12px;
 
   font-size:14px;
+
   font-weight:700;
 
   white-space:pre-line;
@@ -244,7 +159,144 @@ header p{
   color:#92400e;
 }
 
-/* RESUMEN */
+/* =====================================================
+   NEGOCIO
+===================================================== */
+
+.business-selector{
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:10px;
+}
+
+.business-btn{
+  border:2px solid #ddd;
+
+  background:#fff;
+
+  border-radius:12px;
+
+  padding:15px;
+
+  font-size:16px;
+
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:
+    .15s ease;
+}
+
+.business-btn:active{
+  transform:scale(.98);
+}
+
+.business-btn.active{
+  background:#111827;
+
+  border-color:#111827;
+
+  color:#fff;
+}
+
+/* =====================================================
+   FECHA
+===================================================== */
+
+.date-box{
+  background:#f8fafc;
+
+  border:2px solid #e5e7eb;
+
+  border-radius:15px;
+
+  padding:18px;
+}
+
+.date-box label{
+  display:block;
+
+  font-size:16px;
+
+  font-weight:800;
+
+  color:#374151;
+
+  margin-bottom:10px;
+}
+
+.date-box input{
+  width:100%;
+
+  border:2px solid #d1d5db;
+
+  border-radius:13px;
+
+  background:#fff;
+
+  padding:15px;
+
+  font-size:18px;
+
+  color:#111827;
+}
+
+.date-box input:focus{
+  outline:none;
+
+  border-color:#2563eb;
+}
+
+.date-buttons{
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:10px;
+
+  margin-top:10px;
+}
+
+.date-btn{
+  border:2px solid #d1d5db;
+
+  background:#fff;
+
+  border-radius:12px;
+
+  padding:14px;
+
+  font-size:16px;
+
+  font-weight:800;
+
+  color:#2563eb;
+
+  cursor:pointer;
+}
+
+.date-btn:active{
+  transform:scale(.98);
+}
+
+.selected-date{
+  margin-top:14px;
+
+  font-size:16px;
+
+  line-height:1.35;
+
+  font-weight:800;
+
+  color:#374151;
+}
+
+/* =====================================================
+   RESUMEN
+===================================================== */
 
 .info-grid{
   display:grid;
@@ -267,7 +319,9 @@ header p{
 
 .info-label{
   font-size:13px;
+
   color:#6b7280;
+
   font-weight:700;
 }
 
@@ -275,6 +329,7 @@ header p{
   margin-top:5px;
 
   font-size:20px;
+
   font-weight:800;
 }
 
@@ -294,6 +349,7 @@ header p{
   display:flex;
 
   justify-content:space-between;
+
   align-items:center;
 
   padding:13px 0;
@@ -311,6 +367,7 @@ header p{
 
 .payment-total{
   font-weight:800;
+
   font-size:17px;
 }
 
@@ -326,6 +383,7 @@ header p{
   display:flex;
 
   justify-content:space-between;
+
   align-items:center;
 
   margin-top:15px;
@@ -340,7 +398,9 @@ header p{
   font-weight:900;
 }
 
-/* FORMULARIOS */
+/* =====================================================
+   FORMULARIOS
+===================================================== */
 
 .form-group{
   margin-bottom:16px;
@@ -352,6 +412,7 @@ header p{
   margin-bottom:7px;
 
   font-size:14px;
+
   font-weight:800;
 
   color:#374151;
@@ -367,8 +428,6 @@ header p{
 
   padding:14px;
 
-  font-family:inherit;
-
   font-size:17px;
 
   background:#fff;
@@ -383,18 +442,23 @@ header p{
 
 .form-group textarea{
   min-height:90px;
+
   resize:vertical;
 }
 
-/* EFECTIVO */
+/* =====================================================
+   EFECTIVO
+===================================================== */
 
 .expected{
   display:flex;
 
   justify-content:space-between;
+
   align-items:center;
 
   font-size:17px;
+
   font-weight:700;
 
   margin-bottom:12px;
@@ -416,26 +480,31 @@ header p{
 
 .difference.neutral{
   background:#f3f4f6;
+
   color:#374151;
 }
 
 .difference.ok{
   background:#dcfce7;
+
   color:#166534;
 }
 
 .difference.short{
   background:#fee2e2;
+
   color:#991b1b;
 }
 
 .difference.over{
   background:#fef3c7;
+
   color:#92400e;
 }
 
 .difference-label{
   font-size:13px;
+
   font-weight:800;
 }
 
@@ -447,7 +516,9 @@ header p{
   font-weight:900;
 }
 
-/* BOTONES */
+/* =====================================================
+   BOTONES
+===================================================== */
 
 .close-button{
   width:100%;
@@ -471,8 +542,13 @@ header p{
   cursor:pointer;
 }
 
+.close-button:active{
+  transform:scale(.98);
+}
+
 .close-button:disabled{
   opacity:.55;
+
   cursor:wait;
 }
 
@@ -502,7 +578,9 @@ header p{
   transform:scale(.98);
 }
 
-/* CAJA CERRADA */
+/* =====================================================
+   CAJA CERRADA
+===================================================== */
 
 .closed-box{
   text-align:center;
@@ -520,6 +598,7 @@ header p{
 
 .closed-box .icon{
   font-size:40px;
+
   margin-bottom:8px;
 }
 
@@ -529,10 +608,17 @@ header p{
 
 .closed-box p{
   margin-top:6px;
+
   font-size:14px;
+
+  line-height:1.4;
+
+  white-space:pre-line;
 }
 
-/* LOADING */
+/* =====================================================
+   LOADING
+===================================================== */
 
 .loading{
   text-align:center;
@@ -544,6 +630,10 @@ header p{
   font-weight:700;
 }
 
+/* =====================================================
+   MÓVIL
+===================================================== */
+
 @media(max-width:600px){
 
   .container{
@@ -552,6 +642,7 @@ header p{
 
   .card{
     padding:16px;
+
     border-radius:16px;
   }
 
@@ -573,6 +664,7 @@ header p{
 
 </head>
 
+
 <body>
 
 <header>
@@ -588,13 +680,20 @@ Cierre de caja · BakeQuiri
 
 <div class="container">
 
+
+<!-- =====================================================
+     STATUS
+===================================================== -->
+
 <div
   id="status"
   class="status">
 </div>
 
 
-<!-- NEGOCIO -->
+<!-- =====================================================
+     NEGOCIO
+===================================================== -->
 
 <div class="card">
 
@@ -611,6 +710,7 @@ Cierre de caja · BakeQuiri
 
 </button>
 
+
 <button
   type="button"
   class="business-btn"
@@ -625,7 +725,9 @@ Cierre de caja · BakeQuiri
 </div>
 
 
-<!-- FECHA -->
+<!-- =====================================================
+     FECHA
+===================================================== -->
 
 <div class="card">
 
@@ -653,6 +755,7 @@ Hoy
 
 </button>
 
+
 <button
   type="button"
   id="yesterdayButton"
@@ -664,6 +767,7 @@ Ayer
 
 </div>
 
+
 <div
   id="selectedDateText"
   class="selected-date">
@@ -674,7 +778,9 @@ Ayer
 </div>
 
 
-<!-- RESUMEN -->
+<!-- =====================================================
+     RESUMEN
+===================================================== -->
 
 <div class="card">
 
@@ -688,11 +794,14 @@ Cargando información...
 
 </div>
 
+
 <div
   id="summaryContent"
   style="display:none">
 
+
 <div class="info-grid">
+
 
 <div class="info-box">
 
@@ -703,7 +812,9 @@ Ventas
 <div
   id="salesCount"
   class="info-value blue">
+
 0
+
 </div>
 
 </div>
@@ -718,7 +829,9 @@ Productos vendidos
 <div
   id="itemsCount"
   class="info-value">
+
 0
+
 </div>
 
 </div>
@@ -733,7 +846,9 @@ Ventas cobradas
 <div
   id="paidTotal"
   class="info-value green">
+
 $0.00
+
 </div>
 
 </div>
@@ -748,7 +863,9 @@ Cuentas pendientes
 <div
   id="pendingTotal"
   class="info-value orange">
+
 $0.00
+
 </div>
 
 </div>
@@ -779,13 +896,17 @@ $0.00
 </div>
 
 
-<!-- EFECTIVO -->
+<!-- =====================================================
+     EFECTIVO
+===================================================== -->
 
 <div class="card">
 
 <h2>💵 Arqueo de efectivo</h2>
 
+
 <div id="cashSection">
+
 
 <div class="expected">
 
@@ -829,8 +950,8 @@ Diferencia
 <div
   id="differenceValue"
   class="difference-value">
+
 $0.00
-</div>
 
 </div>
 
@@ -838,18 +959,24 @@ $0.00
 
 </div>
 
+</div>
 
-<!-- NOTAS -->
+
+<!-- =====================================================
+     NOTAS
+===================================================== -->
 
 <div class="card">
 
 <h2>📝 Observaciones</h2>
+
 
 <div class="form-group">
 
 <label for="notes">
 Notas del cierre
 </label>
+
 
 <textarea
   id="notes"
@@ -861,22 +988,28 @@ Notas del cierre
 </div>
 
 
-<!-- CERRAR -->
+<!-- =====================================================
+     ACCIONES
+===================================================== -->
 
 <div class="card">
+
 
 <div
   id="closedBox"
   class="closed-box"
   style="display:none">
 
+
 <div class="icon">
 ✅
 </div>
 
+
 <h3>
 Caja cerrada
 </h3>
+
 
 <p id="closedMessage">
 El cierre se registró correctamente.
@@ -900,7 +1033,7 @@ El cierre se registró correctamente.
   id="backButton"
   class="back-button">
 
-← Regresar al POS
+← REGRESAR AL POS
 
 </button>
 
@@ -911,21 +1044,27 @@ El cierre se registró correctamente.
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <script>
 
 "use strict";
 
 
 /* =====================================================
-   CONFIGURACIÓN
+   CONFIGURACIÓN SUPABASE
 ===================================================== */
 
 const SUPABASE_URL =
   "https://jrxklpstlloeckihcduv.supabase.co";
 
+
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
+
+/* =====================================================
+   NEGOCIOS
+===================================================== */
 
 const BUSINESS_IDS = {
 
@@ -938,13 +1077,19 @@ const BUSINESS_IDS = {
 };
 
 
+/* =====================================================
+   ESTADO
+===================================================== */
+
 let supabaseClient = null;
 
-let currentBusiness = "BakeQuiri";
+let currentBusiness =
+  "BakeQuiri";
 
 let selectedDate = "";
 
-let alreadyClosed = false;
+let alreadyClosed =
+  false;
 
 let currentSummary = {
 
@@ -966,7 +1111,7 @@ let currentSummary = {
 
 
 /* =====================================================
-   HELPERS
+   HELPER $
 ===================================================== */
 
 function $(id){
@@ -976,13 +1121,22 @@ function $(id){
 }
 
 
+/* =====================================================
+   DINERO
+===================================================== */
+
 function money(value){
 
   return "$" +
-    Number(value || 0).toFixed(2);
+    Number(value || 0)
+      .toFixed(2);
 
 }
 
+
+/* =====================================================
+   FECHA LOCAL
+===================================================== */
 
 function localDateString(
   date = new Date()
@@ -1012,7 +1166,13 @@ function localDateString(
 }
 
 
-function formatSelectedDate(value){
+/* =====================================================
+   FECHA LEGIBLE
+===================================================== */
+
+function formatSelectedDate(
+  value
+){
 
   if(!value){
     return "";
@@ -1045,29 +1205,42 @@ function formatSelectedDate(value){
 }
 
 
+/* =====================================================
+   STATUS
+===================================================== */
+
 function showStatus(
   message,
   type = "error"
 ){
 
-  const element = $("status");
+  const element =
+    $("status");
 
-  element.textContent = message;
+  element.textContent =
+    message;
 
   element.className =
-    "status show " + type;
+    "status show " +
+    type;
 
 }
 
 
 function clearStatus(){
 
-  $("status").textContent = "";
+  $("status").textContent =
+    "";
 
-  $("status").className = "status";
+  $("status").className =
+    "status";
 
 }
 
+
+/* =====================================================
+   TIMEOUT
+===================================================== */
 
 function withTimeout(
   promise,
@@ -1079,7 +1252,7 @@ function withTimeout(
 
   const timeout =
     new Promise(
-      (_, reject) => {
+      (_,reject) => {
 
         timeoutId =
           setTimeout(
@@ -1127,6 +1300,7 @@ function initializeSupabase(){
 
   }
 
+
   if(!supabaseClient){
 
     supabaseClient =
@@ -1159,27 +1333,37 @@ function initializeDate(){
 
 function updateDateText(){
 
-  $("selectedDateText").textContent =
-    "Corte seleccionado: " +
-    formatSelectedDate(
-      selectedDate
-    );
+  $("selectedDateText")
+    .textContent =
+      "Corte seleccionado: " +
+      formatSelectedDate(
+        selectedDate
+      );
 
 }
 
 
-function setDate(value){
+function setDate(
+  value
+){
 
   if(!value){
     return;
   }
 
-  selectedDate = value;
+  selectedDate =
+    value;
 
   $("selectedDate").value =
     selectedDate;
 
   updateDateText();
+
+  $("countedCash").value =
+    "";
+
+  $("notes").value =
+    "";
 
   loadSummary();
 
@@ -1187,50 +1371,61 @@ function setDate(value){
 
 
 /* =====================================================
-   BOTONES DE FECHA
+   BOTÓN HOY
 ===================================================== */
 
-$("todayButton").addEventListener(
-  "click",
-  () => {
+$("todayButton")
+  .addEventListener(
+    "click",
+    function(){
 
-    setDate(
-      localDateString()
-    );
+      setDate(
+        localDateString()
+      );
 
-  }
-);
-
-
-$("yesterdayButton").addEventListener(
-  "click",
-  () => {
-
-    const date =
-      new Date();
-
-    date.setDate(
-      date.getDate() - 1
-    );
-
-    setDate(
-      localDateString(date)
-    );
-
-  }
-);
+    }
+  );
 
 
-$("selectedDate").addEventListener(
-  "change",
-  event => {
+/* =====================================================
+   BOTÓN AYER
+===================================================== */
 
-    setDate(
-      event.target.value
-    );
+$("yesterdayButton")
+  .addEventListener(
+    "click",
+    function(){
 
-  }
-);
+      const date =
+        new Date();
+
+      date.setDate(
+        date.getDate() - 1
+      );
+
+      setDate(
+        localDateString(date)
+      );
+
+    }
+  );
+
+
+/* =====================================================
+   CAMBIO FECHA
+===================================================== */
+
+$("selectedDate")
+  .addEventListener(
+    "change",
+    function(event){
+
+      setDate(
+        event.target.value
+      );
+
+    }
+  );
 
 
 /* =====================================================
@@ -1241,18 +1436,27 @@ async function loadSummary(){
 
   clearStatus();
 
-  alreadyClosed = false;
+  alreadyClosed =
+    false;
 
-  $("loadingSummary").style.display =
+
+  $("loadingSummary")
+    .style.display =
     "block";
 
-  $("summaryContent").style.display =
+
+  $("summaryContent")
+    .style.display =
     "none";
 
-  $("closedBox").style.display =
+
+  $("closedBox")
+    .style.display =
     "none";
 
-  $("closeButton").style.display =
+
+  $("closeButton")
+    .style.display =
     "block";
 
 
@@ -1260,8 +1464,20 @@ async function loadSummary(){
 
     initializeSupabase();
 
+
     const businessId =
-      BUSINESS_IDS[currentBusiness];
+      BUSINESS_IDS[
+        currentBusiness
+      ];
+
+
+    if(!businessId){
+
+      throw new Error(
+        "No se encontró el negocio seleccionado."
+      );
+
+    }
 
 
     const result =
@@ -1286,7 +1502,9 @@ async function loadSummary(){
 
 
     if(result.error){
+
       throw result.error;
+
     }
 
 
@@ -1299,20 +1517,26 @@ async function loadSummary(){
   catch(error){
 
     console.error(
-      "[CIERRE] Error:",
+      "[CIERRE] Error cargando resumen:",
       error
     );
 
-    $("loadingSummary").style.display =
+
+    $("loadingSummary")
+      .style.display =
       "none";
 
+
     showStatus(
+
       "No se pudo cargar el resumen.\n\n" +
       (
         error?.message ||
         String(error)
       ),
+
       "error"
+
     );
 
   }
@@ -1324,16 +1548,29 @@ async function loadSummary(){
    PROCESAR RESUMEN
 ===================================================== */
 
-function processSummaryData(data){
+function processSummaryData(
+  data
+){
 
-  let summary = data;
+  let summary =
+    data;
+
 
   if(Array.isArray(data)){
 
     summary =
-      data[0] || {};
+      data[0] ||
+      {};
 
   }
+
+
+  if(!summary){
+
+    summary = {};
+
+  }
+
 
   const salesCount =
     Number(
@@ -1376,7 +1613,10 @@ function processSummaryData(data){
       summary.grand_total ??
       summary.total_amount ??
       summary.total_sales_amount ??
-      paidTotal + pendingTotal
+      (
+        paidTotal +
+        pendingTotal
+      )
     );
 
 
@@ -1395,12 +1635,16 @@ function processSummaryData(data){
     [];
 
 
-  if(typeof payments === "string"){
+  if(
+    typeof payments === "string"
+  ){
 
     try{
 
       payments =
-        JSON.parse(payments);
+        JSON.parse(
+          payments
+        );
 
     }
 
@@ -1442,10 +1686,13 @@ function processSummaryData(data){
   renderSummary();
 
 
-  $("loadingSummary").style.display =
+  $("loadingSummary")
+    .style.display =
     "none";
 
-  $("summaryContent").style.display =
+
+  $("summaryContent")
+    .style.display =
     "block";
 
 
@@ -1473,31 +1720,43 @@ function processSummaryData(data){
 
 function renderSummary(){
 
-  $("salesCount").textContent =
+  $("salesCount")
+    .textContent =
     currentSummary.salesCount;
 
-  $("itemsCount").textContent =
+
+  $("itemsCount")
+    .textContent =
     currentSummary.itemsCount;
 
-  $("paidTotal").textContent =
+
+  $("paidTotal")
+    .textContent =
     money(
       currentSummary.paidTotal
     );
 
-  $("pendingTotal").textContent =
+
+  $("pendingTotal")
+    .textContent =
     money(
       currentSummary.pendingTotal
     );
 
-  $("grandTotal").textContent =
+
+  $("grandTotal")
+    .textContent =
     money(
       currentSummary.grandTotal
     );
 
-  $("expectedCash").textContent =
+
+  $("expectedCash")
+    .textContent =
     money(
       currentSummary.expectedCash
     );
+
 
   renderPaymentSummary();
 
@@ -1513,7 +1772,9 @@ function renderPaymentSummary(){
   const container =
     $("paymentSummary");
 
-  container.innerHTML = "";
+
+  container.innerHTML =
+    "";
 
 
   if(
@@ -1531,20 +1792,27 @@ function renderPaymentSummary(){
 
 
   currentSummary.payments.forEach(
-    payment => {
+    function(payment){
 
       const row =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
+
 
       row.className =
         "payment-row";
 
 
       const name =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
+
 
       name.className =
         "payment-name";
+
 
       name.textContent =
         payment.name ??
@@ -1554,10 +1822,14 @@ function renderPaymentSummary(){
 
 
       const total =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
+
 
       total.className =
         "payment-total";
+
 
       total.textContent =
         money(
@@ -1573,7 +1845,10 @@ function renderPaymentSummary(){
         total
       );
 
-      container.appendChild(row);
+
+      container.appendChild(
+        row
+      );
 
     }
   );
@@ -1582,33 +1857,44 @@ function renderPaymentSummary(){
 
 
 /* =====================================================
-   DIFERENCIA
+   DIFERENCIA EFECTIVO
 ===================================================== */
 
-$("countedCash").addEventListener(
-  "input",
-  updateDifference
-);
+$("countedCash")
+  .addEventListener(
+    "input",
+    updateDifference
+  );
 
 
 function updateDifference(){
 
   const expected =
     Number(
-      currentSummary.expectedCash || 0
+      currentSummary.expectedCash ||
+      0
     );
+
 
   const input =
     $("countedCash");
 
+
   const counted =
-    Number(input.value || 0);
+    Number(
+      input.value ||
+      0
+    );
+
 
   const difference =
-    counted - expected;
+    counted -
+    expected;
+
 
   const box =
     $("differenceBox");
+
 
   const value =
     $("differenceValue");
@@ -1618,14 +1904,18 @@ function updateDifference(){
     "difference";
 
 
-  if(input.value === ""){
+  if(
+    input.value === ""
+  ){
 
     value.textContent =
       "$0.00";
 
+
     box.classList.add(
       "neutral"
     );
+
 
     return;
 
@@ -1633,33 +1923,47 @@ function updateDifference(){
 
 
   if(
-    Math.abs(difference) < 0.005
+    Math.abs(difference) <
+    0.005
   ){
 
-    box.classList.add("ok");
+    box.classList.add(
+      "ok"
+    );
+
 
     value.textContent =
       "$0.00 — CORRECTO";
+
 
     return;
 
   }
 
 
-  if(difference < 0){
+  if(
+    difference < 0
+  ){
 
-    box.classList.add("short");
+    box.classList.add(
+      "short"
+    );
+
 
     value.textContent =
       money(difference) +
       " — FALTANTE";
 
+
     return;
 
   }
 
 
-  box.classList.add("over");
+  box.classList.add(
+    "over"
+  );
+
 
   value.textContent =
     "+" +
@@ -1694,12 +1998,15 @@ async function closeCashRegister(){
     $("countedCash").value;
 
 
-  if(countedInput === ""){
+  if(
+    countedInput === ""
+  ){
 
     showStatus(
       "Ingresa primero el efectivo contado físicamente.",
       "warn"
     );
+
 
     $("countedCash").focus();
 
@@ -1709,11 +2016,15 @@ async function closeCashRegister(){
 
 
   const countedCash =
-    Number(countedInput);
+    Number(
+      countedInput
+    );
 
 
   if(
-    !Number.isFinite(countedCash) ||
+    !Number.isFinite(
+      countedCash
+    ) ||
     countedCash < 0
   ){
 
@@ -1729,16 +2040,20 @@ async function closeCashRegister(){
 
   const expectedCash =
     Number(
-      currentSummary.expectedCash || 0
+      currentSummary.expectedCash ||
+      0
     );
 
 
   const difference =
-    countedCash - expectedCash;
+    countedCash -
+    expectedCash;
 
 
   const notes =
-    $("notes").value.trim();
+    $("notes")
+      .value
+      .trim();
 
 
   const confirmed =
@@ -1769,18 +2084,23 @@ async function closeCashRegister(){
 
 
   if(!confirmed){
+
     return;
+
   }
 
 
   const button =
     $("closeButton");
 
+
   const originalText =
     button.textContent;
 
 
-  button.disabled = true;
+  button.disabled =
+    true;
+
 
   button.textContent =
     "CERRANDO CAJA...";
@@ -1792,15 +2112,17 @@ async function closeCashRegister(){
 
 
     const businessId =
-      BUSINESS_IDS[currentBusiness];
+      BUSINESS_IDS[
+        currentBusiness
+      ];
 
 
     /*
-      IMPORTANTE:
-      Se mantienen los cuatro parámetros
-      que está utilizando actualmente
-      tu sistema.
-    */
+     * IMPORTANTE:
+     * Se conserva p_date porque es el
+     * parámetro que estamos utilizando
+     * actualmente en la función RPC.
+     */
 
     const result =
       await withTimeout(
@@ -1832,25 +2154,35 @@ async function closeCashRegister(){
 
 
     if(result.error){
+
       throw result.error;
+
     }
 
 
-    alreadyClosed = true;
+    alreadyClosed =
+      true;
 
 
-    $("closeButton").style.display =
+    $("closeButton")
+      .style.display =
       "none";
 
-    $("closedBox").style.display =
+
+    $("closedBox")
+      .style.display =
       "block";
 
 
-    $("closedMessage").textContent =
+    $("closedMessage")
+      .textContent =
+
       "El cierre de " +
       currentBusiness +
       " del " +
-      formatSelectedDate(selectedDate) +
+      formatSelectedDate(
+        selectedDate
+      ) +
       " se registró correctamente.";
 
 
@@ -1870,19 +2202,25 @@ async function closeCashRegister(){
 
 
     showStatus(
+
       "No se pudo cerrar la caja.\n\n" +
+
       (
         error?.message ||
         String(error)
       ),
+
       "error"
+
     );
 
   }
 
   finally{
 
-    button.disabled = false;
+    button.disabled =
+      false;
+
 
     button.textContent =
       originalText;
@@ -1896,15 +2234,21 @@ async function closeCashRegister(){
    CAJA YA CERRADA
 ===================================================== */
 
-function showAlreadyClosed(summary){
+function showAlreadyClosed(
+  summary
+){
 
-  alreadyClosed = true;
+  alreadyClosed =
+    true;
 
 
-  $("closeButton").style.display =
+  $("closeButton")
+    .style.display =
     "none";
 
-  $("closedBox").style.display =
+
+  $("closedBox")
+    .style.display =
     "block";
 
 
@@ -1912,10 +2256,12 @@ function showAlreadyClosed(summary){
     "Esta caja ya fue cerrada.";
 
 
-  if(summary.closed_at){
+  if(
+    summary.closed_at
+  ){
 
     message +=
-      " " +
+      "\n" +
       new Date(
         summary.closed_at
       ).toLocaleString(
@@ -1929,7 +2275,8 @@ function showAlreadyClosed(summary){
   }
 
 
-  $("closedMessage").textContent =
+  $("closedMessage")
+    .textContent =
     message;
 
 
@@ -1952,6 +2299,15 @@ async function changeBusiness(
 ){
 
   if(
+    !BUSINESS_IDS[business]
+  ){
+
+    return;
+
+  }
+
+
+  if(
     business === currentBusiness
   ){
 
@@ -1965,9 +2321,11 @@ async function changeBusiness(
 
 
   document
-    .querySelectorAll(".business-btn")
+    .querySelectorAll(
+      ".business-btn"
+    )
     .forEach(
-      button => {
+      function(button){
 
         button.classList.toggle(
           "active",
@@ -1979,14 +2337,18 @@ async function changeBusiness(
     );
 
 
-  $("businessSubtitle").textContent =
-    "Cierre de caja · " +
-    currentBusiness;
+  $("businessSubtitle")
+    .textContent =
+      "Cierre de caja · " +
+      currentBusiness;
 
 
-  $("countedCash").value = "";
+  $("countedCash").value =
+    "";
 
-  $("notes").value = "";
+
+  $("notes").value =
+    "";
 
 
   await loadSummary();
@@ -1995,17 +2357,19 @@ async function changeBusiness(
 
 
 /* =====================================================
-   BOTONES DE NEGOCIO
+   BOTONES NEGOCIO
 ===================================================== */
 
 document
-  .querySelectorAll(".business-btn")
+  .querySelectorAll(
+    ".business-btn"
+  )
   .forEach(
-    button => {
+    function(button){
 
       button.addEventListener(
         "click",
-        () => {
+        function(){
 
           changeBusiness(
             button.dataset.business
@@ -2022,37 +2386,91 @@ document
    BOTÓN CERRAR
 ===================================================== */
 
-$("closeButton").addEventListener(
-  "click",
-  closeCashRegister
-);
+$("closeButton")
+  .addEventListener(
+    "click",
+    closeCashRegister
+  );
 
 
 /* =====================================================
    REGRESAR AL POS
 ===================================================== */
 
-$("backButton").addEventListener(
-  "click",
-  function(){
+$("backButton")
+  .addEventListener(
+    "click",
+    function(event){
 
-    /*
-      Usamos replace para evitar que
-      Cierre de Caja quede en el historial
-      del navegador y vuelva a abrirse
-      accidentalmente al presionar atrás.
-    */
+      event.preventDefault();
 
-    const url =
-      "index.html?business=" +
-      encodeURIComponent(
-        currentBusiness
+
+      /*
+       * Recuperamos el negocio actual.
+       */
+
+      const business =
+        encodeURIComponent(
+          currentBusiness ||
+          "BakeQuiri"
+        );
+
+
+      /*
+       * Obtenemos la carpeta donde está
+       * este archivo.
+       */
+
+      const currentUrl =
+        window.location.href
+          .split("?")[0]
+          .split("#")[0];
+
+
+      const lastSlash =
+        currentUrl.lastIndexOf("/");
+
+
+      let basePath =
+        "";
+
+
+      if(lastSlash >= 0){
+
+        basePath =
+          currentUrl.substring(
+            0,
+            lastSlash + 1
+          );
+
+      }
+
+
+      /*
+       * Construimos la dirección del POS.
+       */
+
+      const posUrl =
+        basePath +
+        "index.html?business=" +
+        business;
+
+
+      console.log(
+        "[CIERRE] Regresando a:",
+        posUrl
       );
 
-    window.location.replace(url);
 
-  }
-);
+      /*
+       * Navegación directa.
+       */
+
+      window.location.href =
+        posUrl;
+
+    }
+  );
 
 
 /* =====================================================
@@ -2066,8 +2484,11 @@ function getBusinessFromURL(){
       window.location.search
     );
 
+
   const business =
-    params.get("business");
+    params.get(
+      "business"
+    );
 
 
   if(
@@ -2101,9 +2522,11 @@ async function start(){
 
 
     document
-      .querySelectorAll(".business-btn")
+      .querySelectorAll(
+        ".business-btn"
+      )
       .forEach(
-        button => {
+        function(button){
 
           button.classList.toggle(
             "active",
@@ -2115,9 +2538,10 @@ async function start(){
       );
 
 
-    $("businessSubtitle").textContent =
-      "Cierre de caja · " +
-      currentBusiness;
+    $("businessSubtitle")
+      .textContent =
+        "Cierre de caja · " +
+        currentBusiness;
 
 
     await loadSummary();
@@ -2131,6 +2555,7 @@ async function start(){
       error
     );
 
+
     showStatus(
       error?.message ||
       "No se pudo iniciar el cierre de caja.",
@@ -2141,6 +2566,10 @@ async function start(){
 
 }
 
+
+/* =====================================================
+   ARRANCAR
+===================================================== */
 
 start();
 
