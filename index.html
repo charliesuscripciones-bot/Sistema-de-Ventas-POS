@@ -2710,4 +2710,2396 @@ function showCashModalError(
 }
 
 /*
- * Intent
+ * Intentamos diferentes firmas porque
+ * el nombre de los parámetros de la función
+ * puede variar según la versión de SQL instalada.
+ */
+
+async function tryOpenCashRPC(
+  businessId,
+  openingCash
+){
+
+  const attempts = [
+
+    {
+      p_business_id:
+        businessId,
+
+      p_opening_cash:
+        openingCash
+    },
+
+    {
+      p_business_id:
+        businessId,
+
+      p_initial_cash:
+        openingCash
+    },
+
+    {
+      p_business_id:
+        businessId,
+
+      p_opening_balance:
+        openingCash
+    },
+
+    {
+      p_business_id:
+        businessId,
+
+      p_cash:
+        openingCash
+    }
+
+  ];
+
+  let lastError =
+    null;
+
+  for(
+    const params
+    of attempts
+  ){
+
+    try{
+
+      const result =
+        await withTimeout(
+
+          supabaseClient.rpc(
+            "open_cash_register",
+            params
+          ),
+
+          10000,
+
+          "La apertura de caja tardó demasiado."
+        );
+
+      if(
+        !result.error
+      ){
+
+        return result.data;
+
+      }
+
+      lastError =
+        result.error;
+
+    }
+
+    catch(error){
+
+      lastError =
+        error;
+
+    }
+
+  }
+
+  throw lastError ||
+    new Error(
+      "No se encontró una forma válida de abrir la caja."
+    );
+
+}
+
+async function saveCashOpening(){
+
+  const input =
+    $("openingCash");
+
+  const openingCash =
+    Number(
+      input.value
+    );
+
+  if(
+    !Number.isFinite(
+      openingCash
+    ) ||
+    openingCash < 0
+  ){
+
+    showCashModalError(
+      "Escribe un monto inicial válido."
+    );
+
+    input.focus();
+
+    return;
+
+  }
+
+  const button =
+    $("saveCashButton");
+
+  const originalText =
+    button.textContent;
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    "Abriendo caja...";
+
+  try{
+
+    initializeSupabase();
+
+    const businessId =
+      BUSINESS_IDS[
+        currentBusiness
+      ];
+
+    await tryOpenCashRPC(
+      businessId,
+      openingCash
+    );
+
+    closeCashModal();
+
+    showStatus(
+      "🟢 Caja abierta correctamente.\n" +
+      "Efectivo inicial: " +
+      money(openingCash),
+      "ok"
+    );
+
+    await refreshCashRegister(
+      true
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "open_cash_register:",
+      error
+    );
+
+    showCashModalError(
+
+      "No se pudo abrir la caja.\n\n" +
+
+      (
+        error?.message ||
+        String(error)
+      )
+
+    );
+
+  }
+
+  finally{
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      originalText;
+
+  }
+
+}
+
+/* =========================================================
+   PRODUCTOS
+========================================================= */
+
+async function fetchProducts(){
+
+  const businessId =
+    BUSINESS_IDS[
+      currentBusiness
+    ];
+
+  const result =
+    await withTimeout(
+
+      supabaseClient
+        .from("products")
+        .select(
+          "id,name,price,cost,stock,active,business_id"
+        )
+        .eq(
+          "business_id",
+          businessId
+        )
+        .eq(
+          "active",
+          true
+        )
+        .order("name"),
+
+      8000,
+
+      "La carga de productos tardó demasiado."
+    );
+
+  if(result.error){
+
+    throw result.error;
+
+  }
+
+  return result.data || [];
+
+}
+
+/* =========================================================
+   PAGOS
+========================================================= */
+
+async function fetchPayments(){
+
+  const businessId =
+    BUSINESS_IDS[
+      currentBusiness
+    ];
+
+  const result =
+    await withTimeout(
+
+      supabaseClient
+        .from("payment_methods")
+        .select(
+          "id,name,provider,active,business_id"
+        )
+        .eq(
+          "business_id",
+          businessId
+        )
+        .eq(
+          "active",
+          true
+        )
+        .order("name"),
+
+      8000,
+
+      "La carga de métodos de pago tardó demasiado."
+    );
+
+  if(result.error){
+
+    throw result.error;
+
+  }
+
+  return result.data || [];
+
+}
+
+/* =========================================================
+   CLIENTES
+========================================================= */
+
+async function fetchCustomers(){
+
+  const businessId =
+    BUSINESS_IDS[
+      currentBusiness
+    ];
+
+  try{
+
+    const result =
+      await withTimeout(
+
+        supabaseClient
+          .from("customers")
+          .select(
+            "id,name,phone,notes,business_id"
+          )
+          .or(
+            "business_id.is.null,business_id.eq." +
+            businessId
+          )
+          .order("name"),
+
+        8000,
+
+        "La carga de clientes tardó demasiado."
+      );
+
+    if(
+      !result.error
+    ){
+
+      return result.data || [];
+
+    }
+
+  }
+
+  catch(error){
+
+    console.warn(
+      "Clientes completos:",
+      error
+    );
+
+  }
+
+  const fallback =
+    await withTimeout(
+
+      supabaseClient
+        .from("customers")
+        .select(
+          "id,name,phone,notes"
+        )
+        .order("name"),
+
+      8000,
+
+      "La carga de clientes tardó demasiado."
+    );
+
+  if(fallback.error){
+
+    throw fallback.error;
+
+  }
+
+  return fallback.data || [];
+
+}
+
+/* =========================================================
+   CARGAR DATOS
+========================================================= */
+
+async function loadOnlineData(){
+
+  initializeSupabase();
+
+  const results =
+    await Promise.allSettled([
+
+      fetchProducts(),
+
+      fetchPayments(),
+
+      fetchCustomers()
+
+    ]);
+
+  if(
+    results[0].status ===
+    "fulfilled"
+  ){
+
+    products =
+      results[0].value;
+
+  }
+
+  if(
+    results[1].status ===
+    "fulfilled"
+  ){
+
+    payments =
+      results[1].value;
+
+  }
+
+  if(
+    results[2].status ===
+    "fulfilled"
+  ){
+
+    customers =
+      results[2].value;
+
+  }
+
+  const problems = [];
+
+  if(
+    results[0].status !==
+    "fulfilled"
+  ){
+
+    problems.push(
+      "productos"
+    );
+
+  }
+
+  if(
+    results[1].status !==
+    "fulfilled"
+  ){
+
+    problems.push(
+      "métodos de pago"
+    );
+
+  }
+
+  if(
+    results[2].status !==
+    "fulfilled"
+  ){
+
+    problems.push(
+      "clientes"
+    );
+
+  }
+
+  await saveOfflineData(
+    currentBusiness,
+    {
+      products,
+      payments,
+      customers
+    }
+  );
+
+  renderProducts();
+  renderPayments();
+  renderCart();
+  renderSelectedCustomer();
+
+  if(problems.length){
+
+    showStatus(
+      currentBusiness +
+      " cargado parcialmente.\n" +
+      "No se pudieron actualizar: " +
+      problems.join(", "),
+      "warn"
+    );
+
+  }
+
+  else{
+
+    showStatus(
+      currentBusiness +
+      " actualizado correctamente.",
+      "ok"
+    );
+
+  }
+
+}
+
+/* =========================================================
+   DATOS OFFLINE
+========================================================= */
+
+async function loadBusinessData(){
+
+  clearStatus();
+
+  const cached =
+    await getOfflineData(
+      currentBusiness
+    );
+
+  if(cached){
+
+    products =
+      Array.isArray(
+        cached.products
+      )
+        ? cached.products
+        : [];
+
+    payments =
+      Array.isArray(
+        cached.payments
+      )
+        ? cached.payments
+        : [];
+
+    customers =
+      Array.isArray(
+        cached.customers
+      )
+        ? cached.customers
+        : [];
+
+    renderProducts();
+    renderPayments();
+    renderCart();
+    renderSelectedCustomer();
+
+  }
+
+  if(
+    !navigator.onLine
+  ){
+
+    cashRegister =
+      null;
+
+    cashRegisterOpen =
+      false;
+
+    renderCashRegister();
+
+    showStatus(
+      "📴 MODO OFFLINE\n" +
+      "Las ventas requieren que la caja esté abierta y conexión con Supabase.",
+      "warn"
+    );
+
+    return;
+
+  }
+
+  try{
+
+    await loadOnlineData();
+
+  }
+
+  catch(error){
+
+    console.error(
+      "loadBusinessData:",
+      error
+    );
+
+    if(!cached){
+
+      renderProducts();
+      renderPayments();
+
+      showStatus(
+
+        "No se pudieron cargar los datos.\n\n" +
+
+        (
+          error?.message ||
+          String(error)
+        ),
+
+        "error"
+      );
+
+    }
+
+  }
+
+  await refreshCashRegister(
+    true
+  );
+
+}
+
+/* =========================================================
+   PRODUCTOS
+========================================================= */
+
+function renderProducts(){
+
+  const container =
+    $("products");
+
+  container.innerHTML =
+    "";
+
+  if(!products.length){
+
+    container.innerHTML =
+      '<div class="empty">No hay productos disponibles.</div>';
+
+    return;
+
+  }
+
+  products.forEach(
+    product => {
+
+      const stock =
+        Number(
+          product.stock || 0
+        );
+
+      const button =
+        document.createElement(
+          "button"
+        );
+
+      button.type =
+        "button";
+
+      button.className =
+        "product" +
+        (
+          stock <= 0
+            ? " disabled"
+            : ""
+        );
+
+      button.disabled =
+        stock <= 0;
+
+      button.innerHTML =
+
+        '<div class="product-name">' +
+        escapeHTML(
+          product.name
+        ) +
+        '</div>' +
+
+        '<div class="price">' +
+        money(
+          product.price
+        ) +
+        '</div>' +
+
+        '<div class="stock">' +
+
+        (
+          stock > 0
+            ? "Existencia: " +
+              stock
+            : "Agotado"
+        ) +
+
+        '</div>';
+
+      button.addEventListener(
+        "click",
+        () =>
+          addToCart(product)
+      );
+
+      container.appendChild(
+        button
+      );
+
+    }
+  );
+
+}
+
+/* =========================================================
+   PAGOS
+========================================================= */
+
+function renderPayments(){
+
+  const container =
+    $("payments");
+
+  container.innerHTML =
+    "";
+
+  if(!payments.length){
+
+    container.innerHTML =
+      '<div class="empty">No hay métodos de pago disponibles.</div>';
+
+    return;
+
+  }
+
+  if(
+    !payments.some(
+      payment =>
+        String(payment.id) ===
+        String(selectedPaymentId)
+    )
+  ){
+
+    selectedPaymentId =
+      payments[0]?.id ||
+      null;
+
+  }
+
+  payments.forEach(
+    payment => {
+
+      const button =
+        document.createElement(
+          "button"
+        );
+
+      button.type =
+        "button";
+
+      button.className =
+        "payment" +
+        (
+          String(payment.id) ===
+          String(selectedPaymentId)
+            ? " active"
+            : ""
+        );
+
+      button.textContent =
+        payment.name;
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          if(
+            !cashRegisterOpen
+          ){
+
+            showStatus(
+              "🔒 Primero debes abrir la caja.",
+              "warn"
+            );
+
+            return;
+
+          }
+
+          selectedPaymentId =
+            payment.id;
+
+          renderPayments();
+
+        }
+      );
+
+      container.appendChild(
+        button
+      );
+
+    }
+  );
+
+}
+
+/* =========================================================
+   CARRITO
+========================================================= */
+
+function addToCart(
+  product
+){
+
+  if(
+    !cashRegisterOpen
+  ){
+
+    showStatus(
+      "🔒 La caja está cerrada.\nAbre la caja antes de registrar una venta.",
+      "warn"
+    );
+
+    return;
+
+  }
+
+  const stock =
+    Number(
+      product.stock || 0
+    );
+
+  if(stock <= 0){
+
+    showStatus(
+      "Este producto está agotado."
+    );
+
+    return;
+
+  }
+
+  const item =
+    cart.find(
+      i =>
+        String(i.id) ===
+        String(product.id)
+    );
+
+  if(item){
+
+    if(
+      item.quantity <
+      stock
+    ){
+
+      item.quantity++;
+
+    }
+
+    else{
+
+      showStatus(
+        "No puedes agregar más unidades que la existencia disponible."
+      );
+
+      return;
+
+    }
+
+  }
+
+  else{
+
+    cart.push({
+
+      ...product,
+
+      quantity:1
+
+    });
+
+  }
+
+  renderCart();
+
+}
+
+function changeQuantity(
+  id,
+  amount
+){
+
+  const item =
+    cart.find(
+      i =>
+        String(i.id) ===
+        String(id)
+    );
+
+  if(!item){
+    return;
+  }
+
+  const product =
+    products.find(
+      p =>
+        String(p.id) ===
+        String(id)
+    );
+
+  const max =
+    Number(
+      product?.stock ??
+      item.stock ??
+      0
+    );
+
+  const newQuantity =
+    item.quantity +
+    amount;
+
+  if(
+    newQuantity >
+    max
+  ){
+
+    showStatus(
+      "No hay suficiente existencia disponible."
+    );
+
+    return;
+
+  }
+
+  item.quantity =
+    newQuantity;
+
+  if(
+    item.quantity <= 0
+  ){
+
+    cart =
+      cart.filter(
+        i =>
+          String(i.id) !==
+          String(id)
+      );
+
+  }
+
+  renderCart();
+
+}
+
+function getCartTotal(){
+
+  return cart.reduce(
+    (
+      sum,
+      item
+    ) =>
+      sum +
+      Number(item.price) *
+      Number(item.quantity),
+
+    0
+  );
+
+}
+
+function renderCart(){
+
+  const container =
+    $("cart");
+
+  container.innerHTML =
+    "";
+
+  if(!cart.length){
+
+    container.innerHTML =
+      '<div class="empty">El carrito está vacío</div>';
+
+    $("total").textContent =
+      "$0.00";
+
+    return;
+
+  }
+
+  cart.forEach(
+    item => {
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+      row.className =
+        "cart-item";
+
+      const info =
+        document.createElement(
+          "div"
+        );
+
+      info.innerHTML =
+
+        '<div class="cart-name">' +
+        escapeHTML(
+          item.name
+        ) +
+        '</div>' +
+
+        '<div class="cart-price">' +
+        money(
+          item.price
+        ) +
+        " c/u</div>";
+
+      const controls =
+        document.createElement(
+          "div"
+        );
+
+      controls.className =
+        "quantity";
+
+      const minus =
+        document.createElement(
+          "button"
+        );
+
+      minus.type =
+        "button";
+
+      minus.textContent =
+        "−";
+
+      minus.addEventListener(
+        "click",
+        () =>
+          changeQuantity(
+            item.id,
+            -1
+          )
+      );
+
+      const quantity =
+        document.createElement(
+          "span"
+        );
+
+      quantity.textContent =
+        item.quantity;
+
+      const plus =
+        document.createElement(
+          "button"
+        );
+
+      plus.type =
+        "button";
+
+      plus.textContent =
+        "+";
+
+      plus.addEventListener(
+        "click",
+        () =>
+          changeQuantity(
+            item.id,
+            1
+          )
+      );
+
+      controls.append(
+        minus,
+        quantity,
+        plus
+      );
+
+      info.appendChild(
+        controls
+      );
+
+      const subtotal =
+        document.createElement(
+          "strong"
+        );
+
+      subtotal.textContent =
+        money(
+          Number(item.price) *
+          Number(item.quantity)
+        );
+
+      row.append(
+        info,
+        subtotal
+      );
+
+      container.appendChild(
+        row
+      );
+
+    }
+  );
+
+  $("total").textContent =
+    money(
+      getCartTotal()
+    );
+
+}
+
+/* =========================================================
+   CLIENTES
+========================================================= */
+
+function renderSelectedCustomer(){
+
+  const selected =
+    customers.find(
+      customer =>
+        String(customer.id) ===
+        String(selectedCustomerId)
+    );
+
+  const selectedElement =
+    $("selectedCustomer");
+
+  const general =
+    $("generalCustomer");
+
+  if(!selected){
+
+    selectedCustomerId =
+      null;
+
+    selectedElement.style.display =
+      "none";
+
+    selectedElement.innerHTML =
+      "";
+
+    general.style.display =
+      "block";
+
+    return;
+
+  }
+
+  general.style.display =
+    "none";
+
+  selectedElement.style.display =
+    "block";
+
+  selectedElement.innerHTML =
+
+    "👤 <strong>" +
+
+    escapeHTML(
+      selected.name ||
+      "Cliente"
+    ) +
+
+    "</strong>" +
+
+    (
+      selected.phone
+        ? " · 📱 " +
+          escapeHTML(
+            selected.phone
+          )
+        : ""
+    ) +
+
+    '<button type="button" class="clear-customer" id="clearCustomer">Quitar</button>';
+
+  $("clearCustomer").addEventListener(
+    "click",
+    clearSelectedCustomer
+  );
+
+}
+
+function clearSelectedCustomer(){
+
+  selectedCustomerId =
+    null;
+
+  $("customerSearch").value =
+    "";
+
+  $("customerResults").innerHTML =
+    "";
+
+  $("customerResults").style.display =
+    "none";
+
+  renderSelectedCustomer();
+
+}
+
+function renderCustomerResults(
+  query
+){
+
+  const container =
+    $("customerResults");
+
+  const search =
+    String(
+      query || ""
+    )
+    .trim()
+    .toLowerCase();
+
+  if(!search){
+
+    container.innerHTML =
+      "";
+
+    container.style.display =
+      "none";
+
+    return;
+
+  }
+
+  const filtered =
+    customers.filter(
+      customer => {
+
+        const name =
+          String(
+            customer.name || ""
+          ).toLowerCase();
+
+        const phone =
+          String(
+            customer.phone || ""
+          ).toLowerCase();
+
+        const notes =
+          String(
+            customer.notes || ""
+          ).toLowerCase();
+
+        return(
+          name.includes(search) ||
+          phone.includes(search) ||
+          notes.includes(search)
+        );
+
+      }
+    );
+
+  container.innerHTML =
+    "";
+
+  if(!filtered.length){
+
+    const empty =
+      document.createElement(
+        "div"
+      );
+
+    empty.className =
+      "empty";
+
+    empty.textContent =
+      "No encontramos ese cliente.";
+
+    container.appendChild(
+      empty
+    );
+
+    container.style.display =
+      "block";
+
+    return;
+
+  }
+
+  filtered
+    .slice(0,20)
+    .forEach(
+      customer => {
+
+        const button =
+          document.createElement(
+            "button"
+          );
+
+        button.type =
+          "button";
+
+        button.className =
+          "customer-result";
+
+        button.innerHTML =
+
+          "<strong>" +
+
+          escapeHTML(
+            customer.name ||
+            "Cliente sin nombre"
+          ) +
+
+          "</strong>" +
+
+          (
+            customer.phone
+              ? "<small>📱 " +
+                escapeHTML(
+                  customer.phone
+                ) +
+                "</small>"
+              : ""
+          );
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            selectedCustomerId =
+              customer.id;
+
+            $("customerSearch").value =
+              customer.name || "";
+
+            container.innerHTML =
+              "";
+
+            container.style.display =
+              "none";
+
+            renderSelectedCustomer();
+
+          }
+        );
+
+        container.appendChild(
+          button
+        );
+
+      }
+    );
+
+  container.style.display =
+    "block";
+
+}
+
+/* =========================================================
+   MODAL CLIENTE
+========================================================= */
+
+function openClientModal(){
+
+  $("clientModalBusiness")
+    .textContent =
+      "Nuevo cliente para " +
+      currentBusiness;
+
+  $("clientModalError")
+    .textContent =
+      "";
+
+  $("clientModalError")
+    .classList
+    .remove("show");
+
+  $("clientForm").reset();
+
+  $("clientModal")
+    .classList
+    .add("show");
+
+  $("clientModal")
+    .setAttribute(
+      "aria-hidden",
+      "false"
+    );
+
+  document.body.classList.add(
+    "modal-open"
+  );
+
+  setTimeout(
+    () =>
+      $("newClientName").focus(),
+    100
+  );
+
+}
+
+function closeClientModal(){
+
+  $("clientModal")
+    .classList
+    .remove("show");
+
+  $("clientModal")
+    .setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+  document.body.classList.remove(
+    "modal-open"
+  );
+
+}
+
+async function saveNewClient(){
+
+  const name =
+    $("newClientName")
+      .value
+      .trim();
+
+  const phone =
+    $("newClientPhone")
+      .value
+      .trim();
+
+  const notes =
+    $("newClientNotes")
+      .value
+      .trim();
+
+  if(!name){
+
+    $("clientModalError")
+      .textContent =
+        "Escribe el nombre del cliente.";
+
+    $("clientModalError")
+      .classList
+      .add("show");
+
+    return;
+
+  }
+
+  const button =
+    $("saveClientButton");
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    "Guardando...";
+
+  try{
+
+    initializeSupabase();
+
+    const businessId =
+      BUSINESS_IDS[
+        currentBusiness
+      ];
+
+    let result =
+      await withTimeout(
+
+        supabaseClient
+          .from("customers")
+          .insert({
+
+            name,
+
+            phone:
+              phone || null,
+
+            notes:
+              notes || null,
+
+            business_id:
+              businessId
+
+          })
+          .select(
+            "id,name,phone,notes,business_id"
+          )
+          .single(),
+
+        10000,
+
+        "Guardar el cliente tardó demasiado."
+      );
+
+    if(
+      result.error &&
+      String(
+        result.error.message || ""
+      )
+      .toLowerCase()
+      .includes("business_id")
+    ){
+
+      result =
+        await withTimeout(
+
+          supabaseClient
+            .from("customers")
+            .insert({
+
+              name,
+
+              phone:
+                phone || null,
+
+              notes:
+                notes || null
+
+            })
+            .select(
+              "id,name,phone,notes"
+            )
+            .single(),
+
+          10000,
+
+          "Guardar el cliente tardó demasiado."
+        );
+
+    }
+
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+    customers.push(
+      result.data
+    );
+
+    customers.sort(
+      (a,b) =>
+        String(a.name || "")
+          .localeCompare(
+            String(b.name || "")
+          )
+    );
+
+    await saveOfflineData(
+      currentBusiness,
+      {
+        products,
+        payments,
+        customers
+      }
+    );
+
+    selectedCustomerId =
+      result.data.id;
+
+    $("customerSearch").value =
+      result.data.name;
+
+    renderSelectedCustomer();
+
+    closeClientModal();
+
+    showStatus(
+      "Cliente agregado correctamente.",
+      "ok"
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "saveNewClient:",
+      error
+    );
+
+    $("clientModalError")
+      .textContent =
+
+        "No se pudo guardar el cliente.\n\n" +
+
+        (
+          error?.message ||
+          String(error)
+        );
+
+    $("clientModalError")
+      .classList
+      .add("show");
+
+  }
+
+  finally{
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "Guardar cliente";
+
+  }
+
+}
+
+/* =========================================================
+   REGISTRAR VENTA
+========================================================= */
+
+async function registerSale(
+  isPending
+){
+
+  clearStatus();
+
+  /*
+   * ESTA ES LA PROTECCIÓN PRINCIPAL:
+   * no se puede vender si la caja está cerrada.
+   */
+
+  if(
+    !cashRegisterOpen
+  ){
+
+    showStatus(
+      "🔒 CAJA CERRADA\n\n" +
+      "Debes abrir la caja antes de registrar una venta.",
+      "warn"
+    );
+
+    openCashModal();
+
+    return;
+
+  }
+
+  if(!cart.length){
+
+    showStatus(
+      "Agrega al menos un producto."
+    );
+
+    return;
+
+  }
+
+  if(
+    !isPending &&
+    !selectedPaymentId
+  ){
+
+    showStatus(
+      "Selecciona un método de pago."
+    );
+
+    return;
+
+  }
+
+  if(
+    isPending &&
+    !selectedCustomerId
+  ){
+
+    showStatus(
+      "Para dejar una venta a cuenta debes seleccionar un cliente."
+    );
+
+    return;
+
+  }
+
+  if(!navigator.onLine){
+
+    showStatus(
+      "📴 No hay conexión con Supabase.\n\n" +
+      "La venta no se registró para evitar inconsistencias.",
+      "warn"
+    );
+
+    return;
+
+  }
+
+  initializeSupabase();
+
+  const button =
+    isPending
+      ? $("accountButton")
+      : $("chargeButton");
+
+  const originalText =
+    button.textContent;
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    isPending
+      ? "GUARDANDO..."
+      : "REGISTRANDO...";
+
+  try{
+
+    /*
+     * Volvemos a consultar la caja justo antes
+     * de registrar la venta.
+     */
+
+    const currentCash =
+      await getCashRegister();
+
+    if(
+      !determineCashOpen(
+        currentCash
+      )
+    ){
+
+      cashRegister =
+        currentCash;
+
+      cashRegisterOpen =
+        false;
+
+      renderCashRegister();
+
+      throw new Error(
+        "La caja está cerrada. Abre la caja antes de vender."
+      );
+
+    }
+
+    cashRegister =
+      currentCash;
+
+    cashRegisterOpen =
+      true;
+
+    renderCashRegister();
+
+    const items =
+      cart.map(
+        item => ({
+
+          product_id:
+            item.id,
+
+          description:
+            item.name,
+
+          quantity:
+            Number(
+              item.quantity
+            ),
+
+          unit_price:
+            Number(
+              item.price
+            ),
+
+          subtotal:
+            Number(
+              item.price
+            ) *
+            Number(
+              item.quantity
+            )
+
+        })
+      );
+
+    const businessId =
+      BUSINESS_IDS[
+        currentBusiness
+      ];
+
+    const result =
+      await withTimeout(
+
+        supabaseClient.rpc(
+          "register_sale",
+          {
+
+            p_business_id:
+              businessId,
+
+            p_customer_id:
+              selectedCustomerId ||
+              null,
+
+            p_payment_method_id:
+              isPending
+                ? null
+                : selectedPaymentId,
+
+            p_items:
+              items,
+
+            p_is_pending:
+              isPending
+
+          }
+        ),
+
+        15000,
+
+        "Registrar la venta tardó demasiado."
+      );
+
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+    cart = [];
+
+    selectedCustomerId =
+      null;
+
+    $("customerSearch").value =
+      "";
+
+    $("customerResults").innerHTML =
+      "";
+
+    $("customerResults").style.display =
+      "none";
+
+    renderSelectedCustomer();
+
+    showStatus(
+
+      isPending
+        ? "🟠 Cuenta registrada correctamente."
+        : "🟢 Venta registrada correctamente.",
+
+      "ok"
+
+    );
+
+    await loadBusinessData();
+
+    await refreshCashRegister(
+      true
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "registerSale:",
+      error
+    );
+
+    showStatus(
+
+      "No se pudo registrar la operación:\n\n" +
+
+      (
+        error?.message ||
+        String(error)
+      ),
+
+      "error"
+
+    );
+
+  }
+
+  finally{
+
+    button.disabled =
+      !cashRegisterOpen;
+
+    button.textContent =
+      originalText;
+
+  }
+
+}
+
+/* =========================================================
+   EVENTOS CLIENTES
+========================================================= */
+
+$("customerSearch")
+  .addEventListener(
+    "input",
+    event =>
+      renderCustomerResults(
+        event.target.value
+      )
+  );
+
+$("customerSearch")
+  .addEventListener(
+    "focus",
+    event => {
+
+      if(
+        event.target.value.trim()
+      ){
+
+        renderCustomerResults(
+          event.target.value
+        );
+
+      }
+
+    }
+  );
+
+$("generalCustomer")
+  .addEventListener(
+    "click",
+    clearSelectedCustomer
+  );
+
+$("addClientButton")
+  .addEventListener(
+    "click",
+    event => {
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      openClientModal();
+
+    }
+  );
+
+$("closeClientModal")
+  .addEventListener(
+    "click",
+    closeClientModal
+  );
+
+$("cancelClientModal")
+  .addEventListener(
+    "click",
+    closeClientModal
+  );
+
+$("clientForm")
+  .addEventListener(
+    "submit",
+    event => {
+
+      event.preventDefault();
+
+      saveNewClient();
+
+    }
+  );
+
+/* =========================================================
+   EVENTOS CAJA
+========================================================= */
+
+$("openCashButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      if(
+        cashRegisterOpen
+      ){
+
+        return;
+
+      }
+
+      openCashModal();
+
+    }
+  );
+
+$("refreshCashButton")
+  .addEventListener(
+    "click",
+    async () => {
+
+      const button =
+        $("refreshCashButton");
+
+      button.disabled =
+        true;
+
+      button.textContent =
+        "Actualizando...";
+
+      await refreshCashRegister();
+
+      button.disabled =
+        false;
+
+      button.textContent =
+        "🔄 Actualizar";
+
+    }
+  );
+
+$("closeCashModal")
+  .addEventListener(
+    "click",
+    closeCashModal
+  );
+
+$("cancelCashModal")
+  .addEventListener(
+    "click",
+    closeCashModal
+  );
+
+$("cashForm")
+  .addEventListener(
+    "submit",
+    event => {
+
+      event.preventDefault();
+
+      saveCashOpening();
+
+    }
+  );
+
+$("cashModal")
+  .addEventListener(
+    "click",
+    event => {
+
+      if(
+        event.target ===
+        $("cashModal")
+      ){
+
+        closeCashModal();
+
+      }
+
+    }
+  );
+
+$("clientModal")
+  .addEventListener(
+    "click",
+    event => {
+
+      if(
+        event.target ===
+        $("clientModal")
+      ){
+
+        closeClientModal();
+
+      }
+
+    }
+  );
+
+/* =========================================================
+   CLIC FUERA DE CLIENTES
+========================================================= */
+
+document.addEventListener(
+  "click",
+  event => {
+
+    const box =
+      document.querySelector(
+        ".customer-box"
+      );
+
+    if(
+      box &&
+      !box.contains(
+        event.target
+      )
+    ){
+
+      $("customerResults")
+        .style
+        .display =
+          "none";
+
+    }
+
+  }
+);
+
+/* =========================================================
+   ESC
+========================================================= */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key !==
+      "Escape"
+    ){
+
+      return;
+
+    }
+
+    if(
+      $("cashModal")
+        .classList
+        .contains("show")
+    ){
+
+      closeCashModal();
+
+    }
+
+    if(
+      $("clientModal")
+        .classList
+        .contains("show")
+    ){
+
+      closeClientModal();
+
+    }
+
+  }
+);
+
+/* =========================================================
+   CAMBIO DE NEGOCIO
+========================================================= */
+
+async function changeBusiness(
+  name,
+  button
+){
+
+  if(
+    name ===
+    currentBusiness
+  ){
+
+    return;
+
+  }
+
+  currentBusiness =
+    name;
+
+  cart = [];
+
+  selectedPaymentId =
+    null;
+
+  selectedCustomerId =
+    null;
+
+  cashRegister =
+    null;
+
+  cashRegisterOpen =
+    false;
+
+  $("customerSearch").value =
+    "";
+
+  $("customerResults").innerHTML =
+    "";
+
+  $("customerResults").style.display =
+    "none";
+
+  document
+    .querySelectorAll(
+      ".business-btn"
+    )
+    .forEach(
+      b =>
+        b.classList.remove(
+          "active"
+        )
+    );
+
+  button.classList.add(
+    "active"
+  );
+
+  renderCashRegister();
+
+  await loadBusinessData();
+
+}
+
+/* =========================================================
+   NAVEGACIÓN
+========================================================= */
+
+$("closingButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "cierre.html?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+$("accountsButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "cuentas.html?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+$("clientsButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "clientes.html?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+$("historyButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "historial.html?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+$("inventoryButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "inventario.html?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+$("dashboardButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+        "dashboard.html?business=" +
+        encodeURIComponent(
+          currentBusiness
+        );
+
+    }
+  );
+
+$("chargeButton")
+  .addEventListener(
+    "click",
+    () =>
+      registerSale(false)
+  );
+
+$("accountButton")
+  .addEventListener(
+    "click",
+    () =>
+      registerSale(true)
+  );
+
+/* =========================================================
+   NEGOCIOS
+========================================================= */
+
+document
+  .querySelectorAll(
+    ".business-btn"
+  )
+  .forEach(
+    button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          changeBusiness(
+            button.dataset.business,
+            button
+          );
+
+        }
+      );
+
+    }
+  );
+
+/* =========================================================
+   CONEXIÓN
+========================================================= */
+
+window.addEventListener(
+  "online",
+  async () => {
+
+    $("offlineBadge")
+      .innerHTML =
+        "";
+
+    await loadBusinessData();
+
+  }
+);
+
+window.addEventListener(
+  "offline",
+  () => {
+
+    $("offlineBadge")
+      .innerHTML =
+        '<span class="offline-badge">📴 MODO OFFLINE</span>';
+
+    cashRegister =
+      null;
+
+    cashRegisterOpen =
+      false;
+
+    renderCashRegister();
+
+    showStatus(
+      "📴 Sin conexión.\n" +
+      "Las ventas están bloqueadas hasta recuperar la conexión.",
+      "warn"
+    );
+
+  }
+);
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+async function startApp(){
+
+  if(
+    !navigator.onLine
+  ){
+
+    $("offlineBadge")
+      .innerHTML =
+        '<span class="offline-badge">📴 MODO OFFLINE</span>';
+
+  }
+
+  renderCashRegister();
+
+  try{
+
+    await loadBusinessData();
+
+  }
+
+  catch(error){
+
+    console.error(
+      "Error inicial:",
+      error
+    );
+
+    await loadOfflineData();
+
+    cashRegister =
+      null;
+
+    cashRegisterOpen =
+      false;
+
+    renderCashRegister();
+
+  }
+
+}
+
+/* =========================================================
+   ARRANCAR
+========================================================= */
+
+startApp();
+
+</script>
+
+</body>
+</html>
