@@ -1,0 +1,2247 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1.0,viewport-fit=cover"
+>
+
+<meta
+  name="theme-color"
+  content="#111827"
+>
+
+<meta
+  name="apple-mobile-web-app-capable"
+  content="yes"
+>
+
+<meta
+  name="apple-mobile-web-app-status-bar-style"
+  content="black-translucent"
+>
+
+<meta
+  name="apple-mobile-web-app-title"
+  content="Cierre de Caja"
+>
+
+<title>Cierre de Caja - Sistema POS</title>
+
+
+<style>
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+
+html{
+  width:100%;
+  min-height:100%;
+}
+
+
+body{
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  background:#f5f5f5;
+
+  color:#222;
+
+  min-height:100vh;
+
+  padding-bottom:
+    env(safe-area-inset-bottom);
+
+}
+
+
+header{
+
+  background:#111827;
+
+  color:#fff;
+
+  padding-top:
+    calc(20px + env(safe-area-inset-top));
+
+  padding-right:20px;
+
+  padding-bottom:22px;
+
+  padding-left:20px;
+
+}
+
+
+header h1{
+
+  font-size:27px;
+
+  line-height:1.15;
+
+}
+
+
+header p{
+
+  font-size:14px;
+
+  opacity:.75;
+
+  margin-top:7px;
+
+}
+
+
+.container{
+
+  width:100%;
+
+  max-width:850px;
+
+  margin:auto;
+
+  padding:18px;
+
+}
+
+
+.status{
+
+  display:none;
+
+  margin-bottom:15px;
+
+  padding:14px 16px;
+
+  border-radius:12px;
+
+  font-size:14px;
+
+  font-weight:700;
+
+  white-space:pre-line;
+
+}
+
+
+.status.error{
+
+  display:block;
+
+  background:#fee2e2;
+
+  color:#991b1b;
+
+}
+
+
+.status.ok{
+
+  display:block;
+
+  background:#dcfce7;
+
+  color:#166534;
+
+}
+
+
+.status.warn{
+
+  display:block;
+
+  background:#fef3c7;
+
+  color:#92400e;
+
+}
+
+
+/* =========================================================
+   BOTÓN REGRESAR
+========================================================= */
+
+.back-button{
+
+  width:100%;
+
+  border:2px solid #ddd;
+
+  background:#fff;
+
+  color:#374151;
+
+  padding:13px 16px;
+
+  border-radius:12px;
+
+  font-size:16px;
+
+  font-weight:800;
+
+  cursor:pointer;
+
+  margin-bottom:15px;
+
+}
+
+
+.back-button:active{
+
+  transform:scale(.99);
+
+}
+
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card{
+
+  background:#fff;
+
+  border-radius:18px;
+
+  padding:20px;
+
+  box-shadow:
+    0 3px 14px rgba(0,0,0,.06);
+
+  margin-bottom:15px;
+
+}
+
+
+.card h2{
+
+  font-size:20px;
+
+  margin-bottom:16px;
+
+}
+
+
+/* =========================================================
+   ENCABEZADO DEL CIERRE
+========================================================= */
+
+.business-header{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  gap:15px;
+
+}
+
+
+.business-name{
+
+  font-size:24px;
+
+  font-weight:900;
+
+}
+
+
+.business-date{
+
+  color:#6b7280;
+
+  font-size:14px;
+
+  margin-top:5px;
+
+}
+
+
+.loading{
+
+  text-align:center;
+
+  padding:25px 10px;
+
+  color:#777;
+
+}
+
+
+/* =========================================================
+   RESUMEN
+========================================================= */
+
+.summary-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  gap:10px;
+
+}
+
+
+.summary-item{
+
+  border:2px solid #eee;
+
+  border-radius:13px;
+
+  padding:15px;
+
+  background:#fafafa;
+
+}
+
+
+.summary-label{
+
+  font-size:13px;
+
+  color:#6b7280;
+
+  font-weight:700;
+
+}
+
+
+.summary-value{
+
+  font-size:22px;
+
+  font-weight:900;
+
+  margin-top:6px;
+
+}
+
+
+.summary-item.total{
+
+  background:#eff6ff;
+
+  border-color:#bfdbfe;
+
+}
+
+
+.summary-item.total
+.summary-value{
+
+  color:#1d4ed8;
+
+}
+
+
+.summary-item.pending{
+
+  background:#fff7ed;
+
+  border-color:#fed7aa;
+
+}
+
+
+.summary-item.pending
+.summary-value{
+
+  color:#c2410c;
+
+}
+
+
+/* =========================================================
+   MÉTODOS DE PAGO
+========================================================= */
+
+.payment-row{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  gap:15px;
+
+  padding:14px 0;
+
+  border-bottom:1px solid #eee;
+
+}
+
+
+.payment-row:last-child{
+
+  border-bottom:none;
+
+}
+
+
+.payment-name{
+
+  font-weight:800;
+
+}
+
+
+.payment-count{
+
+  font-size:12px;
+
+  color:#6b7280;
+
+  margin-top:3px;
+
+}
+
+
+.payment-total{
+
+  font-size:18px;
+
+  font-weight:900;
+
+  white-space:nowrap;
+
+}
+
+
+/* =========================================================
+   EFECTIVO
+========================================================= */
+
+.cash-box{
+
+  background:#f0fdf4;
+
+  border:2px solid #bbf7d0;
+
+  border-radius:15px;
+
+  padding:18px;
+
+}
+
+
+.cash-box h3{
+
+  font-size:18px;
+
+  margin-bottom:13px;
+
+}
+
+
+.input-label{
+
+  display:block;
+
+  font-size:14px;
+
+  font-weight:800;
+
+  color:#374151;
+
+  margin-bottom:7px;
+
+}
+
+
+.cash-input{
+
+  width:100%;
+
+  padding:15px;
+
+  border:2px solid #d1d5db;
+
+  border-radius:11px;
+
+  background:#fff;
+
+  font-size:22px;
+
+  font-weight:800;
+
+}
+
+
+.cash-input:focus{
+
+  outline:none;
+
+  border-color:#16a34a;
+
+}
+
+
+.cash-expected{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  gap:10px;
+
+  padding:12px 0;
+
+  margin-bottom:12px;
+
+  border-bottom:1px solid #bbf7d0;
+
+  font-size:16px;
+
+  font-weight:800;
+
+}
+
+
+/* =========================================================
+   DIFERENCIA
+========================================================= */
+
+.difference{
+
+  margin-top:15px;
+
+  padding:16px;
+
+  border-radius:12px;
+
+  background:#fff;
+
+  border:2px solid #ddd;
+
+}
+
+
+.difference-label{
+
+  font-size:13px;
+
+  color:#6b7280;
+
+  font-weight:800;
+
+}
+
+
+.difference-value{
+
+  font-size:28px;
+
+  font-weight:900;
+
+  margin-top:5px;
+
+}
+
+
+.difference.surplus{
+
+  background:#f0fdf4;
+
+  border-color:#86efac;
+
+  color:#166534;
+
+}
+
+
+.difference.shortage{
+
+  background:#fef2f2;
+
+  border-color:#fca5a5;
+
+  color:#991b1b;
+
+}
+
+
+.difference.equal{
+
+  background:#eff6ff;
+
+  border-color:#93c5fd;
+
+  color:#1d4ed8;
+
+}
+
+
+/* =========================================================
+   OBSERVACIONES
+========================================================= */
+
+textarea{
+
+  width:100%;
+
+  min-height:100px;
+
+  resize:vertical;
+
+  border:2px solid #ddd;
+
+  border-radius:11px;
+
+  padding:13px;
+
+  font-family:inherit;
+
+  font-size:16px;
+
+}
+
+
+textarea:focus{
+
+  outline:none;
+
+  border-color:#2563eb;
+
+}
+
+
+/* =========================================================
+   BOTÓN CERRAR
+========================================================= */
+
+.close-button{
+
+  width:100%;
+
+  border:none;
+
+  border-radius:13px;
+
+  padding:17px;
+
+  background:#111827;
+
+  color:#fff;
+
+  font-size:18px;
+
+  font-weight:900;
+
+  cursor:pointer;
+
+}
+
+
+.close-button:disabled{
+
+  opacity:.6;
+
+  cursor:wait;
+
+}
+
+
+.close-button:active{
+
+  transform:scale(.99);
+
+}
+
+
+/* =========================================================
+   ESTADO DE CIERRE
+========================================================= */
+
+.closed-box{
+
+  display:none;
+
+  text-align:center;
+
+  padding:20px;
+
+  border-radius:15px;
+
+  background:#dcfce7;
+
+  border:2px solid #86efac;
+
+  color:#166534;
+
+  margin-top:15px;
+
+}
+
+
+.closed-box.show{
+
+  display:block;
+
+}
+
+
+.closed-icon{
+
+  font-size:40px;
+
+  margin-bottom:8px;
+
+}
+
+
+.closed-title{
+
+  font-size:21px;
+
+  font-weight:900;
+
+}
+
+
+.closed-text{
+
+  margin-top:6px;
+
+  font-size:14px;
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:500px){
+
+  .container{
+
+    padding:15px;
+
+  }
+
+
+  header h1{
+
+    font-size:24px;
+
+  }
+
+
+  .card{
+
+    padding:16px;
+
+  }
+
+
+  .summary-grid{
+
+    grid-template-columns:1fr 1fr;
+
+    gap:8px;
+
+  }
+
+
+  .summary-item{
+
+    padding:13px;
+
+  }
+
+
+  .summary-value{
+
+    font-size:19px;
+
+  }
+
+
+  .business-name{
+
+    font-size:21px;
+
+  }
+
+
+  .payment-total{
+
+    font-size:16px;
+
+  }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<h1>
+🔐 Cierre de Caja
+</h1>
+
+<p>
+Resumen y cierre de operaciones
+</p>
+
+</header>
+
+
+<div class="container">
+
+
+<button
+  type="button"
+  id="backButton"
+  class="back-button"
+>
+
+  ← Regresar al POS
+
+</button>
+
+
+<div
+  id="status"
+  class="status"
+></div>
+
+
+<!-- =====================================================
+     NEGOCIO
+====================================================== -->
+
+<div class="card">
+
+<div class="business-header">
+
+<div>
+
+<div
+  id="businessName"
+  class="business-name"
+>
+Cargando...
+</div>
+
+<div
+  id="businessDate"
+  class="business-date"
+>
+Cargando información...
+</div>
+
+</div>
+
+<div>
+  🔐
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     RESUMEN GENERAL
+====================================================== -->
+
+<div class="card">
+
+<h2>
+📊 Resumen de ventas
+</h2>
+
+
+<div
+  id="summary"
+  class="summary-grid"
+>
+
+<div class="loading">
+Cargando resumen...
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     MÉTODOS DE PAGO
+====================================================== -->
+
+<div class="card">
+
+<h2>
+💳 Métodos de pago
+</h2>
+
+
+<div
+  id="paymentsSummary"
+>
+
+<div class="loading">
+Cargando métodos de pago...
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     EFECTIVO
+====================================================== -->
+
+<div class="card">
+
+<h2>
+💵 Arqueo de efectivo
+</h2>
+
+
+<div class="cash-box">
+
+<h3>
+Efectivo en caja
+</h3>
+
+
+<div class="cash-expected">
+
+<span>
+Efectivo esperado
+</span>
+
+<strong
+  id="expectedCash"
+>
+$0.00
+</strong>
+
+</div>
+
+
+<label
+  class="input-label"
+  for="cashCounted"
+>
+Efectivo contado físicamente
+</label>
+
+
+<input
+  id="cashCounted"
+  class="cash-input"
+  type="number"
+  inputmode="decimal"
+  min="0"
+  step="0.01"
+  placeholder="0.00"
+>
+
+
+<div
+  id="differenceBox"
+  class="difference equal"
+>
+
+<div class="difference-label">
+Diferencia
+</div>
+
+<div
+  id="differenceValue"
+  class="difference-value"
+>
+$0.00
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     OBSERVACIONES
+====================================================== -->
+
+<div class="card">
+
+<h2>
+📝 Observaciones
+</h2>
+
+
+<textarea
+  id="notes"
+  placeholder="Ej. Se encontró un faltante de $20, se revisará con el vendedor..."
+></textarea>
+
+</div>
+
+
+<!-- =====================================================
+     CERRAR CAJA
+====================================================== -->
+
+<div class="card">
+
+<button
+  type="button"
+  id="closeButton"
+  class="close-button"
+>
+
+  🔐 CERRAR CAJA
+
+</button>
+
+
+<div
+  id="closedBox"
+  class="closed-box"
+>
+
+<div class="closed-icon">
+✅
+</div>
+
+<div class="closed-title">
+Caja cerrada correctamente
+</div>
+
+<div
+  id="closedText"
+  class="closed-text"
+>
+</div>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<!-- =====================================================
+     SUPABASE
+====================================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+"use strict";
+
+
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
+
+const SUPABASE_URL =
+  "https://jrxklpstlloeckihcduv.supabase.co";
+
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
+
+
+const BUSINESS_IDS = {
+
+  BakeQuiri:
+    "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+
+  SpicyRoll:
+    "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
+
+};
+
+
+let supabaseClient = null;
+
+
+/* =========================================================
+   ESTADO
+========================================================= */
+
+let currentBusiness =
+  "BakeQuiri";
+
+
+let businessId =
+  BUSINESS_IDS.BakeQuiri;
+
+
+let summaryData = {
+
+  totalSales:0,
+
+  saleCount:0,
+
+  pendingTotal:0,
+
+  pendingCount:0,
+
+  cashTotal:0,
+
+  cashCount:0,
+
+  payments:[]
+
+};
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function $(id){
+
+  return document.getElementById(id);
+
+}
+
+
+function money(value){
+
+  return "$" +
+    Number(value || 0)
+      .toLocaleString(
+        "es-MX",
+        {
+          minimumFractionDigits:2,
+          maximumFractionDigits:2
+        }
+      );
+
+}
+
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+function showStatus(
+  message,
+  type = "error"
+){
+
+  $("status").textContent =
+    message;
+
+  $("status").className =
+    "status " + type;
+
+}
+
+
+function clearStatus(){
+
+  $("status").textContent =
+    "";
+
+  $("status").className =
+    "status";
+
+}
+
+
+/* =========================================================
+   TIMEOUT
+========================================================= */
+
+function withTimeout(
+  promise,
+  milliseconds,
+  message
+){
+
+  let timeoutId;
+
+
+  const timeout =
+    new Promise(
+      (_,reject) => {
+
+        timeoutId =
+          setTimeout(
+            () => {
+
+              reject(
+                new Error(
+                  message ||
+                  "La operación tardó demasiado."
+                )
+              );
+
+            },
+            milliseconds
+          );
+
+      }
+    );
+
+
+  return Promise.race([
+    promise,
+    timeout
+  ])
+  .finally(
+    () =>
+      clearTimeout(timeoutId)
+  );
+
+}
+
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+function initializeSupabase(){
+
+  if(
+    !window.supabase ||
+    typeof window.supabase.createClient !==
+      "function"
+  ){
+
+    throw new Error(
+      "No se pudo cargar Supabase."
+    );
+
+  }
+
+
+  if(!supabaseClient){
+
+    supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+      );
+
+  }
+
+}
+
+
+/* =========================================================
+   FECHAS
+========================================================= */
+
+function getStartOfDay(){
+
+  const date =
+    new Date();
+
+
+  date.setHours(
+    0,0,0,0
+  );
+
+
+  return date;
+
+}
+
+
+function getEndOfDay(){
+
+  const date =
+    new Date();
+
+
+  date.setHours(
+    23,59,59,999
+  );
+
+
+  return date;
+
+}
+
+
+function formatDate(){
+
+  return new Date()
+    .toLocaleDateString(
+      "es-MX",
+      {
+        weekday:"long",
+        year:"numeric",
+        month:"long",
+        day:"numeric"
+      }
+    );
+
+}
+
+
+function toISOStringStart(){
+
+  return getStartOfDay()
+    .toISOString();
+
+}
+
+
+function toISOStringEnd(){
+
+  return getEndOfDay()
+    .toISOString();
+
+}
+
+
+/* =========================================================
+   OBTENER VENTAS DEL DÍA
+========================================================= */
+
+async function fetchTodaySales(){
+
+  /*
+   * Se consulta la tabla sales.
+   *
+   * Se intenta obtener únicamente las ventas
+   * del negocio y del día actual.
+   */
+
+  const result =
+    await withTimeout(
+
+      supabaseClient
+        .from("sales")
+        .select("*")
+        .eq(
+          "business_id",
+          businessId
+        )
+        .gte(
+          "created_at",
+          toISOStringStart()
+        )
+        .lte(
+          "created_at",
+          toISOStringEnd()
+        )
+        .order(
+          "created_at",
+          {
+            ascending:false
+          }
+        ),
+
+      10000,
+
+      "La consulta de ventas tardó demasiado."
+
+    );
+
+
+  if(result.error){
+
+    throw result.error;
+
+  }
+
+
+  return result.data || [];
+
+}
+
+
+/* =========================================================
+   OBTENER DETALLE DE PAGOS
+========================================================= */
+
+async function fetchPaymentMethods(){
+
+  const result =
+    await withTimeout(
+
+      supabaseClient
+        .from("payment_methods")
+        .select(
+          "id,name"
+        )
+        .eq(
+          "business_id",
+          businessId
+        )
+        .order("name"),
+
+      8000,
+
+      "La consulta de métodos de pago tardó demasiado."
+
+    );
+
+
+  if(result.error){
+
+    return [];
+
+  }
+
+
+  return result.data || [];
+
+}
+
+
+/* =========================================================
+   CALCULAR RESUMEN
+========================================================= */
+
+function calculateSummary(
+  sales,
+  paymentMethods
+){
+
+  let totalSales =
+    0;
+
+  let saleCount =
+    0;
+
+  let pendingTotal =
+    0;
+
+  let pendingCount =
+    0;
+
+  let cashTotal =
+    0;
+
+  let cashCount =
+    0;
+
+
+  const paymentMap =
+    {};
+
+
+  paymentMethods.forEach(
+    payment => {
+
+      paymentMap[
+        String(payment.id)
+      ] = {
+
+        id:
+          payment.id,
+
+        name:
+          payment.name,
+
+        total:0,
+
+        count:0
+
+      };
+
+    }
+  );
+
+
+  sales.forEach(
+    sale => {
+
+      /*
+       * Ventas normales.
+       */
+
+      const isPending =
+        Boolean(
+          sale.is_pending
+        );
+
+
+      const amount =
+        Number(
+          sale.total ??
+          sale.amount ??
+          sale.total_amount ??
+          0
+        );
+
+
+      if(isPending){
+
+        pendingTotal +=
+          amount;
+
+        pendingCount++;
+
+        return;
+
+      }
+
+
+      totalSales +=
+        amount;
+
+      saleCount++;
+
+
+      /*
+       * Método de pago.
+       */
+
+      const paymentId =
+        sale.payment_method_id;
+
+
+      if(paymentId){
+
+        const key =
+          String(paymentId);
+
+
+        if(!paymentMap[key]){
+
+          paymentMap[key] = {
+
+            id:
+              paymentId,
+
+            name:
+              "Método de pago",
+
+            total:0,
+
+            count:0
+
+          };
+
+        }
+
+
+        paymentMap[key].total +=
+          amount;
+
+        paymentMap[key].count++;
+
+      }
+
+    }
+  );
+
+
+  /*
+   * Detectamos efectivo por nombre.
+   */
+
+  Object.values(
+    paymentMap
+  ).forEach(
+    payment => {
+
+      const name =
+        String(
+          payment.name || ""
+        )
+        .toLowerCase();
+
+
+      if(
+        name.includes("efectivo") ||
+        name.includes("cash")
+      ){
+
+        cashTotal =
+          payment.total;
+
+        cashCount =
+          payment.count;
+
+      }
+
+    }
+  );
+
+
+  return {
+
+    totalSales,
+
+    saleCount,
+
+    pendingTotal,
+
+    pendingCount,
+
+    cashTotal,
+
+    cashCount,
+
+    payments:
+      Object.values(
+        paymentMap
+      )
+      .filter(
+        payment =>
+          payment.count > 0
+      )
+
+  };
+
+}
+
+
+/* =========================================================
+   RENDER RESUMEN
+========================================================= */
+
+function renderSummary(){
+
+  $("summary").innerHTML = `
+
+    <div class="summary-item total">
+
+      <div class="summary-label">
+        Ventas del día
+      </div>
+
+      <div class="summary-value">
+        ${money(summaryData.totalSales)}
+      </div>
+
+    </div>
+
+
+    <div class="summary-item">
+
+      <div class="summary-label">
+        Operaciones
+      </div>
+
+      <div class="summary-value">
+        ${summaryData.saleCount}
+      </div>
+
+    </div>
+
+
+    <div class="summary-item">
+
+      <div class="summary-label">
+        Efectivo
+      </div>
+
+      <div class="summary-value">
+        ${money(summaryData.cashTotal)}
+      </div>
+
+    </div>
+
+
+    <div class="summary-item pending">
+
+      <div class="summary-label">
+        Cuentas pendientes
+      </div>
+
+      <div class="summary-value">
+        ${money(summaryData.pendingTotal)}
+      </div>
+
+    </div>
+
+  `;
+
+
+  $("expectedCash").textContent =
+    money(
+      summaryData.cashTotal
+    );
+
+}
+
+
+/* =========================================================
+   RENDER PAGOS
+========================================================= */
+
+function renderPayments(){
+
+  const container =
+    $("paymentsSummary");
+
+
+  container.innerHTML =
+    "";
+
+
+  if(
+    !summaryData.payments.length
+  ){
+
+    container.innerHTML = `
+
+      <div class="loading">
+        No hay ventas registradas
+        con métodos de pago para hoy.
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  summaryData.payments.forEach(
+    payment => {
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+
+      row.className =
+        "payment-row";
+
+
+      row.innerHTML = `
+
+        <div>
+
+          <div class="payment-name">
+            ${escapeHTML(payment.name)}
+          </div>
+
+          <div class="payment-count">
+            ${payment.count}
+            operación${payment.count === 1 ? "" : "es"}
+          </div>
+
+        </div>
+
+        <div class="payment-total">
+          ${money(payment.total)}
+        </div>
+
+      `;
+
+
+      container.appendChild(
+        row
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   DIFERENCIA DE EFECTIVO
+========================================================= */
+
+function calculateDifference(){
+
+  const counted =
+    Number(
+      $("cashCounted").value
+    );
+
+
+  const expected =
+    Number(
+      summaryData.cashTotal
+    );
+
+
+  const difference =
+    counted -
+    expected;
+
+
+  const box =
+    $("differenceBox");
+
+
+  const value =
+    $("differenceValue");
+
+
+  value.textContent =
+    money(difference);
+
+
+  box.classList.remove(
+    "surplus",
+    "shortage",
+    "equal"
+  );
+
+
+  if(
+    Math.abs(difference) <
+    0.005
+  ){
+
+    box.classList.add(
+      "equal"
+    );
+
+    value.textContent =
+      "$0.00";
+
+    return;
+
+  }
+
+
+  if(difference > 0){
+
+    box.classList.add(
+      "surplus"
+    );
+
+  }
+  else{
+
+    box.classList.add(
+      "shortage"
+    );
+
+  }
+
+}
+
+
+$("cashCounted").addEventListener(
+  "input",
+  calculateDifference
+);
+
+
+/* =========================================================
+   GUARDAR CIERRE
+========================================================= */
+
+async function saveClosing(){
+
+  clearStatus();
+
+
+  const counted =
+    Number(
+      $("cashCounted").value
+    );
+
+
+  if(
+    !Number.isFinite(counted) ||
+    counted < 0
+  ){
+
+    showStatus(
+      "Ingresa el efectivo contado físicamente."
+    );
+
+    $("cashCounted").focus();
+
+    return;
+
+  }
+
+
+  const expected =
+    Number(
+      summaryData.cashTotal
+    );
+
+
+  const difference =
+    counted -
+    expected;
+
+
+  const notes =
+    $("notes")
+      .value
+      .trim();
+
+
+  const button =
+    $("closeButton");
+
+
+  const originalText =
+    button.textContent;
+
+
+  button.disabled =
+    true;
+
+
+  button.textContent =
+    "CERRANDO CAJA...";
+
+
+  try{
+
+    /*
+     * IMPORTANTE:
+     *
+     * El SQL que creaste previamente debe tener
+     * la tabla de cierres correspondiente.
+     *
+     * Aquí usamos una inserción directa.
+     */
+
+    const result =
+      await withTimeout(
+
+        supabaseClient
+          .from("cash_closings")
+          .insert({
+
+            business_id:
+              businessId,
+
+            closing_date:
+              new Date()
+                .toISOString(),
+
+            total_sales:
+              summaryData.totalSales,
+
+            sales_count:
+              summaryData.saleCount,
+
+            expected_cash:
+              expected,
+
+            counted_cash:
+              counted,
+
+            difference:
+              difference,
+
+            pending_total:
+              summaryData.pendingTotal,
+
+            notes:
+              notes || null
+
+          })
+          .select()
+          .single(),
+
+        10000,
+
+        "Guardar el cierre tardó demasiado."
+
+      );
+
+
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+
+    $("closedText").textContent =
+      "Cierre registrado para " +
+      currentBusiness +
+      ". Total de ventas: " +
+      money(
+        summaryData.totalSales
+      ) +
+      ".";
+
+
+    $("closedBox")
+      .classList
+      .add("show");
+
+
+    showStatus(
+      "El cierre de caja se registró correctamente.",
+      "ok"
+    );
+
+
+    button.textContent =
+      "✅ CAJA CERRADA";
+
+
+    button.disabled =
+      true;
+
+
+  }
+
+  catch(error){
+
+    console.error(
+      "[POS] Error cerrando caja:",
+      error
+    );
+
+
+    showStatus(
+
+      "No se pudo registrar el cierre.\n\n" +
+
+      (
+        error?.message ||
+        String(error)
+      ),
+
+      "error"
+
+    );
+
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      originalText;
+
+  }
+
+}
+
+
+/* =========================================================
+   CARGAR TODO
+========================================================= */
+
+async function loadClosing(){
+
+  clearStatus();
+
+
+  $("businessName").textContent =
+    currentBusiness;
+
+
+  $("businessDate").textContent =
+    formatDate();
+
+
+  try{
+
+    initializeSupabase();
+
+
+    const [
+      sales,
+      paymentMethods
+    ] =
+      await Promise.all([
+        fetchTodaySales(),
+        fetchPaymentMethods()
+      ]);
+
+
+    summaryData =
+      calculateSummary(
+        sales,
+        paymentMethods
+      );
+
+
+    renderSummary();
+
+    renderPayments();
+
+    calculateDifference();
+
+
+    showStatus(
+      "Resumen actualizado correctamente.",
+      "ok"
+    );
+
+  }
+
+  catch(error){
+
+    console.error(
+      "[POS] Error cargando cierre:",
+      error
+    );
+
+
+    $("summary").innerHTML = `
+
+      <div class="loading">
+        No fue posible cargar
+        el resumen de ventas.
+      </div>
+
+    `;
+
+
+    $("paymentsSummary").innerHTML = `
+
+      <div class="loading">
+        No fue posible cargar
+        los métodos de pago.
+      </div>
+
+    `;
+
+
+    showStatus(
+
+      "No se pudo cargar el cierre de caja.\n\n" +
+
+      (
+        error?.message ||
+        String(error)
+      ),
+
+      "error"
+
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   REGRESAR
+========================================================= */
+
+$("backButton").addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+      "index.html?business=" +
+      encodeURIComponent(
+        currentBusiness
+      );
+
+  }
+);
+
+
+/* =========================================================
+   BOTÓN CERRAR CAJA
+========================================================= */
+
+$("closeButton").addEventListener(
+  "click",
+  saveClosing
+);
+
+
+/* =========================================================
+   LEER NEGOCIO DESDE URL
+========================================================= */
+
+function loadBusinessFromURL(){
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+
+  const requestedBusiness =
+    params.get(
+      "business"
+    );
+
+
+  if(
+    requestedBusiness &&
+    BUSINESS_IDS[
+      requestedBusiness
+    ]
+  ){
+
+    currentBusiness =
+      requestedBusiness;
+
+  }
+  else{
+
+    currentBusiness =
+      "BakeQuiri";
+
+  }
+
+
+  businessId =
+    BUSINESS_IDS[
+      currentBusiness
+    ];
+
+}
+
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+async function start(){
+
+  loadBusinessFromURL();
+
+  await loadClosing();
+
+}
+
+
+start();
+
+</script>
+
+
+</body>
+
+</html>
