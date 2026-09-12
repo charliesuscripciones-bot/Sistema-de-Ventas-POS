@@ -7,9 +7,9 @@
 <meta name="theme-color" content="#111827">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Sistema POS">
+<meta name="apple-mobile-web-app-title" content="Charlie Shop">
 
-<title>Sistema de Ventas POS</title>
+<title>Charlie Shop | Productos seleccionados</title>
 
 <style>
 *{
@@ -34,31 +34,64 @@ body.modal-open{
   overflow:hidden
 }
 
+/* =========================================================
+   HEADER / CHARLIE SHOP
+========================================================= */
+
 header{
   background:#111827;
   color:#fff;
-  padding-top:calc(22px + env(safe-area-inset-top));
+  padding-top:calc(18px + env(safe-area-inset-top));
   padding-right:20px;
-  padding-bottom:22px;
+  padding-bottom:20px;
   padding-left:20px
 }
 
-header h1{
+.brand{
+  display:flex;
+  align-items:center;
+  gap:13px
+}
+
+.brand-logo{
+  width:54px;
+  height:54px;
+  flex:0 0 54px;
+  display:flex;
+  align-items:center;
+  justify-content:center
+}
+
+.brand-logo svg{
+  width:54px;
+  height:54px;
+  display:block
+}
+
+.brand-text{
+  min-width:0
+}
+
+.brand-name{
   font-size:28px;
-  line-height:1.15
+  line-height:1.05;
+  font-weight:850;
+  letter-spacing:-.5px
+}
+
+.brand-slogan{
+  font-size:14px;
+  line-height:1.2;
+  margin-top:6px;
+  color:#d4af37;
+  font-weight:700;
+  letter-spacing:.2px
 }
 
 header p{
-  font-size:15px;
-  opacity:.75;
-  margin-top:8px
-}
-
-.container{
-  width:100%;
-  max-width:1100px;
-  margin:auto;
-  padding:20px
+  font-size:14px;
+  opacity:.65;
+  margin-top:10px
 }
 
 .status{
@@ -660,12 +693,27 @@ header p{
     padding:15px
   }
 
-  header h1{
+  .brand-logo{
+    width:48px;
+    height:48px;
+    flex-basis:48px
+  }
+
+  .brand-logo svg{
+    width:48px;
+    height:48px
+  }
+
+  .brand-name{
     font-size:25px
   }
 
+  .brand-slogan{
+    font-size:13px
+  }
+
   header p{
-    font-size:14px
+    font-size:13px
   }
 
   .navigation{
@@ -722,7 +770,7 @@ header p{
 @supports (-webkit-touch-callout:none){
 
   header{
-    padding-top:calc(22px + env(safe-area-inset-top))
+    padding-top:calc(18px + env(safe-area-inset-top))
   }
 
 }
@@ -733,7 +781,73 @@ header p{
 
 <header>
 
-<h1>🧾 Sistema de Ventas POS</h1>
+<div class="brand">
+
+  <div class="brand-logo" aria-hidden="true">
+
+    <svg
+      viewBox="0 0 64 64"
+      xmlns="http://www.w3.org/2000/svg">
+
+      <!-- Círculo exterior -->
+      <circle
+        cx="32"
+        cy="32"
+        r="29"
+        fill="none"
+        stroke="#d4af37"
+        stroke-width="2.5"/>
+
+      <!-- Carrito -->
+      <path
+        d="M14 18h5l4 25h25l5-18H22"
+        fill="none"
+        stroke="#ffffff"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+
+      <circle
+        cx="29"
+        cy="50"
+        r="3"
+        fill="#d4af37"/>
+
+      <circle
+        cx="47"
+        cy="50"
+        r="3"
+        fill="#d4af37"/>
+
+      <!-- CS -->
+      <text
+        x="32"
+        y="35"
+        text-anchor="middle"
+        font-family="Arial,sans-serif"
+        font-size="14"
+        font-weight="800"
+        fill="#d4af37">
+        CS
+      </text>
+
+    </svg>
+
+  </div>
+
+  <div class="brand-text">
+
+    <div class="brand-name">
+      Charlie Shop
+    </div>
+
+    <div class="brand-slogan">
+      Productos seleccionados
+    </div>
+
+  </div>
+
+</div>
 
 <p>
 Administración de negocios y ventas
@@ -3234,11 +3348,6 @@ async function refreshProductsFromServer(){
       freshProducts;
 
 
-    /*
-     * Actualizamos también los productos
-     * que ya estén dentro del carrito.
-     */
-
     cart =
       cart.map(
         item => {
@@ -3479,15 +3588,6 @@ async function registerSale(
   }
 
 
-  /*
-   * ANTES DE ENVIAR LA VENTA:
-   *
-   * Volvemos a consultar Supabase.
-   *
-   * Esto evita que el caché antiguo permita
-   * intentar vender inventario que ya no existe.
-   */
-
   const stockIsValid =
     await validateCartStock();
 
@@ -3596,10 +3696,6 @@ async function registerSale(
     }
 
 
-    /*
-     * Limpiar carrito inmediatamente.
-     */
-
     cart = [];
 
     selectedCustomerId =
@@ -3616,10 +3712,6 @@ async function registerSale(
 
     renderSelectedCustomer();
 
-
-    /*
-     * CONSULTAR NUEVAMENTE EL STOCK REAL.
-     */
 
     await refreshProductsFromServer();
 
@@ -3655,11 +3747,6 @@ async function registerSale(
         ""
       );
 
-
-    /*
-     * Mensaje específico para el problema
-     * que encontramos durante las pruebas.
-     */
 
     if(
       errorMessage
@@ -3879,7 +3966,9 @@ async function startApp(){
       error
     );
 
-    await loadOfflineData();
+    await getOfflineData(
+      currentBusiness
+    );
 
   }
 
