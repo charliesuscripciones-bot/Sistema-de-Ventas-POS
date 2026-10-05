@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>Historial de ventas | Charlie Shop</title>
 
 <style>
@@ -42,7 +43,9 @@ header p{
   padding:25px 20px 40px;
 }
 
-/* CLIENTE */
+/* =========================================
+   CLIENTE
+========================================= */
 
 .customer-banner{
   display:none;
@@ -74,21 +77,23 @@ header p{
   color:#64748b;
 }
 
-/* BOTONES */
+/* =========================================
+   BOTONES
+========================================= */
 
 .toolbar{
   display:flex;
-  gap:12px;
+  gap:10px;
   flex-wrap:wrap;
   margin-bottom:20px;
 }
 
 button{
   border:2px solid #ddd;
-  padding:13px 20px;
+  padding:13px 18px;
   border-radius:12px;
   background:#fff;
-  font-size:16px;
+  font-size:15px;
   font-weight:700;
   cursor:pointer;
 }
@@ -122,13 +127,15 @@ button:disabled{
   color:#111827;
 }
 
-/* FILTROS */
+/* =========================================
+   FILTROS
+========================================= */
 
 .filters{
   display:grid;
   grid-template-columns:1fr 170px 170px;
   gap:12px;
-  margin-bottom:20px;
+  margin-bottom:12px;
 }
 
 .filters input{
@@ -145,30 +152,56 @@ button:disabled{
   border-color:#2680eb;
 }
 
-/* RESUMEN */
+/* =========================================
+   ESTADOS
+========================================= */
+
+.status-filters{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+
+.status-filter{
+  padding:9px 13px;
+  border-radius:10px;
+  font-size:13px;
+  background:#fff;
+}
+
+.status-filter.active{
+  background:#111827;
+  color:#fff;
+  border-color:#111827;
+}
+
+/* =========================================
+   RESUMEN
+========================================= */
 
 .summary{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:15px;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
   margin-bottom:20px;
 }
 
 .summary-card{
   background:#fff;
   border-radius:18px;
-  padding:20px;
+  padding:19px;
   box-shadow:0 5px 20px rgba(0,0,0,.06);
 }
 
 .label{
   color:#6b7280;
-  font-size:14px;
+  font-size:13px;
   font-weight:700;
 }
 
 .value{
-  font-size:28px;
+  font-size:26px;
   font-weight:800;
   margin-top:7px;
 }
@@ -198,7 +231,7 @@ button:disabled{
   justify-content:space-between;
   align-items:center;
   gap:15px;
-  padding:14px 0;
+  padding:13px 0;
   border-bottom:1px solid #e5e7eb;
 }
 
@@ -213,7 +246,7 @@ button:disabled{
 }
 
 .product-quantity{
-  font-size:18px;
+  font-size:17px;
   font-weight:800;
   color:#2680eb;
   white-space:nowrap;
@@ -238,7 +271,48 @@ button:disabled{
   font-size:14px;
 }
 
-/* VENTAS */
+/* =========================================
+   RESUMEN MÉTODOS
+========================================= */
+
+.payment-summary{
+  background:#fff;
+  border-radius:20px;
+  padding:22px;
+  margin-bottom:20px;
+  box-shadow:0 5px 20px rgba(0,0,0,.06);
+}
+
+.payment-summary-title{
+  color:#6b7280;
+  font-size:14px;
+  font-weight:800;
+  margin-bottom:15px;
+}
+
+.method-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0;
+  border-bottom:1px solid #e5e7eb;
+}
+
+.method-row:last-child{
+  border-bottom:0;
+}
+
+.method-name{
+  font-weight:700;
+}
+
+.method-total{
+  font-weight:800;
+}
+
+/* =========================================
+   VENTAS
+========================================= */
 
 .card{
   background:#fff;
@@ -258,10 +332,14 @@ button:disabled{
   margin-bottom:0;
 }
 
-.top{
+.sale-main{
   display:flex;
   justify-content:space-between;
   gap:15px;
+}
+
+.sale-info{
+  min-width:0;
 }
 
 .date{
@@ -270,7 +348,8 @@ button:disabled{
 
 .total{
   font-weight:800;
-  font-size:19px;
+  font-size:21px;
+  white-space:nowrap;
 }
 
 .customer{
@@ -281,12 +360,12 @@ button:disabled{
 
 .details{
   color:#6b7280;
-  font-size:14px;
+  font-size:13px;
   margin-top:7px;
   word-break:break-word;
 }
 
-.status{
+.sale-status{
   display:inline-block;
   margin-top:10px;
   padding:6px 10px;
@@ -297,29 +376,43 @@ button:disabled{
   font-size:13px;
 }
 
-.status.open{
+.sale-status.open{
   background:#fef3c7;
   color:#92400e;
 }
 
-/* SALDO */
+.sale-status.cancelled{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+/* =========================================
+   ACCIONES
+========================================= */
+
+.sale-actions{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+
+.detail-button{
+  background:#f8fafc;
+  border-color:#e2e8f0;
+  color:#334155;
+}
+
+.whatsapp-button{
+  background:#ecfdf5;
+  border-color:#bbf7d0;
+  color:#15803d;
+}
 
 .balance-button{
-  display:block;
-  width:100%;
-  margin-top:12px;
-  padding:13px 15px;
-  border-radius:12px;
-  border:2px solid #f59e0b;
   background:#fffbeb;
+  border-color:#f59e0b;
   color:#92400e;
-  text-align:left;
-  font-size:15px;
-  font-weight:800;
-}
-
-.balance-button:hover{
-  background:#fef3c7;
 }
 
 .balance-button.paid{
@@ -329,7 +422,56 @@ button:disabled{
   cursor:default;
 }
 
-/* HISTORIAL DE ABONOS */
+/* =========================================
+   DETALLE DE PRODUCTOS
+========================================= */
+
+.sale-products{
+  display:none;
+  margin-top:15px;
+  padding:15px;
+  background:#f8fafc;
+  border-radius:14px;
+  border:1px solid #e2e8f0;
+}
+
+.sale-products.visible{
+  display:block;
+}
+
+.sale-products-title{
+  font-size:14px;
+  font-weight:800;
+  color:#334155;
+  margin-bottom:9px;
+}
+
+.sale-product-row{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:8px 0;
+  border-bottom:1px solid #e2e8f0;
+  font-size:14px;
+}
+
+.sale-product-row:last-child{
+  border-bottom:0;
+}
+
+.sale-product-name{
+  font-weight:600;
+}
+
+.sale-product-qty{
+  color:#2563eb;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+/* =========================================
+   HISTORIAL DE ABONOS
+========================================= */
 
 .payment-history{
   margin-top:15px;
@@ -385,12 +527,9 @@ button:disabled{
   color:#334155;
 }
 
-.no-payments{
-  color:#94a3b8;
-  font-size:13px;
-}
-
-/* MODAL */
+/* =========================================
+   MODAL ABONO
+========================================= */
 
 .modal-overlay{
   display:none;
@@ -410,6 +549,8 @@ button:disabled{
 .modal{
   width:100%;
   max-width:430px;
+  max-height:90vh;
+  overflow-y:auto;
   background:#fff;
   border-radius:22px;
   padding:25px;
@@ -513,7 +654,9 @@ button:disabled{
   display:block;
 }
 
-/* MENSAJES */
+/* =========================================
+   MENSAJES
+========================================= */
 
 .empty{
   text-align:center;
@@ -538,24 +681,82 @@ button:disabled{
   font-weight:700;
 }
 
-/* RESPONSIVE */
+/* =========================================
+   RESPONSIVE
+========================================= */
 
-@media(max-width:700px){
+@media(max-width:800px){
+
+  .summary{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .filters{
+    grid-template-columns:1fr 1fr;
+  }
+
+}
+
+@media(max-width:600px){
+
+  header{
+    padding:22px 17px;
+  }
+
+  header h1{
+    font-size:25px;
+  }
+
+  header p{
+    font-size:15px;
+  }
+
+  .container{
+    padding:18px 15px 35px;
+  }
 
   .filters{
     grid-template-columns:1fr;
   }
 
   .summary{
-    grid-template-columns:1fr;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
   }
 
-  .top{
-    flex-direction:column;
+  .summary-card{
+    padding:15px;
   }
 
-  .container{
-    padding:18px 15px 35px;
+  .value{
+    font-size:23px;
+  }
+
+  .card{
+    padding:15px;
+  }
+
+  .sale{
+    padding:15px;
+  }
+
+  .sale-main{
+    align-items:flex-start;
+  }
+
+  .total{
+    font-size:19px;
+  }
+
+  .sale-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+
+  .sale-actions button{
+    width:100%;
+    padding:11px 8px;
+    font-size:13px;
   }
 
   .modal{
@@ -575,7 +776,7 @@ button:disabled{
   }
 
   .product-quantity{
-    font-size:17px;
+    font-size:16px;
   }
 
 }
@@ -599,6 +800,11 @@ Consulta las ventas registradas de tus negocios
 
 <div class="container">
 
+
+<!-- =====================================
+     CLIENTE SELECCIONADO
+===================================== -->
+
 <div
 id="customerBanner"
 class="customer-banner">
@@ -619,6 +825,10 @@ class="customer-banner-phone">
 
 </div>
 
+
+<!-- =====================================
+     NEGOCIOS
+===================================== -->
 
 <div class="toolbar">
 
@@ -653,12 +863,16 @@ id="back">
 </div>
 
 
+<!-- =====================================
+     FILTROS
+===================================== -->
+
 <div class="filters">
 
 <input
 id="search"
 type="search"
-placeholder="🔎 Buscar cliente o venta"
+placeholder="🔎 Buscar cliente, teléfono o venta"
 autocomplete="off"
 >
 
@@ -675,12 +889,64 @@ type="date"
 </div>
 
 
+<div class="status-filters">
+
+<button
+type="button"
+class="status-filter active"
+data-status="all">
+Todas
+</button>
+
+<button
+type="button"
+class="status-filter"
+data-status="paid">
+✓ Pagadas
+</button>
+
+<button
+type="button"
+class="status-filter"
+data-status="open">
+⏳ Pendientes
+</button>
+
+<button
+type="button"
+class="status-filter"
+data-status="cancelled">
+✕ Canceladas
+</button>
+
+</div>
+
+
+<!-- =====================================
+     RESUMEN
+===================================== -->
+
 <div class="summary">
 
 <div class="summary-card">
 
 <div class="label">
-PIEZAS VENDIDAS
+VENTAS
+</div>
+
+<div
+id="salesCount"
+class="value">
+0
+</div>
+
+</div>
+
+
+<div class="summary-card">
+
+<div class="label">
+PIEZAS
 </div>
 
 <div
@@ -725,7 +991,7 @@ $0.00
 
 
 <!-- =====================================
-     DESGLOSE DE PRODUCTOS
+     PRODUCTOS
 ===================================== -->
 
 <div class="product-summary">
@@ -745,6 +1011,31 @@ Cargando productos...
 </div>
 
 
+<!-- =====================================
+     MÉTODOS DE PAGO
+===================================== -->
+
+<div class="payment-summary">
+
+<div class="payment-summary-title">
+💳 RESUMEN POR MÉTODO DE PAGO
+</div>
+
+<div id="paymentBreakdown">
+
+<div class="product-empty">
+Cargando...
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================
+     VENTAS
+===================================== -->
+
 <div class="card">
 
 <div id="message"></div>
@@ -762,9 +1053,9 @@ Cargando ventas...
 </div>
 
 
-<!-- =========================
+<!-- =====================================
      MODAL ABONO
-========================= -->
+===================================== -->
 
 <div
 id="paymentModal"
@@ -819,9 +1110,11 @@ Método de pago del abono
 
 <select
 id="paymentMethod">
+
 <option value="">
 Cargando métodos de pago...
 </option>
+
 </select>
 
 <div class="modal-buttons">
@@ -894,7 +1187,25 @@ const BUSINESS_IDS = {
 
 
 /* =========================================
-   CONTEXTO DE LA URL
+   DATOS PARA WHATSAPP
+========================================= */
+
+const TRANSFER_DATA = {
+
+  name:
+  "Carlos Ivan Rojas Marquez",
+
+  account:
+  "730969300008248726",
+
+  bank:
+  "Clip"
+
+};
+
+
+/* =========================================
+   CONTEXTO URL
 ========================================= */
 
 const urlParams =
@@ -909,9 +1220,7 @@ const requestedBusiness =
 urlParams.get("business");
 
 let currentBusiness =
-BUSINESS_IDS[
-  requestedBusiness
-]
+BUSINESS_IDS[requestedBusiness]
 ? requestedBusiness
 : "BakeQuiri";
 
@@ -926,6 +1235,9 @@ let saleItems = [];
 
 let selectedSaleForPayment =
 null;
+
+let currentStatusFilter =
+"all";
 
 
 /* =========================================
@@ -945,12 +1257,6 @@ function money(value){
 }
 
 
-/*
- * =====================================================
- * FECHA DE LA VENTA
- * =====================================================
- */
-
 function getSaleDate(sale){
 
   return (
@@ -962,10 +1268,6 @@ function getSaleDate(sale){
 }
 
 
-/*
- * Formato de fecha y hora para México.
- */
-
 function formatDate(value){
 
   if(!value)
@@ -974,15 +1276,8 @@ function formatDate(value){
   const date =
     new Date(value);
 
-  if(
-    Number.isNaN(
-      date.getTime()
-    )
-  ){
-
+  if(Number.isNaN(date.getTime()))
     return "Fecha inválida";
-
-  }
 
   return date.toLocaleString(
     "es-MX",
@@ -999,10 +1294,6 @@ function formatDate(value){
 }
 
 
-/*
- * Fecha utilizada por los filtros.
- */
-
 function getSaleDateKey(sale){
 
   const value =
@@ -1014,67 +1305,43 @@ function getSaleDateKey(sale){
   const date =
     new Date(value);
 
-  if(
-    Number.isNaN(
-      date.getTime()
-    )
-  ){
-
+  if(Number.isNaN(date.getTime()))
     return "";
 
-  }
-
-  const year =
-    date.getFullYear();
-
-  const month =
-    String(
-      date.getMonth() + 1
-    ).padStart(2,"0");
-
-  const day =
-    String(
-      date.getDate()
-    ).padStart(2,"0");
-
   return (
-    year +
+    date.getFullYear() +
     "-" +
-    month +
+    String(date.getMonth()+1).padStart(2,"0") +
     "-" +
-    day
+    String(date.getDate()).padStart(2,"0")
   );
 
 }
 
 
 /* =========================================
-   ACTUALIZAR BOTONES DE NEGOCIO
+   NEGOCIO
 ========================================= */
 
 function updateBusinessButtons(){
 
   document
-    .querySelectorAll(
-      ".business"
-    )
-    .forEach(
-      button => {
+    .querySelectorAll(".business")
+    .forEach(button => {
 
-        button.classList.toggle(
-          "active",
-          button.dataset.business ===
-          currentBusiness
-        );
+      button.classList.toggle(
+        "active",
+        button.dataset.business ===
+        currentBusiness
+      );
 
-      }
-    );
+    });
 
 }
 
 
 /* =========================================
-   CARGAR MÉTODOS DE PAGO
+   MÉTODOS DE PAGO
 ========================================= */
 
 async function loadPaymentMethods(){
@@ -1109,10 +1376,6 @@ async function loadPaymentMethods(){
 }
 
 
-/* =========================================
-   RENDERIZAR MÉTODOS DE PAGO
-========================================= */
-
 function renderPaymentMethods(){
 
   const select =
@@ -1136,22 +1399,20 @@ function renderPaymentMethods(){
 
   }
 
-  paymentMethods.forEach(
-    method => {
+  paymentMethods.forEach(method => {
 
-      const option =
-        document.createElement("option");
+    const option =
+      document.createElement("option");
 
-      option.value =
-        method.id;
+    option.value =
+      method.id;
 
-      option.textContent =
-        method.name;
+    option.textContent =
+      method.name;
 
-      select.appendChild(option);
+    select.appendChild(option);
 
-    }
-  );
+  });
 
 }
 
@@ -1165,14 +1426,11 @@ async function loadSelectedCustomer(){
   if(!selectedCustomerId){
 
     $("customerBanner")
-      .classList.remove(
-        "visible"
-      );
+      .classList.remove("visible");
 
     return;
 
   }
-
 
   try{
 
@@ -1209,9 +1467,7 @@ async function loadSelectedCustomer(){
       : "";
 
     $("customerBanner")
-      .classList.add(
-        "visible"
-      );
+      .classList.add("visible");
 
   }
   catch(error){
@@ -1240,6 +1496,11 @@ async function loadSales(){
   $("productBreakdown").innerHTML =
     '<div class="product-empty">' +
     "Cargando productos..." +
+    "</div>";
+
+  $("paymentBreakdown").innerHTML =
+    '<div class="product-empty">' +
+    "Cargando..." +
     "</div>";
 
   try{
@@ -1278,27 +1539,21 @@ async function loadSales(){
       result.data || [];
 
 
-    /*
-     * Orden de seguridad.
-     */
+    sales.sort((a,b) => {
 
-    sales.sort(
-      (a,b) => {
+      const dateA =
+        new Date(
+          getSaleDate(a) || 0
+        ).getTime();
 
-        const dateA =
-          new Date(
-            getSaleDate(a) || 0
-          ).getTime();
+      const dateB =
+        new Date(
+          getSaleDate(b) || 0
+        ).getTime();
 
-        const dateB =
-          new Date(
-            getSaleDate(b) || 0
-          ).getTime();
+      return dateB - dateA;
 
-        return dateB - dateA;
-
-      }
-    );
+    });
 
 
     /* =====================================
@@ -1307,8 +1562,7 @@ async function loadSales(){
 
     const saleIds =
       sales.map(
-        sale =>
-          sale.id
+        sale => sale.id
       );
 
 
@@ -1344,7 +1598,7 @@ async function loadSales(){
 
 
       /* =====================================
-         PIEZAS / PRODUCTOS VENDIDOS
+         PRODUCTOS
       ===================================== */
 
       const itemsResult =
@@ -1374,19 +1628,9 @@ async function loadSales(){
     }
 
 
-    /* =====================================
-       MÉTODOS DE PAGO
-    ===================================== */
-
     await loadPaymentMethods();
 
     renderPaymentMethods();
-
-
-    /*
-     * El cliente se mantiene al cambiar
-     * de negocio.
-     */
 
     await loadSelectedCustomer();
 
@@ -1398,29 +1642,12 @@ async function loadSales(){
     console.error(error);
 
     $("sales").innerHTML =
-
       '<div class="error">' +
-
       "No se pudieron cargar las ventas: " +
-
       (
         error.message ||
         error
       ) +
-
-      "</div>";
-
-    $("productBreakdown").innerHTML =
-
-      '<div class="error">' +
-
-      "No se pudieron cargar las piezas vendidas: " +
-
-      (
-        error.message ||
-        error
-      ) +
-
       "</div>";
 
   }
@@ -1429,201 +1656,10 @@ async function loadSales(){
 
 
 /* =========================================
-   RENDERIZAR DESGLOSE DE PRODUCTOS
+   OBTENER VENTAS FILTRADAS
 ========================================= */
 
-function renderProductBreakdown(
-  filteredRows
-){
-
-  const container =
-    $("productBreakdown");
-
-
-  /*
-   * Las ventas canceladas no cuentan
-   * como piezas vendidas.
-   *
-   * Las ventas pagadas y pendientes sí.
-   */
-
-  const validSaleIds =
-    new Set(
-      filteredRows
-        .filter(
-          sale =>
-            sale.status !==
-            "cancelled"
-        )
-        .map(
-          sale =>
-            sale.id
-        )
-    );
-
-
-  const filteredItems =
-    saleItems.filter(
-      item =>
-        validSaleIds.has(
-          item.sale_id
-        )
-    );
-
-
-  const productMap =
-    new Map();
-
-
-  filteredItems.forEach(
-    item => {
-
-      const productId =
-        item.product_id ||
-        item.description ||
-        "producto";
-
-
-      const productName =
-        item.description ||
-        "Producto sin nombre";
-
-
-      const current =
-        productMap.get(
-          productId
-        ) || {
-
-          name:
-            productName,
-
-          quantity:
-            0
-
-        };
-
-
-      current.quantity +=
-        Number(
-          item.quantity || 0
-        );
-
-
-      productMap.set(
-        productId,
-        current
-      );
-
-    }
-  );
-
-
-  const products =
-    [...productMap.values()]
-      .sort(
-        (a,b) =>
-          b.quantity -
-          a.quantity
-      );
-
-
-  const totalPieces =
-    products.reduce(
-      (sum,product) =>
-        sum +
-        Number(
-          product.quantity || 0
-        ),
-      0
-    );
-
-
-  container.innerHTML = "";
-
-
-  if(!products.length){
-
-    container.innerHTML =
-      '<div class="product-empty">' +
-      "No hay piezas vendidas en este periodo." +
-      "</div>";
-
-    return;
-
-  }
-
-
-  products.forEach(
-    product => {
-
-      const row =
-        document.createElement(
-          "div"
-        );
-
-
-      row.className =
-        "product-row";
-
-
-      row.innerHTML =
-
-        '<div class="product-name">' +
-
-        product.name +
-
-        "</div>" +
-
-        '<div class="product-quantity">' +
-
-        product.quantity +
-
-        " piezas" +
-
-        "</div>";
-
-
-      container.appendChild(
-        row
-      );
-
-    }
-  );
-
-
-  const totalRow =
-    document.createElement(
-      "div"
-    );
-
-
-  totalRow.className =
-    "product-total";
-
-
-  totalRow.innerHTML =
-
-    "<span>Total</span>" +
-
-    "<span>" +
-
-    totalPieces +
-
-    " piezas</span>";
-
-
-  container.appendChild(
-    totalRow
-  );
-
-}
-
-
-/* =========================================
-   RENDERIZAR VENTAS
-========================================= */
-
-async function renderSales(){
+async function getFilteredSales(){
 
   const searchText =
     $("search")
@@ -1639,34 +1675,35 @@ async function renderSales(){
 
 
   let rows =
-    sales.filter(
-      sale => {
+    sales.filter(sale => {
 
-        const date =
-          getSaleDateKey(
-            sale
-          );
+      const date =
+        getSaleDateKey(sale);
 
+      if(from && date < from)
+        return false;
 
-        if(from && date < from)
-          return false;
+      if(to && date > to)
+        return false;
 
-        if(to && date > to)
-          return false;
+      if(
+        selectedCustomerId &&
+        sale.customer_id !==
+        selectedCustomerId
+      )
+        return false;
 
+      if(
+        currentStatusFilter !==
+        "all" &&
+        sale.status !==
+        currentStatusFilter
+      )
+        return false;
 
-        if(
-          selectedCustomerId &&
-          sale.customer_id !==
-          selectedCustomerId
-        )
-          return false;
+      return true;
 
-
-        return true;
-
-      }
-    );
+    });
 
 
   /* =====================================
@@ -1708,16 +1745,14 @@ async function renderSales(){
 
 
     (result.data || [])
-      .forEach(
-        customer => {
+      .forEach(customer => {
 
-          customerMap.set(
-            customer.id,
-            customer
-          );
+        customerMap.set(
+          customer.id,
+          customer
+        );
 
-        }
-      );
+      });
 
   }
 
@@ -1727,50 +1762,56 @@ async function renderSales(){
   ===================================== */
 
   rows =
-    rows.filter(
-      sale => {
+    rows.filter(sale => {
 
-        if(!searchText)
-          return true;
+      if(!searchText)
+        return true;
 
-
-        const customer =
-          customerMap.get(
-            sale.customer_id
-          );
-
-
-        const text =
-          [
-            customer?.name,
-            customer?.phone,
-            sale.id
-          ]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase();
-
-
-        return text.includes(
-          searchText
+      const customer =
+        customerMap.get(
+          sale.customer_id
         );
 
-      }
-    );
+      const text =
+        [
+          customer?.name,
+          customer?.phone,
+          sale.id
+        ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      return text.includes(
+        searchText
+      );
+
+    });
 
 
-  /* =====================================
-     RESUMEN
-  ===================================== */
+  return {
+    rows,
+    customerMap
+  };
 
-  /*
-   * AHORA "count" representa PIEZAS
-   * y no número de ventas.
-   */
+}
+
+
+/* =========================================
+   PRODUCTOS
+========================================= */
+
+function renderProductBreakdown(
+  filteredRows
+){
+
+  const container =
+    $("productBreakdown");
+
 
   const validSaleIds =
     new Set(
-      rows
+      filteredRows
         .filter(
           sale =>
             sale.status !==
@@ -1792,65 +1833,70 @@ async function renderSales(){
     );
 
 
+  const productMap =
+    new Map();
+
+
+  filteredItems.forEach(item => {
+
+    const productId =
+      item.product_id ||
+      item.description ||
+      "producto";
+
+    const productName =
+      item.description ||
+      "Producto sin nombre";
+
+    const current =
+      productMap.get(
+        productId
+      ) || {
+        name:productName,
+        quantity:0
+      };
+
+    current.quantity +=
+      Number(
+        item.quantity || 0
+      );
+
+    productMap.set(
+      productId,
+      current
+    );
+
+  });
+
+
+  const products =
+    [...productMap.values()]
+      .sort(
+        (a,b) =>
+          b.quantity -
+          a.quantity
+      );
+
+
   const totalPieces =
-    filteredItems.reduce(
-      (sum,item) =>
+    products.reduce(
+      (sum,product) =>
         sum +
         Number(
-          item.quantity || 0
+          product.quantity || 0
         ),
       0
     );
 
 
-  $("count").textContent =
-    totalPieces;
+  container.innerHTML = "";
 
 
-  $("total").textContent =
-    money(
-      rows.reduce(
-        (sum,sale) =>
-          sum +
-          Number(
-            sale.total || 0
-          ),
-        0
-      )
-    );
+  if(!products.length){
 
-
-  $("balance").textContent =
-    money(
-      rows.reduce(
-        (sum,sale) =>
-          sum +
-          Number(
-            sale.balance || 0
-          ),
-        0
-      )
-    );
-
-
-  /* =====================================
-     DESGLOSE
-  ===================================== */
-
-  renderProductBreakdown(
-    rows
-  );
-
-
-  /* =====================================
-     SIN RESULTADOS
-  ===================================== */
-
-  if(!rows.length){
-
-    $("sales").innerHTML =
-      '<div class="empty">' +
-      "No hay ventas que coincidan con los filtros." +
+    container.innerHTML =
+      '<div class="product-empty">' +
+      "No hay piezas vendidas en este periodo." +
       "</div>";
 
     return;
@@ -1858,16 +1904,587 @@ async function renderSales(){
   }
 
 
-  $("sales").innerHTML =
-    "";
+  products.forEach(product => {
+
+    const row =
+      document.createElement("div");
+
+    row.className =
+      "product-row";
+
+    row.innerHTML =
+      '<div class="product-name">' +
+      product.name +
+      "</div>" +
+
+      '<div class="product-quantity">' +
+      product.quantity +
+      " piezas" +
+      "</div>";
+
+    container.appendChild(row);
+
+  });
 
 
-  /* =====================================
-     VENTAS
-  ===================================== */
+  const totalRow =
+    document.createElement("div");
 
-  rows.forEach(
-    sale => {
+  totalRow.className =
+    "product-total";
+
+  totalRow.innerHTML =
+    "<span>Total</span>" +
+    "<span>" +
+    totalPieces +
+    " piezas</span>";
+
+  container.appendChild(totalRow);
+
+}
+
+
+/* =========================================
+   RESUMEN MÉTODOS DE PAGO
+========================================= */
+
+function renderPaymentBreakdown(
+  filteredRows
+){
+
+  const container =
+    $("paymentBreakdown");
+
+
+  const validSaleIds =
+    new Set(
+      filteredRows
+        .filter(
+          sale =>
+            sale.status !==
+            "cancelled"
+        )
+        .map(
+          sale =>
+            sale.id
+        )
+    );
+
+
+  const map =
+    new Map();
+
+
+  /*
+   * Ventas pagadas:
+   * se atribuye el total al método
+   * utilizado en la venta.
+   *
+   * Cuentas abiertas:
+   * solamente se contabilizan los abonos
+   * registrados.
+   */
+
+  filteredRows
+    .filter(
+      sale =>
+        sale.status !==
+        "cancelled"
+    )
+    .forEach(sale => {
+
+      const salePayments =
+        payments.filter(
+          payment =>
+            payment.sale_id ===
+            sale.id
+        );
+
+
+      if(
+        sale.status ===
+        "paid" &&
+        salePayments.length
+      ){
+
+        salePayments.forEach(payment => {
+
+          const method =
+            paymentMethods.find(
+              method =>
+                method.id ===
+                payment.payment_method_id
+            );
+
+          const name =
+            method?.name ||
+            "Método no identificado";
+
+          map.set(
+            name,
+            (
+              map.get(name) || 0
+            ) +
+            Number(
+              payment.amount || 0
+            )
+          );
+
+        });
+
+      }
+      else if(
+        sale.status ===
+        "paid" &&
+        !salePayments.length
+      ){
+
+        map.set(
+          "Venta pagada",
+          (
+            map.get("Venta pagada") ||
+            0
+          ) +
+          Number(
+            sale.total || 0
+          )
+        );
+
+      }
+      else{
+
+        salePayments.forEach(payment => {
+
+          const method =
+            paymentMethods.find(
+              method =>
+                method.id ===
+                payment.payment_method_id
+            );
+
+          const name =
+            method?.name ||
+            "Método no identificado";
+
+          map.set(
+            name,
+            (
+              map.get(name) || 0
+            ) +
+            Number(
+              payment.amount || 0
+            )
+          );
+
+        });
+
+      }
+
+    });
+
+
+  container.innerHTML = "";
+
+
+  if(!map.size){
+
+    container.innerHTML =
+      '<div class="product-empty">' +
+      "No hay pagos registrados en este periodo." +
+      "</div>";
+
+    return;
+
+  }
+
+
+  [...map.entries()]
+    .sort(
+      (a,b) =>
+        b[1] - a[1]
+    )
+    .forEach(
+      ([name,total]) => {
+
+        const row =
+          document.createElement("div");
+
+        row.className =
+          "method-row";
+
+        row.innerHTML =
+          '<div class="method-name">' +
+          name +
+          "</div>" +
+
+          '<div class="method-total">' +
+          money(total) +
+          "</div>";
+
+        container.appendChild(row);
+
+      }
+    );
+
+}
+
+
+/* =========================================
+   WHATSAPP
+========================================= */
+
+function cleanPhone(phone){
+
+  if(!phone)
+    return "";
+
+  let digits =
+    String(phone)
+      .replace(/\D/g,"");
+
+
+  /*
+   * Si el teléfono mexicano tiene 10 dígitos,
+   * agregamos +52.
+   */
+
+  if(
+    digits.length === 10
+  ){
+
+    digits =
+      "52" +
+      digits;
+
+  }
+
+
+  return digits;
+
+}
+
+
+function openWhatsApp(
+  customer,
+  sale
+){
+
+  if(!customer?.phone){
+
+    alert(
+      "Este cliente no tiene un número de teléfono registrado."
+    );
+
+    return;
+
+  }
+
+
+  const phone =
+    cleanPhone(
+      customer.phone
+    );
+
+
+  if(!phone){
+
+    alert(
+      "El número de teléfono del cliente no es válido."
+    );
+
+    return;
+
+  }
+
+
+  let message = "";
+
+
+  const customerName =
+    customer.name ||
+    "Cliente";
+
+
+  const business =
+    currentBusiness;
+
+
+  const balance =
+    Number(
+      sale.balance || 0
+    );
+
+
+  if(balance > 0){
+
+    message =
+      "Hola, " +
+      customerName +
+      " 👋\n\n" +
+
+      "Te recordamos que tienes un saldo pendiente de " +
+      money(balance) +
+      " en " +
+      business +
+      ".\n\n" +
+
+      "Puedes realizar tu transferencia a:\n\n" +
+
+      TRANSFER_DATA.name +
+      "\n" +
+
+      "Cuenta:\n" +
+
+      TRANSFER_DATA.account +
+      "\n" +
+
+      "Banco: " +
+      TRANSFER_DATA.bank +
+      "\n\n" +
+
+      "Una vez realizada, puedes enviarnos tu comprobante por este medio. ¡Gracias! 🙌";
+
+  }
+  else{
+
+    message =
+      "Hola, " +
+      customerName +
+      " 👋 Gracias por tu compra en " +
+      business +
+      ". ¡Esperamos verte pronto! 🙌";
+
+  }
+
+
+  const url =
+    "https://wa.me/" +
+    phone +
+    "?text=" +
+    encodeURIComponent(
+      message
+    );
+
+
+  window.open(
+    url,
+    "_blank"
+  );
+
+}
+
+
+/* =========================================
+   DETALLE DE PRODUCTOS DE VENTA
+========================================= */
+
+function renderSaleProducts(
+  sale,
+  container
+){
+
+  container.innerHTML = "";
+
+
+  const items =
+    saleItems.filter(
+      item =>
+        item.sale_id ===
+        sale.id
+    );
+
+
+  const title =
+    document.createElement("div");
+
+  title.className =
+    "sale-products-title";
+
+  title.textContent =
+    "📦 Productos de la venta";
+
+  container.appendChild(title);
+
+
+  if(!items.length){
+
+    const empty =
+      document.createElement("div");
+
+    empty.className =
+      "product-empty";
+
+    empty.textContent =
+      "No hay productos registrados para esta venta.";
+
+    container.appendChild(empty);
+
+    return;
+
+  }
+
+
+  items.forEach(item => {
+
+    const row =
+      document.createElement("div");
+
+    row.className =
+      "sale-product-row";
+
+    row.innerHTML =
+      '<div class="sale-product-name">' +
+      (
+        item.description ||
+        "Producto"
+      ) +
+      "</div>" +
+
+      '<div class="sale-product-qty">' +
+      Number(
+        item.quantity || 0
+      ) +
+      " piezas</div>";
+
+    container.appendChild(row);
+
+  });
+
+}
+
+
+/* =========================================
+   RENDERIZAR VENTAS
+========================================= */
+
+async function renderSales(){
+
+  try{
+
+    const {
+      rows,
+      customerMap
+    } =
+      await getFilteredSales();
+
+
+    /* =====================================
+       RESUMEN
+    ===================================== */
+
+    const validRows =
+      rows.filter(
+        sale =>
+          sale.status !==
+          "cancelled"
+      );
+
+
+    const validSaleIds =
+      new Set(
+        validRows.map(
+          sale =>
+            sale.id
+        )
+      );
+
+
+    const filteredItems =
+      saleItems.filter(
+        item =>
+          validSaleIds.has(
+            item.sale_id
+          )
+      );
+
+
+    const totalPieces =
+      filteredItems.reduce(
+        (sum,item) =>
+          sum +
+          Number(
+            item.quantity || 0
+          ),
+        0
+      );
+
+
+    const total =
+      validRows.reduce(
+        (sum,sale) =>
+          sum +
+          Number(
+            sale.total || 0
+          ),
+        0
+      );
+
+
+    const balance =
+      validRows.reduce(
+        (sum,sale) =>
+          sum +
+          Number(
+            sale.balance || 0
+          ),
+        0
+      );
+
+
+    $("salesCount")
+      .textContent =
+      validRows.length;
+
+
+    $("count")
+      .textContent =
+      totalPieces;
+
+
+    $("total")
+      .textContent =
+      money(total);
+
+
+    $("balance")
+      .textContent =
+      money(balance);
+
+
+    renderProductBreakdown(
+      rows
+    );
+
+
+    renderPaymentBreakdown(
+      rows
+    );
+
+
+    /* =====================================
+       SIN RESULTADOS
+    ===================================== */
+
+    if(!rows.length){
+
+      $("sales").innerHTML =
+        '<div class="empty">' +
+        "No hay ventas que coincidan con los filtros." +
+        "</div>";
+
+      return;
+
+    }
+
+
+    $("sales").innerHTML = "";
+
+
+    /* =====================================
+       VENTAS
+    ===================================== */
+
+    rows.forEach(sale => {
 
       const customer =
         customerMap.get(
@@ -1897,10 +2514,6 @@ async function renderSales(){
         );
 
 
-      /* =================================
-         ABONOS
-      ================================= */
-
       const salePayments =
         payments.filter(
           payment =>
@@ -1920,28 +2533,23 @@ async function renderSales(){
         );
 
 
-      let statusText;
+      let statusText =
+        "Registrada";
 
 
-      if(state === "paid"){
-
+      if(state === "paid")
         statusText =
           "Pagada";
 
-      }
-      else if(state === "open"){
 
+      if(state === "open")
         statusText =
           "Pendiente";
 
-      }
-      else{
 
+      if(state === "cancelled")
         statusText =
-          state ||
-          "Registrada";
-
-      }
+          "Cancelada";
 
 
       /* =================================
@@ -1949,30 +2557,36 @@ async function renderSales(){
       ================================= */
 
       const element =
-        document.createElement(
-          "div"
-        );
-
+        document.createElement("div");
 
       element.className =
         "sale";
 
 
-      element.innerHTML =
+      /* =================================
+         CABECERA
+      ================================= */
 
-        '<div class="top">' +
+      const main =
+        document.createElement("div");
 
+      main.className =
+        "sale-main";
+
+
+      const info =
+        document.createElement("div");
+
+      info.className =
+        "sale-info";
+
+
+      info.innerHTML =
         '<div class="date">' +
-        "Venta · " +
+        "🧾 Venta · " +
         formatDate(
           getSaleDate(sale)
         ) +
-        "</div>" +
-
-        '<div class="total">' +
-        money(sale.total) +
-        "</div>" +
-
         "</div>" +
 
         '<div class="customer">' +
@@ -1986,10 +2600,12 @@ async function renderSales(){
         sale.id +
         "</div>" +
 
-        '<span class="status ' +
+        '<span class="sale-status ' +
         (
           state === "open"
           ? "open"
+          : state === "cancelled"
+          ? "cancelled"
           : ""
         ) +
         '">' +
@@ -2005,17 +2621,57 @@ async function renderSales(){
         "</span>";
 
 
+      const totalElement =
+        document.createElement("div");
+
+      totalElement.className =
+        "total";
+
+      totalElement.textContent =
+        money(
+          sale.total
+        );
+
+
+      main.appendChild(info);
+
+      main.appendChild(
+        totalElement
+      );
+
+      element.appendChild(main);
+
+
       /* =================================
-         HISTORIAL DE ABONOS
+         DETALLE PRODUCTOS
+      ================================= */
+
+      const products =
+        document.createElement("div");
+
+      products.className =
+        "sale-products";
+
+
+      renderSaleProducts(
+        sale,
+        products
+      );
+
+
+      element.appendChild(
+        products
+      );
+
+
+      /* =================================
+         HISTORIAL ABONOS
       ================================= */
 
       if(salePayments.length){
 
         const history =
-          document.createElement(
-            "div"
-          );
-
+          document.createElement("div");
 
         history.className =
           "payment-history";
@@ -2031,10 +2687,7 @@ async function renderSales(){
           payment => {
 
             const row =
-              document.createElement(
-                "div"
-              );
-
+              document.createElement("div");
 
             row.className =
               "payment-row";
@@ -2049,7 +2702,6 @@ async function renderSales(){
 
 
             row.innerHTML =
-
               '<div>' +
 
               '<div class="payment-date">' +
@@ -2078,28 +2730,20 @@ async function renderSales(){
               "</div>";
 
 
-            history.appendChild(
-              row
-            );
+            history.appendChild(row);
 
           }
         );
 
 
         const totalRow =
-          document.createElement(
-            "div"
-          );
-
+          document.createElement("div");
 
         totalRow.className =
           "payment-total";
 
-
         totalRow.innerHTML =
-
           "<span>Total abonado</span>" +
-
           "<span>" +
           money(totalPaid) +
           "</span>";
@@ -2118,29 +2762,124 @@ async function renderSales(){
 
 
       /* =================================
-         SALDO
+         ACCIONES
       ================================= */
 
-      if(balance > 0){
+      const actions =
+        document.createElement("div");
+
+      actions.className =
+        "sale-actions";
+
+
+      /* DETALLE */
+
+      const detailButton =
+        document.createElement("button");
+
+      detailButton.type =
+        "button";
+
+      detailButton.className =
+        "detail-button";
+
+      detailButton.textContent =
+        "🔎 Ver detalle";
+
+
+      detailButton.addEventListener(
+        "click",
+        () => {
+
+          const visible =
+            products.classList.toggle(
+              "visible"
+            );
+
+
+          detailButton.textContent =
+            visible
+            ? "🔼 Ocultar detalle"
+            : "🔎 Ver detalle";
+
+        }
+      );
+
+
+      actions.appendChild(
+        detailButton
+      );
+
+
+      /* WHATSAPP */
+
+      if(customer?.phone){
+
+        const whatsapp =
+          document.createElement("button");
+
+        whatsapp.type =
+          "button";
+
+        whatsapp.className =
+          "whatsapp-button";
+
+
+        if(balance > 0){
+
+          whatsapp.textContent =
+            "💬 Cobrar por WhatsApp";
+
+        }
+        else{
+
+          whatsapp.textContent =
+            "💬 WhatsApp";
+
+        }
+
+
+        whatsapp.addEventListener(
+          "click",
+          () => {
+
+            openWhatsApp(
+              customer,
+              sale
+            );
+
+          }
+        );
+
+
+        actions.appendChild(
+          whatsapp
+        );
+
+      }
+
+
+      /* ABONO */
+
+      if(
+        balance > 0 &&
+        state !== "cancelled"
+      ){
 
         const balanceButton =
-          document.createElement(
-            "button"
-          );
+          document.createElement("button");
 
 
         balanceButton.type =
           "button";
 
-
         balanceButton.className =
           "balance-button";
 
 
-        balanceButton.innerHTML =
-          "💰 Saldo pendiente: " +
-          money(balance) +
-          " · Registrar abono";
+        balanceButton.textContent =
+          "💰 Abonar " +
+          money(balance);
 
 
         balanceButton.addEventListener(
@@ -2156,40 +2895,42 @@ async function renderSales(){
         );
 
 
-        element.appendChild(
+        actions.appendChild(
           balanceButton
         );
 
       }
-      else{
+      else if(
+        state !== "cancelled"
+      ){
 
         const paidButton =
-          document.createElement(
-            "button"
-          );
+          document.createElement("button");
 
 
         paidButton.type =
           "button";
 
-
         paidButton.className =
           "balance-button paid";
-
 
         paidButton.disabled =
           true;
 
-
-        paidButton.innerHTML =
+        paidButton.textContent =
           "✓ Cuenta liquidada";
 
 
-        element.appendChild(
+        actions.appendChild(
           paidButton
         );
 
       }
+
+
+      element.appendChild(
+        actions
+      );
 
 
       $("sales")
@@ -2197,14 +2938,32 @@ async function renderSales(){
           element
         );
 
-    }
-  );
+    });
+
+  }
+  catch(error){
+
+    console.error(
+      "Error renderizando ventas:",
+      error
+    );
+
+    $("sales").innerHTML =
+      '<div class="error">' +
+      "No se pudo mostrar el historial: " +
+      (
+        error.message ||
+        error
+      ) +
+      "</div>";
+
+  }
 
 }
 
 
 /* =========================================
-   ABRIR MODAL
+   MODAL ABONO
 ========================================= */
 
 function openPaymentModal(
@@ -2255,7 +3014,7 @@ function openPaymentModal(
 
     $("paymentMethod")
       .value =
-        paymentMethods[0].id;
+      paymentMethods[0].id;
 
   }
 
@@ -2279,10 +3038,6 @@ function openPaymentModal(
 }
 
 
-/* =========================================
-   CERRAR MODAL
-========================================= */
-
 function closePaymentModal(){
 
   selectedSaleForPayment =
@@ -2296,17 +3051,13 @@ function closePaymentModal(){
 }
 
 
-/* =========================================
-   ERROR
-========================================= */
-
 function showPaymentError(
   message
 ){
 
   $("modalError")
     .textContent =
-      message;
+    message;
 
   $("modalError")
     .classList.add(
@@ -2397,27 +3148,24 @@ async function registerPayment(
 
   $("savePayment")
     .disabled =
-      true;
-
+    true;
 
   $("payFull")
     .disabled =
-      true;
-
+    true;
 
   $("paymentMethod")
     .disabled =
-      true;
+    true;
 
 
   $("savePayment")
     .textContent =
-      "⏳ Procesando...";
-
+    "⏳ Procesando...";
 
   $("payFull")
     .textContent =
-      "⏳ Procesando...";
+    "⏳ Procesando...";
 
 
   try{
@@ -2543,27 +3291,23 @@ async function registerPayment(
 
     $("savePayment")
       .disabled =
-        false;
-
+      false;
 
     $("payFull")
       .disabled =
-        false;
-
+      false;
 
     $("paymentMethod")
       .disabled =
-        false;
-
+      false;
 
     $("savePayment")
       .textContent =
-        "💵 Registrar abono";
-
+      "💵 Registrar abono";
 
     $("payFull")
       .textContent =
-        "✓ Liquidar cuenta";
+      "✓ Liquidar cuenta";
 
   }
 
@@ -2571,7 +3315,7 @@ async function registerPayment(
 
 
 /* =========================================
-   BOTÓN ABONO
+   EVENTOS ABONO
 ========================================= */
 
 $("savePayment")
@@ -2589,10 +3333,6 @@ $("savePayment")
 );
 
 
-/* =========================================
-   LIQUIDAR
-========================================= */
-
 $("payFull")
 .addEventListener(
   "click",
@@ -2601,13 +3341,11 @@ $("payFull")
     if(!selectedSaleForPayment)
       return;
 
-
     const balance =
       Number(
         selectedSaleForPayment.balance ||
         0
       );
-
 
     await registerPayment(
       balance
@@ -2617,20 +3355,12 @@ $("payFull")
 );
 
 
-/* =========================================
-   CANCELAR
-========================================= */
-
 $("cancelPayment")
 .addEventListener(
   "click",
   closePaymentModal
 );
 
-
-/* =========================================
-   CERRAR FUERA DEL MODAL
-========================================= */
 
 $("paymentModal")
 .addEventListener(
@@ -2649,10 +3379,6 @@ $("paymentModal")
   }
 );
 
-
-/* =========================================
-   ESC
-========================================= */
 
 document.addEventListener(
   "keydown",
@@ -2676,69 +3402,70 @@ document.addEventListener(
 ========================================= */
 
 document
-.querySelectorAll(
-  ".business"
-)
-.forEach(
-  button => {
+.querySelectorAll(".business")
+.forEach(button => {
 
-    button.addEventListener(
-      "click",
-      async () => {
+  button.addEventListener(
+    "click",
+    async () => {
 
-        const business =
-          button.dataset.business;
+      const business =
+        button.dataset.business;
 
 
-        if(
-          business ===
-          currentBusiness
-        )
-          return;
+      if(
+        business ===
+        currentBusiness
+      )
+        return;
 
 
-        currentBusiness =
-          business;
+      currentBusiness =
+        business;
 
 
-        updateBusinessButtons();
+      updateBusinessButtons();
 
 
-        const params =
-          new URLSearchParams();
+      const params =
+        new URLSearchParams();
 
 
-        if(selectedCustomerId){
-
-          params.set(
-            "customer_id",
-            selectedCustomerId
-          );
-
-        }
-
+      if(selectedCustomerId){
 
         params.set(
-          "business",
-          currentBusiness
+          "customer_id",
+          selectedCustomerId
         );
-
-
-        window.history.replaceState(
-          {},
-          "",
-          "cuentas.html?" +
-          params.toString()
-        );
-
-
-        await loadSales();
 
       }
-    );
 
-  }
-);
+
+      params.set(
+        "business",
+        currentBusiness
+      );
+
+
+      /*
+       * CORRECCIÓN:
+       * Antes apuntaba a cuentas.html.
+       */
+
+      window.history.replaceState(
+        {},
+        "",
+        "historial.html?" +
+        params.toString()
+      );
+
+
+      await loadSales();
+
+    }
+  );
+
+});
 
 
 /* =========================================
@@ -2764,6 +3491,46 @@ $("to")
   "change",
   renderSales
 );
+
+
+/* =========================================
+   FILTRO ESTADO
+========================================= */
+
+document
+.querySelectorAll(".status-filter")
+.forEach(button => {
+
+  button.addEventListener(
+    "click",
+    () => {
+
+      currentStatusFilter =
+        button.dataset.status;
+
+
+      document
+        .querySelectorAll(
+          ".status-filter"
+        )
+        .forEach(
+          item => {
+
+            item.classList.toggle(
+              "active",
+              item === button
+            );
+
+          }
+        );
+
+
+      renderSales();
+
+    }
+  );
+
+});
 
 
 /* =========================================
