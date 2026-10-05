@@ -240,6 +240,69 @@ button:disabled{
   font-weight:900;
 }
 
+/* PRODUCTOS DENTRO DE LA CUENTA */
+
+.sale-products{
+  margin-top:15px;
+  padding:15px;
+  border-radius:14px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+}
+
+.sale-products-title{
+  font-size:14px;
+  font-weight:900;
+  color:#334155;
+  margin-bottom:10px;
+}
+
+.sale-product-row{
+  display:grid;
+  grid-template-columns:1fr auto auto;
+  gap:12px;
+  align-items:center;
+  padding:10px 0;
+  border-bottom:1px solid #e2e8f0;
+}
+
+.sale-product-row:last-child{
+  border-bottom:0;
+}
+
+.sale-product-name{
+  font-weight:700;
+  color:#334155;
+}
+
+.sale-product-quantity{
+  font-weight:800;
+  color:#2680eb;
+  white-space:nowrap;
+}
+
+.sale-product-subtotal{
+  font-weight:800;
+  color:#111827;
+  white-space:nowrap;
+}
+
+.sale-products-total{
+  display:flex;
+  justify-content:space-between;
+  border-top:2px solid #cbd5e1;
+  margin-top:8px;
+  padding-top:10px;
+  font-weight:900;
+  color:#111827;
+}
+
+.sale-products-empty{
+  color:#64748b;
+  font-size:13px;
+  line-height:1.4;
+}
+
 /* CUENTAS */
 
 .card{
@@ -842,6 +905,15 @@ button:disabled{
     padding:11px;
   }
 
+  .sale-product-row{
+    grid-template-columns:1fr auto;
+  }
+
+  .sale-product-subtotal{
+    grid-column:2;
+    font-size:13px;
+  }
+
 }
 </style>
 </head>
@@ -1293,11 +1365,6 @@ let payments = [];
 
 let paymentMethods = [];
 
-/*
-   IMPORTANTE:
-   Aquí guardamos los productos/cantidades
-   correspondientes a cada venta.
-*/
 let saleItems = [];
 
 let selectedSaleForPayment = null;
@@ -1482,10 +1549,6 @@ function sendWhatsAppReminder(
     formatDate(
       getSaleDate(sale)
     );
-
-  /*
-     Mensaje corto para cobro.
-  */
 
   const message =
     "Hola " +
@@ -1684,6 +1747,65 @@ async function loadSelectedCustomer(){
 
 
 /* =====================================================
+   CARGAR NOMBRES DE PRODUCTOS
+===================================================== */
+
+async function loadProductNames(productIds){
+
+  const productMap =
+    new Map();
+
+  const ids =
+    [
+      ...new Set(
+        (productIds || [])
+          .filter(Boolean)
+      )
+    ];
+
+  if(!ids.length)
+    return productMap;
+
+  const result =
+    await supabaseClient
+      .from("products")
+      .select(
+        "id,name"
+      )
+      .in(
+        "id",
+        ids
+      );
+
+  if(result.error){
+
+    console.error(
+      "⚠️ No se pudieron cargar nombres de productos:",
+      result.error
+    );
+
+    return productMap;
+
+  }
+
+  (result.data || [])
+    .forEach(
+      product => {
+
+        productMap.set(
+          product.id,
+          product.name
+        );
+
+      }
+    );
+
+  return productMap;
+
+}
+
+
+/* =====================================================
    CARGAR PIEZAS DE LAS VENTAS
 ===================================================== */
 
@@ -1696,15 +1818,17 @@ async function loadSaleItems(saleIds){
 
 
   /*
-     PRIMERA OPCIÓN:
-     sale_items es la fuente principal.
+     ===================================================
+     PASO 1
+     Cargar sale_items
+     ===================================================
   */
 
   const itemsResult =
     await supabaseClient
       .from("sale_items")
       .select(
-        "sale_id,product_id,description,quantity"
+        "id,sale_id,product_id,description,quantity,unit_price,subtotal"
       )
       .in(
         "sale_id",
@@ -1712,179 +1836,55 @@ async function loadSaleItems(saleIds){
       );
 
 
-  if(
-    !itemsResult.error &&
-    itemsResult.data &&
-    itemsResult.data.length
-  ){
-
-    saleItems =
-      itemsResult.data.map(
-        item => ({
-
-          sale_id:
-            item.sale_id,
-
-          product_id:
-            item.product_id,
-
-          description:
-            item.description ||
-            "Producto",
-
-          quantity:
-            Number(
-              item.quantity || 0
-            )
-
-        })
-      );
-
-    console.log(
-      "📦 Piezas cargadas desde sale_items:",
-      saleItems
-    );
-
-    return;
-
-  }
-
-
-  /*
-     RESPALDO:
-     Si sale_items no devuelve información,
-     utilizamos inventory_movements.
-
-     Las ventas tienen cantidades negativas,
-     por eso utilizamos Math.abs().
-  */
-
-  console.warn(
-    "⚠️ sale_items no devolvió registros. Intentando inventory_movements..."
-  );
-
-
-  const movementsResult =
-    await supabaseClient
-      .from("inventory_movements")
-      .select(
-        "reference_id,product_id,quantity,movement_type"
-      )
-      .in(
-        "reference_id",
-        saleIds
-      )
-      .eq(
-        "movement_type",
-        "sale"
-      );
-
-
-  if(
-    movementsResult.error
-  ){
+  if(itemsResult.error){
 
     console.error(
-      "No se pudieron cargar movimientos de inventario:",
-      movementsResult.error
+      "❌ Error consultando sale_items:",
+      itemsResult.error
     );
-
-    return;
 
   }
 
 
-  const movements =
-    movementsResult.data || [];
-
-
-  if(!movements.length){
-
-    console.warn(
-      "⚠️ No se encontraron movimientos de venta."
-    );
-
-    return;
-
-  }
+  const directItems =
+    !itemsResult.error
+    ? (
+        itemsResult.data || []
+      )
+    : [];
 
 
   /*
-     Cargamos nombres de productos
-     para mostrar el desglose.
+     Guardamos directamente lo encontrado.
   */
 
-  const productIds =
-    [
-      ...new Set(
-        movements
-          .map(
-            movement =>
-              movement.product_id
-          )
-          .filter(Boolean)
-      )
-    ];
-
-
-  const productMap =
-    new Map();
-
-
-  if(productIds.length){
-
-    const productsResult =
-      await supabaseClient
-        .from("products")
-        .select(
-          "id,name"
-        )
-        .in(
-          "id",
-          productIds
-        );
-
-
-    if(!productsResult.error){
-
-      (productsResult.data || [])
-        .forEach(
-          product => {
-
-            productMap.set(
-              product.id,
-              product.name
-            );
-
-          }
-        );
-
-    }
-
-  }
-
-
   saleItems =
-    movements.map(
-      movement => ({
+    directItems.map(
+      item => ({
 
         sale_id:
-          movement.reference_id,
+          item.sale_id,
 
         product_id:
-          movement.product_id,
+          item.product_id,
 
         description:
-          productMap.get(
-            movement.product_id
-          ) ||
-          "Producto",
+          item.description ||
+          "",
 
         quantity:
-          Math.abs(
-            Number(
-              movement.quantity || 0
-            )
+          Number(
+            item.quantity || 0
+          ),
+
+        unit_price:
+          Number(
+            item.unit_price || 0
+          ),
+
+        subtotal:
+          Number(
+            item.subtotal || 0
           )
 
       })
@@ -1892,9 +1892,465 @@ async function loadSaleItems(saleIds){
 
 
   console.log(
-    "📦 Piezas cargadas desde inventory_movements:",
+    "📦 sale_items encontrados:",
     saleItems
   );
+
+
+  /*
+     ===================================================
+     PASO 2
+     Determinar qué ventas todavía no tienen productos
+     ===================================================
+  */
+
+  const salesWithItems =
+    new Set(
+      saleItems
+        .map(
+          item =>
+            item.sale_id
+        )
+    );
+
+
+  const missingSaleIds =
+    saleIds.filter(
+      saleId =>
+        !salesWithItems.has(
+          saleId
+        )
+    );
+
+
+  /*
+     ===================================================
+     PASO 3
+     Para las ventas faltantes,
+     utilizar inventory_movements.
+     ===================================================
+  */
+
+  if(!missingSaleIds.length){
+
+    /*
+       Aun así completamos nombres faltantes.
+    */
+
+    const missingProductIds =
+      saleItems
+        .filter(
+          item =>
+            item.product_id &&
+            !item.description
+        )
+        .map(
+          item =>
+            item.product_id
+        );
+
+    const productMap =
+      await loadProductNames(
+        missingProductIds
+      );
+
+    saleItems =
+      saleItems.map(
+        item => ({
+
+          ...item,
+
+          description:
+            item.description ||
+            productMap.get(
+              item.product_id
+            ) ||
+            "Producto"
+
+        })
+      );
+
+    return;
+
+  }
+
+
+  console.warn(
+    "⚠️ Ventas sin sale_items. Se buscarán en inventory_movements:",
+    missingSaleIds
+  );
+
+
+  const movementsResult =
+    await supabaseClient
+      .from("inventory_movements")
+      .select(
+        "id,reference_id,product_id,quantity,movement_type"
+      )
+      .in(
+        "reference_id",
+        missingSaleIds
+      )
+      .eq(
+        "movement_type",
+        "sale"
+      );
+
+
+  if(movementsResult.error){
+
+    console.error(
+      "❌ Error consultando inventory_movements:",
+      movementsResult.error
+    );
+
+  }
+
+
+  const movements =
+    !movementsResult.error
+    ? (
+        movementsResult.data || []
+      )
+    : [];
+
+
+  if(movements.length){
+
+    const movementProductIds =
+      movements
+        .map(
+          movement =>
+            movement.product_id
+        )
+        .filter(Boolean);
+
+
+    const productMap =
+      await loadProductNames(
+        movementProductIds
+      );
+
+
+    movements.forEach(
+      movement => {
+
+        const quantity =
+          Math.abs(
+            Number(
+              movement.quantity || 0
+            )
+          );
+
+
+        /*
+           Evitamos registrar movimientos
+           con cantidad cero.
+        */
+
+        if(quantity <= 0)
+          return;
+
+
+        saleItems.push({
+
+          sale_id:
+            movement.reference_id,
+
+          product_id:
+            movement.product_id,
+
+          description:
+            productMap.get(
+              movement.product_id
+            ) ||
+            "Producto",
+
+          quantity:
+            quantity,
+
+          unit_price:
+            0,
+
+          subtotal:
+            0
+
+        });
+
+      }
+    );
+
+  }
+
+
+  /*
+     ===================================================
+     PASO 4
+     Completar nombres de productos que estén vacíos
+     ===================================================
+  */
+
+  const missingNames =
+    saleItems
+      .filter(
+        item =>
+          item.product_id &&
+          !item.description
+      )
+      .map(
+        item =>
+          item.product_id
+      );
+
+
+  if(missingNames.length){
+
+    const productMap =
+      await loadProductNames(
+        missingNames
+      );
+
+
+    saleItems =
+      saleItems.map(
+        item => ({
+
+          ...item,
+
+          description:
+            item.description ||
+            productMap.get(
+              item.product_id
+            ) ||
+            "Producto"
+
+        })
+      );
+
+  }
+
+
+  console.log(
+    "📦 INVENTARIO FINAL DE PIEZAS:",
+    saleItems
+  );
+
+}
+
+
+/* =====================================================
+   OBTENER PRODUCTOS DE UNA VENTA
+===================================================== */
+
+function getSaleItems(saleId){
+
+  return saleItems.filter(
+    item =>
+      item.sale_id ===
+      saleId
+  );
+
+}
+
+
+/* =====================================================
+   RENDERIZAR PRODUCTOS DE UNA VENTA
+===================================================== */
+
+function renderSaleProducts(
+  saleId
+){
+
+  const items =
+    getSaleItems(
+      saleId
+    );
+
+
+  const wrapper =
+    document.createElement(
+      "div"
+    );
+
+  wrapper.className =
+    "sale-products";
+
+
+  const title =
+    document.createElement(
+      "div"
+    );
+
+  title.className =
+    "sale-products-title";
+
+  title.textContent =
+    "📦 Producto de la venta";
+
+  wrapper.appendChild(
+    title
+  );
+
+
+  /*
+     Si realmente no existe ningún producto,
+     mostramos la leyenda.
+  */
+
+  if(!items.length){
+
+    const empty =
+      document.createElement(
+        "div"
+      );
+
+    empty.className =
+      "sale-products-empty";
+
+    empty.textContent =
+      "No hay productos registrados para esta venta.";
+
+    wrapper.appendChild(
+      empty
+    );
+
+    return wrapper;
+
+  }
+
+
+  let totalPieces = 0;
+
+
+  items.forEach(
+    item => {
+
+      const quantity =
+        Number(
+          item.quantity || 0
+        );
+
+
+      totalPieces +=
+        quantity;
+
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+      row.className =
+        "sale-product-row";
+
+
+      const name =
+        document.createElement(
+          "div"
+        );
+
+      name.className =
+        "sale-product-name";
+
+      name.textContent =
+        item.description ||
+        "Producto";
+
+
+      const quantityElement =
+        document.createElement(
+          "div"
+        );
+
+      quantityElement.className =
+        "sale-product-quantity";
+
+      quantityElement.textContent =
+        "× " +
+        quantity;
+
+
+      const subtotal =
+        document.createElement(
+          "div"
+        );
+
+      subtotal.className =
+        "sale-product-subtotal";
+
+
+      /*
+         Si sale_items tiene subtotal lo mostramos.
+         Si no, intentamos calcularlo.
+      */
+
+      let subtotalValue =
+        Number(
+          item.subtotal || 0
+        );
+
+
+      if(
+        subtotalValue <= 0 &&
+        item.unit_price
+      ){
+
+        subtotalValue =
+          quantity *
+          Number(
+            item.unit_price
+          );
+
+      }
+
+
+      subtotal.textContent =
+        subtotalValue > 0
+        ? money(subtotalValue)
+        : "";
+
+
+      row.appendChild(
+        name
+      );
+
+      row.appendChild(
+        quantityElement
+      );
+
+      row.appendChild(
+        subtotal
+      );
+
+      wrapper.appendChild(
+        row
+      );
+
+    }
+  );
+
+
+  const totalRow =
+    document.createElement(
+      "div"
+    );
+
+  totalRow.className =
+    "sale-products-total";
+
+  totalRow.innerHTML =
+    "<span>Total de piezas</span>" +
+    "<span>" +
+    totalPieces +
+    "</span>";
+
+
+  wrapper.appendChild(
+    totalRow
+  );
+
+
+  return wrapper;
 
 }
 
@@ -1961,6 +2417,7 @@ function renderProductBreakdown(
         item.product_id ||
         item.description ||
         "producto";
+
 
       const current =
         productMap.get(
@@ -2079,10 +2536,12 @@ async function loadSales(){
     "Cargando cuentas pendientes..." +
     "</div>";
 
+
   try{
 
     const businessId =
       BUSINESS_IDS[currentBusiness];
+
 
     const result =
       await supabaseClient
@@ -2109,8 +2568,10 @@ async function loadSales(){
           }
         );
 
+
     if(result.error)
       throw result.error;
+
 
     sales =
       result.data || [];
@@ -2118,13 +2579,13 @@ async function loadSales(){
 
     const saleIds =
       sales.map(
-        sale => sale.id
+        sale =>
+          sale.id
       );
 
 
     /*
-       NUEVO:
-       Cargar las piezas de las ventas.
+       CARGAR PRODUCTOS Y PIEZAS
     */
 
     await loadSaleItems(
@@ -2154,8 +2615,10 @@ async function loadSales(){
             }
           );
 
+
       if(paymentsResult.error)
         throw paymentsResult.error;
+
 
       payments =
         paymentsResult.data || [];
@@ -2174,7 +2637,10 @@ async function loadSales(){
   }
   catch(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
+
 
     $("sales").innerHTML =
       '<div class="error">' +
@@ -2202,8 +2668,10 @@ async function renderAccounts(){
       .trim()
       .toLowerCase();
 
+
   const from =
     $("from").value;
+
 
   const to =
     $("to").value;
@@ -2218,26 +2686,40 @@ async function renderAccounts(){
             sale.balance || 0
           );
 
+
         if(balance <= 0)
           return false;
 
+
         if(
-          String(sale.status || "")
-            .toLowerCase() ===
+          String(
+            sale.status || ""
+          )
+          .toLowerCase() ===
           "cancelled"
         )
           return false;
+
 
         const date =
           getDateForFilter(
             sale
           );
 
-        if(from && date < from)
+
+        if(
+          from &&
+          date < from
+        )
           return false;
 
-        if(to && date > to)
+
+        if(
+          to &&
+          date > to
+        )
           return false;
+
 
         if(
           selectedCustomerId &&
@@ -2246,16 +2728,20 @@ async function renderAccounts(){
         )
           return false;
 
+
         return true;
 
       }
     );
 
 
-  /* CLIENTES */
+  /* =================================================
+     CLIENTES
+  ================================================= */
 
   const customerMap =
     new Map();
+
 
   const customerIds =
     [
@@ -2283,8 +2769,10 @@ async function renderAccounts(){
           customerIds
         );
 
+
     if(result.error)
       throw result.error;
+
 
     (result.data || [])
       .forEach(
@@ -2301,7 +2789,9 @@ async function renderAccounts(){
   }
 
 
-  /* BÚSQUEDA */
+  /* =================================================
+     BÚSQUEDA
+  ================================================= */
 
   rows =
     rows.filter(
@@ -2310,10 +2800,12 @@ async function renderAccounts(){
         if(!searchText)
           return true;
 
+
         const customer =
           customerMap.get(
             sale.customer_id
           );
+
 
         const text =
           [
@@ -2324,6 +2816,7 @@ async function renderAccounts(){
           .filter(Boolean)
           .join(" ")
           .toLowerCase();
+
 
         return text.includes(
           searchText
@@ -2337,23 +2830,20 @@ async function renderAccounts(){
      RESUMEN
   ================================================= */
 
-  /*
-     Número de cuentas.
-  */
-
   $("countAccounts").textContent =
     rows.length;
 
 
   /*
-     Filtrar solamente los sale_items
-     pertenecientes a las cuentas visibles.
+     Piezas solamente de las cuentas
+     que están visibles.
   */
 
   const validSaleIds =
     new Set(
       rows.map(
-        sale => sale.id
+        sale =>
+          sale.id
       )
     );
 
@@ -2366,10 +2856,6 @@ async function renderAccounts(){
         )
     );
 
-
-  /*
-     CONTADOR DE PIEZAS
-  */
 
   const totalPieces =
     filteredItems.reduce(
@@ -2386,10 +2872,6 @@ async function renderAccounts(){
     totalPieces;
 
 
-  /*
-     TOTAL VENTAS.
-  */
-
   $("total").textContent =
     money(
       rows.reduce(
@@ -2403,10 +2885,6 @@ async function renderAccounts(){
     );
 
 
-  /*
-     SALDO.
-  */
-
   $("balance").textContent =
     money(
       rows.reduce(
@@ -2419,10 +2897,6 @@ async function renderAccounts(){
       )
     );
 
-
-  /*
-     DESGLOSE DE PRODUCTOS.
-  */
 
   renderProductBreakdown(
     rows
@@ -2444,6 +2918,10 @@ async function renderAccounts(){
   $("sales").innerHTML = "";
 
 
+  /* =================================================
+     RENDER DE CADA CUENTA
+  ================================================= */
+
   rows.forEach(
     sale => {
 
@@ -2452,15 +2930,18 @@ async function renderAccounts(){
           sale.customer_id
         );
 
+
       const customerName =
         customer?.name ||
         "Consumidor general";
+
 
       const phone =
         customer?.phone
         ? " · 📱 " +
           customer.phone
         : "";
+
 
       const balance =
         Number(
@@ -2476,6 +2957,7 @@ async function renderAccounts(){
             payment.sale_id ===
             sale.id
         );
+
 
       const totalPaid =
         salePayments.reduce(
@@ -2494,6 +2976,7 @@ async function renderAccounts(){
         document.createElement(
           "div"
         );
+
 
       element.className =
         "account";
@@ -2530,9 +3013,35 @@ async function renderAccounts(){
 
         '<span class="status">' +
         "⚠️ Cuenta pendiente" +
-        "</span>" +
+        "</span>";
 
-        '<div class="balance-box">' +
+
+      /*
+         =================================================
+         PRODUCTOS DE ESTA VENTA
+         =================================================
+      */
+
+      element.appendChild(
+        renderSaleProducts(
+          sale.id
+        )
+      );
+
+
+      /* SALDO */
+
+      const balanceBox =
+        document.createElement(
+          "div"
+        );
+
+
+      balanceBox.className =
+        "balance-box";
+
+
+      balanceBox.innerHTML =
 
         '<div class="balance-label">' +
         "SALDO POR COBRAR" +
@@ -2540,9 +3049,12 @@ async function renderAccounts(){
 
         '<div class="balance-value">' +
         money(balance) +
-        "</div>" +
-
         "</div>";
+
+
+      element.appendChild(
+        balanceBox
+      );
 
 
       /* HISTORIAL DE ABONOS */
@@ -2554,8 +3066,10 @@ async function renderAccounts(){
             "div"
           );
 
+
         history.className =
           "payment-history";
+
 
         history.innerHTML =
           '<div class="payment-history-title">' +
@@ -2570,6 +3084,7 @@ async function renderAccounts(){
               document.createElement(
                 "div"
               );
+
 
             row.className =
               "payment-row";
@@ -2612,6 +3127,7 @@ async function renderAccounts(){
               ) +
               "</div>";
 
+
             history.appendChild(
               row
             );
@@ -2625,8 +3141,10 @@ async function renderAccounts(){
             "div"
           );
 
+
         totalRow.className =
           "payment-total";
+
 
         totalRow.innerHTML =
           "<span>Total abonado</span>" +
@@ -2634,9 +3152,11 @@ async function renderAccounts(){
           money(totalPaid) +
           "</span>";
 
+
         history.appendChild(
           totalRow
         );
+
 
         element.appendChild(
           history
@@ -2652,15 +3172,19 @@ async function renderAccounts(){
           "button"
         );
 
+
       balanceButton.type =
         "button";
+
 
       balanceButton.className =
         "balance-button";
 
+
       balanceButton.innerHTML =
         "💰 Registrar abono · Saldo " +
         money(balance);
+
 
       balanceButton.addEventListener(
         "click",
@@ -2674,6 +3198,7 @@ async function renderAccounts(){
         }
       );
 
+
       element.appendChild(
         balanceButton
       );
@@ -2686,17 +3211,21 @@ async function renderAccounts(){
           "button"
         );
 
+
       whatsappButton.type =
         "button";
 
+
       whatsappButton.className =
         "whatsapp-button";
+
 
       if(!customer?.phone){
 
         whatsappButton.classList.add(
           "no-phone"
         );
+
 
         whatsappButton.innerHTML =
           "💬 WhatsApp · Sin teléfono";
@@ -2708,6 +3237,7 @@ async function renderAccounts(){
           "💬 Enviar recordatorio por WhatsApp";
 
       }
+
 
       whatsappButton.addEventListener(
         "click",
@@ -2721,6 +3251,7 @@ async function renderAccounts(){
         }
       );
 
+
       element.appendChild(
         whatsappButton
       );
@@ -2733,14 +3264,18 @@ async function renderAccounts(){
           "button"
         );
 
+
       cancelButton.type =
         "button";
+
 
       cancelButton.className =
         "cancel-button";
 
+
       cancelButton.innerHTML =
         "🗑️ Cancelar cuenta";
+
 
       cancelButton.addEventListener(
         "click",
@@ -2753,6 +3288,7 @@ async function renderAccounts(){
 
         }
       );
+
 
       element.appendChild(
         cancelButton
@@ -2779,20 +3315,27 @@ async function loadCancelledSales(){
   const panel =
     $("cancelledHistoryPanel");
 
+
   const container =
     $("cancelledSales");
 
-  panel.classList.add("visible");
+
+  panel.classList.add(
+    "visible"
+  );
+
 
   container.innerHTML =
     '<div class="empty">' +
     "Cargando historial de cuentas canceladas..." +
     "</div>";
 
+
   try{
 
     const businessId =
       BUSINESS_IDS[currentBusiness];
+
 
     const result =
       await supabaseClient
@@ -2815,11 +3358,14 @@ async function loadCancelledSales(){
           }
         );
 
+
     if(result.error)
       throw result.error;
 
+
     const cancelledSales =
       result.data || [];
+
 
     $("cancelledHistorySubtitle")
       .textContent =
@@ -2827,6 +3373,7 @@ async function loadCancelledSales(){
         " · " +
         cancelledSales.length +
         " cuenta(s) cancelada(s)";
+
 
     if(!cancelledSales.length){
 
@@ -2846,6 +3393,7 @@ async function loadCancelledSales(){
 
     const customerMap =
       new Map();
+
 
     const customerIds =
       [
@@ -2873,8 +3421,10 @@ async function loadCancelledSales(){
             customerIds
           );
 
+
       if(customerResult.error)
         throw customerResult.error;
+
 
       (customerResult.data || [])
         .forEach(
@@ -2902,9 +3452,11 @@ async function loadCancelledSales(){
             sale.customer_id
           );
 
+
         const customerName =
           customer?.name ||
           "Consumidor general";
+
 
         const phone =
           customer?.phone
@@ -2912,10 +3464,12 @@ async function loadCancelledSales(){
             customer.phone
           : "";
 
+
         const element =
           document.createElement(
             "div"
           );
+
 
         element.className =
           "cancelled-account";
@@ -2989,6 +3543,7 @@ async function loadCancelledSales(){
       error
     );
 
+
     container.innerHTML =
       '<div class="error">' +
       "No se pudo cargar el historial: " +
@@ -3042,30 +3597,37 @@ function openPaymentModal(
   selectedSaleForPayment =
     sale;
 
+
   $("paymentSubtitle")
     .textContent =
       customerName +
       " · Venta de " +
       money(sale.total);
 
+
   $("modalBalance")
     .textContent =
     money(sale.balance);
+
 
   $("paymentAmount")
     .value =
     "";
 
+
   $("modalError")
     .textContent =
     "";
+
 
   $("modalError")
     .classList.remove(
       "visible"
     );
 
+
   renderPaymentMethods();
+
 
   if(paymentMethods.length){
 
@@ -3075,10 +3637,12 @@ function openPaymentModal(
 
   }
 
+
   $("paymentModal")
     .classList.add(
       "visible"
     );
+
 
   setTimeout(
     () => {
@@ -3098,6 +3662,7 @@ function closePaymentModal(){
   selectedSaleForPayment =
     null;
 
+
   $("paymentModal")
     .classList.remove(
       "visible"
@@ -3113,6 +3678,7 @@ function showPaymentError(
   $("modalError")
     .textContent =
     message;
+
 
   $("modalError")
     .classList.add(
@@ -3133,16 +3699,20 @@ async function registerPayment(
   if(!selectedSaleForPayment)
     return;
 
+
   const sale =
     selectedSaleForPayment;
+
 
   const currentBalance =
     Number(
       sale.balance || 0
     );
 
+
   amount =
   Number(amount);
+
 
   const paymentMethodId =
     $("paymentMethod").value;
@@ -3158,6 +3728,7 @@ async function registerPayment(
 
   }
 
+
   if(amount <= 0){
 
     showPaymentError(
@@ -3167,6 +3738,7 @@ async function registerPayment(
     return;
 
   }
+
 
   if(
     amount >
@@ -3183,6 +3755,7 @@ async function registerPayment(
 
   }
 
+
   if(!paymentMethodId){
 
     showPaymentError(
@@ -3197,14 +3770,18 @@ async function registerPayment(
   $("savePayment").disabled =
     true;
 
+
   $("payFull").disabled =
     true;
+
 
   $("paymentMethod").disabled =
     true;
 
+
   $("savePayment").textContent =
     "⏳ Procesando...";
+
 
   $("payFull").textContent =
     "⏳ Procesando...";
@@ -3317,6 +3894,7 @@ async function registerPayment(
       error
     );
 
+
     showPaymentError(
       "No se pudo registrar el abono: " +
       (
@@ -3331,14 +3909,18 @@ async function registerPayment(
     $("savePayment").disabled =
       false;
 
+
     $("payFull").disabled =
       false;
+
 
     $("paymentMethod").disabled =
       false;
 
+
     $("savePayment").textContent =
       "💵 Registrar abono";
+
 
     $("payFull").textContent =
       "✓ Liquidar cuenta";
@@ -3360,37 +3942,45 @@ function openCancelModal(
   selectedSaleForCancel =
     sale;
 
+
   $("cancelSubtitle")
     .textContent =
       customerName +
       " · Venta de " +
       money(sale.total);
 
+
   $("cancelSaleId")
     .textContent =
     sale.id;
+
 
   $("cancelBalance")
     .textContent =
     money(sale.balance);
 
+
   $("cancelReason")
     .value =
     "";
 
+
   $("cancelError")
     .textContent =
     "";
+
 
   $("cancelError")
     .classList.remove(
       "visible"
     );
 
+
   $("cancelModal")
     .classList.add(
       "visible"
     );
+
 
   setTimeout(
     () => {
@@ -3410,6 +4000,7 @@ function closeCancelModal(){
   selectedSaleForCancel =
     null;
 
+
   $("cancelModal")
     .classList.remove(
       "visible"
@@ -3425,6 +4016,7 @@ function showCancelError(
   $("cancelError")
     .textContent =
     message;
+
 
   $("cancelError")
     .classList.add(
@@ -3443,8 +4035,10 @@ async function cancelSale(){
   if(!selectedSaleForCancel)
     return;
 
+
   const sale =
     selectedSaleForCancel;
+
 
   const reason =
     $("cancelReason")
@@ -3458,8 +4052,10 @@ async function cancelSale(){
       "Debes escribir el motivo de cancelación. Este campo es obligatorio."
     );
 
+
     $("cancelReason")
       .focus();
+
 
     return;
 
@@ -3472,8 +4068,10 @@ async function cancelSale(){
       "El motivo debe tener al menos 3 caracteres."
     );
 
+
     $("cancelReason")
       .focus();
+
 
     return;
 
@@ -3485,6 +4083,7 @@ async function cancelSale(){
     showCancelError(
       "El motivo no puede superar 500 caracteres."
     );
+
 
     return;
 
@@ -3514,11 +4113,14 @@ async function cancelSale(){
   $("confirmCancel").disabled =
     true;
 
+
   $("cancelCancel").disabled =
     true;
 
+
   $("cancelReason").disabled =
     true;
+
 
   $("confirmCancel").textContent =
     "⏳ Cancelando cuenta...";
@@ -3556,6 +4158,7 @@ async function cancelSale(){
 
 
     await loadSales();
+
 
     if(
       $("cancelledHistoryPanel")
@@ -3618,11 +4221,14 @@ async function cancelSale(){
     $("confirmCancel").disabled =
       false;
 
+
     $("cancelCancel").disabled =
       false;
 
+
     $("cancelReason").disabled =
       false;
+
 
     $("confirmCancel").textContent =
       "⚠️ Confirmar cancelación";
@@ -3659,10 +4265,12 @@ $("payFull")
     if(!selectedSaleForPayment)
       return;
 
+
     const balance =
       Number(
         selectedSaleForPayment.balance || 0
       );
+
 
     await registerPayment(
       balance
@@ -3705,6 +4313,7 @@ $("cancelledHistoryButton")
     const panel =
       $("cancelledHistoryPanel");
 
+
     if(
       panel.classList
         .contains("visible")
@@ -3718,7 +4327,9 @@ $("cancelledHistoryButton")
 
     }
 
+
     await loadCancelledSales();
+
 
     panel.scrollIntoView({
       behavior:"smooth",
@@ -3777,6 +4388,7 @@ document.addEventListener(
     )
       return;
 
+
     closePaymentModal();
 
     closeCancelModal();
@@ -3785,7 +4397,9 @@ document.addEventListener(
 );
 
 
-/* CAMBIAR NEGOCIO */
+/* =====================================================
+   CAMBIAR NEGOCIO
+===================================================== */
 
 document
 .querySelectorAll(".business")
@@ -3799,20 +4413,24 @@ document
         const business =
           button.dataset.business;
 
+
         if(
           business ===
           currentBusiness
         )
           return;
 
+
         currentBusiness =
           business;
+
 
         updateBusinessButtons();
 
 
         const params =
           new URLSearchParams();
+
 
         if(selectedCustomerId){
 
@@ -3822,6 +4440,7 @@ document
           );
 
         }
+
 
         params.set(
           "business",
@@ -3839,7 +4458,10 @@ document
 
         $("cancelledHistoryPanel")
           .classList
-          .remove("visible");
+          .remove(
+            "visible"
+          );
+
 
         await loadSales();
 
@@ -3850,7 +4472,9 @@ document
 );
 
 
-/* FILTROS */
+/* =====================================================
+   FILTROS
+===================================================== */
 
 $("search")
 .addEventListener(
@@ -3858,11 +4482,13 @@ $("search")
   renderAccounts
 );
 
+
 $("from")
 .addEventListener(
   "change",
   renderAccounts
 );
+
 
 $("to")
 .addEventListener(
@@ -3871,7 +4497,9 @@ $("to")
 );
 
 
-/* ACTUALIZAR */
+/* =====================================================
+   ACTUALIZAR
+===================================================== */
 
 $("refresh")
 .addEventListener(
@@ -3879,6 +4507,7 @@ $("refresh")
   async () => {
 
     await loadSales();
+
 
     if(
       $("cancelledHistoryPanel")
@@ -3894,7 +4523,9 @@ $("refresh")
 );
 
 
-/* DASHBOARD */
+/* =====================================================
+   DASHBOARD
+===================================================== */
 
 $("back")
 .addEventListener(
@@ -3912,7 +4543,9 @@ $("back")
 );
 
 
-/* INICIO */
+/* =====================================================
+   INICIO
+===================================================== */
 
 updateBusinessButtons();
 
