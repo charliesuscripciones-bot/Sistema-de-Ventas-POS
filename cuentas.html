@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Cuentas pendientes</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -15,77 +14,141 @@
 
     body{
       margin:0;
-      font-family:Arial,Helvetica,sans-serif;
-      background:#f5f7fa;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      background:#f4f6f8;
       color:#1f2937;
     }
 
-    header{
-      background:#111827;
-      color:white;
-      padding:18px;
+    button,
+    input,
+    select{
+      font:inherit;
     }
 
-    header h1{
+    button{
+      cursor:pointer;
+    }
+
+    .header{
+      background:#111827;
+      color:white;
+      padding:18px 20px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:15px;
+      flex-wrap:wrap;
+    }
+
+    .header h1{
       margin:0;
       font-size:22px;
     }
 
-    header p{
-      margin:6px 0 0;
-      opacity:.75;
-      font-size:14px;
+    .header small{
+      opacity:.7;
     }
 
     .container{
-      max-width:1100px;
+      max-width:1400px;
       margin:auto;
       padding:20px;
     }
 
-    .topbar{
+    .toolbar{
       display:flex;
-      flex-wrap:wrap;
       gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom:20px;
-    }
-
-    .business-selector{
-      display:flex;
-      gap:8px;
       flex-wrap:wrap;
+      margin-bottom:18px;
     }
 
-    button{
+    .btn{
       border:0;
       border-radius:10px;
-      padding:11px 16px;
-      cursor:pointer;
+      padding:10px 15px;
+      background:#e5e7eb;
+      color:#111827;
       font-weight:600;
     }
 
-    .business-button{
-      background:#e5e7eb;
-      color:#111827;
+    .btn:hover{
+      filter:brightness(.96);
     }
 
-    .business-button.active{
+    .btn.primary{
       background:#111827;
       color:white;
     }
 
-    .refresh-button{
+    .btn.green{
+      background:#16a34a;
+      color:white;
+    }
+
+    .btn.red{
+      background:#dc2626;
+      color:white;
+    }
+
+    .btn.blue{
       background:#2563eb;
       color:white;
     }
 
+    .btn.whatsapp{
+      background:#25d366;
+      color:white;
+    }
+
+    .business-buttons{
+      display:flex;
+      gap:8px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+
+    .business-btn{
+      padding:11px 18px;
+      border-radius:10px;
+      border:1px solid #d1d5db;
+      background:white;
+      font-weight:700;
+    }
+
+    .business-btn.active{
+      background:#111827;
+      color:white;
+      border-color:#111827;
+    }
+
+    .filters{
+      background:white;
+      border-radius:14px;
+      padding:15px;
+      box-shadow:0 2px 8px rgba(0,0,0,.06);
+      display:grid;
+      grid-template-columns:2fr 1fr 1fr auto;
+      gap:10px;
+      margin-bottom:18px;
+    }
+
+    .filters input{
+      width:100%;
+      border:1px solid #d1d5db;
+      border-radius:9px;
+      padding:10px 12px;
+      outline:none;
+    }
+
+    .filters input:focus{
+      border-color:#2563eb;
+    }
+
     .summary{
       display:grid;
-      grid-template-columns:repeat(3,1fr);
+      grid-template-columns:repeat(4,1fr);
       gap:12px;
-      margin-bottom:20px;
+      margin-bottom:18px;
     }
 
     .summary-card{
@@ -95,263 +158,345 @@
       box-shadow:0 2px 8px rgba(0,0,0,.06);
     }
 
-    .summary-card small{
-      display:block;
+    .summary-card .label{
       color:#6b7280;
-      margin-bottom:6px;
-    }
-
-    .summary-card strong{
-      font-size:24px;
-    }
-
-    .status{
-      display:none;
-      padding:12px 14px;
-      border-radius:10px;
-      margin-bottom:15px;
-      white-space:pre-line;
-    }
-
-    .status.show{
-      display:block;
-    }
-
-    .status.ok{
-      background:#dcfce7;
-      color:#166534;
-    }
-
-    .status.error{
-      background:#fee2e2;
-      color:#991b1b;
-    }
-
-    .status.info{
-      background:#dbeafe;
-      color:#1e40af;
-    }
-
-    .table-wrapper{
-      background:white;
-      border-radius:14px;
-      overflow:auto;
-      box-shadow:0 2px 8px rgba(0,0,0,.06);
-    }
-
-    table{
-      width:100%;
-      border-collapse:collapse;
-      min-width:750px;
-    }
-
-    th,
-    td{
-      padding:14px;
-      border-bottom:1px solid #e5e7eb;
-      text-align:left;
-    }
-
-    th{
-      background:#f9fafb;
       font-size:13px;
-      color:#6b7280;
-    }
-
-    td{
-      font-size:14px;
-    }
-
-    .balance{
       font-weight:700;
+      text-transform:uppercase;
+    }
+
+    .summary-card .value{
+      margin-top:7px;
+      font-size:27px;
+      font-weight:800;
+    }
+
+    .summary-card.pieces .value{
+      color:#2563eb;
+    }
+
+    .summary-card.total .value{
+      color:#111827;
+    }
+
+    .summary-card.balance .value{
       color:#dc2626;
     }
 
-    .actions{
+    .section{
+      background:white;
+      border-radius:14px;
+      padding:18px;
+      box-shadow:0 2px 8px rgba(0,0,0,.06);
+      margin-bottom:18px;
+    }
+
+    .section-title{
       display:flex;
-      gap:7px;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:14px;
       flex-wrap:wrap;
     }
 
-    .pay-button{
-      background:#16a34a;
-      color:white;
+    .section-title h2{
+      margin:0;
+      font-size:18px;
     }
 
-    .cancel-button{
-      background:#dc2626;
-      color:white;
+    .product-list{
+      display:grid;
+      gap:8px;
     }
 
-    .whatsapp-button{
-      background:#25d366;
-      color:white;
+    .product-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:15px;
+      padding:11px 12px;
+      background:#f9fafb;
+      border-radius:9px;
+      border:1px solid #eef0f2;
+    }
+
+    .product-row strong{
+      display:block;
+    }
+
+    .product-row small{
+      color:#6b7280;
+    }
+
+    .product-total{
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .sales{
+      display:grid;
+      gap:14px;
+    }
+
+    .sale-card{
+      border:1px solid #e5e7eb;
+      border-radius:14px;
+      overflow:hidden;
+      background:white;
+    }
+
+    .sale-header{
+      padding:15px;
+      background:#f9fafb;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:15px;
+      flex-wrap:wrap;
+    }
+
+    .sale-title{
+      font-size:17px;
+      font-weight:800;
+    }
+
+    .sale-meta{
+      color:#6b7280;
+      font-size:13px;
+      margin-top:4px;
+    }
+
+    .sale-amount{
+      text-align:right;
+    }
+
+    .sale-amount .total{
+      font-size:19px;
+      font-weight:800;
+    }
+
+    .sale-amount .balance{
+      color:#dc2626;
+      font-weight:800;
+      margin-top:3px;
+    }
+
+    .sale-body{
+      padding:15px;
+    }
+
+    .sale-products{
+      margin-bottom:14px;
+    }
+
+    .sale-products-title{
+      font-size:13px;
+      font-weight:800;
+      color:#6b7280;
+      text-transform:uppercase;
+      margin-bottom:7px;
+    }
+
+    .sale-product{
+      display:grid;
+      grid-template-columns:1fr auto auto;
+      gap:12px;
+      align-items:center;
+      padding:8px 0;
+      border-bottom:1px solid #f0f0f0;
+    }
+
+    .sale-product:last-child{
+      border-bottom:0;
+    }
+
+    .sale-product .qty{
+      font-weight:800;
+      min-width:45px;
+      text-align:center;
+    }
+
+    .sale-product .price{
+      font-weight:700;
+      min-width:80px;
+      text-align:right;
+    }
+
+    .no-products{
+      color:#9ca3af;
+      font-style:italic;
+      padding:8px 0;
+    }
+
+    .sale-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      padding-top:10px;
+      border-top:1px solid #eee;
+    }
+
+    .payments{
+      margin-top:12px;
+      background:#f9fafb;
+      border-radius:10px;
+      padding:10px;
+    }
+
+    .payment-row{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      font-size:13px;
+      padding:4px 0;
     }
 
     .empty{
-      padding:35px;
       text-align:center;
+      padding:35px 15px;
       color:#6b7280;
     }
 
     .loading{
-      padding:35px;
       text-align:center;
+      padding:25px;
       color:#6b7280;
     }
 
-    .modal{
-      display:none;
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.55);
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-      z-index:1000;
-    }
-
-    .modal.show{
-      display:flex;
-    }
-
-    .modal-content{
-      width:100%;
-      max-width:480px;
-      background:white;
-      border-radius:16px;
-      padding:22px;
-      max-height:90vh;
-      overflow:auto;
-    }
-
-    .modal-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:15px;
-    }
-
-    .modal-header h2{
-      margin:0;
-      font-size:20px;
-    }
-
-    .close{
-      background:#e5e7eb;
-      color:#111827;
-      padding:7px 10px;
-    }
-
-    .customer-info{
-      background:#f3f4f6;
+    .error{
+      background:#fee2e2;
+      color:#991b1b;
+      border:1px solid #fecaca;
       border-radius:10px;
       padding:12px;
       margin-bottom:15px;
     }
 
-    .customer-info strong{
-      display:block;
-      margin-bottom:4px;
+    .hidden{
+      display:none !important;
     }
 
-    label{
-      display:block;
-      font-size:14px;
-      font-weight:600;
-      margin-bottom:6px;
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.55);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:15px;
+      z-index:9999;
     }
 
-    input,
-    select,
-    textarea{
+    .modal-card{
       width:100%;
-      padding:12px;
+      max-width:500px;
+      background:white;
+      border-radius:16px;
+      padding:20px;
+      max-height:90vh;
+      overflow:auto;
+    }
+
+    .modal-card h3{
+      margin-top:0;
+    }
+
+    .modal-card label{
+      display:block;
+      font-size:13px;
+      font-weight:700;
+      margin-bottom:5px;
+    }
+
+    .modal-card input,
+    .modal-card select,
+    .modal-card textarea{
+      width:100%;
       border:1px solid #d1d5db;
       border-radius:9px;
-      font-size:15px;
-      margin-bottom:14px;
-    }
-
-    textarea{
-      resize:vertical;
-      min-height:100px;
-    }
-
-    .payment-methods{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:8px;
-      margin-bottom:14px;
-    }
-
-    .payment-method{
-      background:#f3f4f6;
-      color:#111827;
-      border:2px solid transparent;
-    }
-
-    .payment-method.selected{
-      border-color:#2563eb;
-      background:#dbeafe;
+      padding:10px;
+      margin-bottom:13px;
     }
 
     .modal-actions{
       display:flex;
-      gap:10px;
+      gap:8px;
       justify-content:flex-end;
+      margin-top:10px;
+    }
+
+    .account-data{
+      background:#f9fafb;
+      border-radius:10px;
+      padding:12px;
+      margin-bottom:15px;
+    }
+
+    .account-number{
+      font-size:18px;
+      font-weight:800;
+      user-select:text;
+      cursor:text;
+    }
+
+    .cancelled-card{
+      border:1px solid #fecaca;
+      background:#fffafa;
+      border-radius:12px;
+      padding:14px;
+      margin-bottom:10px;
+    }
+
+    .cancelled-title{
+      font-weight:800;
+      color:#991b1b;
+    }
+
+    .debug{
+      font-size:12px;
+      color:#6b7280;
       margin-top:5px;
     }
 
-    .modal-actions .cancel-modal{
-      background:#e5e7eb;
-      color:#111827;
+    @media(max-width:900px){
+      .summary{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .filters{
+        grid-template-columns:1fr 1fr;
+      }
     }
 
-    .modal-actions .confirm{
-      background:#16a34a;
-      color:white;
-    }
-
-    .modal-actions .confirm.cancel{
-      background:#dc2626;
-    }
-
-    .payment-error{
-      display:none;
-      background:#fee2e2;
-      color:#991b1b;
-      padding:12px;
-      border-radius:9px;
-      margin-bottom:14px;
-      white-space:pre-line;
-      font-size:13px;
-    }
-
-    .payment-error.show{
-      display:block;
-    }
-
-    @media(max-width:700px){
+    @media(max-width:600px){
+      .container{
+        padding:12px;
+      }
 
       .summary{
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+      }
+
+      .summary-card{
+        padding:13px;
+      }
+
+      .summary-card .value{
+        font-size:22px;
+      }
+
+      .filters{
         grid-template-columns:1fr;
       }
 
-      .topbar{
-        align-items:stretch;
+      .sale-product{
+        grid-template-columns:1fr auto;
       }
 
-      .business-selector{
-        width:100%;
-      }
-
-      .business-button{
-        flex:1;
-      }
-
-      .refresh-button{
-        width:100%;
+      .sale-product .price{
+        grid-column:2;
       }
     }
   </style>
@@ -359,158 +504,295 @@
 
 <body>
 
-<header>
-  <h1>Cuentas pendientes</h1>
-  <p>Consulta, abona, liquida o cancela cuentas.</p>
+<header class="header">
+  <div>
+    <h1>💰 Cuentas pendientes</h1>
+    <small id="currentBusinessLabel">Cargando...</small>
+  </div>
+
+  <button class="btn" onclick="loadSales()">🔄 Actualizar</button>
 </header>
 
 <div class="container">
 
-  <div class="topbar">
-
-    <div class="business-selector">
-
-      <button
-        class="business-button active"
-        id="businessBakeQuiri"
-        onclick="changeBusiness('BakeQuiri')">
-        BakeQuiri
-      </button>
-
-      <button
-        class="business-button"
-        id="businessSpicyRoll"
-        onclick="changeBusiness('SpicyRoll')">
-        SpicyRoll
-      </button>
-
-    </div>
+  <div class="business-buttons">
 
     <button
-      class="refresh-button"
-      onclick="loadSales()">
-      ↻ Actualizar
+      id="btnBakeQuiri"
+      class="business-btn"
+      onclick="setBusiness('BakeQuiri')">
+      🧁 BakeQuiri
+    </button>
+
+    <button
+      id="btnSpicyRoll"
+      class="business-btn"
+      onclick="setBusiness('SpicyRoll')">
+      🍙 SpicyRoll
+    </button>
+
+    <button
+      class="business-btn"
+      onclick="showCancelled()">
+      🗑️ Cuentas canceladas
+    </button>
+
+    <button
+      class="business-btn"
+      onclick="goDashboard()">
+      📊 Dashboard
     </button>
 
   </div>
 
-  <div id="statusMessage" class="status"></div>
+  <div id="errorBox" class="error hidden"></div>
+
+  <div class="filters">
+
+    <input
+      id="search"
+      type="text"
+      placeholder="Buscar cliente, folio o venta..."
+      oninput="renderAccounts()">
+
+    <input
+      id="dateFrom"
+      type="date"
+      onchange="renderAccounts()">
+
+    <input
+      id="dateTo"
+      type="date"
+      onchange="renderAccounts()">
+
+    <button
+      class="btn"
+      onclick="clearFilters()">
+      Limpiar
+    </button>
+
+  </div>
 
   <div class="summary">
 
     <div class="summary-card">
-      <small>Cuentas pendientes</small>
-      <strong id="pendingCount">0</strong>
+
+      <div class="label">
+        Cuentas
+      </div>
+
+      <div
+        class="value"
+        id="countAccounts">
+        0
+      </div>
+
     </div>
 
-    <div class="summary-card">
-      <small>Total pendiente</small>
-      <strong id="pendingTotal">$0.00</strong>
+    <div class="summary-card pieces">
+
+      <div class="label">
+        Piezas pendientes
+      </div>
+
+      <div
+        class="value"
+        id="count">
+        0
+      </div>
+
     </div>
 
-    <div class="summary-card">
-      <small>Negocio</small>
-      <strong id="currentBusinessLabel">BakeQuiri</strong>
+    <div class="summary-card total">
+
+      <div class="label">
+        Ventas a crédito
+      </div>
+
+      <div
+        class="value"
+        id="total">
+        $0.00
+      </div>
+
+    </div>
+
+    <div class="summary-card balance">
+
+      <div class="label">
+        Por cobrar
+      </div>
+
+      <div
+        class="value"
+        id="balance">
+        $0.00
+      </div>
+
     </div>
 
   </div>
 
-  <div class="table-wrapper">
+  <section class="section">
 
-    <div id="loading" class="loading">
-      Cargando cuentas...
+    <div class="section-title">
+
+      <h2>
+        📦 Productos pendientes
+      </h2>
+
+      <span
+        id="productBreakdownTotal"
+        class="debug">
+        0 piezas
+      </span>
+
     </div>
 
-    <div id="empty" class="empty" style="display:none;">
-      No hay cuentas pendientes.
+    <div
+      id="productBreakdownList"
+      class="product-list">
+
+      <div class="empty">
+        No hay productos pendientes.
+      </div>
+
     </div>
 
-    <table id="accountsTable" style="display:none;">
+  </section>
 
-      <thead>
-        <tr>
-          <th>Cliente</th>
-          <th>Fecha</th>
-          <th>Total</th>
-          <th>Pagado</th>
-          <th>Saldo</th>
-          <th>Estado</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
+  <section class="section">
 
-      <tbody id="accountsBody"></tbody>
+    <div class="section-title">
 
-    </table>
+      <h2>
+        📋 Cuentas
+      </h2>
 
-  </div>
+    </div>
 
-</div>
+    <div
+      id="sales"
+      class="sales">
 
+      <div class="loading">
+        Cargando cuentas...
+      </div>
 
-<!-- MODAL ABONO -->
+    </div>
 
-<div
-  id="paymentModal"
-  class="modal">
+  </section>
 
-  <div class="modal-content">
+  <section
+    id="cancelledPanel"
+    class="section hidden">
 
-    <div class="modal-header">
+    <div class="section-title">
 
-      <h2>Registrar abono</h2>
+      <h2>
+        🗑️ Cuentas canceladas
+      </h2>
 
       <button
-        class="close"
-        onclick="closeModal('paymentModal')">
-        ✕
+        class="btn"
+        onclick="hideCancelled()">
+        Cerrar
       </button>
 
     </div>
 
-    <div
-      id="paymentCustomerInfo"
-      class="customer-info">
+    <div id="cancelledList">
+
+      <div class="loading">
+        Cargando...
+      </div>
+
     </div>
 
+  </section>
+
+</div>
+
+
+<!-- =====================================================
+     MODAL PAGO
+===================================================== -->
+
+<div
+  id="paymentModal"
+  class="modal hidden">
+
+  <div class="modal-card">
+
+    <h3>
+      💳 Registrar pago
+    </h3>
+
     <div
-      id="paymentError"
-      class="payment-error">
+      id="paymentSaleInfo"
+      class="account-data">
     </div>
 
-    <label for="paymentAmount">
-      Cantidad a abonar
+    <label>
+      Monto del pago
     </label>
 
     <input
       id="paymentAmount"
       type="number"
+      min="0"
       step="0.01"
-      min="0.01"
       placeholder="0.00">
 
     <label>
       Método de pago
     </label>
 
-    <div
-      id="paymentMethods"
-      class="payment-methods">
-    </div>
+    <select id="paymentMethod">
+
+      <option value="Efectivo">
+        Efectivo
+      </option>
+
+      <option value="Transferencia">
+        Transferencia
+      </option>
+
+      <option value="Clip">
+        Clip
+      </option>
+
+      <option value="BBVA">
+        BBVA
+      </option>
+
+      <option value="Tarjeta">
+        Tarjeta
+      </option>
+
+    </select>
+
+    <label>
+      Nota
+    </label>
+
+    <textarea
+      id="paymentNote"
+      rows="3"
+      placeholder="Nota opcional"></textarea>
 
     <div class="modal-actions">
 
       <button
-        class="cancel-modal"
-        onclick="closeModal('paymentModal')">
+        class="btn"
+        onclick="closePaymentModal()">
         Cancelar
       </button>
 
       <button
-        id="confirmPaymentButton"
-        class="confirm"
-        onclick="confirmPayment()">
-        Abonar
+        class="btn green"
+        onclick="savePayment()">
+        Registrar pago
       </button>
 
     </div>
@@ -520,50 +802,44 @@
 </div>
 
 
-<!-- MODAL CANCELAR -->
+<!-- =====================================================
+     MODAL CANCELACIÓN
+===================================================== -->
 
 <div
   id="cancelModal"
-  class="modal">
+  class="modal hidden">
 
-  <div class="modal-content">
+  <div class="modal-card">
 
-    <div class="modal-header">
-
-      <h2>Cancelar cuenta</h2>
-
-      <button
-        class="close"
-        onclick="closeModal('cancelModal')">
-        ✕
-      </button>
-
-    </div>
+    <h3>
+      ⚠️ Cancelar cuenta
+    </h3>
 
     <div
-      id="cancelCustomerInfo"
-      class="customer-info">
+      id="cancelSaleInfo"
+      class="account-data">
     </div>
 
-    <label for="cancelReason">
+    <label>
       Motivo de cancelación
     </label>
 
     <textarea
       id="cancelReason"
-      placeholder="Escribe el motivo..."></textarea>
+      rows="4"
+      placeholder="Escribe el motivo de la cancelación..."></textarea>
 
     <div class="modal-actions">
 
       <button
-        class="cancel-modal"
-        onclick="closeModal('cancelModal')">
+        class="btn"
+        onclick="closeCancelModal()">
         Regresar
       </button>
 
       <button
-        id="confirmCancelButton"
-        class="confirm cancel"
+        class="btn red"
         onclick="confirmCancel()">
         Cancelar cuenta
       </button>
@@ -583,7 +859,6 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
-
 const BUSINESS_IDS = {
 
   BakeQuiri:
@@ -594,7 +869,6 @@ const BUSINESS_IDS = {
 
 };
 
-
 const supabaseClient =
   window.supabase.createClient(
     SUPABASE_URL,
@@ -602,20 +876,23 @@ const supabaseClient =
   );
 
 
-let currentBusiness = "BakeQuiri";
+let currentBusiness =
+  localStorage.getItem("currentBusiness") ||
+  "BakeQuiri";
 
 let sales = [];
+let saleItems = [];
+let payments = [];
+let products = [];
+let paymentMethods = [];
 
-let selectedSale = null;
-
-let selectedPaymentMethod = null;
-
-let selectedCancelSale = null;
+let currentPaymentSale = null;
+let currentCancelSale = null;
 
 
-/* =========================
-   UTILIDADES
-========================= */
+/* =========================================================
+   HELPERS
+========================================================= */
 
 function $(id){
 
@@ -626,10 +903,7 @@ function $(id){
 
 function money(value){
 
-  const number =
-    Number(value) || 0;
-
-  return number.toLocaleString(
+  return Number(value || 0).toLocaleString(
     "es-MX",
     {
       style:"currency",
@@ -640,164 +914,221 @@ function money(value){
 }
 
 
+function normalizeId(value){
+
+  return String(value || "").trim();
+
+}
+
+
 function escapeHtml(value){
 
-  if(value === null || value === undefined){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function showError(message){
+
+  const box =
+    $("errorBox");
+
+  box.textContent =
+    message;
+
+  box.classList.remove(
+    "hidden"
+  );
+
+}
+
+
+function hideError(){
+
+  $("errorBox")
+    .classList.add(
+      "hidden"
+    );
+
+}
+
+
+function formatDate(value){
+
+  if(!value){
     return "";
   }
 
-  return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+  const date =
+    new Date(value);
 
-}
-
-
-function showStatus(message,type="info"){
-
-  const element =
-    $("statusMessage");
-
-  element.textContent =
-    message;
-
-  element.className =
-    "status show "+type;
-
-}
-
-
-function closeModal(id){
-
-  $(id).classList.remove("show");
-
-}
-
-
-function getSaleBalance(sale){
-
-  const balance =
-    Number(sale.balance);
-
-  if(Number.isFinite(balance)){
-    return Math.max(0,balance);
+  if(Number.isNaN(date.getTime())){
+    return String(value);
   }
 
-  const total =
-    Number(sale.total) || 0;
-
-  const paid =
-    Number(sale.paid) || 0;
-
-  return Math.max(
-    0,
-    total-paid
+  return date.toLocaleString(
+    "es-MX",
+    {
+      dateStyle:"medium",
+      timeStyle:"short"
+    }
   );
 
 }
 
 
-function getCustomerName(sale){
+function dateOnly(value){
 
-  if(sale.customer){
-
-    return (
-      sale.customer.name ||
-      sale.customer.full_name ||
-      sale.customer.fullName ||
-      "Cliente"
-    );
-
+  if(!value){
+    return "";
   }
 
-  return (
-    sale.customer_name ||
-    sale.customerName ||
-    "Cliente"
-  );
+  const date =
+    new Date(value);
+
+  if(Number.isNaN(date.getTime())){
+    return "";
+  }
+
+  const year =
+    date.getFullYear();
+
+  const month =
+    String(
+      date.getMonth()+1
+    ).padStart(2,"0");
+
+  const day =
+    String(
+      date.getDate()
+    ).padStart(2,"0");
+
+  return `${year}-${month}-${day}`;
 
 }
 
 
-function formatDate(date){
+/* =========================================================
+   BUSINESS
+========================================================= */
 
-  if(!date){
-    return "-";
+function setBusiness(name){
+
+  if(!BUSINESS_IDS[name]){
+    return;
   }
-
-  try{
-
-    return new Date(date)
-      .toLocaleDateString(
-        "es-MX",
-        {
-          day:"2-digit",
-          month:"2-digit",
-          year:"numeric"
-        }
-      );
-
-  }catch{
-
-    return "-";
-
-  }
-
-}
-
-
-/* =========================
-   CAMBIAR NEGOCIO
-========================= */
-
-function changeBusiness(business){
 
   currentBusiness =
-    business;
+    name;
 
-  $("currentBusinessLabel")
-    .textContent =
-    business;
+  localStorage.setItem(
+    "currentBusiness",
+    name
+  );
 
-  $("businessBakeQuiri")
-    .classList.toggle(
-      "active",
-      business === "BakeQuiri"
-    );
-
-  $("businessSpicyRoll")
-    .classList.toggle(
-      "active",
-      business === "SpicyRoll"
-    );
+  updateBusinessUI();
 
   loadSales();
 
 }
 
 
-/* =========================
-   MÉTODOS DE PAGO
-========================= */
+function updateBusinessUI(){
 
-async function loadPaymentMethods(){
+  $("currentBusinessLabel")
+    .textContent =
+      currentBusiness;
+
+  $("btnBakeQuiri")
+    .classList.toggle(
+      "active",
+      currentBusiness === "BakeQuiri"
+    );
+
+  $("btnSpicyRoll")
+    .classList.toggle(
+      "active",
+      currentBusiness === "SpicyRoll"
+    );
+
+}
+
+
+function goDashboard(){
+
+  window.location.href =
+    "index.html";
+
+}
+
+
+/* =========================================================
+   LOAD PRODUCTS
+========================================================= */
+
+async function loadProducts(){
+
+  products = [];
 
   const businessId =
     BUSINESS_IDS[currentBusiness];
 
-  const container =
-    $("paymentMethods");
+  if(!businessId){
+    return;
+  }
 
-  container.innerHTML =
-    "Cargando...";
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("products")
+      .select("*")
+      .eq(
+        "business_id",
+        businessId
+      );
 
-  selectedPaymentMethod =
-    null;
+  if(error){
 
-  const result =
+    console.warn(
+      "No se pudieron cargar productos:",
+      error
+    );
+
+    return;
+  }
+
+  products =
+    data || [];
+
+}
+
+
+/* =========================================================
+   LOAD PAYMENT METHODS
+========================================================= */
+
+async function loadPaymentMethods(){
+
+  paymentMethods = [];
+
+  const businessId =
+    BUSINESS_IDS[currentBusiness];
+
+  if(!businessId){
+    return;
+  }
+
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from("payment_methods")
       .select(
@@ -818,131 +1149,536 @@ async function loadPaymentMethods(){
         }
       );
 
+  if(error){
 
-  console.log(
-    "MÉTODOS DE PAGO:",
-    result
-  );
-
-
-  if(result.error){
-
-    container.innerHTML =
-      "<div style='color:#dc2626;'>"+
-      "No fue posible cargar los métodos de pago."+
-      "</div>";
-
-    console.error(
-      result.error
+    console.warn(
+      "No se pudieron cargar métodos de pago:",
+      error
     );
 
     return;
   }
 
-
-  if(!result.data ||
-     result.data.length === 0){
-
-    container.innerHTML =
-      "<div style='color:#6b7280;'>"+
-      "No hay métodos de pago disponibles."+
-      "</div>";
-
-    return;
-  }
-
-
-  container.innerHTML = "";
-
-
-  result.data.forEach(method => {
-
-    const button =
-      document.createElement("button");
-
-    button.type =
-      "button";
-
-    button.className =
-      "payment-method";
-
-    button.textContent =
-      method.name;
-
-    button.onclick =
-      () => {
-
-        selectedPaymentMethod =
-          method;
-
-        document
-          .querySelectorAll(
-            ".payment-method"
-          )
-          .forEach(
-            item =>
-              item.classList.remove(
-                "selected"
-              )
-          );
-
-        button.classList.add(
-          "selected"
-        );
-
-      };
-
-
-    container.appendChild(
-      button
-    );
-
-  });
+  paymentMethods =
+    data || [];
 
 }
 
 
-/* =========================
-   CARGAR VENTAS
-========================= */
+/* =========================================================
+   GET PAYMENT METHOD ID
+========================================================= */
+
+function getPaymentMethodId(
+  selectedName
+){
+
+  const wanted =
+    String(
+      selectedName || ""
+    )
+    .trim()
+    .toLowerCase();
+
+  if(!wanted){
+    return null;
+  }
+
+  /*
+    Primero buscamos coincidencia exacta
+    por nombre.
+  */
+
+  let method =
+    paymentMethods.find(
+      item =>
+        String(
+          item.name || ""
+        )
+        .trim()
+        .toLowerCase() === wanted
+    );
+
+  /*
+    Si no existe, intentamos también
+    con provider.
+  */
+
+  if(!method){
+
+    method =
+      paymentMethods.find(
+        item =>
+          String(
+            item.provider || ""
+          )
+          .trim()
+          .toLowerCase() === wanted
+      );
+
+  }
+
+  /*
+    Último intento:
+    coincidencia parcial.
+  */
+
+  if(!method){
+
+    method =
+      paymentMethods.find(
+        item => {
+
+          const name =
+            String(
+              item.name || ""
+            )
+            .trim()
+            .toLowerCase();
+
+          const provider =
+            String(
+              item.provider || ""
+            )
+            .trim()
+            .toLowerCase();
+
+          return (
+            name.includes(wanted) ||
+            wanted.includes(name) ||
+            provider.includes(wanted) ||
+            wanted.includes(provider)
+          );
+
+        }
+      );
+
+  }
+
+  return method
+    ? method.id
+    : null;
+
+}
+
+
+/* =========================================================
+   PRODUCT NAME
+========================================================= */
+
+function getProductName(
+  productId,
+  fallback=""
+){
+
+  const id =
+    normalizeId(productId);
+
+  if(!id){
+    return fallback || "Producto";
+  }
+
+  const product =
+    products.find(
+      p =>
+        normalizeId(p.id) === id
+    );
+
+  if(product){
+
+    return (
+      product.name ||
+      product.nombre ||
+      fallback ||
+      "Producto"
+    );
+
+  }
+
+  return fallback || "Producto";
+
+}
+
+
+/* =========================================================
+   LOAD SALE ITEMS
+========================================================= */
+
+async function loadSaleItems(
+  saleIds
+){
+
+  saleItems = [];
+
+  const normalizedSaleIds =
+    [
+      ...new Set(
+        (saleIds || [])
+          .map(normalizeId)
+          .filter(Boolean)
+      )
+    ];
+
+  if(!normalizedSaleIds.length){
+
+    console.log(
+      "No hay saleIds para consultar."
+    );
+
+    return;
+  }
+
+  console.log(
+    "Consultando sale_items:",
+    normalizedSaleIds.length,
+    "ventas"
+  );
+
+  const chunkSize = 100;
+
+  for(
+    let i = 0;
+    i < normalizedSaleIds.length;
+    i += chunkSize
+  ){
+
+    const chunk =
+      normalizedSaleIds.slice(
+        i,
+        i + chunkSize
+      );
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("sale_items")
+        .select(
+          "id,sale_id,product_id,description,quantity,unit_price,subtotal"
+        )
+        .in(
+          "sale_id",
+          chunk
+        );
+
+    if(error){
+
+      console.error(
+        "Error cargando sale_items:",
+        error
+      );
+
+      throw new Error(
+        "No se pudieron cargar los productos de las ventas: " +
+        error.message
+      );
+
+    }
+
+    if(data){
+
+      saleItems.push(
+        ...data.map(item => ({
+
+          ...item,
+
+          sale_id:
+            normalizeId(
+              item.sale_id
+            ),
+
+          product_id:
+            normalizeId(
+              item.product_id
+            ),
+
+          quantity:
+            Number(
+              item.quantity || 0
+            ),
+
+          unit_price:
+            Number(
+              item.unit_price || 0
+            ),
+
+          subtotal:
+            Number(
+              item.subtotal ||
+              (
+                Number(item.quantity || 0) *
+                Number(item.unit_price || 0)
+              )
+            )
+
+        }))
+      );
+
+    }
+
+  }
+
+  saleItems =
+    saleItems.filter(
+      item =>
+        Number(
+          item.quantity || 0
+        ) > 0
+    );
+
+  await loadProductNames();
+
+  const totalPieces =
+    saleItems.reduce(
+      (sum,item) =>
+        sum +
+        Number(
+          item.quantity || 0
+        ),
+      0
+    );
+
+  console.log(
+    "sale_items cargados:",
+    saleItems.length
+  );
+
+  console.log(
+    "PIEZAS TOTALES:",
+    totalPieces
+  );
+
+  console.table(
+    saleItems
+  );
+
+}
+
+
+/* =========================================================
+   LOAD PRODUCT NAMES
+========================================================= */
+
+async function loadProductNames(){
+
+  const productIds =
+    [
+      ...new Set(
+        saleItems
+          .map(
+            item =>
+              normalizeId(
+                item.product_id
+              )
+          )
+          .filter(Boolean)
+      )
+    ];
+
+  if(!productIds.length){
+    return;
+  }
+
+  const missingIds =
+    productIds.filter(
+      id =>
+        !products.some(
+          p =>
+            normalizeId(p.id) === id
+        )
+    );
+
+  if(!missingIds.length){
+    return;
+  }
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("products")
+      .select(
+        "id,name,nombre"
+      )
+      .in(
+        "id",
+        missingIds
+      );
+
+  if(error){
+
+    console.warn(
+      "No se pudieron cargar nombres:",
+      error
+    );
+
+    return;
+  }
+
+  if(data){
+    products.push(
+      ...data
+    );
+  }
+
+}
+
+
+/* =========================================================
+   GET SALE ITEMS
+========================================================= */
+
+function getSaleItems(
+  saleId
+){
+
+  const normalizedSaleId =
+    normalizeId(
+      saleId
+    );
+
+  return saleItems.filter(
+    item =>
+      normalizeId(
+        item.sale_id
+      ) === normalizedSaleId
+  );
+
+}
+
+
+/* =========================================================
+   LOAD PAYMENTS
+========================================================= */
+
+async function loadPayments(
+  saleIds
+){
+
+  payments = [];
+
+  const ids =
+    [
+      ...new Set(
+        (saleIds || [])
+          .map(normalizeId)
+          .filter(Boolean)
+      )
+    ];
+
+  if(!ids.length){
+    return;
+  }
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("payments")
+      .select("*")
+      .in(
+        "sale_id",
+        ids
+      )
+      .order(
+        "paid_at",
+        {
+          ascending:true
+        }
+      );
+
+  if(error){
+
+    console.warn(
+      "No se pudieron cargar pagos:",
+      error
+    );
+
+    return;
+  }
+
+  payments =
+    data || [];
+
+}
+
+
+/* =========================================================
+   PAYMENTS BY SALE
+========================================================= */
+
+function getSalePayments(
+  saleId
+){
+
+  const id =
+    normalizeId(
+      saleId
+    );
+
+  return payments.filter(
+    payment =>
+      normalizeId(
+        payment.sale_id
+      ) === id
+  );
+
+}
+
+
+/* =========================================================
+   LOAD SALES
+========================================================= */
 
 async function loadSales(){
 
-  $("loading")
-    .style.display =
-    "block";
+  hideError();
 
-  $("empty")
-    .style.display =
-    "none";
-
-  $("accountsTable")
-    .style.display =
-    "none";
-
-
-  const businessId =
-    BUSINESS_IDS[currentBusiness];
-
-
-  console.log(
-    "CARGANDO VENTAS:",
-    {
-      currentBusiness,
-      businessId
-    }
-  );
-
+  $("sales").innerHTML =
+    `
+      <div class="loading">
+        Cargando cuentas...
+      </div>
+    `;
 
   try{
 
-    const salesResult =
+    await loadProducts();
+
+    await loadPaymentMethods();
+
+    const businessId =
+      BUSINESS_IDS[currentBusiness];
+
+    if(!businessId){
+
+      throw new Error(
+        "No se encontró el negocio seleccionado."
+      );
+
+    }
+
+    const {
+      data,
+      error
+    } =
       await supabaseClient
         .from("sales")
         .select("*")
         .eq(
           "business_id",
           businessId
+        )
+        .gt(
+          "balance",
+          0
+        )
+        .neq(
+          "status",
+          "cancelled"
         )
         .order(
           "created_at",
@@ -951,1141 +1687,1420 @@ async function loadSales(){
           }
         );
 
+    if(error){
+      throw error;
+    }
 
-    console.log(
-      "RESULTADO SALES:",
-      salesResult
+    sales =
+      data || [];
+
+    const saleIds =
+      sales.map(
+        sale =>
+          normalizeId(
+            sale.id
+          )
+      );
+
+    await loadSaleItems(
+      saleIds
     );
 
+    await loadPayments(
+      saleIds
+    );
 
-    if(salesResult.error){
-      throw salesResult.error;
-    }
+    console.log(
+      "Ventas:",
+      sales.length
+    );
 
+    console.log(
+      "Productos cargados:",
+      saleItems.length
+    );
 
-    sales =
-      salesResult.data || [];
-
-
-    /*
-      Solo mostramos cuentas
-      abiertas con saldo pendiente.
-    */
-
-    sales =
-      sales.filter(
-        sale =>
-          sale.status !== "cancelled" &&
-          getSaleBalance(sale) > 0.005
-      );
-
-
-    /*
-      Cargar items para obtener
-      información adicional si existe.
-    */
-
-    if(sales.length > 0){
-
-      const saleIds =
-        sales.map(
-          sale => sale.id
-        );
-
-
-      const itemsResult =
-        await supabaseClient
-          .from("sale_items")
-          .select("*")
-          .in(
-            "sale_id",
-            saleIds
-          );
-
-
-      console.log(
-        "RESULTADO SALE ITEMS:",
-        itemsResult
-      );
-
-
-      if(!itemsResult.error){
-
-        const items =
-          itemsResult.data || [];
-
-
-        sales =
-          sales.map(
-            sale => ({
-              ...sale,
-
-              items:
-                items.filter(
-                  item =>
-                    item.sale_id === sale.id
-                )
-
-            })
-          );
-
-      }
-
-    }
-
-
-    renderSales();
-
+    renderAccounts();
 
   }catch(error){
 
     console.error(
-      "ERROR CARGANDO CUENTAS:",
+      "Error general:",
       error
     );
 
-    showStatus(
-      "No fue posible cargar las cuentas.\n\n"+
-      "Código: "+(error.code || "N/D")+"\n"+
-      "Mensaje: "+(error.message || error),
-      "error"
+    showError(
+      "Error al cargar las cuentas: " +
+      (
+        error.message ||
+        "Error desconocido"
+      )
     );
 
-  }finally{
-
-    $("loading")
-      .style.display =
-      "none";
+    $("sales").innerHTML =
+      `
+        <div class="empty">
+          No fue posible cargar las cuentas.
+        </div>
+      `;
 
   }
 
 }
 
 
-/* =========================
-   RENDER
-========================= */
+/* =========================================================
+   FILTERS
+========================================================= */
 
-function renderSales(){
+function getFilteredSales(){
 
-  const body =
-    $("accountsBody");
+  const search =
+    $("search")
+      .value
+      .trim()
+      .toLowerCase();
 
-  body.innerHTML = "";
+  const from =
+    $("dateFrom")
+      .value;
 
+  const to =
+    $("dateTo")
+      .value;
 
-  let totalPending =
-    0;
-
-
-  sales.forEach(
+  return sales.filter(
     sale => {
 
-      const balance =
-        getSaleBalance(sale);
+      const text =
+        [
+          sale.id,
+          sale.customer_name,
+          sale.customer,
+          sale.client_name,
+          sale.folio,
+          sale.notes
+        ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
 
-      totalPending +=
-        balance;
+      if(
+        search &&
+        !text.includes(search)
+      ){
+        return false;
+      }
 
-
-      const customerName =
-        getCustomerName(sale);
-
-
-      const total =
-        Number(sale.total) || 0;
-
-
-      const paid =
-        Math.max(
-          0,
-          total-balance
+      const saleDate =
+        dateOnly(
+          sale.created_at
         );
 
+      if(
+        from &&
+        saleDate < from
+      ){
+        return false;
+      }
 
-      const row =
-        document.createElement("tr");
+      if(
+        to &&
+        saleDate > to
+      ){
+        return false;
+      }
 
-
-      row.innerHTML = `
-
-        <td>
-          <strong>
-            ${escapeHtml(customerName)}
-          </strong>
-        </td>
-
-        <td>
-          ${formatDate(
-            sale.created_at ||
-            sale.date ||
-            sale.sold_at
-          )}
-        </td>
-
-        <td>
-          ${money(total)}
-        </td>
-
-        <td>
-          ${money(paid)}
-        </td>
-
-        <td class="balance">
-          ${money(balance)}
-        </td>
-
-        <td>
-          ${escapeHtml(
-            sale.status || "open"
-          )}
-        </td>
-
-        <td>
-
-          <div class="actions">
-
-            <button
-              class="pay-button"
-              onclick="openPaymentModal('${sale.id}')">
-              Abonar
-            </button>
-
-            <button
-              class="cancel-button"
-              onclick="openCancelModal('${sale.id}')">
-              Cancelar
-            </button>
-
-            <button
-              class="whatsapp-button"
-              onclick="sendWhatsApp('${sale.id}')">
-              WhatsApp
-            </button>
-
-          </div>
-
-        </td>
-
-      `;
-
-
-      body.appendChild(
-        row
-      );
+      return true;
 
     }
   );
 
-
-  $("pendingCount")
-    .textContent =
-    sales.length;
+}
 
 
-  $("pendingTotal")
-    .textContent =
-    money(totalPending);
+function clearFilters(){
 
+  $("search").value = "";
+  $("dateFrom").value = "";
+  $("dateTo").value = "";
 
-  if(sales.length === 0){
-
-    $("empty")
-      .style.display =
-      "block";
-
-    $("accountsTable")
-      .style.display =
-      "none";
-
-  }else{
-
-    $("empty")
-      .style.display =
-      "none";
-
-    $("accountsTable")
-      .style.display =
-      "table";
-
-  }
+  renderAccounts();
 
 }
 
 
-/* =========================
-   ABRIR MODAL DE PAGO
-========================= */
+/* =========================================================
+   RENDER ACCOUNTS
+========================================================= */
 
-async function openPaymentModal(saleId){
+function renderAccounts(){
 
-  selectedSale =
-    sales.find(
-      sale =>
-        sale.id === saleId
+  const rows =
+    getFilteredSales();
+
+  const validSaleIds =
+    new Set(
+      rows.map(
+        sale =>
+          normalizeId(
+            sale.id
+          )
+      )
     );
 
+  const filteredItems =
+    saleItems.filter(
+      item =>
+        validSaleIds.has(
+          normalizeId(
+            item.sale_id
+          )
+        )
+    );
 
-  if(!selectedSale){
+  const totalPieces =
+    filteredItems.reduce(
+      (sum,item) =>
+        sum +
+        Number(
+          item.quantity || 0
+        ),
+      0
+    );
+
+  const totalSales =
+    rows.reduce(
+      (sum,sale) =>
+        sum +
+        Number(
+          sale.total || 0
+        ),
+      0
+    );
+
+  const totalBalance =
+    rows.reduce(
+      (sum,sale) =>
+        sum +
+        Number(
+          sale.balance || 0
+        ),
+      0
+    );
+
+  $("countAccounts")
+    .textContent =
+      rows.length;
+
+  $("count")
+    .textContent =
+      totalPieces;
+
+  $("total")
+    .textContent =
+      money(totalSales);
+
+  $("balance")
+    .textContent =
+      money(totalBalance);
+
+  renderProductBreakdown(
+    rows
+  );
+
+  if(!rows.length){
+
+    $("sales").innerHTML =
+      `
+        <div class="empty">
+          No hay cuentas pendientes
+          con los filtros seleccionados.
+        </div>
+      `;
+
     return;
   }
 
+  $("sales").innerHTML =
+    rows
+      .map(
+        sale =>
+          renderSaleCard(
+            sale
+          )
+      )
+      .join("");
 
-  const customerName =
-    getCustomerName(
-      selectedSale
+}
+
+
+/* =========================================================
+   PRODUCT BREAKDOWN
+========================================================= */
+
+function renderProductBreakdown(
+  filteredRows
+){
+
+  const validSaleIds =
+    new Set(
+      filteredRows.map(
+        sale =>
+          normalizeId(
+            sale.id
+          )
+      )
     );
 
+  const items =
+    saleItems.filter(
+      item =>
+        validSaleIds.has(
+          normalizeId(
+            item.sale_id
+          )
+        )
+    );
+
+  const grouped = {};
+
+  items.forEach(
+    item => {
+
+      const productId =
+        normalizeId(
+          item.product_id
+        );
+
+      const key =
+        productId ||
+        (
+          item.description ||
+          "Producto"
+        );
+
+      const name =
+        getProductName(
+          productId,
+          item.description ||
+          "Producto"
+        );
+
+      if(!grouped[key]){
+
+        grouped[key] = {
+
+          name,
+          quantity:0,
+          total:0
+
+        };
+
+      }
+
+      grouped[key].quantity +=
+        Number(
+          item.quantity || 0
+        );
+
+      grouped[key].total +=
+        Number(
+          item.subtotal || 0
+        );
+
+    }
+  );
+
+  const list =
+    Object.values(
+      grouped
+    )
+    .sort(
+      (a,b) =>
+        b.quantity -
+        a.quantity
+    );
+
+  const totalPieces =
+    list.reduce(
+      (sum,item) =>
+        sum +
+        item.quantity,
+      0
+    );
+
+  $("productBreakdownTotal")
+    .textContent =
+      `${totalPieces} piezas`;
+
+  if(!list.length){
+
+    $("productBreakdownList").innerHTML =
+      `
+        <div class="empty">
+          No hay productos pendientes.
+        </div>
+      `;
+
+    return;
+  }
+
+  $("productBreakdownList").innerHTML =
+    list
+      .map(
+        item =>
+          `
+            <div class="product-row">
+
+              <div>
+
+                <strong>
+                  ${escapeHtml(item.name)}
+                </strong>
+
+                <small>
+                  ${item.quantity}
+                  pieza${item.quantity === 1 ? "" : "s"}
+                </small>
+
+              </div>
+
+              <div class="product-total">
+                ${money(item.total)}
+              </div>
+
+            </div>
+          `
+      )
+      .join("");
+
+}
+
+
+/* =========================================================
+   RENDER SALE CARD
+========================================================= */
+
+function renderSaleCard(
+  sale
+){
+
+  const saleId =
+    normalizeId(
+      sale.id
+    );
+
+  const items =
+    getSaleItems(
+      saleId
+    );
+
+  const paymentRows =
+    getSalePayments(
+      saleId
+    );
+
+  const customer =
+    sale.customer_name ||
+    sale.customer ||
+    sale.client_name ||
+    "Cliente";
+
+  const folio =
+    sale.folio ||
+    sale.sale_number ||
+    saleId.slice(0,8);
+
+  const total =
+    Number(
+      sale.total || 0
+    );
 
   const balance =
-    getSaleBalance(
-      selectedSale
+    Number(
+      sale.balance || 0
     );
 
+  return `
+    <article class="sale-card">
 
-  $("paymentCustomerInfo")
-    .innerHTML = `
+      <div class="sale-header">
 
-      <strong>
-        ${escapeHtml(customerName)}
-      </strong>
+        <div>
 
-      <span>
-        Saldo pendiente:
-        <b>${money(balance)}</b>
-      </span>
+          <div class="sale-title">
+            ${escapeHtml(customer)}
+          </div>
 
+          <div class="sale-meta">
+            Folio:
+            ${escapeHtml(folio)}
+          </div>
+
+          <div class="sale-meta">
+            ${escapeHtml(
+              formatDate(
+                sale.created_at
+              )
+            )}
+          </div>
+
+        </div>
+
+        <div class="sale-amount">
+
+          <div class="total">
+            ${money(total)}
+          </div>
+
+          <div class="balance">
+            Pendiente:
+            ${money(balance)}
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="sale-body">
+
+        ${renderSaleProducts(
+          saleId
+        )}
+
+        ${
+          paymentRows.length
+            ? `
+              <div class="payments">
+
+                <strong>
+                  Pagos registrados
+                </strong>
+
+                ${paymentRows.map(
+                  payment =>
+                    `
+                      <div class="payment-row">
+
+                        <span>
+
+                          ${
+                            escapeHtml(
+                              payment.method ||
+                              payment.payment_method ||
+                              payment.provider ||
+                              "Pago"
+                            )
+                          }
+
+                          ·
+
+                          ${escapeHtml(
+                            formatDate(
+                              payment.paid_at ||
+                              payment.created_at
+                            )
+                          )}
+
+                        </span>
+
+                        <strong>
+                          ${money(
+                            payment.amount
+                          )}
+                        </strong>
+
+                      </div>
+                    `
+                ).join("")}
+
+              </div>
+            `
+            : ""
+        }
+
+        <div class="sale-actions">
+
+          <button
+            class="btn green"
+            onclick="openPaymentModal('${saleId}')">
+            💳 Registrar pago
+          </button>
+
+          <button
+            class="btn whatsapp"
+            onclick="sendWhatsApp('${saleId}')">
+            WhatsApp
+          </button>
+
+          <button
+            class="btn red"
+            onclick="openCancelModal('${saleId}')">
+            Cancelar cuenta
+          </button>
+
+        </div>
+
+      </div>
+
+    </article>
+  `;
+
+}
+
+
+/* =========================================================
+   RENDER PRODUCTS OF SALE
+========================================================= */
+
+function renderSaleProducts(
+  saleId
+){
+
+  const items =
+    getSaleItems(
+      saleId
+    );
+
+  if(!items.length){
+
+    return `
+      <div class="sale-products">
+
+        <div class="sale-products-title">
+          Productos de la venta
+        </div>
+
+        <div class="no-products">
+          No hay productos registrados
+          para esta venta.
+        </div>
+
+      </div>
     `;
 
+  }
 
-  $("paymentAmount")
-    .value =
-    balance.toFixed(2);
+  return `
+    <div class="sale-products">
 
+      <div class="sale-products-title">
+        Productos de la venta
+      </div>
 
-  $("paymentError")
-    .textContent =
-    "";
+      ${items.map(
+        item => {
 
-  $("paymentError")
-    .className =
-    "payment-error";
+          const name =
+            getProductName(
+              item.product_id,
+              item.description ||
+              "Producto"
+            );
 
+          const quantity =
+            Number(
+              item.quantity || 0
+            );
 
-  $("confirmPaymentButton")
-    .disabled =
-    false;
+          const subtotal =
+            Number(
+              item.subtotal ||
+              (
+                quantity *
+                Number(
+                  item.unit_price || 0
+                )
+              )
+            );
 
-  $("confirmPaymentButton")
-    .textContent =
-    "Abonar";
+          return `
+            <div class="sale-product">
 
+              <div>
 
-  await loadPaymentMethods();
+                <strong>
+                  ${escapeHtml(name)}
+                </strong>
 
+                ${
+                  item.description &&
+                  item.description !== name
+                    ? `
+                      <small>
+                        ${escapeHtml(
+                          item.description
+                        )}
+                      </small>
+                    `
+                    : ""
+                }
 
-  $("paymentModal")
-    .classList.add("show");
+              </div>
+
+              <div class="qty">
+                ×${quantity}
+              </div>
+
+              <div class="price">
+                ${money(subtotal)}
+              </div>
+
+            </div>
+          `;
+
+        }
+      ).join("")}
+
+    </div>
+  `;
 
 }
 
 
-/* =========================
-   CONFIRMAR PAGO
-========================= */
+/* =========================================================
+   PAYMENT MODAL
+========================================================= */
 
-async function confirmPayment(){
+function openPaymentModal(
+  saleId
+){
 
-  if(!selectedSale){
+  const sale =
+    sales.find(
+      s =>
+        normalizeId(s.id) ===
+        normalizeId(saleId)
+    );
+
+  if(!sale){
     return;
   }
 
+  currentPaymentSale =
+    sale;
 
-  const balance =
-    getSaleBalance(
-      selectedSale
+  $("paymentSaleInfo")
+    .innerHTML =
+      `
+        <strong>
+          ${escapeHtml(
+            sale.customer_name ||
+            sale.customer ||
+            sale.client_name ||
+            "Cliente"
+          )}
+        </strong>
+
+        <br>
+
+        Pendiente:
+        <strong>
+          ${money(
+            sale.balance
+          )}
+        </strong>
+      `;
+
+  $("paymentAmount").value =
+    "";
+
+  $("paymentNote").value =
+    "";
+
+  $("paymentModal")
+    .classList.remove(
+      "hidden"
     );
 
+  setTimeout(
+    () =>
+      $("paymentAmount").focus(),
+    100
+  );
+
+}
+
+
+function closePaymentModal(){
+
+  $("paymentModal")
+    .classList.add(
+      "hidden"
+    );
+
+  currentPaymentSale =
+    null;
+
+}
+
+
+/* =========================================================
+   SAVE PAYMENT
+   AHORA UTILIZA register_payment()
+========================================================= */
+
+async function savePayment(){
+
+  if(!currentPaymentSale){
+    return;
+  }
 
   const amount =
     Number(
       $("paymentAmount").value
     );
 
-
-  const errorElement =
-    $("paymentError");
-
-
-  errorElement.className =
-    "payment-error";
-
-  errorElement.textContent =
-    "";
-
-
   if(
-    !Number.isFinite(amount) ||
+    !amount ||
     amount <= 0
   ){
 
-    errorElement.textContent =
-      "Ingresa una cantidad válida.";
-
-    errorElement.className =
-      "payment-error show";
+    alert(
+      "Ingresa un monto válido."
+    );
 
     return;
-
   }
 
+  const currentBalance =
+    Number(
+      currentPaymentSale.balance || 0
+    );
 
-  if(
-    amount >
-    balance + 0.005
-  ){
+  if(amount > currentBalance){
 
-    errorElement.textContent =
-      "El abono no puede ser mayor al saldo pendiente de "+
-      money(balance)+".";
-
-    errorElement.className =
-      "payment-error show";
+    alert(
+      "El pago no puede ser mayor al saldo pendiente."
+    );
 
     return;
-
   }
 
+  const method =
+    $("paymentMethod").value;
 
-  if(!selectedPaymentMethod){
-
-    errorElement.textContent =
-      "Selecciona un método de pago.";
-
-    errorElement.className =
-      "payment-error show";
-
-    return;
-
-  }
-
-
-  const button =
-    $("confirmPaymentButton");
-
-
-  button.disabled =
-    true;
-
-  button.textContent =
-    "Registrando...";
-
+  const note =
+    $("paymentNote")
+      .value
+      .trim();
 
   try{
 
-    /*
-      ============================================
-      DATOS DEL PAGO
-      ============================================
-    */
-
     const businessId =
-      selectedSale.business_id ||
+      currentPaymentSale.business_id ||
       BUSINESS_IDS[currentBusiness];
 
+    if(!businessId){
 
-    const saleId =
-      selectedSale.id;
+      throw new Error(
+        "No se encontró el negocio de la cuenta."
+      );
 
+    }
 
-    const customerId =
-      selectedSale.customer_id ||
-      null;
-
+    /*
+      Obtener el UUID real del método de pago.
+    */
 
     const paymentMethodId =
-      selectedPaymentMethod.id;
-
-
-    const paymentAmount =
-      Number(
-        amount.toFixed(2)
+      getPaymentMethodId(
+        method
       );
 
-
-    /*
-      Verificación de seguridad:
-      el método de pago debe pertenecer
-      al negocio seleccionado.
-    */
-
-    if(
-      selectedPaymentMethod.business_id &&
-      selectedPaymentMethod.business_id !== businessId
-    ){
+    if(!paymentMethodId){
 
       throw new Error(
-        "El método de pago seleccionado no pertenece al negocio actual."
+        "No se encontró el método de pago \"" +
+        method +
+        "\" en payment_methods para " +
+        currentBusiness +
+        "."
       );
 
     }
 
-
-    console.log(
-      "================================"
-    );
-
-    console.log(
-      "REGISTRANDO PAGO"
-    );
-
-    console.log({
-      businessId,
-      saleId,
-      customerId,
-      paymentMethodId,
-      paymentAmount,
-      currentBusiness
-    });
-
-
     /*
-      ============================================
-      INSERT PAYMENT
-      ============================================
-
       IMPORTANTE:
-      payments.business_id es NOT NULL.
+      Ya NO hacemos INSERT directo a payments.
 
-      Por eso se envía explícitamente.
-
-      NO usamos .select() para que el INSERT
-      no necesite una lectura posterior
-      de la fila.
+      Usamos la función SQL:
+      register_payment(
+        p_business_id,
+        p_sale_id,
+        p_payment_method_id,
+        p_amount
+      )
     */
 
-    const paymentResult =
+    const {
+      data,
+      error
+    } =
       await supabaseClient
-        .from("payments")
-        .insert({
+        .rpc(
+          "register_payment",
+          {
+            p_business_id:
+              businessId,
 
-          business_id:
-            businessId,
+            p_sale_id:
+              currentPaymentSale.id,
 
-          sale_id:
-            saleId,
+            p_payment_method_id:
+              paymentMethodId,
 
-          customer_id:
-            customerId,
-
-          payment_method_id:
-            paymentMethodId,
-
-          amount:
-            paymentAmount
-
-        });
-
-
-    console.log(
-      "RESULTADO INSERT PAYMENT:",
-      paymentResult
-    );
-
-
-    if(paymentResult.error){
-
-      const error =
-        paymentResult.error;
-
-
-      throw new Error(
-
-        "No fue posible registrar el pago.\n\n"+
-
-        "Código: "+
-        (error.code || "N/D")+"\n"+
-
-        "Mensaje: "+
-        (error.message || "N/D")+"\n"+
-
-        "Detalle: "+
-        (error.details || "N/D")+"\n"+
-
-        "Sugerencia: "+
-        (error.hint || "N/D")
-
-      );
-
-    }
-
-
-    /*
-      ============================================
-      CALCULAR NUEVO SALDO
-      ============================================
-    */
-
-    const newBalance =
-      Math.max(
-        0,
-        Number(
-          (
-            balance -
-            amount
-          ).toFixed(2)
-        )
-      );
-
-
-    const newStatus =
-      newBalance <= 0.005
-        ? "paid"
-        : "open";
-
-
-    console.log(
-      "NUEVO SALDO:",
-      newBalance
-    );
-
-    console.log(
-      "NUEVO STATUS:",
-      newStatus
-    );
-
-
-    /*
-      ============================================
-      ACTUALIZAR SALE
-      ============================================
-    */
-
-    const saleUpdate =
-      await supabaseClient
-        .from("sales")
-        .update({
-
-          balance:
-            newBalance,
-
-          status:
-            newStatus
-
-        })
-        .eq(
-          "id",
-          saleId
-        )
-        .eq(
-          "business_id",
-          businessId
+            p_amount:
+              Number(
+                amount.toFixed(2)
+              )
+          }
         );
 
-
-    console.log(
-      "RESULTADO UPDATE SALE:",
-      saleUpdate
-    );
-
-
-    if(saleUpdate.error){
-
-      throw new Error(
-
-        "El pago SÍ fue registrado en payments, "+
-        "pero no fue posible actualizar la venta.\n\n"+
-
-        "NO vuelvas a registrar este abono.\n\n"+
-
-        "Código: "+
-        (
-          saleUpdate.error.code ||
-          "N/D"
-        )+"\n"+
-
-        "Mensaje: "+
-        (
-          saleUpdate.error.message ||
-          "N/D"
-        )+"\n"+
-
-        "Detalle: "+
-        (
-          saleUpdate.error.details ||
-          "N/D"
-        )+"\n"+
-
-        "Sugerencia: "+
-        (
-          saleUpdate.error.hint ||
-          "N/D"
-        )
-
-      );
-
+    if(error){
+      throw error;
     }
 
+    console.log(
+      "Pago registrado correctamente:",
+      data
+    );
 
     /*
-      ============================================
-      TODO CORRECTO
-      ============================================
+      La función SQL ya actualiza:
+      balance
+      status
+      payments
     */
 
-    closeModal(
-      "paymentModal"
-    );
-
-
-    showStatus(
-
-      newBalance <= 0.005
-
-        ? "Cuenta liquidada correctamente."
-
-        : "Abono registrado correctamente. Nuevo saldo: "+
-          money(newBalance),
-
-      "ok"
-
-    );
-
-
-    selectedSale =
-      null;
-
-    selectedPaymentMethod =
-      null;
-
+    closePaymentModal();
 
     await loadSales();
 
+    /*
+      La nota se conserva solamente
+      si la tabla/function se amplía
+      posteriormente. No se manda a
+      payments porque actualmente
+      payments no tiene columna note.
+    */
+
+    if(note){
+      console.log(
+        "Nota del pago:",
+        note
+      );
+    }
+
+    alert(
+      "Pago registrado correctamente."
+    );
 
   }catch(error){
 
     console.error(
-      "================================"
-    );
-
-    console.error(
-      "ERROR COMPLETO REGISTRANDO ABONO:"
-    );
-
-    console.error(
+      "Error registrando pago:",
       error
     );
 
-    console.error(
-      "================================"
+    alert(
+      "No se pudo registrar el pago:\n\n" +
+      (
+        error.message ||
+        "Error desconocido"
+      )
     );
-
-
-    errorElement.textContent =
-      error.message ||
-      "No fue posible registrar el abono.";
-
-
-    errorElement.className =
-      "payment-error show";
-
-
-  }finally{
-
-    button.disabled =
-      false;
-
-    button.textContent =
-      "Abonar";
 
   }
 
 }
 
 
-/* =========================
-   ABRIR CANCELACIÓN
-========================= */
+/* =========================================================
+   CANCEL MODAL
+========================================================= */
 
-function openCancelModal(saleId){
+function openCancelModal(
+  saleId
+){
 
-  selectedCancelSale =
+  const sale =
     sales.find(
-      sale =>
-        sale.id === saleId
+      s =>
+        normalizeId(s.id) ===
+        normalizeId(saleId)
     );
 
-
-  if(!selectedCancelSale){
+  if(!sale){
     return;
   }
 
+  currentCancelSale =
+    sale;
 
-  const customerName =
-    getCustomerName(
-      selectedCancelSale
-    );
+  $("cancelSaleInfo")
+    .innerHTML =
+      `
+        <strong>
+          ${escapeHtml(
+            sale.customer_name ||
+            sale.customer ||
+            sale.client_name ||
+            "Cliente"
+          )}
+        </strong>
 
+        <br>
 
-  const balance =
-    getSaleBalance(
-      selectedCancelSale
-    );
+        Total:
+        ${money(
+          sale.total
+        )}
 
+        <br>
 
-  $("cancelCustomerInfo")
-    .innerHTML = `
+        Pendiente:
+        <strong>
+          ${money(
+            sale.balance
+          )}
+        </strong>
+      `;
 
-      <strong>
-        ${escapeHtml(customerName)}
-      </strong>
-
-      <span>
-        Saldo pendiente:
-        <b>${money(balance)}</b>
-      </span>
-
-    `;
-
-
-  $("cancelReason")
-    .value =
+  $("cancelReason").value =
     "";
 
-
-  $("confirmCancelButton")
-    .disabled =
-    false;
-
-
-  $("confirmCancelButton")
-    .textContent =
-    "Cancelar cuenta";
-
-
   $("cancelModal")
-    .classList.add("show");
+    .classList.remove(
+      "hidden"
+    );
 
 }
 
 
-/* =========================
-   CONFIRMAR CANCELACIÓN
-========================= */
+function closeCancelModal(){
+
+  $("cancelModal")
+    .classList.add(
+      "hidden"
+    );
+
+  currentCancelSale =
+    null;
+
+}
+
+
+/* =========================================================
+   CONFIRM CANCEL
+   AHORA UTILIZA cancel_sale_and_restore_inventory()
+========================================================= */
 
 async function confirmCancel(){
 
-  if(!selectedCancelSale){
+  if(!currentCancelSale){
     return;
   }
-
 
   const reason =
     $("cancelReason")
       .value
       .trim();
 
-
   if(!reason){
 
-    showStatus(
-      "Escribe un motivo de cancelación.",
-      "error"
+    alert(
+      "Escribe el motivo de la cancelación."
     );
 
     return;
-
   }
 
-
-  const button =
-    $("confirmCancelButton");
-
-
-  button.disabled =
-    true;
-
-  button.textContent =
-    "Cancelando...";
-
+  if(
+    !confirm(
+      "¿Seguro que deseas cancelar esta cuenta?"
+    )
+  ){
+    return;
+  }
 
   try{
 
-    const businessId =
-      selectedCancelSale.business_id ||
-      BUSINESS_IDS[currentBusiness];
-
-
-    const saleId =
-      selectedCancelSale.id;
-
-
-    console.log(
-      "================================"
-    );
-
-    console.log(
-      "CANCELANDO VENTA"
-    );
-
-    console.log({
-
-      saleId,
-
-      businessId,
-
-      currentBusiness,
-
-      reason
-
-    });
-
-
     /*
-      Actualizamos únicamente la venta
-      que pertenece al negocio actual.
+      IMPORTANTE:
+      Ya NO hacemos UPDATE directo a sales.
+
+      Usamos la función SQL que ya tienes:
+
+      cancel_sale_and_restore_inventory(
+        p_sale_id,
+        p_cancel_reason
+      )
+
+      Esta función:
+      - bloquea la venta
+      - restaura inventario
+      - registra inventory_movements
+      - marca la venta como cancelled
+      - guarda el motivo
+      - registra audit_log
     */
 
-    const result =
+    const {
+      error
+    } =
       await supabaseClient
-        .from("sales")
-        .update({
+        .rpc(
+          "cancel_sale_and_restore_inventory",
+          {
+            p_sale_id:
+              currentCancelSale.id,
 
-          status:
-            "cancelled",
-
-          cancellation_reason:
-            reason
-
-        })
-        .eq(
-          "id",
-          saleId
-        )
-        .eq(
-          "business_id",
-          businessId
+            p_cancel_reason:
+              reason
+          }
         );
 
-
-    console.log(
-      "RESULTADO CANCELACIÓN:",
-      result
-    );
-
-
-    if(result.error){
-
-      const error =
-        result.error;
-
-
-      throw new Error(
-
-        "No fue posible cancelar la cuenta.\n\n"+
-
-        "Código: "+
-        (error.code || "N/D")+"\n"+
-
-        "Mensaje: "+
-        (error.message || "N/D")+"\n"+
-
-        "Detalle: "+
-        (error.details || "N/D")+"\n"+
-
-        "Sugerencia: "+
-        (error.hint || "N/D")
-
-      );
-
+    if(error){
+      throw error;
     }
 
-
-    /*
-      Supabase puede devolver data null
-      cuando no usamos .select().
-      Por eso aquí solamente verificamos
-      si existe error.
-    */
-
-
-    closeModal(
-      "cancelModal"
+    console.log(
+      "Cuenta cancelada correctamente."
     );
 
-
-    showStatus(
-      "Cuenta cancelada correctamente.",
-      "ok"
-    );
-
-
-    selectedCancelSale =
-      null;
-
+    closeCancelModal();
 
     await loadSales();
 
+    /*
+      Ocultar también el panel de
+      canceladas si estaba abierto,
+      para evitar que quede información
+      vieja en pantalla.
+    */
+
+    $("cancelledPanel")
+      .classList.add(
+        "hidden"
+      );
+
+    alert(
+      "Cuenta cancelada correctamente.\n\nEl inventario fue restaurado."
+    );
 
   }catch(error){
 
     console.error(
-      "ERROR CANCELANDO CUENTA:",
+      "Error cancelando cuenta:",
       error
     );
 
-
-    showStatus(
-
-      error.message ||
-      "No fue posible cancelar la cuenta.",
-
-      "error"
-
+    alert(
+      "No se pudo cancelar la cuenta:\n\n" +
+      (
+        error.message ||
+        "Error desconocido"
+      )
     );
-
-  }finally{
-
-    button.disabled =
-      false;
-
-    button.textContent =
-      "Cancelar cuenta";
 
   }
 
 }
 
 
-/* =========================
+/* =========================================================
    WHATSAPP
-========================= */
+========================================================= */
 
-function sendWhatsApp(saleId){
+function sendWhatsApp(
+  saleId
+){
 
   const sale =
     sales.find(
-      item =>
-        item.id === saleId
+      s =>
+        normalizeId(s.id) ===
+        normalizeId(saleId)
     );
-
 
   if(!sale){
     return;
   }
 
-
-  const name =
-    getCustomerName(
-      sale
-    );
-
+  const customer =
+    sale.customer_name ||
+    sale.customer ||
+    sale.client_name ||
+    "cliente";
 
   const balance =
-    getSaleBalance(
-      sale
+    Number(
+      sale.balance || 0
     );
 
+  const items =
+    getSaleItems(
+      saleId
+    );
 
-  let message;
+  const productText =
+    items.length
+      ? items
+          .map(
+            item => {
 
+              const name =
+                getProductName(
+                  item.product_id,
+                  item.description ||
+                  "Producto"
+                );
 
-  if(currentBusiness === "SpicyRoll"){
+              return (
+                `• ${item.quantity} × ${name}`
+              );
 
-    message =
-      "Hola, "+name+" 👋\n\n"+
-      "Te recordamos que tienes un pendiente: "+
-      money(balance)+".\n\n"+
-      "Puedes realizar tu transferencia a:\n\n"+
-      "Carlos Ivan Rojas Marquez\n"+
-      "Cuenta: 730969300008248726\n"+
-      "Banco: Clip\n\n"+
-      "Una vez realizada, puedes enviarnos tu comprobante por este medio.\n\n"+
-      "¡Gracias! 🙌";
+            }
+          )
+          .join("\n")
+      : "";
 
-  }else{
+  const message =
+`Hola ${customer} 👋
 
-    message =
-      "Hola, "+name+" 👋\n\n"+
-      "Te recordamos que tienes un saldo pendiente de "+
-      money(balance)+
-      " en "+currentBusiness+".\n\n"+
-      "Puedes realizar tu transferencia a:\n\n"+
-      "Carlos Ivan Rojas Marquez\n"+
-      "Cuenta: 730969300008248726\n"+
-      "Banco: Clip\n\n"+
-      "Una vez realizada, puedes enviarnos tu comprobante por este medio.\n\n"+
-      "¡Gracias! 🙌";
+Te compartimos el saldo pendiente de tu cuenta.
 
-  }
+${
+  productText
+    ? `Productos:
+${productText}
 
+`
+    : ""
+}Saldo pendiente: ${money(balance)}
 
-  const encoded =
+Datos para pago:
+Carlos Ivan Rojas Marquez
+Clip
+Cuenta: 730969300008248726
+
+¡Muchas gracias! 🙌`;
+
+  const url =
+    "https://wa.me/?text=" +
     encodeURIComponent(
       message
     );
 
-
   window.open(
-    "https://wa.me/?text="+encoded,
+    url,
     "_blank"
   );
 
 }
 
 
-/* =========================
-   CERRAR MODALES AL
-   HACER CLICK FUERA
-========================= */
+/* =========================================================
+   CANCELLED SALES
+========================================================= */
 
-window.addEventListener(
-  "click",
-  function(event){
+async function showCancelled(){
 
-    if(
-      event.target ===
-      $("paymentModal")
-    ){
+  $("cancelledPanel")
+    .classList.remove(
+      "hidden"
+    );
 
-      closeModal(
-        "paymentModal"
-      );
+  $("cancelledList").innerHTML =
+    `
+      <div class="loading">
+        Cargando cuentas canceladas...
+      </div>
+    `;
 
+  try{
+
+    const businessId =
+      BUSINESS_IDS[currentBusiness];
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("sales")
+        .select("*")
+        .eq(
+          "business_id",
+          businessId
+        )
+        .eq(
+          "status",
+          "cancelled"
+        )
+        .order(
+          "cancelled_at",
+          {
+            ascending:false
+          }
+        );
+
+    if(error){
+      throw error;
     }
 
+    const rows =
+      data || [];
 
-    if(
-      event.target ===
-      $("cancelModal")
-    ){
+    if(!rows.length){
 
-      closeModal(
-        "cancelModal"
-      );
+      $("cancelledList").innerHTML =
+        `
+          <div class="empty">
+            No hay cuentas canceladas.
+          </div>
+        `;
 
+      return;
     }
+
+    $("cancelledList").innerHTML =
+      rows
+        .map(
+          sale => {
+
+            const customer =
+              sale.customer_name ||
+              sale.customer ||
+              sale.client_name ||
+              "Cliente";
+
+            return `
+              <div class="cancelled-card">
+
+                <div class="cancelled-title">
+                  ${escapeHtml(
+                    customer
+                  )}
+                </div>
+
+                <div>
+                  Total:
+                  ${money(
+                    sale.total
+                  )}
+                </div>
+
+                <div class="sale-meta">
+                  Cancelada:
+                  ${escapeHtml(
+                    formatDate(
+                      sale.cancelled_at ||
+                      sale.updated_at
+                    )
+                  )}
+                </div>
+
+                <div class="sale-meta">
+                  Motivo:
+                  ${escapeHtml(
+                    sale.cancellation_reason ||
+                    "Sin motivo registrado"
+                  )}
+                </div>
+
+              </div>
+            `;
+
+          }
+        )
+        .join("");
+
+  }catch(error){
+
+    console.error(
+      error
+    );
+
+    $("cancelledList").innerHTML =
+      `
+        <div class="error">
+          No se pudieron cargar
+          las cuentas canceladas.
+        </div>
+      `;
 
   }
-);
+
+}
 
 
-/* =========================
-   INICIO
-========================= */
+function hideCancelled(){
+
+  $("cancelledPanel")
+    .classList.add(
+      "hidden"
+    );
+
+}
+
+
+/* =========================================================
+   INIT
+========================================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
-  function(){
+  () => {
 
-    console.log(
-      "CUENTAS.HTML CARGADO - VERSIÓN RLS FIX 2"
-    );
+    updateBusinessUI();
 
     loadSales();
 
   }
 );
+
+
+/* =========================================================
+   CLOSE MODALS WHEN CLICKING OUTSIDE
+========================================================= */
+
+$("paymentModal")
+  .addEventListener(
+    "click",
+    event => {
+
+      if(
+        event.target ===
+        $("paymentModal")
+      ){
+
+        closePaymentModal();
+
+      }
+
+    }
+  );
+
+
+$("cancelModal")
+  .addEventListener(
+    "click",
+    event => {
+
+      if(
+        event.target ===
+        $("cancelModal")
+      ){
+
+        closeCancelModal();
+
+      }
+
+    }
+  );
 
 </script>
 
