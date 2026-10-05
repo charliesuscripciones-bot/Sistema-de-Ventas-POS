@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Historial de ventas | Sistema de Ventas POS</title>
+<title>Historial de ventas | Charlie Shop</title>
 
 <style>
 
@@ -171,6 +171,71 @@ button:disabled{
   font-size:28px;
   font-weight:800;
   margin-top:7px;
+}
+
+/* =========================================
+   DESGLOSE DE PRODUCTOS
+========================================= */
+
+.product-summary{
+  background:#fff;
+  border-radius:20px;
+  padding:22px;
+  margin-bottom:20px;
+  box-shadow:0 5px 20px rgba(0,0,0,.06);
+}
+
+.product-summary-title{
+  color:#6b7280;
+  font-size:14px;
+  font-weight:800;
+  margin-bottom:15px;
+  letter-spacing:.3px;
+}
+
+.product-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  padding:14px 0;
+  border-bottom:1px solid #e5e7eb;
+}
+
+.product-row:last-of-type{
+  border-bottom:0;
+}
+
+.product-name{
+  font-size:16px;
+  font-weight:700;
+  color:#1f2937;
+}
+
+.product-quantity{
+  font-size:18px;
+  font-weight:800;
+  color:#2680eb;
+  white-space:nowrap;
+}
+
+.product-total{
+  margin-top:15px;
+  padding-top:15px;
+  border-top:2px solid #e5e7eb;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:17px;
+  font-weight:800;
+  color:#111827;
+}
+
+.product-empty{
+  color:#94a3b8;
+  text-align:center;
+  padding:18px 5px;
+  font-size:14px;
 }
 
 /* VENTAS */
@@ -501,6 +566,18 @@ button:disabled{
     grid-template-columns:1fr;
   }
 
+  .product-row{
+    align-items:flex-start;
+  }
+
+  .product-name{
+    font-size:15px;
+  }
+
+  .product-quantity{
+    font-size:17px;
+  }
+
 }
 
 </style>
@@ -603,7 +680,7 @@ type="date"
 <div class="summary-card">
 
 <div class="label">
-VENTAS
+PIEZAS VENDIDAS
 </div>
 
 <div
@@ -640,6 +717,27 @@ PENDIENTE
 id="balance"
 class="value">
 $0.00
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================
+     DESGLOSE DE PRODUCTOS
+===================================== -->
+
+<div class="product-summary">
+
+<div class="product-summary-title">
+📦 DESGLOSE DE PRODUCTOS
+</div>
+
+<div id="productBreakdown">
+
+<div class="product-empty">
+Cargando productos...
 </div>
 
 </div>
@@ -807,10 +905,8 @@ new URLSearchParams(
 let selectedCustomerId =
 urlParams.get("customer_id");
 
-
 const requestedBusiness =
 urlParams.get("business");
-
 
 let currentBusiness =
 BUSINESS_IDS[
@@ -825,6 +921,8 @@ let sales = [];
 let payments = [];
 
 let paymentMethods = [];
+
+let saleItems = [];
 
 let selectedSaleForPayment =
 null;
@@ -851,18 +949,6 @@ function money(value){
  * =====================================================
  * FECHA DE LA VENTA
  * =====================================================
- *
- * IMPORTANTE:
- *
- * Para el historial utilizamos primero
- * created_at porque representa el momento
- * real en que la cuenta fue creada.
- *
- * sale_date queda únicamente como respaldo.
- *
- * Esto evita que varias cuentas aparezcan
- * con la misma fecha/hora cuando sale_date
- * fue guardado con un valor predeterminado.
  */
 
 function getSaleDate(sale){
@@ -1151,6 +1237,11 @@ async function loadSales(){
     "Cargando ventas..." +
     "</div>";
 
+  $("productBreakdown").innerHTML =
+    '<div class="product-empty">' +
+    "Cargando productos..." +
+    "</div>";
+
   try{
 
     const businessId =
@@ -1189,10 +1280,6 @@ async function loadSales(){
 
     /*
      * Orden de seguridad.
-     *
-     * Si por alguna razón Supabase no devuelve
-     * el orden esperado, aquí volvemos a ordenar
-     * usando created_at.
      */
 
     sales.sort(
@@ -1255,6 +1342,35 @@ async function loadSales(){
       payments =
         paymentsResult.data || [];
 
+
+      /* =====================================
+         PIEZAS / PRODUCTOS VENDIDOS
+      ===================================== */
+
+      const itemsResult =
+        await supabaseClient
+          .from("sale_items")
+          .select(
+            "sale_id,product_id,description,quantity"
+          )
+          .in(
+            "sale_id",
+            saleIds
+          );
+
+
+      if(itemsResult.error)
+        throw itemsResult.error;
+
+
+      saleItems =
+        itemsResult.data || [];
+
+    }
+    else{
+
+      saleItems = [];
+
     }
 
 
@@ -1294,7 +1410,211 @@ async function loadSales(){
 
       "</div>";
 
+    $("productBreakdown").innerHTML =
+
+      '<div class="error">' +
+
+      "No se pudieron cargar las piezas vendidas: " +
+
+      (
+        error.message ||
+        error
+      ) +
+
+      "</div>";
+
   }
+
+}
+
+
+/* =========================================
+   RENDERIZAR DESGLOSE DE PRODUCTOS
+========================================= */
+
+function renderProductBreakdown(
+  filteredRows
+){
+
+  const container =
+    $("productBreakdown");
+
+
+  /*
+   * Las ventas canceladas no cuentan
+   * como piezas vendidas.
+   *
+   * Las ventas pagadas y pendientes sí.
+   */
+
+  const validSaleIds =
+    new Set(
+      filteredRows
+        .filter(
+          sale =>
+            sale.status !==
+            "cancelled"
+        )
+        .map(
+          sale =>
+            sale.id
+        )
+    );
+
+
+  const filteredItems =
+    saleItems.filter(
+      item =>
+        validSaleIds.has(
+          item.sale_id
+        )
+    );
+
+
+  const productMap =
+    new Map();
+
+
+  filteredItems.forEach(
+    item => {
+
+      const productId =
+        item.product_id ||
+        item.description ||
+        "producto";
+
+
+      const productName =
+        item.description ||
+        "Producto sin nombre";
+
+
+      const current =
+        productMap.get(
+          productId
+        ) || {
+
+          name:
+            productName,
+
+          quantity:
+            0
+
+        };
+
+
+      current.quantity +=
+        Number(
+          item.quantity || 0
+        );
+
+
+      productMap.set(
+        productId,
+        current
+      );
+
+    }
+  );
+
+
+  const products =
+    [...productMap.values()]
+      .sort(
+        (a,b) =>
+          b.quantity -
+          a.quantity
+      );
+
+
+  const totalPieces =
+    products.reduce(
+      (sum,product) =>
+        sum +
+        Number(
+          product.quantity || 0
+        ),
+      0
+    );
+
+
+  container.innerHTML = "";
+
+
+  if(!products.length){
+
+    container.innerHTML =
+      '<div class="product-empty">' +
+      "No hay piezas vendidas en este periodo." +
+      "</div>";
+
+    return;
+
+  }
+
+
+  products.forEach(
+    product => {
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+
+      row.className =
+        "product-row";
+
+
+      row.innerHTML =
+
+        '<div class="product-name">' +
+
+        product.name +
+
+        "</div>" +
+
+        '<div class="product-quantity">' +
+
+        product.quantity +
+
+        " piezas" +
+
+        "</div>";
+
+
+      container.appendChild(
+        row
+      );
+
+    }
+  );
+
+
+  const totalRow =
+    document.createElement(
+      "div"
+    );
+
+
+  totalRow.className =
+    "product-total";
+
+
+  totalRow.innerHTML =
+
+    "<span>Total</span>" +
+
+    "<span>" +
+
+    totalPieces +
+
+    " piezas</span>";
+
+
+  container.appendChild(
+    totalRow
+  );
 
 }
 
@@ -1443,8 +1763,48 @@ async function renderSales(){
      RESUMEN
   ===================================== */
 
+  /*
+   * AHORA "count" representa PIEZAS
+   * y no número de ventas.
+   */
+
+  const validSaleIds =
+    new Set(
+      rows
+        .filter(
+          sale =>
+            sale.status !==
+            "cancelled"
+        )
+        .map(
+          sale =>
+            sale.id
+        )
+    );
+
+
+  const filteredItems =
+    saleItems.filter(
+      item =>
+        validSaleIds.has(
+          item.sale_id
+        )
+    );
+
+
+  const totalPieces =
+    filteredItems.reduce(
+      (sum,item) =>
+        sum +
+        Number(
+          item.quantity || 0
+        ),
+      0
+    );
+
+
   $("count").textContent =
-    rows.length;
+    totalPieces;
 
 
   $("total").textContent =
@@ -1471,6 +1831,15 @@ async function renderSales(){
         0
       )
     );
+
+
+  /* =====================================
+     DESGLOSE
+  ===================================== */
+
+  renderProductBreakdown(
+    rows
+  );
 
 
   /* =====================================
@@ -1588,12 +1957,6 @@ async function renderSales(){
       element.className =
         "sale";
 
-
-      /*
-       * AQUÍ ESTÁ EL CAMBIO PRINCIPAL:
-       *
-       * La fecha visible utiliza created_at.
-       */
 
       element.innerHTML =
 
