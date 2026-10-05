@@ -460,6 +460,7 @@
     }
 
     @media(max-width:900px){
+
       .summary{
         grid-template-columns:repeat(2,1fr);
       }
@@ -467,9 +468,11 @@
       .filters{
         grid-template-columns:1fr 1fr;
       }
+
     }
 
     @media(max-width:600px){
+
       .container{
         padding:12px;
       }
@@ -498,20 +501,36 @@
       .sale-product .price{
         grid-column:2;
       }
+
     }
+
   </style>
 </head>
 
 <body>
 
 <header class="header">
+
   <div>
-    <h1>💰 Cuentas pendientes</h1>
-    <small id="currentBusinessLabel">Cargando...</small>
+
+    <h1>
+      💰 Cuentas pendientes
+    </h1>
+
+    <small id="currentBusinessLabel">
+      Cargando...
+    </small>
+
   </div>
 
-  <button class="btn" onclick="loadSales()">🔄 Actualizar</button>
+  <button
+    class="btn"
+    onclick="loadSales()">
+    🔄 Actualizar
+  </button>
+
 </header>
+
 
 <div class="container">
 
@@ -545,7 +564,12 @@
 
   </div>
 
-  <div id="errorBox" class="error hidden"></div>
+
+  <div
+    id="errorBox"
+    class="error hidden">
+  </div>
+
 
   <div class="filters">
 
@@ -573,6 +597,7 @@
 
   </div>
 
+
   <div class="summary">
 
     <div class="summary-card">
@@ -589,6 +614,7 @@
 
     </div>
 
+
     <div class="summary-card pieces">
 
       <div class="label">
@@ -603,6 +629,7 @@
 
     </div>
 
+
     <div class="summary-card total">
 
       <div class="label">
@@ -616,6 +643,7 @@
       </div>
 
     </div>
+
 
     <div class="summary-card balance">
 
@@ -632,6 +660,7 @@
     </div>
 
   </div>
+
 
   <section class="section">
 
@@ -661,6 +690,7 @@
 
   </section>
 
+
   <section class="section">
 
     <div class="section-title">
@@ -682,6 +712,7 @@
     </div>
 
   </section>
+
 
   <section
     id="cancelledPanel"
@@ -884,6 +915,7 @@ let sales = [];
 let saleItems = [];
 let payments = [];
 let products = [];
+let customers = [];
 let paymentMethods = [];
 
 let currentPaymentSale = null;
@@ -1068,6 +1100,164 @@ function goDashboard(){
 
 
 /* =========================================================
+   LOAD CUSTOMERS
+========================================================= */
+
+async function loadCustomers(){
+
+  customers = [];
+
+  const customerIds =
+    [
+      ...new Set(
+        sales
+          .map(
+            sale =>
+              normalizeId(
+                sale.customer_id
+              )
+          )
+          .filter(Boolean)
+      )
+    ];
+
+  if(!customerIds.length){
+
+    console.log(
+      "Las ventas no tienen customer_id."
+    );
+
+    return;
+
+  }
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("customers")
+      .select(
+        "id,name,phone,notes"
+      )
+      .in(
+        "id",
+        customerIds
+      );
+
+  if(error){
+
+    console.error(
+      "Error cargando clientes:",
+      error
+    );
+
+    throw new Error(
+      "No se pudieron cargar los clientes: " +
+      error.message
+    );
+
+  }
+
+  customers =
+    data || [];
+
+  console.log(
+    "Clientes cargados:",
+    customers.length
+  );
+
+}
+
+
+/* =========================================================
+   CUSTOMER HELPERS
+========================================================= */
+
+function getCustomer(
+  customerId
+){
+
+  const id =
+    normalizeId(
+      customerId
+    );
+
+  if(!id){
+    return null;
+  }
+
+  return customers.find(
+    customer =>
+      normalizeId(
+        customer.id
+      ) === id
+  ) || null;
+
+}
+
+
+function getCustomerName(
+  sale
+){
+
+  /*
+    Primero usamos el nombre que pudiera
+    venir directamente en la venta.
+  */
+
+  const directName =
+    sale.customer_name ||
+    sale.customer ||
+    sale.client_name;
+
+  if(directName){
+    return directName;
+  }
+
+  /*
+    Después buscamos por customer_id
+    en customers.name.
+  */
+
+  const customer =
+    getCustomer(
+      sale.customer_id
+    );
+
+  if(customer){
+
+    return (
+      customer.name ||
+      "Cliente"
+    );
+
+  }
+
+  return "Cliente";
+
+}
+
+
+function getCustomerPhone(
+  sale
+){
+
+  const customer =
+    getCustomer(
+      sale.customer_id
+    );
+
+  return customer
+    ? String(
+        customer.phone || ""
+      ).trim()
+    : "";
+
+}
+
+
+/* =========================================================
    LOAD PRODUCTS
 ========================================================= */
 
@@ -1184,11 +1374,6 @@ function getPaymentMethodId(
     return null;
   }
 
-  /*
-    Primero buscamos coincidencia exacta
-    por nombre.
-  */
-
   let method =
     paymentMethods.find(
       item =>
@@ -1198,11 +1383,6 @@ function getPaymentMethodId(
         .trim()
         .toLowerCase() === wanted
     );
-
-  /*
-    Si no existe, intentamos también
-    con provider.
-  */
 
   if(!method){
 
@@ -1217,11 +1397,6 @@ function getPaymentMethodId(
       );
 
   }
-
-  /*
-    Último intento:
-    coincidencia parcial.
-  */
 
   if(!method){
 
@@ -1272,7 +1447,9 @@ function getProductName(
 ){
 
   const id =
-    normalizeId(productId);
+    normalizeId(
+      productId
+    );
 
   if(!id){
     return fallback || "Producto";
@@ -1320,19 +1497,8 @@ async function loadSaleItems(
     ];
 
   if(!normalizedSaleIds.length){
-
-    console.log(
-      "No hay saleIds para consultar."
-    );
-
     return;
   }
-
-  console.log(
-    "Consultando sale_items:",
-    normalizedSaleIds.length,
-    "ventas"
-  );
 
   const chunkSize = 100;
 
@@ -1428,30 +1594,6 @@ async function loadSaleItems(
     );
 
   await loadProductNames();
-
-  const totalPieces =
-    saleItems.reduce(
-      (sum,item) =>
-        sum +
-        Number(
-          item.quantity || 0
-        ),
-      0
-    );
-
-  console.log(
-    "sale_items cargados:",
-    saleItems.length
-  );
-
-  console.log(
-    "PIEZAS TOTALES:",
-    totalPieces
-  );
-
-  console.table(
-    saleItems
-  );
 
 }
 
@@ -1607,6 +1749,52 @@ async function loadPayments(
 
 
 /* =========================================================
+   PAYMENT METHOD NAME
+========================================================= */
+
+function getPaymentMethodName(
+  payment
+){
+
+  if(
+    payment.method ||
+    payment.payment_method
+  ){
+
+    return (
+      payment.method ||
+      payment.payment_method
+    );
+
+  }
+
+  const method =
+    paymentMethods.find(
+      item =>
+        normalizeId(
+          item.id
+        ) ===
+        normalizeId(
+          payment.payment_method_id
+        )
+    );
+
+  if(method){
+
+    return (
+      method.name ||
+      method.provider ||
+      "Pago"
+    );
+
+  }
+
+  return "Pago";
+
+}
+
+
+/* =========================================================
    PAYMENTS BY SALE
 ========================================================= */
 
@@ -1646,10 +1834,6 @@ async function loadSales(){
 
   try{
 
-    await loadProducts();
-
-    await loadPaymentMethods();
-
     const businessId =
       BUSINESS_IDS[currentBusiness];
 
@@ -1660,6 +1844,10 @@ async function loadSales(){
       );
 
     }
+
+    await loadProducts();
+
+    await loadPaymentMethods();
 
     const {
       data,
@@ -1694,6 +1882,13 @@ async function loadSales(){
     sales =
       data || [];
 
+    /*
+      NUEVO:
+      cargar clientes usando sales.customer_id
+    */
+
+    await loadCustomers();
+
     const saleIds =
       sales.map(
         sale =>
@@ -1708,16 +1903,6 @@ async function loadSales(){
 
     await loadPayments(
       saleIds
-    );
-
-    console.log(
-      "Ventas:",
-      sales.length
-    );
-
-    console.log(
-      "Productos cargados:",
-      saleItems.length
     );
 
     renderAccounts();
@@ -1772,6 +1957,11 @@ function getFilteredSales(){
   return sales.filter(
     sale => {
 
+      const customerName =
+        getCustomerName(
+          sale
+        );
+
       const text =
         [
           sale.id,
@@ -1779,7 +1969,8 @@ function getFilteredSales(){
           sale.customer,
           sale.client_name,
           sale.folio,
-          sale.notes
+          sale.notes,
+          customerName
         ]
         .filter(Boolean)
         .join(" ")
@@ -1793,6 +1984,7 @@ function getFilteredSales(){
       }
 
       const saleDate =
+        sale.sale_date ||
         dateOnly(
           sale.created_at
         );
@@ -2102,10 +2294,14 @@ function renderSaleCard(
     );
 
   const customer =
-    sale.customer_name ||
-    sale.customer ||
-    sale.client_name ||
-    "Cliente";
+    getCustomerName(
+      sale
+    );
+
+  const customerPhone =
+    getCustomerPhone(
+      sale
+    );
 
   const folio =
     sale.folio ||
@@ -2132,6 +2328,18 @@ function renderSaleCard(
           <div class="sale-title">
             ${escapeHtml(customer)}
           </div>
+
+          ${
+            customerPhone
+              ? `
+                <div class="sale-meta">
+                  📞 ${escapeHtml(
+                    customerPhone
+                  )}
+                </div>
+              `
+              : ""
+          }
 
           <div class="sale-meta">
             Folio:
@@ -2163,11 +2371,13 @@ function renderSaleCard(
 
       </div>
 
+
       <div class="sale-body">
 
         ${renderSaleProducts(
           saleId
         )}
+
 
         ${
           paymentRows.length
@@ -2185,21 +2395,17 @@ function renderSaleCard(
 
                         <span>
 
-                          ${
-                            escapeHtml(
-                              payment.method ||
-                              payment.payment_method ||
-                              payment.provider ||
-                              "Pago"
+                          ${escapeHtml(
+                            getPaymentMethodName(
+                              payment
                             )
-                          }
+                          )}
 
                           ·
 
                           ${escapeHtml(
                             formatDate(
-                              payment.paid_at ||
-                              payment.created_at
+                              payment.paid_at
                             )
                           )}
 
@@ -2219,6 +2425,7 @@ function renderSaleCard(
             `
             : ""
         }
+
 
         <div class="sale-actions">
 
@@ -2386,10 +2593,9 @@ function openPaymentModal(
       `
         <strong>
           ${escapeHtml(
-            sale.customer_name ||
-            sale.customer ||
-            sale.client_name ||
-            "Cliente"
+            getCustomerName(
+              sale
+            )
           )}
         </strong>
 
@@ -2438,7 +2644,6 @@ function closePaymentModal(){
 
 /* =========================================================
    SAVE PAYMENT
-   AHORA UTILIZA register_payment()
 ========================================================= */
 
 async function savePayment(){
@@ -2481,11 +2686,6 @@ async function savePayment(){
   const method =
     $("paymentMethod").value;
 
-  const note =
-    $("paymentNote")
-      .value
-      .trim();
-
   try{
 
     const businessId =
@@ -2499,10 +2699,6 @@ async function savePayment(){
       );
 
     }
-
-    /*
-      Obtener el UUID real del método de pago.
-    */
 
     const paymentMethodId =
       getPaymentMethodId(
@@ -2520,19 +2716,6 @@ async function savePayment(){
       );
 
     }
-
-    /*
-      IMPORTANTE:
-      Ya NO hacemos INSERT directo a payments.
-
-      Usamos la función SQL:
-      register_payment(
-        p_business_id,
-        p_sale_id,
-        p_payment_method_id,
-        p_amount
-      )
-    */
 
     const {
       data,
@@ -2563,35 +2746,13 @@ async function savePayment(){
     }
 
     console.log(
-      "Pago registrado correctamente:",
+      "Pago registrado:",
       data
     );
-
-    /*
-      La función SQL ya actualiza:
-      balance
-      status
-      payments
-    */
 
     closePaymentModal();
 
     await loadSales();
-
-    /*
-      La nota se conserva solamente
-      si la tabla/function se amplía
-      posteriormente. No se manda a
-      payments porque actualmente
-      payments no tiene columna note.
-    */
-
-    if(note){
-      console.log(
-        "Nota del pago:",
-        note
-      );
-    }
 
     alert(
       "Pago registrado correctamente."
@@ -2644,10 +2805,9 @@ function openCancelModal(
       `
         <strong>
           ${escapeHtml(
-            sale.customer_name ||
-            sale.customer ||
-            sale.client_name ||
-            "Cliente"
+            getCustomerName(
+              sale
+            )
           )}
         </strong>
 
@@ -2694,7 +2854,6 @@ function closeCancelModal(){
 
 /* =========================================================
    CONFIRM CANCEL
-   AHORA UTILIZA cancel_sale_and_restore_inventory()
 ========================================================= */
 
 async function confirmCancel(){
@@ -2727,26 +2886,6 @@ async function confirmCancel(){
 
   try{
 
-    /*
-      IMPORTANTE:
-      Ya NO hacemos UPDATE directo a sales.
-
-      Usamos la función SQL que ya tienes:
-
-      cancel_sale_and_restore_inventory(
-        p_sale_id,
-        p_cancel_reason
-      )
-
-      Esta función:
-      - bloquea la venta
-      - restaura inventario
-      - registra inventory_movements
-      - marca la venta como cancelled
-      - guarda el motivo
-      - registra audit_log
-    */
-
     const {
       error
     } =
@@ -2766,20 +2905,9 @@ async function confirmCancel(){
       throw error;
     }
 
-    console.log(
-      "Cuenta cancelada correctamente."
-    );
-
     closeCancelModal();
 
     await loadSales();
-
-    /*
-      Ocultar también el panel de
-      canceladas si estaba abierto,
-      para evitar que quede información
-      vieja en pantalla.
-    */
 
     $("cancelledPanel")
       .classList.add(
@@ -2830,10 +2958,14 @@ function sendWhatsApp(
   }
 
   const customer =
-    sale.customer_name ||
-    sale.customer ||
-    sale.client_name ||
-    "cliente";
+    getCustomerName(
+      sale
+    );
+
+  const phone =
+    getCustomerPhone(
+      sale
+    );
 
   const balance =
     Number(
@@ -2881,18 +3013,66 @@ ${productText}
     : ""
 }Saldo pendiente: ${money(balance)}
 
-Datos para pago:
-Carlos Ivan Rojas Marquez
-Clip
-Cuenta: 730969300008248726
-
 ¡Muchas gracias! 🙌`;
 
-  const url =
-    "https://wa.me/?text=" +
-    encodeURIComponent(
-      message
+  /*
+    Si el cliente tiene teléfono,
+    abrimos directamente su WhatsApp.
+  */
+
+  let url;
+
+  const cleanPhone =
+    phone.replace(
+      /[^0-9]/g,
+      ""
     );
+
+  if(cleanPhone){
+
+    let whatsappPhone =
+      cleanPhone;
+
+    /*
+      Si el teléfono mexicano
+      viene como 10 dígitos,
+      agregamos +52.
+    */
+
+    if(
+      whatsappPhone.length === 10
+    ){
+
+      whatsappPhone =
+        "52" +
+        whatsappPhone;
+
+    }
+
+    url =
+      "https://wa.me/" +
+      whatsappPhone +
+      "?text=" +
+      encodeURIComponent(
+        message
+      );
+
+  }else{
+
+    /*
+      Si todavía no tiene teléfono,
+      se mantiene el comportamiento
+      anterior de abrir WhatsApp
+      para seleccionar contacto.
+    */
+
+    url =
+      "https://wa.me/?text=" +
+      encodeURIComponent(
+        message
+      );
+
+  }
 
   window.open(
     url,
@@ -2941,7 +3121,7 @@ async function showCancelled(){
           "cancelled"
         )
         .order(
-          "cancelled_at",
+          "created_at",
           {
             ascending:false
           }
@@ -2951,10 +3131,73 @@ async function showCancelled(){
       throw error;
     }
 
-    const rows =
+    const cancelledSales =
       data || [];
 
-    if(!rows.length){
+    /*
+      Cargar los clientes de las ventas
+      canceladas para mostrar sus nombres.
+    */
+
+    const cancelledCustomerIds =
+      [
+        ...new Set(
+          cancelledSales
+            .map(
+              sale =>
+                normalizeId(
+                  sale.customer_id
+                )
+            )
+            .filter(Boolean)
+        )
+      ];
+
+    if(
+      cancelledCustomerIds.length
+    ){
+
+      const {
+        data:cancelledCustomers,
+        error:customerError
+      } =
+        await supabaseClient
+          .from("customers")
+          .select(
+            "id,name,phone"
+          )
+          .in(
+            "id",
+            cancelledCustomerIds
+          );
+
+      if(!customerError){
+
+        cancelledCustomers
+          ?.forEach(
+            customer => {
+
+              const exists =
+                customers.some(
+                  c =>
+                    normalizeId(c.id) ===
+                    normalizeId(customer.id)
+                );
+
+              if(!exists){
+                customers.push(
+                  customer
+                );
+              }
+
+            }
+          );
+
+      }
+
+    }
+
+    if(!cancelledSales.length){
 
       $("cancelledList").innerHTML =
         `
@@ -2967,15 +3210,14 @@ async function showCancelled(){
     }
 
     $("cancelledList").innerHTML =
-      rows
+      cancelledSales
         .map(
           sale => {
 
             const customer =
-              sale.customer_name ||
-              sale.customer ||
-              sale.client_name ||
-              "Cliente";
+              getCustomerName(
+                sale
+              );
 
             return `
               <div class="cancelled-card">
@@ -2998,7 +3240,8 @@ async function showCancelled(){
                   ${escapeHtml(
                     formatDate(
                       sale.cancelled_at ||
-                      sale.updated_at
+                      sale.updated_at ||
+                      sale.created_at
                     )
                   )}
                 </div>
@@ -3064,7 +3307,7 @@ document.addEventListener(
 
 
 /* =========================================================
-   CLOSE MODALS WHEN CLICKING OUTSIDE
+   CLOSE MODALS OUTSIDE
 ========================================================= */
 
 $("paymentModal")
