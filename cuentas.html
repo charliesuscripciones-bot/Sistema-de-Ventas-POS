@@ -2124,8 +2124,6 @@ function renderQuickAmounts(balance){
 
   const values=[];
 
-  const rounded=Math.floor(balance);
-
   if(balance>0){
     values.push(balance);
   }
@@ -2406,13 +2404,35 @@ function sendWhatsApp(saleId){
   const name=getCustomerName(sale);
   const balance=getSaleBalance(sale);
 
-  const message=
-    "Hola "+name+
-    ", te compartimos el saldo pendiente de tu cuenta en "+
-    currentBusiness+
-    ".\n\n"+
-    "Saldo pendiente: "+money(balance)+
-    "\n\nGracias por tu preferencia. 😊";
+  let message;
+
+  if(currentBusiness==="SpicyRoll"){
+
+    message=
+      "Hola, "+name+" 👋\n\n"+
+      "Te recordamos que tienes un saldo pendiente de onigiris.\n\n"+
+      "Saldo pendiente de onigiris: "+money(balance)+"\n\n"+
+      "Puedes realizar tu transferencia a:\n\n"+
+      "Carlos Ivan Rojas Marquez\n"+
+      "Cuenta: 730969300008248726\n"+
+      "Banco: Clip\n\n"+
+      "Una vez realizada, puedes enviarnos tu comprobante por este medio.\n\n"+
+      "¡Gracias! 🙌";
+
+  }else{
+
+    message=
+      "Hola, "+name+" 👋\n\n"+
+      "Te recordamos que tienes un saldo pendiente en "+
+      currentBusiness+".\n\n"+
+      "Saldo pendiente: "+money(balance)+"\n\n"+
+      "Puedes realizar tu transferencia a:\n\n"+
+      "Carlos Ivan Rojas Marquez\n"+
+      "Cuenta: 730969300008248726\n"+
+      "Banco: Clip\n\n"+
+      "Una vez realizada, puedes enviarnos tu comprobante por este medio.\n\n"+
+      "¡Gracias! 🙌";
+  }
 
   const url=whatsappUrl(
     phone,
@@ -2420,11 +2440,13 @@ function sendWhatsApp(saleId){
   );
 
   if(url){
+
     window.open(
       url,
       "_blank",
       "noopener,noreferrer"
     );
+
   }
 }
 
