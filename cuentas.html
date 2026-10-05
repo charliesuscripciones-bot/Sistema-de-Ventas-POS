@@ -11,32 +11,36 @@
 
 <title>Charlie Shop | Cuentas pendientes</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0
-}
+*{box-sizing:border-box;margin:0;padding:0}
 
 html{
   width:100%;
-  min-height:100%
+  min-height:100%;
 }
 
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   background:#f5f5f5;
   color:#222;
-  min-height:100vh
+  min-height:100vh;
 }
 
 body.modal-open{
-  overflow:hidden
+  overflow:hidden;
 }
 
-/* =========================================================
-   HEADER
-========================================================= */
+button,
+input,
+select{
+  font-family:inherit;
+}
+
+button{
+  -webkit-tap-highlight-color:transparent;
+}
 
 header{
   background:#111827;
@@ -44,13 +48,13 @@ header{
   padding-top:calc(18px + env(safe-area-inset-top));
   padding-right:20px;
   padding-bottom:20px;
-  padding-left:20px
+  padding-left:20px;
 }
 
 .brand{
   display:flex;
   align-items:center;
-  gap:13px
+  gap:13px;
 }
 
 .brand-logo{
@@ -59,24 +63,24 @@ header{
   flex:0 0 54px;
   display:flex;
   align-items:center;
-  justify-content:center
+  justify-content:center;
 }
 
 .brand-logo svg{
   width:54px;
   height:54px;
-  display:block
+  display:block;
 }
 
 .brand-text{
-  min-width:0
+  min-width:0;
 }
 
 .brand-name{
   font-size:28px;
   line-height:1.05;
   font-weight:850;
-  letter-spacing:-.5px
+  letter-spacing:-.5px;
 }
 
 .brand-slogan{
@@ -85,71 +89,34 @@ header{
   margin-top:6px;
   color:#d4af37;
   font-weight:700;
-  letter-spacing:.2px
+  letter-spacing:.2px;
 }
 
 header p{
   font-size:14px;
   opacity:.65;
-  margin-top:10px
+  margin-top:10px;
 }
 
-/* =========================================================
-   STATUS
-========================================================= */
-
-.status{
-  margin:0 0 15px;
-  padding:14px 16px;
-  border-radius:12px;
-  font-size:14px;
-  display:none;
-  font-weight:700;
-  white-space:pre-line
-}
-
-.status.error{
-  display:block;
-  background:#fee2e2;
-  color:#991b1b
-}
-
-.status.ok{
-  display:block;
-  background:#dcfce7;
-  color:#166534
-}
-
-.status.warn{
-  display:block;
-  background:#fef3c7;
-  color:#92400e
-}
-
-/* =========================================================
-   CONTENEDOR
-========================================================= */
+/* CONTENEDOR */
 
 .container{
-  width:100%;
-  max-width:1450px;
+  max-width:1400px;
   margin:0 auto;
-  padding:20px
+  padding:20px;
 }
 
-/* =========================================================
-   NEGOCIOS
-========================================================= */
+/* NEGOCIOS */
 
 .businesses{
   display:flex;
   gap:10px;
-  margin-bottom:20px
+  margin-bottom:20px;
+  flex-wrap:wrap;
 }
 
-.business-btn{
-  flex:1;
-  min-height:58px;
+.business-btn,
+.nav-btn{
   border:none;
   padding:13px 20px;
   border-radius:12px;
@@ -158,934 +125,831 @@ header p{
   font-weight:700;
   cursor:pointer;
   font-size:16px;
-  transition:.15s
 }
 
-.business-btn:active{
-  transform:scale(.98)
+.business-btn{
+  flex:1;
+  min-height:58px;
 }
 
 .business-btn.active{
   background:#111827;
   color:#fff;
-  border-color:#111827
+  border-color:#111827;
 }
 
-/* =========================================================
-   NAVEGACIÓN
-========================================================= */
+/* NAVEGACIÓN */
 
 .navigation{
   display:grid;
   grid-template-columns:repeat(5,1fr);
   gap:10px;
-  margin-bottom:20px
+  margin-bottom:20px;
 }
 
 .nav-btn{
+  color:#2563eb;
   min-height:60px;
-  border:none;
-  padding:13px 10px;
-  border-radius:12px;
-  background:#fff;
-  border:2px solid #ddd;
-  font-weight:700;
-  cursor:pointer;
-  font-size:15px;
-  transition:.15s
-}
-
-.nav-btn:active{
-  transform:scale(.98)
 }
 
 .nav-btn.accounts{
   background:#fff7ed;
   border-color:#f59e0b;
-  color:#b45309
+  color:#b45309;
 }
 
 .nav-btn.clients{
   background:#ecfdf5;
   border-color:#10b981;
-  color:#047857
+  color:#047857;
 }
 
 .nav-btn.history{
   background:#f5f3ff;
   border-color:#7c3aed;
-  color:#6d28d9
+  color:#6d28d9;
 }
 
 .nav-btn.inventory{
   background:#eff6ff;
   border-color:#2563eb;
-  color:#1d4ed8
+  color:#1d4ed8;
 }
 
-/* =========================================================
-   TARJETAS
-========================================================= */
-
-.card{
-  background:#fff;
-  border-radius:18px;
-  padding:20px;
-  box-shadow:0 3px 14px rgba(0,0,0,.06);
-  margin-bottom:20px
+.nav-btn.dashboard{
+  background:#fdf2f8;
+  border-color:#ec4899;
+  color:#be185d;
 }
 
-.card h2{
-  font-size:21px;
-  margin-bottom:16px
-}
+/* STATUS */
 
-/* =========================================================
-   TOOLBAR
-========================================================= */
-
-.toolbar{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) auto;
-  gap:12px;
-  align-items:center
-}
-
-.search-box{
-  position:relative
-}
-
-.search-box input{
-  width:100%;
-  min-height:48px;
-  border:2px solid #ddd;
+.status{
+  margin:0 0 15px;
+  padding:14px 16px;
   border-radius:12px;
-  padding:0 15px;
-  font-family:inherit;
-  font-size:15px;
-  background:#fff
-}
-
-.search-box input:focus{
-  outline:none;
-  border-color:#2563eb
-}
-
-.filters{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap
-}
-
-.filter-btn{
-  min-height:44px;
-  padding:0 15px;
-  border:2px solid #ddd;
-  border-radius:11px;
-  background:#fff;
-  font-family:inherit;
+  font-size:14px;
+  display:none;
   font-weight:700;
-  cursor:pointer;
-  color:#374151
+  white-space:pre-line;
 }
 
-.filter-btn.active{
-  background:#111827;
-  border-color:#111827;
-  color:#fff
+.status.error{
+  display:block;
+  background:#fee2e2;
+  color:#991b1b;
 }
 
-/* =========================================================
-   RESUMEN
-========================================================= */
+.status.ok{
+  display:block;
+  background:#dcfce7;
+  color:#166534;
+}
 
-.summary{
+.status.warn{
+  display:block;
+  background:#fef3c7;
+  color:#92400e;
+}
+
+/* RESUMEN */
+
+.summary-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:12px;
-  margin-bottom:20px
+  margin-bottom:20px;
 }
 
 .summary-card{
-  border:2px solid #eee;
-  border-radius:14px;
+  background:#fff;
+  border-radius:16px;
   padding:16px;
-  background:#fff
+  box-shadow:0 3px 14px rgba(0,0,0,.06);
+  border-left:5px solid #f59e0b;
+}
+
+.summary-card:nth-child(2){
+  border-left-color:#2563eb;
+}
+
+.summary-card:nth-child(3){
+  border-left-color:#10b981;
+}
+
+.summary-card:nth-child(4){
+  border-left-color:#7c3aed;
 }
 
 .summary-label{
+  font-size:12px;
   color:#6b7280;
-  font-size:13px;
   font-weight:700;
-  margin-bottom:7px
+  text-transform:uppercase;
+  letter-spacing:.4px;
 }
 
 .summary-value{
   font-size:25px;
   font-weight:850;
-  line-height:1.1
+  margin-top:5px;
 }
 
-.summary-card.accounts-summary{
-  background:#fff7ed;
-  border-color:#fed7aa
-}
+/* TOOLBAR */
 
-.summary-card.pieces-summary{
-  background:#eff6ff;
-  border-color:#bfdbfe
-}
-
-.summary-card.sales-summary{
-  background:#f5f3ff;
-  border-color:#ddd6fe
-}
-
-.summary-card.balance-summary{
-  background:#ecfdf5;
-  border-color:#bbf7d0
-}
-
-/* =========================================================
-   PRODUCTOS
-========================================================= */
-
-.product-breakdown{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px
-}
-
-.product-stat{
-  border:2px solid #eee;
-  border-radius:14px;
-  padding:15px;
+.toolbar{
   background:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px
-}
-
-.product-stat-name{
-  font-weight:800;
-  font-size:15px
-}
-
-.product-stat-sales{
-  color:#6b7280;
-  font-size:12px;
-  margin-top:4px
-}
-
-.product-stat-qty{
-  min-width:55px;
-  text-align:center;
-  padding:8px 10px;
-  border-radius:10px;
-  background:#eff6ff;
-  color:#1d4ed8;
-  font-size:17px;
-  font-weight:850
-}
-
-/* =========================================================
-   CUENTAS
-========================================================= */
-
-.sales-list{
-  display:grid;
-  gap:14px
-}
-
-.sale-card{
-  background:#fff;
-  border:2px solid #e5e7eb;
-  border-radius:16px;
-  overflow:hidden;
-  transition:.15s
-}
-
-.sale-card.pending{
-  border-color:#f59e0b
-}
-
-.sale-card.paid{
-  border-color:#d1d5db
-}
-
-.sale-card.cancelled{
-  border-color:#fecaca;
-  opacity:.9
-}
-
-.sale-header{
+  border-radius:18px;
   padding:16px;
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:15px;
-  background:#fafafa
+  box-shadow:0 3px 14px rgba(0,0,0,.06);
+  margin-bottom:18px;
 }
 
-.sale-customer{
-  min-width:0
-}
-
-.customer-name{
-  font-size:18px;
-  font-weight:850;
-  color:#111827;
-  word-break:break-word
-}
-
-.customer-phone{
-  color:#6b7280;
-  font-size:13px;
-  margin-top:5px
-}
-
-.sale-date{
-  color:#6b7280;
-  font-size:12px;
-  margin-top:5px
-}
-
-.sale-total{
-  text-align:right;
-  flex-shrink:0
-}
-
-.sale-total-label{
-  color:#6b7280;
-  font-size:12px;
-  font-weight:700
-}
-
-.sale-total-value{
-  font-size:22px;
-  font-weight:850;
-  margin-top:2px
-}
-
-.status-badge{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:6px 10px;
-  border-radius:20px;
-  font-size:11px;
-  font-weight:850;
-  margin-top:7px
-}
-
-.status-badge.pending{
-  background:#fef3c7;
-  color:#92400e
-}
-
-.status-badge.paid{
-  background:#dcfce7;
-  color:#166534
-}
-
-.status-badge.cancelled{
-  background:#fee2e2;
-  color:#991b1b
-}
-
-.sale-body{
-  padding:16px
-}
-
-.sale-financial{
+.toolbar-row{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  margin-bottom:14px
+  grid-template-columns:1fr 190px auto;
+  gap:10px;
 }
 
-.financial-item{
-  border-radius:11px;
-  padding:11px;
-  background:#f5f5f5
-}
-
-.financial-label{
-  color:#6b7280;
-  font-size:11px;
-  font-weight:700
-}
-
-.financial-value{
-  font-size:16px;
-  font-weight:850;
-  margin-top:3px
-}
-
-.financial-value.balance{
-  color:#b45309
-}
-
-.financial-value.paid{
-  color:#15803d
-}
-
-/* =========================================================
-   PRODUCTOS DE LA VENTA
-========================================================= */
-
-.sale-products{
-  border-top:1px solid #eee;
-  padding-top:12px
-}
-
-.sale-products-title{
-  font-size:13px;
-  font-weight:850;
-  margin-bottom:8px;
-  color:#374151
-}
-
-.sale-product-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  padding:9px 0;
-  border-bottom:1px solid #f0f0f0
-}
-
-.sale-product-row:last-child{
-  border-bottom:none
-}
-
-.sale-product-info{
-  min-width:0
-}
-
-.sale-product-name{
-  font-weight:700;
-  font-size:14px;
-  word-break:break-word
-}
-
-.sale-product-meta{
-  font-size:12px;
-  color:#6b7280;
-  margin-top:3px
-}
-
-.sale-product-subtotal{
-  flex-shrink:0;
-  font-weight:800;
-  font-size:14px
-}
-
-.no-products{
-  color:#9ca3af;
-  font-size:13px;
-  padding:8px 0
-}
-
-/* =========================================================
-   BOTONES DE ACCIÓN
-========================================================= */
-
-.sale-actions{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  margin-top:14px;
-  padding-top:14px;
-  border-top:1px solid #eee
-}
-
-.action-btn{
-  min-height:44px;
-  border:2px solid #ddd;
-  border-radius:11px;
+.search-input,
+.filter-select{
+  width:100%;
+  border:2px solid #e5e7eb;
+  border-radius:12px;
+  min-height:46px;
+  padding:0 14px;
+  font-size:15px;
+  outline:none;
   background:#fff;
-  font-family:inherit;
-  font-size:13px;
+}
+
+.search-input:focus,
+.filter-select:focus{
+  border-color:#2563eb;
+}
+
+.refresh-btn{
+  border:none;
+  border-radius:12px;
+  padding:0 18px;
+  min-height:46px;
+  background:#111827;
+  color:#fff;
   font-weight:800;
   cursor:pointer;
-  transition:.15s
 }
 
-.action-btn:active{
-  transform:scale(.97)
-}
-
-.action-btn.pay{
-  background:#16a34a;
-  border-color:#16a34a;
-  color:#fff
-}
-
-.action-btn.whatsapp{
-  background:#ecfdf5;
-  border-color:#10b981;
-  color:#047857
-}
-
-.action-btn.detail{
-  background:#eff6ff;
-  border-color:#93c5fd;
-  color:#1d4ed8
-}
-
-.action-btn.cancel{
-  background:#fff;
-  border-color:#fca5a5;
-  color:#dc2626
-}
-
-.action-btn:disabled{
-  opacity:.5;
-  cursor:not-allowed
-}
-
-/* =========================================================
-   CANCELADAS
-========================================================= */
+/* TÍTULO */
 
 .section-title{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  margin-bottom:12px;
   gap:10px;
-  margin-bottom:15px
 }
 
 .section-title h2{
-  margin:0
+  font-size:21px;
 }
 
-.count-badge{
-  min-width:32px;
-  height:28px;
-  padding:0 9px;
-  display:inline-flex;
+.section-title span{
+  color:#6b7280;
+  font-size:13px;
+  font-weight:700;
+}
+
+/* CUENTAS */
+
+.accounts-list{
+  display:grid;
+  gap:10px;
+}
+
+.sale-card{
+  background:#fff;
+  border-radius:15px;
+  box-shadow:0 3px 14px rgba(0,0,0,.055);
+  overflow:hidden;
+  border:1px solid #eee;
+}
+
+.sale-card.cancelled{
+  opacity:.72;
+}
+
+.sale-header{
+  display:flex;
   align-items:center;
-  justify-content:center;
-  border-radius:20px;
-  background:#f3f4f6;
-  color:#374151;
+  justify-content:space-between;
+  gap:12px;
+  padding:13px 16px 10px;
+  border-bottom:1px solid #f1f1f1;
+}
+
+.customer-main{
+  min-width:0;
+}
+
+.customer-name{
+  font-size:16px;
+  font-weight:850;
+  color:#111827;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.customer-phone{
   font-size:12px;
-  font-weight:850
+  color:#6b7280;
+  margin-top:3px;
 }
 
-/* =========================================================
-   ESTADOS
-========================================================= */
-
-.empty-state{
-  text-align:center;
-  color:#777;
-  padding:35px 15px
+.sale-meta{
+  text-align:right;
+  flex:0 0 auto;
 }
 
-.empty-icon{
-  font-size:36px;
-  margin-bottom:10px
+.sale-date{
+  font-size:11px;
+  color:#6b7280;
 }
 
-.loading{
+.sale-id{
+  font-size:10px;
+  color:#9ca3af;
+  margin-top:2px;
+}
+
+.sale-body{
+  padding:11px 16px 13px;
+}
+
+.sale-summary{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+
+.sale-total-label{
+  font-size:12px;
+  color:#6b7280;
+  font-weight:700;
+}
+
+.sale-total-value{
+  font-size:20px;
+  font-weight:850;
+  color:#111827;
+}
+
+.sale-balance{
+  text-align:right;
+  font-size:13px;
+  color:#b45309;
+  font-weight:850;
+}
+
+.sale-balance.paid{
+  color:#047857;
+}
+
+.sale-actions{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:7px;
+  margin-top:11px;
+  padding-top:11px;
+  border-top:1px solid #f0f0f0;
+}
+
+.action-btn{
+  border:none;
+  border-radius:9px;
+  min-height:39px;
+  padding:7px 5px;
+  font-size:11px;
+  font-weight:800;
+  cursor:pointer;
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:10px;
+  gap:4px;
+}
+
+.action-detail{
+  background:#eff6ff;
+  color:#1d4ed8;
+}
+
+.action-pay{
+  background:#ecfdf5;
+  color:#047857;
+}
+
+.action-whatsapp{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.action-cancel{
+  background:#fef2f2;
+  color:#b91c1c;
+}
+
+.action-btn:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+.empty{
+  background:#fff;
+  border-radius:18px;
+  padding:35px 20px;
+  text-align:center;
   color:#6b7280;
-  padding:35px 15px;
-  font-weight:700
+  box-shadow:0 3px 14px rgba(0,0,0,.06);
+}
+
+.empty-icon{
+  font-size:40px;
+  margin-bottom:10px;
+}
+
+.empty strong{
+  display:block;
+  color:#111827;
+  font-size:17px;
+  margin-bottom:5px;
+}
+
+/* LOADER */
+
+.loader{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:120px;
+  color:#6b7280;
+  font-weight:700;
 }
 
 .spinner{
-  width:20px;
-  height:20px;
-  border:3px solid #ddd;
-  border-top-color:#2563eb;
+  width:25px;
+  height:25px;
+  border:3px solid #e5e7eb;
+  border-top-color:#111827;
   border-radius:50%;
-  animation:spin .7s linear infinite
+  animation:spin .8s linear infinite;
+  margin-right:10px;
 }
 
 @keyframes spin{
-  to{
-    transform:rotate(360deg)
-  }
+  to{transform:rotate(360deg)}
 }
 
-/* =========================================================
-   MODALES
-========================================================= */
+/* MODAL */
 
 .modal{
   position:fixed;
   inset:0;
-  z-index:99999;
+  z-index:1000;
   display:none;
+  background:rgba(17,24,39,.58);
+  padding:20px;
   align-items:center;
   justify-content:center;
-  padding:15px;
-  background:rgba(0,0,0,.58);
-  backdrop-filter:blur(5px);
-  -webkit-backdrop-filter:blur(5px)
 }
 
 .modal.show{
-  display:flex
+  display:flex;
 }
 
-.modal-box{
-  width:100%;
-  max-width:520px;
-  max-height:90vh;
+.modal-card{
+  width:min(620px,100%);
+  max-height:min(90vh,850px);
   overflow:auto;
   background:#fff;
-  border-radius:22px;
-  box-shadow:0 20px 60px rgba(0,0,0,.3);
-  animation:modalIn .18s ease-out
-}
-
-@keyframes modalIn{
-  from{
-    opacity:0;
-    transform:translateY(15px) scale(.97)
-  }
-  to{
-    opacity:1;
-    transform:translateY(0) scale(1)
-  }
+  border-radius:20px;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
 }
 
 .modal-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  padding:20px;
   background:#111827;
-  color:#fff
+  color:#fff;
+  padding:18px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
 }
 
-.modal-header h3{
-  font-size:20px
+.modal-title{
+  font-size:19px;
+  font-weight:850;
 }
 
-.modal-header p{
-  font-size:13px;
-  opacity:.75;
-  margin-top:4px
-}
-
-.close-modal{
+.modal-close{
   width:38px;
   height:38px;
   border:none;
-  border-radius:50%;
+  border-radius:10px;
   background:rgba(255,255,255,.12);
   color:#fff;
-  font-size:25px;
-  cursor:pointer
+  font-size:22px;
+  cursor:pointer;
 }
 
-.modal-content{
-  padding:20px
+.modal-body{
+  padding:20px;
 }
 
-.modal-actions{
+.detail-grid{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:repeat(2,1fr);
   gap:10px;
-  margin-top:20px
+  margin-bottom:18px;
 }
 
-.modal-button{
-  min-height:48px;
-  border:none;
-  border-radius:11px;
-  font-family:inherit;
-  font-size:15px;
-  font-weight:800;
-  cursor:pointer
-}
-
-.modal-button.secondary{
-  background:#f3f4f6;
-  color:#374151
-}
-
-.modal-button.primary{
-  background:#2563eb;
-  color:#fff
-}
-
-.modal-button.danger{
-  background:#dc2626;
-  color:#fff
-}
-
-.payment-list{
-  display:grid;
-  gap:9px
-}
-
-.payment-option{
-  width:100%;
-  padding:14px;
-  border:2px solid #ddd;
-  border-radius:11px;
-  background:#fff;
-  text-align:left;
-  font-family:inherit;
-  font-size:15px;
-  font-weight:800;
-  cursor:pointer
-}
-
-.payment-option:hover{
-  border-color:#2563eb
-}
-
-.detail-list{
-  display:grid;
-  gap:9px
-}
-
-.detail-row{
-  display:flex;
-  justify-content:space-between;
-  gap:15px;
-  padding:11px 0;
-  border-bottom:1px solid #eee
-}
-
-.detail-row:last-child{
-  border-bottom:none
+.detail-item{
+  background:#f8fafc;
+  border-radius:12px;
+  padding:12px;
 }
 
 .detail-label{
+  display:block;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.3px;
   color:#6b7280;
-  font-size:13px
+  font-weight:800;
+  margin-bottom:4px;
 }
 
 .detail-value{
+  font-size:15px;
   font-weight:800;
-  text-align:right
+  color:#111827;
 }
 
-.modal-warning{
-  padding:13px;
-  border-radius:11px;
-  background:#fef3c7;
-  color:#92400e;
+.detail-value.balance{
+  color:#b45309;
+}
+
+.detail-value.paid{
+  color:#047857;
+}
+
+.modal-section-title{
+  font-size:15px;
+  font-weight:850;
+  margin:17px 0 9px;
+}
+
+.product-list{
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  overflow:hidden;
+}
+
+.product-row{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:11px 12px;
+  border-bottom:1px solid #eee;
   font-size:13px;
-  font-weight:700;
-  margin-bottom:15px
 }
 
-.modal-danger{
-  padding:13px;
+.product-row:last-child{
+  border-bottom:none;
+}
+
+.product-name{
+  font-weight:700;
+}
+
+.product-qty{
+  color:#6b7280;
+  white-space:nowrap;
+}
+
+.modal-footer{
+  padding:15px 20px;
+  border-top:1px solid #eee;
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+}
+
+.btn{
+  border:none;
+  min-height:44px;
+  padding:0 18px;
   border-radius:11px;
-  background:#fee2e2;
-  color:#991b1b;
-  font-size:13px;
-  font-weight:700;
-  margin-bottom:15px
+  font-weight:800;
+  cursor:pointer;
 }
 
-/* =========================================================
-   TOAST
-========================================================= */
-
-.toast{
-  position:fixed;
-  left:50%;
-  bottom:25px;
-  transform:translate(-50%,20px);
-  z-index:100000;
+.btn-dark{
   background:#111827;
   color:#fff;
-  padding:13px 17px;
-  border-radius:12px;
+}
+
+.btn-green{
+  background:#059669;
+  color:#fff;
+}
+
+.btn-red{
+  background:#dc2626;
+  color:#fff;
+}
+
+.btn-gray{
+  background:#f3f4f6;
+  color:#374151;
+}
+
+/* ABONO */
+
+.payment-customer{
+  background:#f8fafc;
+  border-radius:13px;
+  padding:14px;
+  margin-bottom:16px;
+}
+
+.payment-customer strong{
+  display:block;
+  font-size:17px;
+  color:#111827;
+}
+
+.payment-current{
+  margin-top:4px;
+  color:#b45309;
   font-size:14px;
+  font-weight:800;
+}
+
+.amount-label{
+  display:block;
+  font-size:13px;
+  font-weight:800;
+  color:#374151;
+  margin-bottom:7px;
+}
+
+.amount-input{
+  width:100%;
+  min-height:58px;
+  border:2px solid #d1d5db;
+  border-radius:13px;
+  padding:0 15px;
+  font-size:25px;
+  font-weight:850;
+  outline:none;
+}
+
+.amount-input:focus{
+  border-color:#059669;
+}
+
+.quick-amounts{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:9px;
+}
+
+.quick-amount{
+  border:1px solid #d1d5db;
+  background:#fff;
+  border-radius:9px;
+  padding:8px 11px;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.methods-title{
+  font-size:13px;
+  font-weight:850;
+  margin:18px 0 8px;
+}
+
+.payment-methods{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+}
+
+.method-btn{
+  border:2px solid #e5e7eb;
+  background:#fff;
+  border-radius:11px;
+  min-height:48px;
+  padding:8px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.method-btn.active{
+  border-color:#059669;
+  background:#ecfdf5;
+  color:#047857;
+}
+
+.payment-error{
+  background:#fee2e2;
+  color:#991b1b;
+  padding:11px;
+  border-radius:10px;
+  margin-top:12px;
+  font-size:13px;
   font-weight:700;
-  box-shadow:0 10px 30px rgba(0,0,0,.25);
-  opacity:0;
-  pointer-events:none;
-  transition:.2s;
-  max-width:calc(100% - 30px);
-  text-align:center
+  display:none;
 }
 
-.toast.show{
-  opacity:1;
-  transform:translate(-50%,0)
+.payment-error.show{
+  display:block;
 }
 
-/* =========================================================
-   RESPONSIVE
-========================================================= */
+/* CANCELAR */
+
+.warning-box{
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+  color:#9a3412;
+  border-radius:12px;
+  padding:13px;
+  font-size:13px;
+  line-height:1.45;
+  margin-bottom:15px;
+}
+
+.cancel-reason{
+  width:100%;
+  min-height:100px;
+  border:2px solid #e5e7eb;
+  border-radius:12px;
+  padding:12px;
+  resize:vertical;
+  outline:none;
+  font-size:14px;
+}
+
+.cancel-reason:focus{
+  border-color:#dc2626;
+}
+
+/* RESPONSIVE */
 
 @media(max-width:950px){
-
   .navigation{
-    grid-template-columns:repeat(3,1fr)
+    grid-template-columns:repeat(3,1fr);
   }
 
-  .summary{
-    grid-template-columns:repeat(2,1fr)
+  .summary-grid{
+    grid-template-columns:repeat(2,1fr);
   }
 
+  .toolbar-row{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .refresh-btn{
+    grid-column:1/-1;
+  }
 }
 
-@media(max-width:650px){
+@media(max-width:600px){
+  header{
+    padding-right:15px;
+    padding-left:15px;
+  }
 
   .container{
-    padding:15px
+    padding:15px;
   }
-
-  .navigation{
-    grid-template-columns:repeat(2,1fr)
-  }
-
-  .toolbar{
-    grid-template-columns:1fr
-  }
-
-  .filters{
-    display:grid;
-    grid-template-columns:repeat(2,1fr)
-  }
-
-  .filter-btn{
-    width:100%
-  }
-
-  .product-breakdown{
-    grid-template-columns:1fr
-  }
-
-  .sale-header{
-    flex-direction:column
-  }
-
-  .sale-total{
-    text-align:left
-  }
-
-  .sale-financial{
-    grid-template-columns:1fr 1fr 1fr
-  }
-
-  .sale-actions{
-    grid-template-columns:1fr 1fr
-  }
-
-  .sale-actions .detail{
-    grid-column:span 2
-  }
-
-}
-
-@media(max-width:500px){
 
   .brand-logo{
     width:48px;
     height:48px;
-    flex-basis:48px
+    flex-basis:48px;
   }
 
   .brand-logo svg{
     width:48px;
-    height:48px
+    height:48px;
   }
 
   .brand-name{
-    font-size:25px
+    font-size:25px;
   }
 
   .brand-slogan{
-    font-size:13px
+    font-size:13px;
   }
 
   header p{
-    font-size:13px
-  }
-
-  .businesses{
-    gap:8px
-  }
-
-  .business-btn{
-    min-height:52px;
-    padding:10px 8px;
-    font-size:14px
+    font-size:13px;
   }
 
   .navigation{
     grid-template-columns:1fr 1fr;
-    gap:8px
   }
 
-  .nav-btn{
-    min-height:55px;
-    font-size:13px
-  }
-
-  .card{
-    padding:16px;
-    border-radius:16px
-  }
-
-  .summary{
+  .summary-grid{
     grid-template-columns:1fr 1fr;
-    gap:8px
   }
 
   .summary-card{
-    padding:13px
+    padding:13px;
   }
 
   .summary-value{
-    font-size:21px
+    font-size:21px;
   }
 
-  .sale-financial{
+  .toolbar-row{
     grid-template-columns:1fr;
-    gap:6px
+  }
+
+  .refresh-btn{
+    grid-column:auto;
+  }
+
+  .sale-header{
+    padding:12px 13px 9px;
+  }
+
+  .sale-body{
+    padding:10px 13px 12px;
   }
 
   .sale-actions{
-    grid-template-columns:1fr 1fr
+    grid-template-columns:1fr 1fr;
   }
 
-  .sale-actions .detail{
-    grid-column:span 2
+  .action-btn{
+    min-height:40px;
+    font-size:12px;
   }
 
   .modal{
-    padding:10px
+    padding:10px;
   }
 
-  .modal-box{
-    border-radius:18px;
-    max-height:92vh
+  .modal-card{
+    max-height:94vh;
+    border-radius:17px;
   }
 
-  .modal-content{
-    padding:16px
+  .modal-body{
+    padding:16px;
   }
 
+  .modal-header{
+    padding:15px 16px;
+  }
+
+  .detail-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .modal-footer{
+    padding:12px 16px;
+  }
 }
 
-@supports (-webkit-touch-callout:none){
-
-  header{
-    padding-top:calc(18px + env(safe-area-inset-top))
+@media(max-width:380px){
+  .navigation{
+    gap:7px;
   }
 
+  .nav-btn{
+    padding:10px 7px;
+    font-size:13px;
+  }
+
+  .business-btn{
+    min-height:52px;
+    padding:10px;
+    font-size:14px;
+  }
+
+  .customer-name{
+    font-size:15px;
+  }
+
+  .sale-total-value{
+    font-size:18px;
+  }
 }
 </style>
 </head>
@@ -1093,1343 +957,642 @@ header p{
 <body>
 
 <header>
-
-<div class="brand">
-
-  <div class="brand-logo" aria-hidden="true">
-
-    <svg
-      viewBox="0 0 64 64"
-      xmlns="http://www.w3.org/2000/svg">
-
-      <circle
-        cx="32"
-        cy="32"
-        r="29"
-        fill="none"
-        stroke="#d4af37"
-        stroke-width="2.5"/>
-
-      <path
-        d="M14 18h5l4 25h25l5-18H22"
-        fill="none"
-        stroke="#ffffff"
-        stroke-width="3"
-        stroke-linecap="round"
-        stroke-linejoin="round"/>
-
-      <circle
-        cx="29"
-        cy="50"
-        r="3"
-        fill="#d4af37"/>
-
-      <circle
-        cx="47"
-        cy="50"
-        r="3"
-        fill="#d4af37"/>
-
-      <text
-        x="32"
-        y="35"
-        text-anchor="middle"
-        font-family="Arial,sans-serif"
-        font-size="14"
-        font-weight="800"
-        fill="#d4af37">
-        CS
-      </text>
-
-    </svg>
-
-  </div>
-
-  <div class="brand-text">
-
-    <div class="brand-name">
-      Charlie Shop
+  <div class="brand">
+    <div class="brand-logo" aria-hidden="true">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="29" fill="none" stroke="#d4af37" stroke-width="2.5"/>
+        <path d="M14 18h5l4 25h25l5-18H22" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="29" cy="50" r="3" fill="#d4af37"/>
+        <circle cx="47" cy="50" r="3" fill="#d4af37"/>
+        <text x="32" y="35" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" font-weight="800" fill="#d4af37">CS</text>
+      </svg>
     </div>
 
-    <div class="brand-slogan">
-      Productos seleccionados
+    <div class="brand-text">
+      <div class="brand-name">Charlie Shop</div>
+      <div class="brand-slogan">productos seleccionados</div>
     </div>
-
   </div>
 
-</div>
-
-<p>
-Administración de negocios y ventas
-</p>
-
+  <p>Cuentas pendientes y saldos por cobrar</p>
 </header>
 
-<div class="container">
+<main class="container">
 
-<div id="status" class="status"></div>
+  <div id="status" class="status"></div>
 
-<!-- =======================================================
-     NEGOCIOS
-======================================================= -->
+  <div class="businesses">
+    <button class="business-btn" id="businessBakeQuiri">BakeQuiri</button>
+    <button class="business-btn" id="businessSpicyRoll">SpicyRoll</button>
+  </div>
 
-<div class="businesses">
+  <nav class="navigation">
+    <button class="nav-btn accounts" id="accountsButton">💳 Cuentas</button>
+    <button class="nav-btn clients" id="clientsButton">👥 Clientes</button>
+    <button class="nav-btn history" id="historyButton">📋 Historial</button>
+    <button class="nav-btn inventory" id="inventoryButton">📦 Inventario</button>
+    <button class="nav-btn dashboard" id="dashboardButton">📊 Dashboard</button>
+  </nav>
 
-<button
-  type="button"
-  class="business-btn active"
-  data-business="BakeQuiri">
-  🧁 BakeQuiri
-</button>
+  <section class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-label">Cuentas abiertas</div>
+      <div class="summary-value" id="summaryAccounts">0</div>
+    </div>
 
-<button
-  type="button"
-  class="business-btn"
-  data-business="SpicyRoll">
-  🍣 SpicyRoll
-</button>
+    <div class="summary-card">
+      <div class="summary-label">Piezas pendientes</div>
+      <div class="summary-value" id="summaryPieces">0</div>
+    </div>
 
+    <div class="summary-card">
+      <div class="summary-label">Ventas pendientes</div>
+      <div class="summary-value" id="summarySales">$0.00</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">Saldo por cobrar</div>
+      <div class="summary-value" id="summaryBalance">$0.00</div>
+    </div>
+  </section>
+
+  <section class="toolbar">
+    <div class="toolbar-row">
+      <input
+        type="search"
+        id="searchInput"
+        class="search-input"
+        placeholder="🔎 Buscar por cliente o teléfono..."
+        autocomplete="off"
+      >
+
+      <select id="filterSelect" class="filter-select">
+        <option value="open">Cuentas abiertas</option>
+        <option value="all">Todas las cuentas</option>
+        <option value="paid">Pagadas</option>
+        <option value="cancelled">Canceladas</option>
+      </select>
+
+      <button class="refresh-btn" id="refreshButton">↻ Actualizar</button>
+    </div>
+  </section>
+
+  <div class="section-title">
+    <h2>Cuentas</h2>
+    <span id="accountCountLabel">0 cuentas</span>
+  </div>
+
+  <section id="accountsList" class="accounts-list">
+    <div class="loader">
+      <div class="spinner"></div>
+      Cargando cuentas...
+    </div>
+  </section>
+
+</main>
+
+<!-- MODAL DETALLE -->
+
+<div class="modal" id="detailModal">
+  <div class="modal-card">
+
+    <div class="modal-header">
+      <div class="modal-title">🧾 Detalle de la cuenta</div>
+      <button class="modal-close" data-close="detailModal">×</button>
+    </div>
+
+    <div class="modal-body" id="detailBody"></div>
+
+    <div class="modal-footer">
+      <button class="btn btn-gray" data-close="detailModal">Cerrar</button>
+    </div>
+
+  </div>
 </div>
 
-<!-- =======================================================
-     NAVEGACIÓN
-======================================================= -->
+<!-- MODAL ABONO -->
 
-<div class="navigation">
+<div class="modal" id="paymentModal">
+  <div class="modal-card">
 
-<button
-  type="button"
-  class="nav-btn accounts"
-  id="accountsButton">
-  💰 Cuentas pendientes
-</button>
+    <div class="modal-header">
+      <div class="modal-title">💳 Abonar al saldo pendiente</div>
+      <button class="modal-close" data-close="paymentModal">×</button>
+    </div>
 
-<button
-  type="button"
-  class="nav-btn clients"
-  id="clientsButton">
-  👥 Clientes
-</button>
+    <div class="modal-body">
 
-<button
-  type="button"
-  class="nav-btn history"
-  id="historyButton">
-  🧾 Historial
-</button>
+      <div class="payment-customer">
+        <strong id="paymentCustomerName">Cliente</strong>
+        <div class="payment-current">
+          Saldo pendiente: <span id="paymentCurrentBalance">$0.00</span>
+        </div>
+      </div>
 
-<button
-  type="button"
-  class="nav-btn inventory"
-  id="inventoryButton">
-  📦 Inventario
-</button>
+      <label class="amount-label" for="paymentAmount">
+        Cantidad a abonar
+      </label>
 
-<button
-  type="button"
-  class="nav-btn"
-  id="dashboardButton">
-  📊 Dashboard
-</button>
+      <input
+        id="paymentAmount"
+        class="amount-input"
+        type="number"
+        min="0.01"
+        step="0.01"
+        inputmode="decimal"
+        placeholder="$0.00"
+      >
 
+      <div class="quick-amounts" id="quickAmounts"></div>
+
+      <div class="methods-title">Método de pago</div>
+
+      <div class="payment-methods" id="paymentMethods">
+        <div class="loader">
+          <div class="spinner"></div>
+          Cargando...
+        </div>
+      </div>
+
+      <div class="payment-error" id="paymentError"></div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-gray" data-close="paymentModal">Cancelar</button>
+      <button class="btn btn-green" id="confirmPaymentButton">
+        Abonar
+      </button>
+    </div>
+
+  </div>
 </div>
 
-<!-- =======================================================
-     RESUMEN
-======================================================= -->
+<!-- MODAL CANCELAR -->
 
-<div class="summary">
+<div class="modal" id="cancelModal">
+  <div class="modal-card">
 
-<div class="summary-card accounts-summary">
+    <div class="modal-header">
+      <div class="modal-title">❌ Cancelar cuenta</div>
+      <button class="modal-close" data-close="cancelModal">×</button>
+    </div>
 
-<div class="summary-label">
-Cuentas pendientes
+    <div class="modal-body">
+
+      <div class="warning-box">
+        Esta acción marcará la venta como cancelada. El registro no se eliminará.
+      </div>
+
+      <label class="amount-label" for="cancelReason">
+        Motivo de cancelación
+      </label>
+
+      <textarea
+        id="cancelReason"
+        class="cancel-reason"
+        placeholder="Escribe el motivo de la cancelación..."
+      ></textarea>
+
+      <div class="payment-error" id="cancelError"></div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-gray" data-close="cancelModal">Regresar</button>
+      <button class="btn btn-red" id="confirmCancelButton">
+        Cancelar cuenta
+      </button>
+    </div>
+
+  </div>
 </div>
-
-<div
-  id="summaryAccounts"
-  class="summary-value">
-0
-</div>
-
-</div>
-
-<div class="summary-card pieces-summary">
-
-<div class="summary-label">
-Piezas vendidas
-</div>
-
-<div
-  id="summaryPieces"
-  class="summary-value">
-0
-</div>
-
-</div>
-
-<div class="summary-card sales-summary">
-
-<div class="summary-label">
-Ventas
-</div>
-
-<div
-  id="summarySales"
-  class="summary-value">
-0
-</div>
-
-</div>
-
-<div class="summary-card balance-summary">
-
-<div class="summary-label">
-Por cobrar
-</div>
-
-<div
-  id="summaryBalance"
-  class="summary-value">
-$0.00
-</div>
-
-</div>
-
-</div>
-
-<!-- =======================================================
-     BUSCAR / FILTROS
-======================================================= -->
-
-<div class="card">
-
-<div class="toolbar">
-
-<div class="search-box">
-
-<input
-  type="search"
-  id="searchInput"
-  placeholder="🔎 Buscar cliente, teléfono o producto..."
-  autocomplete="off">
-
-</div>
-
-<div class="filters">
-
-<button
-  type="button"
-  class="filter-btn active"
-  data-filter="pending">
-  Pendientes
-</button>
-
-<button
-  type="button"
-  class="filter-btn"
-  data-filter="all">
-  Todas
-</button>
-
-<button
-  type="button"
-  class="filter-btn"
-  data-filter="paid">
-  Pagadas
-</button>
-
-<button
-  type="button"
-  class="filter-btn"
-  data-filter="cancelled">
-  Canceladas
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- =======================================================
-     PRODUCTOS
-======================================================= -->
-
-<div class="card">
-
-<div class="section-title">
-
-<h2>
-📦 Productos vendidos
-</h2>
-
-<span
-  id="productsCount"
-  class="count-badge">
-0
-</span>
-
-</div>
-
-<div
-  id="productBreakdown"
-  class="product-breakdown">
-
-<div class="loading">
-<div class="spinner"></div>
-Cargando productos...
-</div>
-
-</div>
-
-</div>
-
-<!-- =======================================================
-     CUENTAS
-======================================================= -->
-
-<div class="card">
-
-<div class="section-title">
-
-<h2>
-💰 Cuentas
-</h2>
-
-<span
-  id="salesCount"
-  class="count-badge">
-0
-</span>
-
-</div>
-
-<div
-  id="salesList"
-  class="sales-list">
-
-<div class="loading">
-<div class="spinner"></div>
-Cargando ventas...
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- =======================================================
-     MODAL PAGAR
-======================================================= -->
-
-<div
-  id="paymentModal"
-  class="modal"
-  aria-hidden="true">
-
-<div
-  class="modal-box">
-
-<div class="modal-header">
-
-<div>
-
-<h3>
-💳 Registrar pago
-</h3>
-
-<p>
-Selecciona el método de pago
-</p>
-
-</div>
-
-<button
-  type="button"
-  class="close-modal"
-  id="closePaymentModal">
-×
-</button>
-
-</div>
-
-<div class="modal-content">
-
-<div
-  id="paymentSaleInfo"
-  class="modal-warning">
-</div>
-
-<div
-  id="paymentMethodsList"
-  class="payment-list">
-</div>
-
-<div class="modal-actions">
-
-<button
-  type="button"
-  class="modal-button secondary"
-  id="cancelPaymentModal">
-Cancelar
-</button>
-
-<button
-  type="button"
-  class="modal-button primary"
-  id="confirmPaymentButton">
-Registrar pago
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- =======================================================
-     MODAL DETALLE
-======================================================= -->
-
-<div
-  id="detailModal"
-  class="modal"
-  aria-hidden="true">
-
-<div
-  class="modal-box">
-
-<div class="modal-header">
-
-<div>
-
-<h3>
-🧾 Detalle de venta
-</h3>
-
-<p>
-Información completa de la operación
-</p>
-
-</div>
-
-<button
-  type="button"
-  class="close-modal"
-  id="closeDetailModal">
-×
-</button>
-
-</div>
-
-<div
-  id="detailContent"
-  class="modal-content">
-</div>
-
-</div>
-
-</div>
-
-<!-- =======================================================
-     MODAL CANCELAR
-======================================================= -->
-
-<div
-  id="cancelModal"
-  class="modal"
-  aria-hidden="true">
-
-<div
-  class="modal-box">
-
-<div class="modal-header">
-
-<div>
-
-<h3>
-❌ Cancelar venta
-</h3>
-
-<p>
-Esta acción quedará registrada
-</p>
-
-</div>
-
-<button
-  type="button"
-  class="close-modal"
-  id="closeCancelModal">
-×
-</button>
-
-</div>
-
-<div class="modal-content">
-
-<div class="modal-danger">
-
-La cancelación de una venta puede afectar el inventario y el saldo de la cuenta.
-
-</div>
-
-<label
-  for="cancelReason"
-  style="display:block;font-weight:800;font-size:14px;margin-bottom:7px">
-Motivo de cancelación
-</label>
-
-<textarea
-  id="cancelReason"
-  placeholder="Escribe el motivo..."
-  style="width:100%;min-height:100px;padding:13px;border:2px solid #ddd;border-radius:11px;font-family:inherit;font-size:15px;resize:vertical"></textarea>
-
-<div class="modal-actions">
-
-<button
-  type="button"
-  class="modal-button secondary"
-  id="cancelCancelModal">
-Volver
-</button>
-
-<button
-  type="button"
-  class="modal-button danger"
-  id="confirmCancelButton">
-Cancelar venta
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<div
-  id="toast"
-  class="toast">
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-"use strict";
-
 /* =========================================================
    CONFIGURACIÓN
 ========================================================= */
 
-const SUPABASE_URL =
-  "https://jrxklpstlloeckihcduv.supabase.co";
+const SUPABASE_URL="https://jrxklpstlloeckihcduv.supabase.co";
 
-const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
+const SUPABASE_PUBLISHABLE_KEY=
+"sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
-const BUSINESS_IDS = {
-
-  BakeQuiri:
-    "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
-
-  SpicyRoll:
-    "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
-
+const BUSINESS_IDS={
+  BakeQuiri:"c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+  SpicyRoll:"ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
 };
 
-let supabaseClient = null;
+const supabaseClient=
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
 
-let currentBusiness =
-  new URLSearchParams(
-    window.location.search
-  ).get("business") || "BakeQuiri";
+/* =========================================================
+   ESTADO
+========================================================= */
 
-if(
-  !BUSINESS_IDS[currentBusiness]
-){
-  currentBusiness = "BakeQuiri";
-}
+let currentBusiness="BakeQuiri";
 
-let sales = [];
-let saleItems = [];
-let customers = [];
-let payments = [];
+let sales=[];
+let customersMap=new Map();
+let productsMap=new Map();
+let paymentMethods=[];
 
-let currentFilter = "pending";
-let searchQuery = "";
+let selectedSale=null;
+let selectedPaymentMethod=null;
+let selectedCancelSale=null;
 
-let selectedSaleForPayment = null;
-let selectedSaleForDetail = null;
-let selectedSaleForCancel = null;
-
+let loading=false;
 
 /* =========================================================
    HELPERS
 ========================================================= */
 
-function $(id){
-  return document.getElementById(id);
-}
-
+const $=id=>document.getElementById(id);
 
 function money(value){
+  const number=Number(value||0);
 
-  return "$" +
-    Number(value || 0).toLocaleString(
-      "es-MX",
-      {
-        minimumFractionDigits:2,
-        maximumFractionDigits:2
-      }
-    );
-
+  return number.toLocaleString("es-MX",{
+    style:"currency",
+    currency:"MXN",
+    minimumFractionDigits:2
+  });
 }
 
-
-function escapeHTML(value){
-
-  return String(value ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-
+function escapeHtml(value){
+  return String(value??"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 }
 
-
-function showStatus(
-  message,
-  type = "error"
-){
-
-  $("status").textContent =
-    message;
-
-  $("status").className =
-    "status " + type;
-
+function normalizeText(value){
+  return String(value??"")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toLowerCase()
+    .trim();
 }
-
-
-function clearStatus(){
-
-  $("status").textContent = "";
-
-  $("status").className =
-    "status";
-
-}
-
-
-function showToast(message){
-
-  const toast =
-    $("toast");
-
-  toast.textContent =
-    message;
-
-  toast.classList.add(
-    "show"
-  );
-
-  clearTimeout(
-    window.__toastTimer
-  );
-
-  window.__toastTimer =
-    setTimeout(
-      () => {
-
-        toast.classList.remove(
-          "show"
-        );
-
-      },
-      2600
-    );
-
-}
-
 
 function formatDate(value){
+  if(!value) return "Sin fecha";
 
-  if(!value){
-    return "Sin fecha";
-  }
+  const date=new Date(value);
 
-  const date =
-    new Date(value);
-
-  if(
-    Number.isNaN(
-      date.getTime()
-    )
-  ){
-
+  if(Number.isNaN(date.getTime())){
     return String(value);
-
   }
 
-  return date.toLocaleString(
-    "es-MX",
-    {
-      day:"2-digit",
-      month:"short",
-      year:"numeric",
-      hour:"2-digit",
-      minute:"2-digit"
-    }
-  );
-
+  return date.toLocaleString("es-MX",{
+    day:"2-digit",
+    month:"2-digit",
+    year:"numeric",
+    hour:"2-digit",
+    minute:"2-digit"
+  });
 }
 
+function saleStatus(sale){
+  return String(sale.status||"open").toLowerCase();
+}
+
+function getCustomer(sale){
+  if(sale.customer_id && customersMap.has(sale.customer_id)){
+    return customersMap.get(sale.customer_id);
+  }
+
+  return {
+    id:sale.customer_id||null,
+    name:"Cliente",
+    phone:"",
+    notes:""
+  };
+}
+
+function getCustomerName(sale){
+  return getCustomer(sale).name || "Cliente";
+}
+
+function getCustomerPhone(sale){
+  return getCustomer(sale).phone || "";
+}
+
+function getSaleBalance(sale){
+  return Math.max(0,Number(sale.balance||0));
+}
+
+function getSaleTotal(sale){
+  return Number(sale.total||0);
+}
+
+function getSalePaid(sale){
+  return Math.max(0,getSaleTotal(sale)-getSaleBalance(sale));
+}
+
+function getSalePieces(sale){
+  if(Array.isArray(sale.items)){
+    return sale.items.reduce(
+      (sum,item)=>sum+Number(item.quantity||0),
+      0
+    );
+  }
+
+  return Number(sale.pieces||0);
+}
+
+function whatsappUrl(phone,message){
+  const clean=String(phone||"").replace(/\D/g,"");
+
+  if(!clean){
+    return "";
+  }
+
+  let number=clean;
+
+  if(number.length===10){
+    number="52"+number;
+  }
+
+  return "https://wa.me/"+number+
+    "?text="+encodeURIComponent(message);
+}
+
+function showStatus(message,type="ok"){
+  const element=$("status");
+
+  element.textContent=message;
+  element.className="status "+type;
+
+  clearTimeout(showStatus.timer);
+
+  showStatus.timer=setTimeout(()=>{
+    element.className="status";
+    element.textContent="";
+  },5000);
+}
+
+function hideStatus(){
+  $("status").className="status";
+  $("status").textContent="";
+}
+
+function openModal(id){
+  $(id).classList.add("show");
+  document.body.classList.add("modal-open");
+}
+
+function closeModal(id){
+  $(id).classList.remove("show");
+
+  if(!document.querySelector(".modal.show")){
+    document.body.classList.remove("modal-open");
+  }
+}
 
 /* =========================================================
-   SUPABASE
+   NEGOCIO
 ========================================================= */
 
-function initializeSupabase(){
+function setBusiness(business){
+  if(!BUSINESS_IDS[business]){
+    business="BakeQuiri";
+  }
+
+  currentBusiness=business;
+
+  $("businessBakeQuiri").classList.toggle(
+    "active",
+    business==="BakeQuiri"
+  );
+
+  $("businessSpicyRoll").classList.toggle(
+    "active",
+    business==="SpicyRoll"
+  );
+
+  const url=new URL(window.location.href);
+
+  url.searchParams.set(
+    "business",
+    business
+  );
+
+  window.history.replaceState(
+    {},
+    "",
+    url.toString()
+  );
+
+  loadSales();
+}
+
+function initializeBusiness(){
+  const params=new URLSearchParams(
+    window.location.search
+  );
+
+  const requestedBusiness=params.get("business");
 
   if(
-    !window.supabase ||
-    typeof window.supabase.createClient !==
-      "function"
+    requestedBusiness &&
+    BUSINESS_IDS[requestedBusiness]
   ){
-
-    throw new Error(
-      "No se pudo cargar la librería de Supabase."
-    );
-
+    currentBusiness=requestedBusiness;
   }
 
-  if(!supabaseClient){
-
-    supabaseClient =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
-      );
-
-  }
-
-}
-
-
-/* =========================================================
-   FETCH REST ROBUSTO
-========================================================= */
-
-async function supabaseFetch(
-  table,
-  options = {}
-){
-
-  const {
-    select = "*",
-    filters = [],
-    order = null
-  } = options;
-
-  let url =
-    SUPABASE_URL +
-    "/rest/v1/" +
-    table +
-    "?select=" +
-    encodeURIComponent(
-      select
-    );
-
-  filters.forEach(
-    filter => {
-
-      url +=
-        "&" +
-        filter.column +
-        "=" +
-        filter.operator +
-        "." +
-        encodeURIComponent(
-          filter.value
-        );
-
-    }
+  $("businessBakeQuiri").classList.toggle(
+    "active",
+    currentBusiness==="BakeQuiri"
   );
 
-  if(order){
-
-    url +=
-      "&order=" +
-      encodeURIComponent(
-        order
-      );
-
-  }
-
-  const response =
-    await fetch(
-      url,
-      {
-        method:"GET",
-        headers:{
-          "apikey":
-            SUPABASE_PUBLISHABLE_KEY,
-
-          "Authorization":
-            "Bearer " +
-            SUPABASE_PUBLISHABLE_KEY,
-
-          "Content-Type":
-            "application/json",
-
-          "Accept":
-            "application/json"
-        }
-      }
-    );
-
-  if(!response.ok){
-
-    const text =
-      await response.text();
-
-    throw new Error(
-      text ||
-      "HTTP " +
-      response.status
-    );
-
-  }
-
-  return response.json();
-
+  $("businessSpicyRoll").classList.toggle(
+    "active",
+    currentBusiness==="SpicyRoll"
+  );
 }
-
 
 /* =========================================================
    CARGAR CLIENTES
 ========================================================= */
 
 async function loadCustomers(){
+  const result=await supabaseClient
+    .from("customers")
+    .select("id,name,phone,notes,created_at")
+    .order("name",{ascending:true});
 
-  try{
-
-    customers =
-      await supabaseFetch(
-        "customers",
-        {
-          select:
-            "id,name,phone,notes"
-        }
-      );
-
+  if(result.error){
+    throw result.error;
   }
 
-  catch(error){
+  customersMap.clear();
 
-    console.warn(
-      "No se pudieron cargar clientes:",
-      error
-    );
-
-    customers = [];
-
+  for(const customer of result.data||[]){
+    customersMap.set(customer.id,customer);
   }
-
 }
 
+/* =========================================================
+   CARGAR PRODUCTOS
+========================================================= */
+
+async function loadProducts(){
+  productsMap.clear();
+
+  const result=await supabaseClient
+    .from("products")
+    .select("*");
+
+  if(result.error){
+    return;
+  }
+
+  for(const product of result.data||[]){
+    productsMap.set(
+      product.id,
+      product
+    );
+  }
+}
 
 /* =========================================================
    CARGAR MÉTODOS DE PAGO
 ========================================================= */
 
-async function loadPayments(){
+async function loadPaymentMethods(){
+  const businessId=BUSINESS_IDS[currentBusiness];
 
-  try{
+  const result=await supabaseClient
+    .from("payment_methods")
+    .select("id,name,provider,active,business_id")
+    .eq("business_id",businessId)
+    .eq("active",true)
+    .order("name",{ascending:true});
 
-    payments =
-      await supabaseFetch(
-        "payment_methods",
-        {
-          select:
-            "id,name,provider,active,business_id",
-          filters:[
-            {
-              column:"business_id",
-              operator:"eq",
-              value:
-                BUSINESS_IDS[
-                  currentBusiness
-                ]
-            },
-            {
-              column:"active",
-              operator:"eq",
-              value:"true"
-            }
-          ],
-          order:"name.asc"
-        }
-      );
-
+  if(result.error){
+    throw result.error;
   }
 
-  catch(error){
-
-    console.warn(
-      "No se pudieron cargar métodos de pago:",
-      error
-    );
-
-    payments = [];
-
-  }
-
+  paymentMethods=result.data||[];
 }
-
 
 /* =========================================================
    CARGAR VENTAS
 ========================================================= */
 
 async function loadSales(){
+  if(loading){
+    return;
+  }
 
-  const salesList =
-    $("salesList");
+  loading=true;
 
-  salesList.innerHTML = `
-    <div class="loading">
+  $("accountsList").innerHTML=`
+    <div class="loader">
       <div class="spinner"></div>
-      Cargando ventas...
+      Cargando cuentas...
     </div>
   `;
 
+  hideStatus();
+
   try{
 
+    await Promise.all([
+      loadCustomers(),
+      loadProducts(),
+      loadPaymentMethods()
+    ]);
+
+    const businessId=BUSINESS_IDS[currentBusiness];
+
+    const salesResult=await supabaseClient
+      .from("sales")
+      .select("*")
+      .eq("business_id",businessId)
+      .order("sale_date",{ascending:false});
+
+    if(salesResult.error){
+      throw salesResult.error;
+    }
+
+    const rawSales=salesResult.data||[];
+
     /*
-      Los clientes son auxiliares.
-      Si fallan NO deben impedir
-      que aparezcan las ventas.
+      IMPORTANTE:
+      sale_items NO se ordena por created_at porque
+      esa columna no existe en esa tabla.
     */
 
-    await loadCustomers();
+    sales=[];
 
-    const businessId =
-      BUSINESS_IDS[
-        currentBusiness
-      ];
+    if(rawSales.length){
 
+      const saleIds=rawSales.map(
+        sale=>sale.id
+      );
 
-    /*
-      PRIMERO cargamos ventas.
-      Esta consulta es independiente
-      de sale_items.
-    */
+      const itemsResult=await supabaseClient
+        .from("sale_items")
+        .select("*")
+        .in("sale_id",saleIds);
 
-    sales =
-      await supabaseFetch(
-        "sales",
-        {
-          select:"*",
+      if(itemsResult.error){
+        throw itemsResult.error;
+      }
 
-          filters:[
-            {
-              column:"business_id",
-              operator:"eq",
-              value:businessId
-            }
-          ],
+      const itemsBySale=new Map();
 
-          order:
-            "created_at.desc"
+      for(const item of itemsResult.data||[]){
+
+        if(!itemsBySale.has(item.sale_id)){
+          itemsBySale.set(
+            item.sale_id,
+            []
+          );
         }
-      );
 
+        itemsBySale
+          .get(item.sale_id)
+          .push(item);
+      }
 
-    /*
-      DESPUÉS cargamos productos.
-      No utilizamos created_at aquí porque
-      sale_items puede no tener esa columna.
-    */
-
-    try{
-
-      saleItems =
-        await supabaseFetch(
-          "sale_items",
-          {
-            select:"*"
-          }
-        );
-
+      sales=rawSales.map(sale=>({
+        ...sale,
+        items:itemsBySale.get(sale.id)||[]
+      }));
     }
 
-    catch(error){
+    renderSummary();
+    renderSales();
 
-      console.warn(
-        "No se pudieron cargar los productos de las ventas:",
-        error
-      );
+  }catch(error){
 
-      saleItems = [];
+    console.error("Error cargando cuentas:",error);
 
-    }
-
-
-    /*
-      Métodos de pago.
-    */
-
-    await loadPayments();
-
-
-    renderEverything();
-
-
-  }
-
-  catch(error){
-
-    console.error(
-      "ERROR REAL CARGANDO VENTAS:",
-      error
-    );
-
-    salesList.innerHTML = `
-
-      <div class="empty-state">
-
-        <div class="empty-icon">
-          ⚠️
-        </div>
-
-        <strong>
-          No fue posible cargar las ventas
-        </strong>
-
-        <br><br>
-
-        <span style="
-          font-size:12px;
-          color:#8e8e93;
-          word-break:break-word;
-          display:block;
-          margin-bottom:18px
-        ">
-          ${escapeHTML(
-            error?.message ||
-            "Error desconocido"
-          )}
-        </span>
-
-        <button
-          type="button"
-          class="action-btn detail"
-          style="padding:0 20px"
-          onclick="loadSales()">
-          Intentar nuevamente
-        </button>
-
+    $("accountsList").innerHTML=`
+      <div class="empty">
+        <div class="empty-icon">⚠️</div>
+        <strong>No fue posible cargar las cuentas</strong>
+        <div>${escapeHtml(error.message||"Error desconocido")}</div>
       </div>
-
     `;
 
-    showToast(
-      "Error cargando ventas"
+    showStatus(
+      "No fue posible cargar las cuentas.\n"+
+      (error.message||"Error desconocido"),
+      "error"
     );
 
+  }finally{
+    loading=false;
   }
-
 }
-
-
-/* =========================================================
-   NORMALIZAR DATOS
-========================================================= */
-
-function getCustomer(
-  customerId
-){
-
-  if(!customerId){
-    return null;
-  }
-
-  return customers.find(
-    customer =>
-      String(customer.id) ===
-      String(customerId)
-  ) || null;
-
-}
-
-
-function getCustomerName(
-  sale
-){
-
-  const customer =
-    getCustomer(
-      sale.customer_id
-    );
-
-  if(customer?.name){
-
-    return customer.name;
-
-  }
-
-  /*
-    Algunos registros antiguos
-    pueden tener nombre directo.
-  */
-
-  if(
-    sale.customer_name
-  ){
-
-    return sale.customer_name;
-
-  }
-
-  return "Consumidor general";
-
-}
-
-
-function getCustomerPhone(
-  sale
-){
-
-  const customer =
-    getCustomer(
-      sale.customer_id
-    );
-
-  return (
-    customer?.phone ||
-    sale.customer_phone ||
-    ""
-  );
-
-}
-
-
-function getSaleItems(
-  saleId
-){
-
-  return saleItems.filter(
-    item =>
-      String(item.sale_id) ===
-      String(saleId)
-  );
-
-}
-
-
-function getSaleQuantity(
-  saleId
-){
-
-  return getSaleItems(
-    saleId
-  ).reduce(
-    (
-      total,
-      item
-    ) =>
-      total +
-      Number(
-        item.quantity || 0
-      ),
-    0
-  );
-
-}
-
-
-function getSaleBalance(
-  sale
-){
-
-  if(
-    sale.status ===
-    "cancelled"
-  ){
-
-    return 0;
-
-  }
-
-  return Number(
-    sale.balance ??
-    sale.total ??
-    0
-  );
-
-}
-
-
-function getSalePaid(
-  sale
-){
-
-  const total =
-    Number(
-      sale.total || 0
-    );
-
-  const balance =
-    getSaleBalance(
-      sale
-    );
-
-  return Math.max(
-    0,
-    total - balance
-  );
-
-}
-
-
-function isCancelled(
-  sale
-){
-
-  return (
-    sale.status ===
-    "cancelled" ||
-    sale.cancelled === true
-  );
-
-}
-
-
-function isPaid(
-  sale
-){
-
-  return (
-    !isCancelled(sale) &&
-    (
-      sale.status ===
-      "paid" ||
-      getSaleBalance(sale) <= 0
-    )
-  );
-
-}
-
-
-/* =========================================================
-   FILTRO
-========================================================= */
-
-function saleMatchesSearch(
-  sale
-){
-
-  if(!searchQuery){
-    return true;
-  }
-
-  const customer =
-    getCustomerName(
-      sale
-    ).toLowerCase();
-
-  const phone =
-    getCustomerPhone(
-      sale
-    ).toLowerCase();
-
-  const id =
-    String(
-      sale.id || ""
-    ).toLowerCase();
-
-  const items =
-    getSaleItems(
-      sale.id
-    )
-    .map(
-      item =>
-        String(
-          item.description ||
-          ""
-        ).toLowerCase()
-    )
-    .join(" ");
-
-  return(
-    customer.includes(
-      searchQuery
-    ) ||
-    phone.includes(
-      searchQuery
-    ) ||
-    id.includes(
-      searchQuery
-    ) ||
-    items.includes(
-      searchQuery
-    )
-  );
-
-}
-
-
-function saleMatchesFilter(
-  sale
-){
-
-  if(
-    currentFilter ===
-    "cancelled"
-  ){
-
-    return isCancelled(
-      sale
-    );
-
-  }
-
-  if(
-    currentFilter ===
-    "paid"
-  ){
-
-    return isPaid(
-      sale
-    );
-
-  }
-
-  if(
-    currentFilter ===
-    "pending"
-  ){
-
-    return (
-      !isCancelled(sale) &&
-      !isPaid(sale) &&
-      getSaleBalance(sale) > 0
-    );
-
-  }
-
-  return true;
-
-}
-
 
 /* =========================================================
    RESUMEN
@@ -2437,1977 +1600,1087 @@ function saleMatchesFilter(
 
 function renderSummary(){
 
-  const activeSales =
-    sales.filter(
-      sale =>
-        !isCancelled(sale)
-    );
-
-  const pendingSales =
-    activeSales.filter(
-      sale =>
-        getSaleBalance(sale) > 0
-    );
-
-  const pieces =
-    activeSales.reduce(
-      (
-        total,
-        sale
-      ) =>
-        total +
-        getSaleQuantity(
-          sale.id
-        ),
-      0
-    );
-
-  const balance =
-    pendingSales.reduce(
-      (
-        total,
-        sale
-      ) =>
-        total +
-        getSaleBalance(
-          sale
-        ),
-      0
-    );
-
-
-  $("summaryAccounts").textContent =
-    pendingSales.length;
-
-
-  $("summaryPieces").textContent =
-    pieces;
-
-
-  $("summarySales").textContent =
-    activeSales.length;
-
-
-  $("summaryBalance").textContent =
-    money(balance);
-
-}
-
-
-/* =========================================================
-   PRODUCTOS VENDIDOS
-========================================================= */
-
-function renderProductBreakdown(){
-
-  const container =
-    $("productBreakdown");
-
-  const map =
-    new Map();
-
-  const activeSales =
-    sales.filter(
-      sale =>
-        !isCancelled(sale)
-    );
-
-
-  activeSales.forEach(
-    sale => {
-
-      const items =
-        getSaleItems(
-          sale.id
-        );
-
-      items.forEach(
-        item => {
-
-          const name =
-            item.description ||
-            item.product_name ||
-            "Producto";
-
-          const key =
-            String(name)
-              .trim()
-              .toLowerCase();
-
-
-          if(!map.has(key)){
-
-            map.set(
-              key,
-              {
-                name,
-                quantity:0,
-                sales:0
-              }
-            );
-
-          }
-
-
-          const record =
-            map.get(key);
-
-
-          record.quantity +=
-            Number(
-              item.quantity || 0
-            );
-
-          record.sales++;
-
-        }
-      );
-
-    }
+  const openSales=sales.filter(
+    sale=>saleStatus(sale)==="open"
   );
 
+  const openWithBalance=openSales.filter(
+    sale=>getSaleBalance(sale)>0
+  );
 
-  const products =
-    Array.from(
-      map.values()
-    )
-    .sort(
-      (a,b) =>
-        b.quantity -
-        a.quantity
-    );
+  const pieces=openWithBalance.reduce(
+    (sum,sale)=>sum+getSalePieces(sale),
+    0
+  );
 
+  const total=openWithBalance.reduce(
+    (sum,sale)=>sum+getSaleTotal(sale),
+    0
+  );
 
-  $("productsCount").textContent =
-    products.length;
+  const balance=openWithBalance.reduce(
+    (sum,sale)=>sum+getSaleBalance(sale),
+    0
+  );
 
+  $("summaryAccounts").textContent=
+    openWithBalance.length;
 
-  if(!products.length){
+  $("summaryPieces").textContent=
+    pieces;
 
-    container.innerHTML = `
+  $("summarySales").textContent=
+    money(total);
 
-      <div class="empty-state"
-           style="grid-column:1/-1">
-
-        <div class="empty-icon">
-          📦
-        </div>
-
-        Todavía no hay productos vendidos.
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  container.innerHTML =
-    products
-      .map(
-        product => `
-
-          <div class="product-stat">
-
-            <div>
-
-              <div class="product-stat-name">
-                ${escapeHTML(
-                  product.name
-                )}
-              </div>
-
-              <div class="product-stat-sales">
-                Registrado en
-                ${product.sales}
-                operación${product.sales === 1 ? "" : "es"}
-              </div>
-
-            </div>
-
-            <div class="product-stat-qty">
-              ${product.quantity}
-            </div>
-
-          </div>
-
-        `
-      )
-      .join("");
-
+  $("summaryBalance").textContent=
+    money(balance);
 }
 
+/* =========================================================
+   FILTRAR
+========================================================= */
+
+function getFilteredSales(){
+
+  const search=normalizeText(
+    $("searchInput").value
+  );
+
+  const filter=$("filterSelect").value;
+
+  return sales.filter(sale=>{
+
+    const status=saleStatus(sale);
+
+    if(filter==="open" && status!=="open"){
+      return false;
+    }
+
+    if(filter==="paid" && status!=="paid"){
+      return false;
+    }
+
+    if(filter==="cancelled" && status!=="cancelled"){
+      return false;
+    }
+
+    const customer=getCustomer(sale);
+
+    if(!search){
+      return true;
+    }
+
+    const searchable=[
+      customer.name,
+      customer.phone,
+      sale.id,
+      sale.status
+    ]
+      .map(normalizeText)
+      .join(" ");
+
+    return searchable.includes(search);
+  });
+}
 
 /* =========================================================
-   RENDER VENTAS
+   RENDER CUENTAS
 ========================================================= */
 
 function renderSales(){
 
-  const container =
-    $("salesList");
+  const filtered=getFilteredSales();
 
-
-  let filtered =
-    sales
-      .filter(
-        sale =>
-          saleMatchesFilter(
-            sale
-          )
-      )
-      .filter(
-        sale =>
-          saleMatchesSearch(
-            sale
-          )
-      );
-
-
-  /*
-    Pendientes primero:
-    más recientes primero.
-  */
-
-  filtered.sort(
-    (a,b) => {
-
-      const aTime =
-        new Date(
-          a.created_at ||
-          a.sale_date ||
-          0
-        ).getTime();
-
-      const bTime =
-        new Date(
-          b.created_at ||
-          b.sale_date ||
-          0
-        ).getTime();
-
-      return bTime - aTime;
-
-    }
-  );
-
-
-  $("salesCount").textContent =
-    filtered.length;
-
+  $("accountCountLabel").textContent=
+    filtered.length+
+    (filtered.length===1 ? " cuenta" : " cuentas");
 
   if(!filtered.length){
 
-    container.innerHTML = `
+    const filter=$("filterSelect").value;
 
-      <div class="empty-state">
+    let message="No hay cuentas para mostrar.";
 
-        <div class="empty-icon">
-          ${
-            currentFilter === "pending"
-              ? "🎉"
-              : "🧾"
-          }
+    if(filter==="open"){
+      message="No hay cuentas pendientes.";
+    }
+
+    $("accountsList").innerHTML=`
+      <div class="empty">
+        <div class="empty-icon">💳</div>
+        <strong>${message}</strong>
+        <div>
+          Cuando exista una cuenta pendiente aparecerá aquí.
         </div>
-
-        <strong>
-          ${
-            currentFilter === "pending"
-              ? "No hay cuentas pendientes"
-              : "No encontramos ventas"
-          }
-        </strong>
-
-        <br>
-
-        <span style="font-size:13px">
-          ${
-            searchQuery
-              ? "Prueba con otra búsqueda."
-              : ""
-          }
-        </span>
-
       </div>
-
     `;
 
     return;
-
   }
 
-
-  container.innerHTML =
-    filtered
-      .map(
-        sale =>
-          renderSaleCard(
-            sale
-          )
-      )
-      .join("");
-
-
-  attachSaleEvents();
-
+  $("accountsList").innerHTML=
+    filtered.map(renderSaleCard).join("");
 }
 
+function renderSaleCard(sale){
 
-/* =========================================================
-   TARJETA DE VENTA
-========================================================= */
+  const customer=getCustomer(sale);
 
-function renderSaleCard(
-  sale
-){
+  const name=
+    customer.name||
+    "Cliente";
 
-  const cancelled =
-    isCancelled(
-      sale
-    );
+  const phone=
+    customer.phone||
+    "";
 
-  const paid =
-    isPaid(
-      sale
-    );
+  const total=getSaleTotal(sale);
+  const balance=getSaleBalance(sale);
+  const status=saleStatus(sale);
 
-  const balance =
-    getSaleBalance(
-      sale
-    );
+  const isOpen=
+    status==="open" &&
+    balance>0;
 
-  const total =
-    Number(
-      sale.total || 0
-    );
+  const isCancelled=
+    status==="cancelled";
 
-  const paidAmount =
-    getSalePaid(
-      sale
-    );
+  const isPaid=
+    status==="paid" ||
+    balance<=0;
 
-  const quantity =
-    getSaleQuantity(
-      sale.id
-    );
+  let badge="Pendiente";
+  let badgeClass="";
 
-  const customerName =
-    getCustomerName(
-      sale
-    );
-
-  const phone =
-    getCustomerPhone(
-      sale
-    );
-
-  const items =
-    getSaleItems(
-      sale.id
-    );
-
-
-  let badgeClass =
-    "pending";
-
-  let badgeText =
-    "PENDIENTE";
-
-
-  if(cancelled){
-
-    badgeClass =
-      "cancelled";
-
-    badgeText =
-      "CANCELADA";
-
+  if(isCancelled){
+    badge="Cancelada";
+  }else if(isPaid){
+    badge="Pagada";
   }
 
-  else if(paid){
-
-    badgeClass =
-      "paid";
-
-    badgeText =
-      "PAGADA";
-
-  }
-
-
-  const productsHTML =
-    items.length
-      ? items
-          .map(
-            item => `
-
-              <div class="sale-product-row">
-
-                <div class="sale-product-info">
-
-                  <div class="sale-product-name">
-                    ${escapeHTML(
-                      item.description ||
-                      "Producto"
-                    )}
-                  </div>
-
-                  <div class="sale-product-meta">
-                    ${Number(
-                      item.quantity || 0
-                    )}
-                    ×
-                    ${money(
-                      item.unit_price
-                    )}
-                  </div>
-
-                </div>
-
-                <div class="sale-product-subtotal">
-                  ${money(
-                    item.subtotal ??
-                    (
-                      Number(
-                        item.quantity || 0
-                      ) *
-                      Number(
-                        item.unit_price || 0
-                      )
-                    )
-                  )}
-                </div>
-
-              </div>
-
-            `
-          )
-          .join("")
-      : `
-          <div class="no-products">
-            No hay productos registrados para esta venta.
-          </div>
-        `;
-
+  const whatsappDisabled=
+    !phone;
 
   return `
-
     <article
-      class="sale-card ${
-        cancelled
-          ? "cancelled"
-          : paid
-            ? "paid"
-            : "pending"
-      }"
-      data-sale-id="${escapeHTML(
-        sale.id
-      )}">
+      class="sale-card ${isCancelled?"cancelled":""}"
+      data-sale-id="${escapeHtml(sale.id)}"
+    >
 
       <div class="sale-header">
 
-        <div class="sale-customer">
+        <div class="customer-main">
 
           <div class="customer-name">
-            👤 ${escapeHTML(
-              customerName
-            )}
+            ${escapeHtml(name)}
           </div>
 
           ${
             phone
-              ? `
-                <div class="customer-phone">
-                  📱 ${escapeHTML(
-                    phone
-                  )}
-                </div>
-              `
-              : ""
+            ? `<div class="customer-phone">
+                📱 ${escapeHtml(phone)}
+              </div>`
+            : `<div class="customer-phone">
+                Sin teléfono registrado
+              </div>`
           }
-
-          <div class="sale-date">
-            ${formatDate(
-              sale.created_at ||
-              sale.sale_date
-            )}
-          </div>
 
         </div>
 
-        <div class="sale-total">
+        <div class="sale-meta">
 
-          <div class="sale-total-label">
-            TOTAL
+          <div class="sale-date">
+            ${escapeHtml(formatDate(sale.sale_date||sale.created_at))}
           </div>
 
-          <div class="sale-total-value">
-            ${money(total)}
-          </div>
-
-          <div class="status-badge ${badgeClass}">
-            ${badgeText}
+          <div class="sale-id">
+            #${escapeHtml(String(sale.id).slice(0,8))}
           </div>
 
         </div>
 
       </div>
 
-
       <div class="sale-body">
 
-        <div class="sale-financial">
+        <div class="sale-summary">
 
-          <div class="financial-item">
-
-            <div class="financial-label">
-              PIEZAS
+          <div>
+            <div class="sale-total-label">
+              Total de la venta
             </div>
 
-            <div class="financial-value">
-              ${quantity}
+            <div class="sale-total-value">
+              ${money(total)}
             </div>
-
           </div>
 
-          <div class="financial-item">
-
-            <div class="financial-label">
-              PAGADO
-            </div>
-
-            <div class="financial-value paid">
-              ${money(
-                paidAmount
-              )}
-            </div>
-
-          </div>
-
-          <div class="financial-item">
-
-            <div class="financial-label">
-              SALDO
-            </div>
-
-            <div class="financial-value balance">
-              ${money(
-                balance
-              )}
-            </div>
-
+          <div class="sale-balance ${isPaid?"paid":""}">
+            ${
+              isCancelled
+              ? "Cuenta cancelada"
+              : isPaid
+                ? "Saldo liquidado"
+                : "Saldo: "+money(balance)
+            }
           </div>
 
         </div>
-
-
-        <div class="sale-products">
-
-          <div class="sale-products-title">
-            📦 Productos de la venta
-          </div>
-
-          ${productsHTML}
-
-        </div>
-
 
         <div class="sale-actions">
 
-          ${
-            !cancelled && balance > 0
-              ? `
-                <button
-                  type="button"
-                  class="action-btn pay"
-                  data-action="pay"
-                  data-id="${escapeHTML(
-                    sale.id
-                  )}">
-                  💳 Pagar
-                </button>
-              `
-              : `
-                <button
-                  type="button"
-                  class="action-btn pay"
-                  disabled>
-                  ${
-                    cancelled
-                      ? "Cancelada"
-                      : "✓ Pagada"
-                  }
-                </button>
-              `
-          }
-
-
-          ${
-            phone && !cancelled
-              ? `
-                <button
-                  type="button"
-                  class="action-btn whatsapp"
-                  data-action="whatsapp"
-                  data-id="${escapeHTML(
-                    sale.id
-                  )}">
-                  📱 WhatsApp
-                </button>
-              `
-              : `
-                <button
-                  type="button"
-                  class="action-btn whatsapp"
-                  disabled>
-                  📱 WhatsApp
-                </button>
-              `
-          }
-
-
           <button
-            type="button"
-            class="action-btn detail"
-            data-action="detail"
-            data-id="${escapeHTML(
-              sale.id
-            )}">
-            🧾 Ver detalle
+            class="action-btn action-detail"
+            onclick="openDetail('${escapeHtml(sale.id)}')"
+          >
+            🧾 Detalle
           </button>
 
+          <button
+            class="action-btn action-pay"
+            onclick="openPayment('${escapeHtml(sale.id)}')"
+            ${!isOpen?"disabled":""}
+          >
+            💳 Abonar
+          </button>
 
-          ${
-            !cancelled
-              ? `
-                <button
-                  type="button"
-                  class="action-btn cancel"
-                  data-action="cancel"
-                  data-id="${escapeHTML(
-                    sale.id
-                  )}">
-                  ❌ Cancelar
-                </button>
-              `
-              : ""
-          }
+          <button
+            class="action-btn action-whatsapp"
+            onclick="sendWhatsApp('${escapeHtml(sale.id)}')"
+            ${whatsappDisabled?"disabled":""}
+          >
+            📱 WhatsApp
+          </button>
+
+          <button
+            class="action-btn action-cancel"
+            onclick="openCancel('${escapeHtml(sale.id)}')"
+            ${!isOpen?"disabled":""}
+          >
+            ❌ Cancelar
+          </button>
 
         </div>
 
       </div>
 
     </article>
-
   `;
-
 }
 
-
 /* =========================================================
-   EVENTOS DE VENTAS
+   DETALLE
 ========================================================= */
 
-function attachSaleEvents(){
+async function openDetail(saleId){
 
-  document
-    .querySelectorAll(
-      "[data-action]"
-    )
-    .forEach(
-      button => {
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            const action =
-              button.dataset.action;
-
-            const id =
-              button.dataset.id;
-
-            const sale =
-              sales.find(
-                item =>
-                  String(item.id) ===
-                  String(id)
-              );
-
-            if(!sale){
-              return;
-            }
-
-
-            if(
-              action === "pay"
-            ){
-
-              openPaymentModal(
-                sale
-              );
-
-            }
-
-
-            if(
-              action === "detail"
-            ){
-
-              openDetailModal(
-                sale
-              );
-
-            }
-
-
-            if(
-              action === "cancel"
-            ){
-
-              openCancelModal(
-                sale
-              );
-
-            }
-
-
-            if(
-              action === "whatsapp"
-            ){
-
-              sendWhatsApp(
-                sale
-              );
-
-            }
-
-          }
-        );
-
-      }
-    );
-
-}
-
-
-/* =========================================================
-   MODAL DETALLE
-========================================================= */
-
-function openDetailModal(
-  sale
-){
-
-  selectedSaleForDetail =
-    sale;
-
-
-  const items =
-    getSaleItems(
-      sale.id
-    );
-
-
-  const total =
-    Number(
-      sale.total || 0
-    );
-
-
-  const balance =
-    getSaleBalance(
-      sale
-    );
-
-
-  const paid =
-    getSalePaid(
-      sale
-    );
-
-
-  const customer =
-    getCustomerName(
-      sale
-    );
-
-
-  $("detailContent").innerHTML = `
-
-    <div class="detail-list">
-
-      <div class="detail-row">
-
-        <div class="detail-label">
-          Cliente
-        </div>
-
-        <div class="detail-value">
-          ${escapeHTML(
-            customer
-          )}
-        </div>
-
-      </div>
-
-      <div class="detail-row">
-
-        <div class="detail-label">
-          Fecha
-        </div>
-
-        <div class="detail-value">
-          ${formatDate(
-            sale.created_at ||
-            sale.sale_date
-          )}
-        </div>
-
-      </div>
-
-      <div class="detail-row">
-
-        <div class="detail-label">
-          Total
-        </div>
-
-        <div class="detail-value">
-          ${money(total)}
-        </div>
-
-      </div>
-
-      <div class="detail-row">
-
-        <div class="detail-label">
-          Pagado
-        </div>
-
-        <div class="detail-value"
-             style="color:#15803d">
-          ${money(paid)}
-        </div>
-
-      </div>
-
-      <div class="detail-row">
-
-        <div class="detail-label">
-          Saldo
-        </div>
-
-        <div class="detail-value"
-             style="color:#b45309">
-          ${money(balance)}
-        </div>
-
-      </div>
-
-    </div>
-
-    <div style="
-      margin-top:20px;
-      font-size:16px;
-      font-weight:850;
-      margin-bottom:10px
-    ">
-      📦 Productos
-    </div>
-
-    ${
-      items.length
-        ? items
-            .map(
-              item => `
-
-                <div class="sale-product-row">
-
-                  <div class="sale-product-info">
-
-                    <div class="sale-product-name">
-                      ${escapeHTML(
-                        item.description ||
-                        "Producto"
-                      )}
-                    </div>
-
-                    <div class="sale-product-meta">
-                      ${Number(
-                        item.quantity || 0
-                      )}
-                      ×
-                      ${money(
-                        item.unit_price
-                      )}
-                    </div>
-
-                  </div>
-
-                  <div class="sale-product-subtotal">
-                    ${money(
-                      item.subtotal
-                    )}
-                  </div>
-
-                </div>
-
-              `
-            )
-            .join("")
-        : `
-            <div class="no-products">
-              No hay productos registrados para esta venta.
-            </div>
-          `
-    }
-
-    ${
-      sale.notes
-        ? `
-          <div style="
-            margin-top:18px;
-            padding:13px;
-            background:#f3f4f6;
-            border-radius:11px;
-            font-size:13px
-          ">
-            <strong>Notas:</strong><br>
-            ${escapeHTML(
-              sale.notes
-            )}
-          </div>
-        `
-        : ""
-    }
-
-  `;
-
-
-  showModal(
-    "detailModal"
+  const sale=sales.find(
+    item=>item.id===saleId
   );
 
-}
+  if(!sale){
+    showStatus(
+      "No fue posible encontrar la cuenta.",
+      "error"
+    );
+    return;
+  }
 
+  const customer=getCustomer(sale);
 
-/* =========================================================
-   MODAL PAGOS
-========================================================= */
+  const total=getSaleTotal(sale);
+  const balance=getSaleBalance(sale);
+  const paid=getSalePaid(sale);
+  const pieces=getSalePieces(sale);
 
-function openPaymentModal(
-  sale
-){
+  let statusLabel="Pendiente";
 
-  selectedSaleForPayment =
-    sale;
+  if(saleStatus(sale)==="paid"){
+    statusLabel="Pagada";
+  }
 
+  if(saleStatus(sale)==="cancelled"){
+    statusLabel="Cancelada";
+  }
 
-  $("paymentSaleInfo").innerHTML =
+  const items=sale.items||[];
 
-    "<strong>" +
-    escapeHTML(
-      getCustomerName(
-        sale
-      )
-    ) +
-    "</strong><br>" +
+  const productRows=items.length
+    ? items.map(item=>{
 
-    "Saldo pendiente: <strong>" +
-    money(
-      getSaleBalance(
-        sale
-      )
-    ) +
-    "</strong>";
+        let productName=
+          item.description||
+          "";
 
+        if(
+          item.product_id &&
+          productsMap.has(item.product_id)
+        ){
+          const product=
+            productsMap.get(item.product_id);
 
-  const container =
-    $("paymentMethodsList");
+          productName=
+            product.name||
+            productName||
+            "Producto";
+        }
 
+        if(!productName){
+          productName="Producto";
+        }
 
-  if(!payments.length){
+        return `
+          <div class="product-row">
 
-    container.innerHTML = `
-      <div class="empty-state">
-        No hay métodos de pago disponibles.
+            <div>
+              <div class="product-name">
+                ${escapeHtml(productName)}
+              </div>
+
+              ${
+                item.unit_price!=null
+                ? `<div style="color:#6b7280;margin-top:2px">
+                    ${money(item.unit_price)} c/u
+                  </div>`
+                : ""
+              }
+            </div>
+
+            <div class="product-qty">
+              ${Number(item.quantity||0)} pza.
+            </div>
+
+          </div>
+        `;
+      }).join("")
+    : `
+      <div class="product-row">
+        <div class="product-name">
+          Sin productos registrados
+        </div>
       </div>
     `;
 
-  }
+  const cancelReason=
+    sale.cancellation_reason||
+    "";
 
-  else{
+  $("detailBody").innerHTML=`
 
-    container.innerHTML =
-      payments
-        .map(
-          payment => `
+    <div class="detail-grid">
 
-            <button
-              type="button"
-              class="payment-option"
-              data-payment-id="${escapeHTML(
-                payment.id
-              )}">
-              💳
-              ${escapeHTML(
-                payment.name
-              )}
-            </button>
+      <div class="detail-item">
+        <span class="detail-label">Cliente</span>
+        <div class="detail-value">
+          ${escapeHtml(customer.name||"Cliente")}
+        </div>
+      </div>
 
-          `
-        )
-        .join("");
+      <div class="detail-item">
+        <span class="detail-label">Teléfono</span>
+        <div class="detail-value">
+          ${escapeHtml(customer.phone||"No registrado")}
+        </div>
+      </div>
 
+      <div class="detail-item">
+        <span class="detail-label">Fecha</span>
+        <div class="detail-value">
+          ${escapeHtml(formatDate(sale.sale_date||sale.created_at))}
+        </div>
+      </div>
 
-    container
-      .querySelectorAll(
-        "[data-payment-id]"
-      )
-      .forEach(
-        button => {
+      <div class="detail-item">
+        <span class="detail-label">Estado</span>
+        <div class="detail-value">
+          ${escapeHtml(statusLabel)}
+        </div>
+      </div>
 
-          button.addEventListener(
-            "click",
-            () => {
+      <div class="detail-item">
+        <span class="detail-label">Piezas</span>
+        <div class="detail-value">
+          ${pieces}
+        </div>
+      </div>
 
-              container
-                .querySelectorAll(
-                  ".payment-option"
-                )
-                .forEach(
-                  item =>
-                    item.style.borderColor =
-                      "#ddd"
-                );
+      <div class="detail-item">
+        <span class="detail-label">Total</span>
+        <div class="detail-value">
+          ${money(total)}
+        </div>
+      </div>
 
-              button.style.borderColor =
-                "#2563eb";
+      <div class="detail-item">
+        <span class="detail-label">Pagado</span>
+        <div class="detail-value paid">
+          ${money(paid)}
+        </div>
+      </div>
 
-              button.dataset.selected =
-                "true";
+      <div class="detail-item">
+        <span class="detail-label">Saldo pendiente</span>
+        <div class="detail-value ${balance>0?"balance":"paid"}">
+          ${money(balance)}
+        </div>
+      </div>
 
-            }
-          );
+    </div>
 
-        }
-      );
+    <div class="modal-section-title">
+      Productos
+    </div>
 
-  }
+    <div class="product-list">
+      ${productRows}
+    </div>
 
+    ${
+      customer.notes
+      ? `
+        <div class="modal-section-title">
+          Notas del cliente
+        </div>
 
-  showModal(
-    "paymentModal"
-  );
+        <div class="detail-item">
+          ${escapeHtml(customer.notes)}
+        </div>
+      `
+      : ""
+    }
 
+    ${
+      cancelReason
+      ? `
+        <div class="modal-section-title">
+          Motivo de cancelación
+        </div>
+
+        <div class="detail-item">
+          ${escapeHtml(cancelReason)}
+        </div>
+      `
+      : ""
+    }
+
+  `;
+
+  openModal("detailModal");
 }
 
+/* =========================================================
+   ABONO
+========================================================= */
+
+async function openPayment(saleId){
+
+  const sale=sales.find(
+    item=>item.id===saleId
+  );
+
+  if(!sale){
+    showStatus(
+      "No fue posible encontrar la cuenta.",
+      "error"
+    );
+    return;
+  }
+
+  const balance=getSaleBalance(sale);
+
+  if(balance<=0){
+    showStatus(
+      "Esta cuenta ya no tiene saldo pendiente.",
+      "warn"
+    );
+    return;
+  }
+
+  selectedSale=sale;
+  selectedPaymentMethod=null;
+
+  $("paymentCustomerName").textContent=
+    getCustomerName(sale);
+
+  $("paymentCurrentBalance").textContent=
+    money(balance);
+
+  $("paymentAmount").value="";
+
+  $("paymentError").className="payment-error";
+  $("paymentError").textContent="";
+
+  renderQuickAmounts(balance);
+  renderPaymentMethods();
+
+  openModal("paymentModal");
+
+  setTimeout(()=>{
+    $("paymentAmount").focus();
+  },150);
+}
+
+function renderQuickAmounts(balance){
+
+  const values=[];
+
+  const rounded=Math.floor(balance);
+
+  if(balance>0){
+    values.push(balance);
+  }
+
+  if(balance>=100){
+    values.push(100);
+  }
+
+  if(balance>=200){
+    values.push(200);
+  }
+
+  if(balance>=500){
+    values.push(500);
+  }
+
+  if(balance>=1000){
+    values.push(1000);
+  }
+
+  const unique=[
+    ...new Set(
+      values
+        .filter(value=>value>0)
+        .filter(value=>value<=balance)
+        .map(value=>Number(value.toFixed(2)))
+    )
+  ];
+
+  $("quickAmounts").innerHTML=
+    unique.map(value=>`
+      <button
+        type="button"
+        class="quick-amount"
+        onclick="setPaymentAmount(${value})"
+      >
+        ${value===balance?"Liquidar":money(value)}
+      </button>
+    `).join("");
+}
+
+function setPaymentAmount(amount){
+  $("paymentAmount").value=
+    Number(amount).toFixed(2);
+}
+
+function renderPaymentMethods(){
+
+  if(!paymentMethods.length){
+
+    $("paymentMethods").innerHTML=`
+      <div class="empty" style="grid-column:1/-1;padding:20px">
+        <strong>No hay métodos de pago disponibles</strong>
+        <div>
+          Configura los métodos de pago activos para este negocio.
+        </div>
+      </div>
+    `;
+
+    return;
+  }
+
+  $("paymentMethods").innerHTML=
+    paymentMethods.map(method=>`
+
+      <button
+        type="button"
+        class="method-btn"
+        data-method-id="${escapeHtml(method.id)}"
+        onclick="selectPaymentMethod('${escapeHtml(method.id)}')"
+      >
+        💳 ${escapeHtml(method.name)}
+      </button>
+
+    `).join("");
+}
+
+function selectPaymentMethod(methodId){
+
+  selectedPaymentMethod=
+    paymentMethods.find(
+      method=>method.id===methodId
+    )||null;
+
+  document
+    .querySelectorAll(".method-btn")
+    .forEach(button=>{
+      button.classList.toggle(
+        "active",
+        button.dataset.methodId===methodId
+      );
+    });
+}
+
+/* =========================================================
+   CONFIRMAR ABONO
+========================================================= */
 
 async function confirmPayment(){
 
-  if(!selectedSaleForPayment){
-
+  if(!selectedSale){
     return;
-
   }
 
+  const balance=getSaleBalance(selectedSale);
 
-  const selected =
-    document.querySelector(
-      ".payment-option[data-selected='true']"
-    );
+  const amount=Number(
+    $("paymentAmount").value
+  );
 
+  const errorElement=$("paymentError");
 
-  if(!selected){
+  errorElement.className="payment-error";
+  errorElement.textContent="";
 
-    showToast(
-      "Selecciona un método de pago."
-    );
+  if(!Number.isFinite(amount) || amount<=0){
+
+    errorElement.textContent=
+      "Ingresa una cantidad válida.";
+
+    errorElement.className=
+      "payment-error show";
 
     return;
-
   }
 
+  if(amount>balance+0.005){
 
-  const paymentId =
-    selected.dataset.paymentId;
+    errorElement.textContent=
+      "El abono no puede ser mayor al saldo pendiente de "+
+      money(balance)+".";
 
+    errorElement.className=
+      "payment-error show";
 
-  const sale =
-    selectedSaleForPayment;
+    return;
+  }
 
+  if(!selectedPaymentMethod){
 
-  const button =
-    $("confirmPaymentButton");
+    errorElement.textContent=
+      "Selecciona un método de pago.";
 
+    errorElement.className=
+      "payment-error show";
 
-  button.disabled =
-    true;
+    return;
+  }
 
-  button.textContent =
-    "Registrando...";
+  const button=$("confirmPaymentButton");
 
+  button.disabled=true;
+  button.textContent="Registrando...";
 
   try{
 
-    initializeSupabase();
-
-
     /*
-      Intentamos registrar el pago usando
-      la tabla payments.
+      1. Registramos el pago.
     */
 
-    const amount =
-      getSaleBalance(
-        sale
-      );
-
-
-    const result =
+    const paymentResult=
       await supabaseClient
         .from("payments")
         .insert({
+          sale_id:selectedSale.id,
+          customer_id:selectedSale.customer_id||null,
+          payment_method_id:selectedPaymentMethod.id,
+          amount:Number(amount.toFixed(2))
+        })
+        .select();
 
-          sale_id:
-            sale.id,
-
-          customer_id:
-            sale.customer_id ||
-            null,
-
-          payment_method_id:
-            paymentId,
-
-          amount:
-            amount
-
-        });
-
-
-    if(result.error){
-
-      throw result.error;
-
+    if(paymentResult.error){
+      throw paymentResult.error;
     }
 
+    /*
+      2. Calculamos el nuevo saldo.
+    */
 
-    hideModal(
-      "paymentModal"
+    const newBalance=
+      Math.max(
+        0,
+        Number(
+          (balance-amount).toFixed(2)
+        )
+      );
+
+    const newStatus=
+      newBalance<=0.005
+        ? "paid"
+        : "open";
+
+    /*
+      3. Actualizamos la venta.
+    */
+
+    const saleUpdate=
+      await supabaseClient
+        .from("sales")
+        .update({
+          balance:newBalance,
+          status:newStatus
+        })
+        .eq("id",selectedSale.id);
+
+    if(saleUpdate.error){
+
+      /*
+        El pago sí pudo haberse registrado.
+        Informamos claramente para evitar duplicarlo.
+      */
+
+      throw new Error(
+        "El abono fue registrado, pero no fue posible actualizar "+
+        "el saldo de la venta. No vuelvas a registrar el mismo abono "+
+        "sin verificar primero la cuenta.\n"+
+        saleUpdate.error.message
+      );
+    }
+
+    closeModal("paymentModal");
+
+    showStatus(
+      newBalance<=0
+        ? "Cuenta liquidada correctamente."
+        : "Abono registrado correctamente. Nuevo saldo: "+
+          money(newBalance),
+      "ok"
     );
 
-
-    showToast(
-      "Pago registrado correctamente."
-    );
-
+    selectedSale=null;
+    selectedPaymentMethod=null;
 
     await loadSales();
 
+  }catch(error){
+
+    console.error("Error registrando abono:",error);
+
+    errorElement.textContent=
+      error.message||
+      "No fue posible registrar el abono.";
+
+    errorElement.className=
+      "payment-error show";
+
+  }finally{
+
+    button.disabled=false;
+    button.textContent="Abonar";
   }
-
-  catch(error){
-
-    console.error(
-      "Error registrando pago:",
-      error
-    );
-
-
-    showStatus(
-      "No se pudo registrar el pago.\n\n" +
-      (
-        error?.message ||
-        String(error)
-      )
-    );
-
-  }
-
-  finally{
-
-    button.disabled =
-      false;
-
-    button.textContent =
-      "Registrar pago";
-
-  }
-
 }
-
 
 /* =========================================================
    WHATSAPP
 ========================================================= */
 
-function sendWhatsApp(
-  sale
-){
+function sendWhatsApp(saleId){
 
-  const phone =
-    getCustomerPhone(
-      sale
-    );
+  const sale=sales.find(
+    item=>item.id===saleId
+  );
 
+  if(!sale){
+    return;
+  }
+
+  const phone=getCustomerPhone(sale);
 
   if(!phone){
-
-    showToast(
-      "Este cliente no tiene teléfono registrado."
+    showStatus(
+      "Este cliente no tiene teléfono registrado.",
+      "warn"
     );
-
     return;
-
   }
 
+  const name=getCustomerName(sale);
+  const balance=getSaleBalance(sale);
 
-  const cleanPhone =
-    phone.replace(
-      /\D/g,
-      ""
-    );
+  const message=
+    "Hola "+name+
+    ", te compartimos el saldo pendiente de tu cuenta en "+
+    currentBusiness+
+    ".\n\n"+
+    "Saldo pendiente: "+money(balance)+
+    "\n\nGracias por tu preferencia. 😊";
 
-
-  if(!cleanPhone){
-
-    showToast(
-      "El teléfono del cliente no es válido."
-    );
-
-    return;
-
-  }
-
-
-  const customerName =
-    getCustomerName(
-      sale
-    );
-
-
-  const items =
-    getSaleItems(
-      sale.id
-    );
-
-
-  const productText =
-    items.length
-      ? items
-          .map(
-            item =>
-              `${item.description || "Producto"} x${Number(item.quantity || 0)}`
-          )
-          .join("\n")
-      : "Productos no registrados";
-
-
-  const message =
-    `Hola ${customerName}, te comparto el detalle de tu cuenta en Charlie Shop:\n\n` +
-    `${productText}\n\n` +
-    `Total: ${money(sale.total)}\n` +
-    `Saldo pendiente: ${money(getSaleBalance(sale))}\n\n` +
-    `Gracias por tu compra.`;
-
-
-  const url =
-    "https://wa.me/52" +
-    cleanPhone +
-    "?text=" +
-    encodeURIComponent(
-      message
-    );
-
-
-  window.open(
-    url,
-    "_blank"
+  const url=whatsappUrl(
+    phone,
+    message
   );
 
+  if(url){
+    window.open(
+      url,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }
 }
-
 
 /* =========================================================
-   CANCELAR VENTA
+   CANCELAR
 ========================================================= */
 
-function openCancelModal(
-  sale
-){
+function openCancel(saleId){
 
-  selectedSaleForCancel =
-    sale;
-
-
-  $("cancelReason").value =
-    "";
-
-
-  showModal(
-    "cancelModal"
+  const sale=sales.find(
+    item=>item.id===saleId
   );
 
-}
+  if(!sale){
+    return;
+  }
 
+  selectedCancelSale=sale;
+
+  $("cancelReason").value="";
+
+  $("cancelError").className="payment-error";
+  $("cancelError").textContent="";
+
+  openModal("cancelModal");
+}
 
 async function confirmCancel(){
 
-  if(!selectedSaleForCancel){
-
+  if(!selectedCancelSale){
     return;
-
   }
 
+  const reason=
+    $("cancelReason").value.trim();
 
-  const sale =
-    selectedSaleForCancel;
+  const errorElement=
+    $("cancelError");
 
-
-  const reason =
-    $("cancelReason")
-      .value
-      .trim();
-
+  errorElement.className="payment-error";
+  errorElement.textContent="";
 
   if(!reason){
 
-    showToast(
-      "Escribe el motivo de cancelación."
-    );
+    errorElement.textContent=
+      "Escribe el motivo de la cancelación.";
 
-    $("cancelReason").focus();
+    errorElement.className=
+      "payment-error show";
 
     return;
-
   }
 
+  const button=$("confirmCancelButton");
 
-  const button =
-    $("confirmCancelButton");
-
-
-  button.disabled =
-    true;
-
-  button.textContent =
-    "Cancelando...";
-
+  button.disabled=true;
+  button.textContent="Cancelando...";
 
   try{
 
-    initializeSupabase();
-
-
-    const result =
+    const result=
       await supabaseClient
         .from("sales")
         .update({
-
-          status:
-            "cancelled",
-
-          cancellation_reason:
-            reason
-
+          status:"cancelled",
+          cancellation_reason:reason
         })
-        .eq(
-          "id",
-          sale.id
-        );
-
+        .eq("id",selectedCancelSale.id);
 
     if(result.error){
-
       throw result.error;
-
     }
 
+    closeModal("cancelModal");
 
-    hideModal(
-      "cancelModal"
+    showStatus(
+      "Cuenta cancelada correctamente.",
+      "ok"
     );
 
-
-    showToast(
-      "Venta cancelada correctamente."
-    );
-
+    selectedCancelSale=null;
 
     await loadSales();
 
-  }
-
-  catch(error){
+  }catch(error){
 
     console.error(
-      "Error cancelando venta:",
+      "Error cancelando cuenta:",
       error
     );
 
+    errorElement.textContent=
+      error.message||
+      "No fue posible cancelar la cuenta.";
 
-    showStatus(
-      "No se pudo cancelar la venta.\n\n" +
-      (
-        error?.message ||
-        String(error)
-      )
-    );
+    errorElement.className=
+      "payment-error show";
 
+  }finally{
+
+    button.disabled=false;
+    button.textContent="Cancelar cuenta";
   }
-
-  finally{
-
-    button.disabled =
-      false;
-
-    button.textContent =
-      "Cancelar venta";
-
-  }
-
 }
-
 
 /* =========================================================
-   MODALES GENERALES
+   EVENTOS
 ========================================================= */
 
-function showModal(
-  id
-){
-
-  const modal =
-    $(id);
-
-  modal.classList.add(
-    "show"
-  );
-
-  modal.setAttribute(
-    "aria-hidden",
-    "false"
-  );
-
-  document.body.classList.add(
-    "modal-open"
-  );
-
-}
-
-
-function hideModal(
-  id
-){
-
-  const modal =
-    $(id);
-
-  modal.classList.remove(
-    "show"
-  );
-
-  modal.setAttribute(
-    "aria-hidden",
-    "true"
-  );
-
-
-  if(
-    !document.querySelector(
-      ".modal.show"
-    )
-  ){
-
-    document.body.classList.remove(
-      "modal-open"
-    );
-
+$("businessBakeQuiri").addEventListener(
+  "click",
+  ()=>{
+    if(currentBusiness!=="BakeQuiri"){
+      setBusiness("BakeQuiri");
+    }
   }
+);
 
-}
-
-
-/* =========================================================
-   RENDER GENERAL
-========================================================= */
-
-function renderEverything(){
-
-  renderSummary();
-
-  renderProductBreakdown();
-
-  renderSales();
-
-}
-
-
-/* =========================================================
-   BÚSQUEDA
-========================================================= */
+$("businessSpicyRoll").addEventListener(
+  "click",
+  ()=>{
+    if(currentBusiness!=="SpicyRoll"){
+      setBusiness("SpicyRoll");
+    }
+  }
+);
 
 $("searchInput").addEventListener(
   "input",
-  event => {
+  renderSales
+);
 
-    searchQuery =
-      String(
-        event.target.value || ""
-      )
-      .trim()
-      .toLowerCase();
+$("filterSelect").addEventListener(
+  "change",
+  renderSales
+);
 
-    renderSales();
+$("refreshButton").addEventListener(
+  "click",
+  loadSales
+);
 
+$("confirmPaymentButton").addEventListener(
+  "click",
+  confirmPayment
+);
+
+$("confirmCancelButton").addEventListener(
+  "click",
+  confirmCancel
+);
+
+/* Navegación */
+
+$("accountsButton").addEventListener(
+  "click",
+  ()=>{
+    window.location.href=
+      "cuentas.html?business="+
+      encodeURIComponent(currentBusiness);
   }
 );
 
-
-/* =========================================================
-   FILTROS
-========================================================= */
-
-document
-  .querySelectorAll(
-    ".filter-btn"
-  )
-  .forEach(
-    button => {
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          currentFilter =
-            button.dataset.filter;
-
-
-          document
-            .querySelectorAll(
-              ".filter-btn"
-            )
-            .forEach(
-              item =>
-                item.classList.remove(
-                  "active"
-                )
-            );
-
-
-          button.classList.add(
-            "active"
-          );
-
-
-          renderSales();
-
-        }
-      );
-
-    }
-  );
-
-
-/* =========================================================
-   CAMBIO DE NEGOCIO
-========================================================= */
-
-async function changeBusiness(
-  name,
-  button
-){
-
-  if(
-    name ===
-    currentBusiness
-  ){
-
-    return;
-
+$("clientsButton").addEventListener(
+  "click",
+  ()=>{
+    window.location.href=
+      "clientes.html?business="+
+      encodeURIComponent(currentBusiness);
   }
+);
 
+$("historyButton").addEventListener(
+  "click",
+  ()=>{
+    window.location.href=
+      "historial.html?business="+
+      encodeURIComponent(currentBusiness);
+  }
+);
 
-  currentBusiness =
-    name;
+$("inventoryButton").addEventListener(
+  "click",
+  ()=>{
+    window.location.href=
+      "inventario.html?business="+
+      encodeURIComponent(currentBusiness);
+  }
+);
 
+$("dashboardButton").addEventListener(
+  "click",
+  ()=>{
+    window.location.href=
+      "dashboard.html?business="+
+      encodeURIComponent(currentBusiness);
+  }
+);
 
-  document
-    .querySelectorAll(
-      ".business-btn"
-    )
-    .forEach(
-      item =>
-        item.classList.remove(
-          "active"
-        )
-    );
-
-
-  button.classList.add(
-    "active"
-  );
-
-
-  const url =
-    new URL(
-      window.location.href
-    );
-
-
-  url.searchParams.set(
-    "business",
-    currentBusiness
-  );
-
-
-  window.history.replaceState(
-    {},
-    "",
-    url
-  );
-
-
-  sales = [];
-  saleItems = [];
-  customers = [];
-  payments = [];
-
-
-  clearStatus();
-
-
-  $("salesList").innerHTML = `
-    <div class="loading">
-      <div class="spinner"></div>
-      Cargando ${escapeHTML(
-        currentBusiness
-      )}...
-    </div>
-  `;
-
-
-  await loadSales();
-
-}
-
-
-/* =========================================================
-   BOTONES NEGOCIO
-========================================================= */
+/* Cerrar modales */
 
 document
-  .querySelectorAll(
-    ".business-btn"
-  )
-  .forEach(
-    button => {
+  .querySelectorAll("[data-close]")
+  .forEach(button=>{
 
-      if(
-        button.dataset.business ===
-        currentBusiness
-      ){
-
-        button.classList.add(
-          "active"
+    button.addEventListener(
+      "click",
+      ()=>{
+        closeModal(
+          button.dataset.close
         );
-
       }
-      else{
-
-        button.classList.remove(
-          "active"
-        );
-
-      }
-
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          changeBusiness(
-            button.dataset.business,
-            button
-          );
-
-        }
-      );
-
-    }
-  );
-
-
-/* =========================================================
-   NAVEGACIÓN
-========================================================= */
-
-function goTo(
-  page
-){
-
-  window.location.href =
-    page +
-    "?business=" +
-    encodeURIComponent(
-      currentBusiness
     );
 
-}
-
-
-$("accountsButton")
-  .addEventListener(
-    "click",
-    () => {}
-  );
-
-
-$("clientsButton")
-  .addEventListener(
-    "click",
-    () =>
-      goTo("clientes.html")
-  );
-
-
-$("historyButton")
-  .addEventListener(
-    "click",
-    () =>
-      goTo("historial.html")
-  );
-
-
-$("inventoryButton")
-  .addEventListener(
-    "click",
-    () =>
-      goTo("inventario.html")
-  );
-
-
-$("dashboardButton")
-  .addEventListener(
-    "click",
-    () =>
-      goTo("dashboard.html")
-  );
-
-
-/*
-  Si existe un archivo principal index.html
-  usamos esa ruta para regresar al POS.
-  No se agrega botón adicional porque mantenemos
-  exactamente la navegación del POS proporcionado.
-*/
-
-
-/* =========================================================
-   MODAL PAGOS
-========================================================= */
-
-$("closePaymentModal")
-  .addEventListener(
-    "click",
-    () =>
-      hideModal("paymentModal")
-  );
-
-
-$("cancelPaymentModal")
-  .addEventListener(
-    "click",
-    () =>
-      hideModal("paymentModal")
-  );
-
-
-$("confirmPaymentButton")
-  .addEventListener(
-    "click",
-    confirmPayment
-  );
-
-
-/* =========================================================
-   MODAL DETALLE
-========================================================= */
-
-$("closeDetailModal")
-  .addEventListener(
-    "click",
-    () =>
-      hideModal("detailModal")
-  );
-
-
-/* =========================================================
-   MODAL CANCELACIÓN
-========================================================= */
-
-$("closeCancelModal")
-  .addEventListener(
-    "click",
-    () =>
-      hideModal("cancelModal")
-  );
-
-
-$("cancelCancelModal")
-  .addEventListener(
-    "click",
-    () =>
-      hideModal("cancelModal")
-  );
-
-
-$("confirmCancelButton")
-  .addEventListener(
-    "click",
-    confirmCancel
-  );
-
-
-/* =========================================================
-   CERRAR MODALES
-========================================================= */
+  });
 
 document
-  .querySelectorAll(
-    ".modal"
-  )
-  .forEach(
-    modal => {
+  .querySelectorAll(".modal")
+  .forEach(modal=>{
 
-      modal.addEventListener(
-        "click",
-        event => {
+    modal.addEventListener(
+      "click",
+      event=>{
 
-          if(
-            event.target ===
-            modal
-          ){
-
-            hideModal(
-              modal.id
-            );
-
-          }
-
+        if(event.target===modal){
+          closeModal(modal.id);
         }
-      );
 
-    }
-  );
+      }
+    );
 
+  });
 
 document.addEventListener(
   "keydown",
-  event => {
+  event=>{
 
-    if(
-      event.key !==
-      "Escape"
-    ){
+    if(event.key==="Escape"){
 
-      return;
+      document
+        .querySelectorAll(".modal.show")
+        .forEach(modal=>{
+          closeModal(modal.id);
+        });
 
     }
 
-
-    document
-      .querySelectorAll(
-        ".modal.show"
-      )
-      .forEach(
-        modal =>
-          hideModal(
-            modal.id
-          )
-      );
-
   }
 );
-
-
-/* =========================================================
-   ONLINE / OFFLINE
-========================================================= */
-
-window.addEventListener(
-  "online",
-  () => {
-
-    showToast(
-      "Conexión restaurada."
-    );
-
-    loadSales();
-
-  }
-);
-
-
-window.addEventListener(
-  "offline",
-  () => {
-
-    showStatus(
-      "📴 Sin conexión a Internet.\nLas ventas existentes podrían no actualizarse hasta recuperar la conexión.",
-      "warn"
-    );
-
-  }
-);
-
 
 /* =========================================================
    INICIO
 ========================================================= */
 
-async function startApp(){
-
-  /*
-    Marcamos correctamente el negocio
-    seleccionado desde la URL.
-  */
-
-  document
-    .querySelectorAll(
-      ".business-btn"
-    )
-    .forEach(
-      button => {
-
-        button.classList.toggle(
-          "active",
-          button.dataset.business ===
-          currentBusiness
-        );
-
-      }
-    );
-
-
-  if(!navigator.onLine){
-
-    showStatus(
-      "📴 No hay conexión a Internet.",
-      "warn"
-    );
-
-  }
-
-
-  await loadSales();
-
-}
-
-
-startApp();
+initializeBusiness();
+loadSales();
 
 </script>
 
