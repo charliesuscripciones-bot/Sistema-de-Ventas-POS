@@ -1,563 +1,939 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cuentas pendientes</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    *{
-      box-sizing:border-box;
-    }
-
-    body{
-      margin:0;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-      background:#f4f6f8;
-      color:#1f2937;
-    }
-
-    button,
-    input,
-    select{
-      font:inherit;
-    }
-
-    button{
-      cursor:pointer;
-    }
-
-    .header{
-      background:#111827;
-      color:white;
-      padding:18px 20px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:15px;
-      flex-wrap:wrap;
-    }
-
-    .header h1{
-      margin:0;
-      font-size:22px;
-    }
-
-    .header small{
-      opacity:.7;
-    }
-
-    .container{
-      max-width:1400px;
-      margin:auto;
-      padding:20px;
-    }
-
-    .toolbar{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:18px;
-    }
-
-    .btn{
-      border:0;
-      border-radius:10px;
-      padding:10px 15px;
-      background:#e5e7eb;
-      color:#111827;
-      font-weight:600;
-    }
-
-    .btn:hover{
-      filter:brightness(.96);
-    }
-
-    .btn.primary{
-      background:#111827;
-      color:white;
-    }
-
-    .btn.green{
-      background:#16a34a;
-      color:white;
-    }
-
-    .btn.red{
-      background:#dc2626;
-      color:white;
-    }
-
-    .btn.blue{
-      background:#2563eb;
-      color:white;
-    }
-
-    .btn.whatsapp{
-      background:#25d366;
-      color:white;
-    }
-
-    .business-buttons{
-      display:flex;
-      gap:8px;
-      margin-bottom:18px;
-      flex-wrap:wrap;
-    }
-
-    .business-btn{
-      padding:11px 18px;
-      border-radius:10px;
-      border:1px solid #d1d5db;
-      background:white;
-      font-weight:700;
-    }
-
-    .business-btn.active{
-      background:#111827;
-      color:white;
-      border-color:#111827;
-    }
-
-    .filters{
-      background:white;
-      border-radius:14px;
-      padding:15px;
-      box-shadow:0 2px 8px rgba(0,0,0,.06);
-      display:grid;
-      grid-template-columns:2fr 1fr 1fr auto;
-      gap:10px;
-      margin-bottom:18px;
-    }
-
-    .filters input{
-      width:100%;
-      border:1px solid #d1d5db;
-      border-radius:9px;
-      padding:10px 12px;
-      outline:none;
-    }
-
-    .filters input:focus{
-      border-color:#2563eb;
-    }
-
-    .summary{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:12px;
-      margin-bottom:18px;
-    }
-
-    .summary-card{
-      background:white;
-      border-radius:14px;
-      padding:18px;
-      box-shadow:0 2px 8px rgba(0,0,0,.06);
-    }
-
-    .summary-card .label{
-      color:#6b7280;
-      font-size:13px;
-      font-weight:700;
-      text-transform:uppercase;
-    }
-
-    .summary-card .value{
-      margin-top:7px;
-      font-size:27px;
-      font-weight:800;
-    }
-
-    .summary-card.pieces .value{
-      color:#2563eb;
-    }
-
-    .summary-card.total .value{
-      color:#111827;
-    }
-
-    .summary-card.balance .value{
-      color:#dc2626;
-    }
-
-    .section{
-      background:white;
-      border-radius:14px;
-      padding:18px;
-      box-shadow:0 2px 8px rgba(0,0,0,.06);
-      margin-bottom:18px;
-    }
-
-    .section-title{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      margin-bottom:14px;
-      flex-wrap:wrap;
-    }
-
-    .section-title h2{
-      margin:0;
-      font-size:18px;
-    }
-
-    .product-list{
-      display:grid;
-      gap:8px;
-    }
-
-    .product-row{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:15px;
-      padding:11px 12px;
-      background:#f9fafb;
-      border-radius:9px;
-      border:1px solid #eef0f2;
-    }
-
-    .product-row strong{
-      display:block;
-    }
-
-    .product-row small{
-      color:#6b7280;
-    }
-
-    .product-total{
-      font-weight:800;
-      white-space:nowrap;
-    }
-
-    .sales{
-      display:grid;
-      gap:14px;
-    }
-
-    .sale-card{
-      border:1px solid #e5e7eb;
-      border-radius:14px;
-      overflow:hidden;
-      background:white;
-    }
-
-    .sale-header{
-      padding:15px;
-      background:#f9fafb;
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:15px;
-      flex-wrap:wrap;
-    }
-
-    .sale-title{
-      font-size:17px;
-      font-weight:800;
-    }
-
-    .sale-meta{
-      color:#6b7280;
-      font-size:13px;
-      margin-top:4px;
-    }
-
-    .sale-amount{
-      text-align:right;
-    }
-
-    .sale-amount .total{
-      font-size:19px;
-      font-weight:800;
-    }
-
-    .sale-amount .balance{
-      color:#dc2626;
-      font-weight:800;
-      margin-top:3px;
-    }
-
-    .sale-body{
-      padding:15px;
-    }
-
-    .sale-products{
-      margin-bottom:14px;
-    }
-
-    .sale-products-title{
-      font-size:13px;
-      font-weight:800;
-      color:#6b7280;
-      text-transform:uppercase;
-      margin-bottom:7px;
-    }
-
-    .sale-product{
-      display:grid;
-      grid-template-columns:1fr auto auto;
-      gap:12px;
-      align-items:center;
-      padding:8px 0;
-      border-bottom:1px solid #f0f0f0;
-    }
-
-    .sale-product:last-child{
-      border-bottom:0;
-    }
-
-    .sale-product .qty{
-      font-weight:800;
-      min-width:45px;
-      text-align:center;
-    }
-
-    .sale-product .price{
-      font-weight:700;
-      min-width:80px;
-      text-align:right;
-    }
-
-    .no-products{
-      color:#9ca3af;
-      font-style:italic;
-      padding:8px 0;
-    }
-
-    .sale-actions{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      padding-top:10px;
-      border-top:1px solid #eee;
-    }
-
-    .payments{
-      margin-top:12px;
-      background:#f9fafb;
-      border-radius:10px;
-      padding:10px;
-    }
-
-    .payment-row{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      font-size:13px;
-      padding:4px 0;
-    }
-
-    .empty{
-      text-align:center;
-      padding:35px 15px;
-      color:#6b7280;
-    }
-
-    .loading{
-      text-align:center;
-      padding:25px;
-      color:#6b7280;
-    }
-
-    .error{
-      background:#fee2e2;
-      color:#991b1b;
-      border:1px solid #fecaca;
-      border-radius:10px;
-      padding:12px;
-      margin-bottom:15px;
-    }
-
-    .hidden{
-      display:none !important;
-    }
-
-    .modal{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.55);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:15px;
-      z-index:9999;
-    }
-
-    .modal-card{
-      width:100%;
-      max-width:500px;
-      background:white;
-      border-radius:16px;
-      padding:20px;
-      max-height:90vh;
-      overflow:auto;
-    }
-
-    .modal-card h3{
-      margin-top:0;
-    }
-
-    .modal-card label{
-      display:block;
-      font-size:13px;
-      font-weight:700;
-      margin-bottom:5px;
-    }
-
-    .modal-card input,
-    .modal-card select,
-    .modal-card textarea{
-      width:100%;
-      border:1px solid #d1d5db;
-      border-radius:9px;
-      padding:10px;
-      margin-bottom:13px;
-    }
-
-    .modal-actions{
-      display:flex;
-      gap:8px;
-      justify-content:flex-end;
-      margin-top:10px;
-    }
-
-    .account-data{
-      background:#f9fafb;
-      border-radius:10px;
-      padding:12px;
-      margin-bottom:15px;
-    }
-
-    .account-number{
-      font-size:18px;
-      font-weight:800;
-      user-select:text;
-      cursor:text;
-    }
-
-    .cancelled-card{
-      border:1px solid #fecaca;
-      background:#fffafa;
-      border-radius:12px;
-      padding:14px;
-      margin-bottom:10px;
-    }
-
-    .cancelled-title{
-      font-weight:800;
-      color:#991b1b;
-    }
-
-    .debug{
-      font-size:12px;
-      color:#6b7280;
-      margin-top:5px;
-    }
-
-    @media(max-width:900px){
-
-      .summary{
-        grid-template-columns:repeat(2,1fr);
-      }
-
-      .filters{
-        grid-template-columns:1fr 1fr;
-      }
-
-    }
-
-    @media(max-width:600px){
-
-      .container{
-        padding:12px;
-      }
-
-      .summary{
-        grid-template-columns:1fr 1fr;
-        gap:8px;
-      }
-
-      .summary-card{
-        padding:13px;
-      }
-
-      .summary-card .value{
-        font-size:22px;
-      }
-
-      .filters{
-        grid-template-columns:1fr;
-      }
-
-      .sale-product{
-        grid-template-columns:1fr auto;
-      }
-
-      .sale-product .price{
-        grid-column:2;
-      }
-
-    }
-
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cuentas | POS</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+:root{
+  --bg:#f5f6f8;
+  --card:#ffffff;
+  --text:#111827;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+  --soft:#f3f4f6;
+  --dark:#111827;
+  --green:#16a34a;
+  --red:#dc2626;
+  --blue:#2563eb;
+  --orange:#ea580c;
+  --shadow:0 2px 8px rgba(0,0,0,.06);
+}
+
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+button,
+input,
+select,
+textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.hidden{
+  display:none !important;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+  background:var(--dark);
+  color:white;
+  padding:14px 18px;
+  position:sticky;
+  top:0;
+  z-index:100;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+
+.header-inner{
+  max-width:1400px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.header-title{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.header-icon{
+  width:40px;
+  height:40px;
+  border-radius:11px;
+  background:#1f2937;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:21px;
+}
+
+.header h1{
+  margin:0;
+  font-size:19px;
+  font-weight:800;
+}
+
+.header small{
+  display:block;
+  margin-top:2px;
+  color:#9ca3af;
+  font-size:12px;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container{
+  max-width:1400px;
+  margin:auto;
+  padding:16px;
+}
+
+/* =========================
+   TOP NAV
+========================= */
+
+.top-nav{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
+
+.nav-btn{
+  border:1px solid var(--border);
+  background:white;
+  color:var(--text);
+  border-radius:10px;
+  padding:9px 13px;
+  font-weight:700;
+  font-size:14px;
+  box-shadow:0 1px 2px rgba(0,0,0,.03);
+}
+
+.nav-btn.active{
+  background:var(--dark);
+  color:white;
+  border-color:var(--dark);
+}
+
+/* =========================
+   TOOLBAR
+========================= */
+
+.toolbar{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px;
+  display:grid;
+  grid-template-columns:minmax(220px,2fr) 1fr 1fr auto;
+  gap:8px;
+  box-shadow:var(--shadow);
+  margin-bottom:12px;
+}
+
+.field{
+  position:relative;
+}
+
+.field input{
+  width:100%;
+  height:42px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:0 12px;
+  outline:none;
+  background:white;
+}
+
+.field input:focus{
+  border-color:#9ca3af;
+}
+
+.btn{
+  border:0;
+  border-radius:9px;
+  padding:9px 13px;
+  min-height:42px;
+  font-weight:700;
+  font-size:14px;
+  transition:.15s;
+}
+
+.btn:active{
+  transform:scale(.98);
+}
+
+.btn.dark{
+  background:var(--dark);
+  color:white;
+}
+
+.btn.light{
+  background:var(--soft);
+  color:var(--text);
+}
+
+.btn.green{
+  background:var(--green);
+  color:white;
+}
+
+.btn.red{
+  background:var(--red);
+  color:white;
+}
+
+.btn.blue{
+  background:var(--blue);
+  color:white;
+}
+
+.btn.whatsapp{
+  background:#25d366;
+  color:white;
+}
+
+.btn.orange{
+  background:var(--orange);
+  color:white;
+}
+
+/* =========================
+   SUMMARY
+========================= */
+
+.summary{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:9px;
+  margin-bottom:14px;
+}
+
+.summary-card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:13px 14px;
+  box-shadow:var(--shadow);
+}
+
+.summary-label{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.3px;
+}
+
+.summary-value{
+  font-size:22px;
+  font-weight:850;
+  margin-top:4px;
+}
+
+.summary-card.blue .summary-value{
+  color:var(--blue);
+}
+
+.summary-card.red .summary-value{
+  color:var(--red);
+}
+
+/* =========================
+   SECTIONS
+========================= */
+
+.section{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow:var(--shadow);
+  margin-bottom:14px;
+  overflow:hidden;
+}
+
+.section-header{
+  padding:13px 15px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.section-header h2{
+  margin:0;
+  font-size:16px;
+}
+
+.section-subtitle{
+  color:var(--muted);
+  font-size:12px;
+}
+
+/* =========================
+   PRODUCTS SUMMARY
+========================= */
+
+.product-list{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  padding:12px;
+}
+
+.product-row{
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#fafafa;
+  padding:10px 11px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.product-name{
+  font-weight:750;
+  font-size:13px;
+}
+
+.product-qty{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:2px;
+}
+
+.product-total{
+  font-weight:800;
+  font-size:13px;
+  white-space:nowrap;
+}
+
+/* =========================
+   SALES
+========================= */
+
+.sales{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  padding:10px;
+}
+
+/* =========================
+   SALE CARD
+========================= */
+
+.sale-card{
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:white;
+  overflow:hidden;
+}
+
+.sale-card-top{
+  padding:12px;
+}
+
+.sale-main{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+}
+
+.customer{
+  font-size:15px;
+  font-weight:850;
+  line-height:1.2;
+}
+
+.sale-meta{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:4px;
+}
+
+.sale-money{
+  text-align:right;
+  flex-shrink:0;
+}
+
+.sale-total{
+  font-size:15px;
+  font-weight:850;
+}
+
+.sale-balance{
+  color:var(--red);
+  font-size:12px;
+  font-weight:850;
+  margin-top:2px;
+}
+
+.sale-info{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.info-chip{
+  background:var(--soft);
+  border-radius:7px;
+  padding:5px 7px;
+  font-size:11px;
+  color:#4b5563;
+  font-weight:650;
+}
+
+.balance-bar{
+  margin-top:10px;
+  height:5px;
+  background:#f3f4f6;
+  border-radius:99px;
+  overflow:hidden;
+}
+
+.balance-progress{
+  height:100%;
+  background:var(--green);
+  border-radius:99px;
+}
+
+.sale-actions{
+  border-top:1px solid var(--border);
+  background:#fafafa;
+  padding:9px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:6px;
+}
+
+.action-btn{
+  border:0;
+  border-radius:8px;
+  padding:8px 6px;
+  min-height:36px;
+  font-size:12px;
+  font-weight:750;
+}
+
+.action-details{
+  background:white;
+  border:1px solid var(--border);
+  color:var(--text);
+}
+
+.action-pay{
+  background:var(--green);
+  color:white;
+}
+
+.action-liquidate{
+  background:var(--dark);
+  color:white;
+}
+
+.action-whatsapp{
+  background:#25d366;
+  color:white;
+}
+
+.action-cancel{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+/* =========================
+   EMPTY / LOADING
+========================= */
+
+.empty,
+.loading{
+  padding:35px 15px;
+  text-align:center;
+  color:var(--muted);
+}
+
+.error{
+  background:#fee2e2;
+  color:#991b1b;
+  border:1px solid #fecaca;
+  border-radius:10px;
+  padding:11px 13px;
+  margin-bottom:12px;
+  font-size:13px;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.58);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:14px;
+  z-index:9999;
+}
+
+.modal-card{
+  width:100%;
+  max-width:560px;
+  max-height:92vh;
+  overflow:auto;
+  background:white;
+  border-radius:17px;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
+
+.modal-header{
+  padding:15px 17px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  position:sticky;
+  top:0;
+  background:white;
+  z-index:2;
+}
+
+.modal-header h3{
+  margin:0;
+  font-size:17px;
+}
+
+.close-btn{
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:9px;
+  background:var(--soft);
+  font-size:18px;
+}
+
+.modal-body{
+  padding:16px;
+}
+
+.modal-footer{
+  padding:12px 16px;
+  border-top:1px solid var(--border);
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  position:sticky;
+  bottom:0;
+  background:white;
+}
+
+/* =========================
+   DETAIL
+========================= */
+
+.detail-customer{
+  background:#f9fafb;
+  border:1px solid var(--border);
+  border-radius:11px;
+  padding:12px;
+  margin-bottom:13px;
+}
+
+.detail-customer-name{
+  font-size:17px;
+  font-weight:850;
+}
+
+.detail-customer-meta{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:4px;
+}
+
+.detail-section{
+  margin-bottom:15px;
+}
+
+.detail-title{
+  font-size:11px;
+  color:var(--muted);
+  font-weight:850;
+  text-transform:uppercase;
+  margin-bottom:7px;
+}
+
+.detail-row{
+  display:grid;
+  grid-template-columns:1fr auto auto;
+  gap:10px;
+  padding:8px 0;
+  border-bottom:1px solid #f0f0f0;
+  font-size:13px;
+}
+
+.detail-row:last-child{
+  border-bottom:0;
+}
+
+.detail-qty{
+  font-weight:800;
+}
+
+.detail-price{
+  font-weight:800;
+  min-width:70px;
+  text-align:right;
+}
+
+.total-box{
+  background:#f9fafb;
+  border-radius:10px;
+  padding:11px;
+}
+
+.total-line{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:4px 0;
+  font-size:13px;
+}
+
+.total-line strong{
+  font-size:14px;
+}
+
+.total-line.balance{
+  color:var(--red);
+  font-size:15px;
+  font-weight:850;
+  border-top:1px solid var(--border);
+  margin-top:5px;
+  padding-top:8px;
+}
+
+.payment-history{
+  border:1px solid var(--border);
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.payment-history-row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:9px 10px;
+  border-bottom:1px solid var(--border);
+  font-size:12px;
+}
+
+.payment-history-row:last-child{
+  border-bottom:0;
+}
+
+.payment-method{
+  font-weight:750;
+}
+
+.payment-date{
+  color:var(--muted);
+  margin-top:2px;
+}
+
+.payment-amount{
+  font-weight:850;
+}
+
+/* =========================
+   PAYMENT MODAL
+========================= */
+
+.payment-balance{
+  background:#fef2f2;
+  border:1px solid #fecaca;
+  border-radius:11px;
+  padding:12px;
+  margin-bottom:14px;
+  text-align:center;
+}
+
+.payment-balance-label{
+  font-size:11px;
+  color:#991b1b;
+  font-weight:800;
+  text-transform:uppercase;
+}
+
+.payment-balance-value{
+  color:var(--red);
+  font-size:26px;
+  font-weight:900;
+  margin-top:2px;
+}
+
+.form-group{
+  margin-bottom:13px;
+}
+
+.form-group label{
+  display:block;
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+  width:100%;
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:10px 11px;
+  outline:none;
+  background:white;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+  border-color:#9ca3af;
+}
+
+.liquidate-btn{
+  width:100%;
+  border:0;
+  border-radius:10px;
+  padding:11px;
+  background:var(--dark);
+  color:white;
+  font-weight:800;
+  margin-bottom:13px;
+}
+
+/* =========================
+   CANCELLED
+========================= */
+
+.cancelled-list{
+  padding:10px;
+}
+
+.cancelled-card{
+  border:1px solid #fecaca;
+  background:#fffafa;
+  border-radius:11px;
+  padding:12px;
+  margin-bottom:8px;
+}
+
+.cancelled-name{
+  font-weight:850;
+  color:#991b1b;
+}
+
+.cancelled-meta{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:4px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:1000px){
+
+  .sales{
+    grid-template-columns:1fr;
+  }
+
+  .product-list{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:800px){
+
+  .toolbar{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .summary{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:600px){
+
+  .container{
+    padding:10px;
+  }
+
+  .header{
+    padding:12px;
+  }
+
+  .header h1{
+    font-size:17px;
+  }
+
+  .header-icon{
+    width:36px;
+    height:36px;
+  }
+
+  .top-nav{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+
+  .nav-btn{
+    width:100%;
+    padding:9px 7px;
+    font-size:12px;
+  }
+
+  .toolbar{
+    grid-template-columns:1fr;
+    padding:10px;
+  }
+
+  .summary{
+    gap:7px;
+  }
+
+  .summary-card{
+    padding:11px;
+  }
+
+  .summary-value{
+    font-size:19px;
+  }
+
+  .sales{
+    padding:8px;
+  }
+
+  .sale-actions{
+    grid-template-columns:1fr 1fr 1fr;
+  }
+
+  .action-btn{
+    font-size:11px;
+  }
+
+  .product-list{
+    grid-template-columns:1fr;
+  }
+
+}
+
+</style>
 </head>
 
 <body>
 
 <header class="header">
 
-  <div>
+  <div class="header-inner">
 
-    <h1>
-      💰 Cuentas pendientes
-    </h1>
+    <div class="header-title">
 
-    <small id="currentBusinessLabel">
-      Cargando...
-    </small>
+      <div class="header-icon">
+        💰
+      </div>
+
+      <div>
+
+        <h1>
+          Cuentas pendientes
+        </h1>
+
+        <small id="currentBusinessLabel">
+          Cargando...
+        </small>
+
+      </div>
+
+    </div>
+
+    <button
+      class="btn light"
+      onclick="loadSales()">
+      🔄 Actualizar
+    </button>
 
   </div>
-
-  <button
-    class="btn"
-    onclick="loadSales()">
-    🔄 Actualizar
-  </button>
 
 </header>
 
 
 <div class="container">
 
-  <div class="business-buttons">
+  <!-- =========================
+       NAVEGACIÓN
+  ========================== -->
+
+  <div class="top-nav">
 
     <button
       id="btnBakeQuiri"
-      class="business-btn"
+      class="nav-btn"
       onclick="setBusiness('BakeQuiri')">
       🧁 BakeQuiri
     </button>
 
     <button
       id="btnSpicyRoll"
-      class="business-btn"
+      class="nav-btn"
       onclick="setBusiness('SpicyRoll')">
       🍙 SpicyRoll
     </button>
 
     <button
-      class="business-btn"
+      class="nav-btn"
       onclick="showCancelled()">
-      🗑️ Cuentas canceladas
+      🗑️ Canceladas
     </button>
 
     <button
-      class="business-btn"
+      class="nav-btn"
       onclick="goDashboard()">
       📊 Dashboard
     </button>
@@ -571,26 +947,42 @@
   </div>
 
 
-  <div class="filters">
+  <!-- =========================
+       FILTROS
+  ========================== -->
 
-    <input
-      id="search"
-      type="text"
-      placeholder="Buscar cliente, folio o venta..."
-      oninput="renderAccounts()">
+  <div class="toolbar">
 
-    <input
-      id="dateFrom"
-      type="date"
-      onchange="renderAccounts()">
+    <div class="field">
 
-    <input
-      id="dateTo"
-      type="date"
-      onchange="renderAccounts()">
+      <input
+        id="search"
+        type="text"
+        placeholder="🔎 Buscar cliente, folio o venta..."
+        oninput="renderAccounts()">
+
+    </div>
+
+    <div class="field">
+
+      <input
+        id="dateFrom"
+        type="date"
+        onchange="renderAccounts()">
+
+    </div>
+
+    <div class="field">
+
+      <input
+        id="dateTo"
+        type="date"
+        onchange="renderAccounts()">
+
+    </div>
 
     <button
-      class="btn"
+      class="btn light"
       onclick="clearFilters()">
       Limpiar
     </button>
@@ -598,62 +990,63 @@
   </div>
 
 
+  <!-- =========================
+       RESUMEN
+  ========================== -->
+
   <div class="summary">
 
     <div class="summary-card">
 
-      <div class="label">
+      <div class="summary-label">
         Cuentas
       </div>
 
       <div
-        class="value"
-        id="countAccounts">
+        id="countAccounts"
+        class="summary-value">
         0
       </div>
 
     </div>
 
+    <div class="summary-card blue">
 
-    <div class="summary-card pieces">
-
-      <div class="label">
+      <div class="summary-label">
         Piezas pendientes
       </div>
 
       <div
-        class="value"
-        id="count">
+        id="count"
+        class="summary-value">
         0
       </div>
 
     </div>
 
+    <div class="summary-card">
 
-    <div class="summary-card total">
-
-      <div class="label">
+      <div class="summary-label">
         Ventas a crédito
       </div>
 
       <div
-        class="value"
-        id="total">
+        id="total"
+        class="summary-value">
         $0.00
       </div>
 
     </div>
 
+    <div class="summary-card red">
 
-    <div class="summary-card balance">
-
-      <div class="label">
+      <div class="summary-label">
         Por cobrar
       </div>
 
       <div
-        class="value"
-        id="balance">
+        id="balance"
+        class="summary-value">
         $0.00
       </div>
 
@@ -662,17 +1055,29 @@
   </div>
 
 
+  <!-- =========================
+       PRODUCTOS
+  ========================== -->
+
   <section class="section">
 
-    <div class="section-title">
+    <div class="section-header">
 
-      <h2>
-        📦 Productos pendientes
-      </h2>
+      <div>
+
+        <h2>
+          📦 Productos pendientes
+        </h2>
+
+        <div class="section-subtitle">
+          Resumen de productos en cuentas activas
+        </div>
+
+      </div>
 
       <span
         id="productBreakdownTotal"
-        class="debug">
+        class="section-subtitle">
         0 piezas
       </span>
 
@@ -691,13 +1096,25 @@
   </section>
 
 
+  <!-- =========================
+       CUENTAS
+  ========================== -->
+
   <section class="section">
 
-    <div class="section-title">
+    <div class="section-header">
 
-      <h2>
-        📋 Cuentas
-      </h2>
+      <div>
+
+        <h2>
+          📋 Cuentas
+        </h2>
+
+        <div class="section-subtitle">
+          Selecciona una cuenta para consultar o registrar movimientos
+        </div>
+
+      </div>
 
     </div>
 
@@ -714,25 +1131,35 @@
   </section>
 
 
+  <!-- =========================
+       CANCELADAS
+  ========================== -->
+
   <section
     id="cancelledPanel"
     class="section hidden">
 
-    <div class="section-title">
+    <div class="section-header">
 
-      <h2>
-        🗑️ Cuentas canceladas
-      </h2>
+      <div>
+
+        <h2>
+          🗑️ Cuentas canceladas
+        </h2>
+
+      </div>
 
       <button
-        class="btn"
+        class="btn light"
         onclick="hideCancelled()">
         Cerrar
       </button>
 
     </div>
 
-    <div id="cancelledList">
+    <div
+      id="cancelledList"
+      class="cancelled-list">
 
       <div class="loading">
         Cargando...
@@ -741,6 +1168,58 @@
     </div>
 
   </section>
+
+</div>
+
+
+<!-- =====================================================
+     MODAL DETALLES
+===================================================== -->
+
+<div
+  id="detailsModal"
+  class="modal hidden">
+
+  <div class="modal-card">
+
+    <div class="modal-header">
+
+      <h3>
+        📋 Detalle de venta
+      </h3>
+
+      <button
+        class="close-btn"
+        onclick="closeDetailsModal()">
+        ×
+      </button>
+
+    </div>
+
+    <div
+      id="detailsContent"
+      class="modal-body">
+    </div>
+
+    <div class="modal-footer">
+
+      <button
+        id="detailsPayBtn"
+        class="btn green"
+        onclick="paymentFromDetails()">
+        💳 Abonar
+      </button>
+
+      <button
+        id="detailsLiquidateBtn"
+        class="btn dark"
+        onclick="liquidateFromDetails()">
+        ⚡ Liquidar
+      </button>
+
+    </div>
+
+  </div>
 
 </div>
 
@@ -755,67 +1234,97 @@
 
   <div class="modal-card">
 
-    <h3>
-      💳 Registrar pago
-    </h3>
+    <div class="modal-header">
 
-    <div
-      id="paymentSaleInfo"
-      class="account-data">
-    </div>
-
-    <label>
-      Monto del pago
-    </label>
-
-    <input
-      id="paymentAmount"
-      type="number"
-      min="0"
-      step="0.01"
-      placeholder="0.00">
-
-    <label>
-      Método de pago
-    </label>
-
-    <select id="paymentMethod">
-
-      <option value="Efectivo">
-        Efectivo
-      </option>
-
-      <option value="Transferencia">
-        Transferencia
-      </option>
-
-      <option value="Clip">
-        Clip
-      </option>
-
-      <option value="BBVA">
-        BBVA
-      </option>
-
-      <option value="Tarjeta">
-        Tarjeta
-      </option>
-
-    </select>
-
-    <label>
-      Nota
-    </label>
-
-    <textarea
-      id="paymentNote"
-      rows="3"
-      placeholder="Nota opcional"></textarea>
-
-    <div class="modal-actions">
+      <h3>
+        💳 Registrar pago
+      </h3>
 
       <button
-        class="btn"
+        class="close-btn"
+        onclick="closePaymentModal()">
+        ×
+      </button>
+
+    </div>
+
+    <div class="modal-body">
+
+      <div
+        id="paymentSaleInfo"
+        class="detail-customer">
+      </div>
+
+      <div class="payment-balance">
+
+        <div class="payment-balance-label">
+          Saldo pendiente
+        </div>
+
+        <div
+          id="paymentBalanceValue"
+          class="payment-balance-value">
+          $0.00
+        </div>
+
+      </div>
+
+
+      <button
+        id="liquidateButton"
+        class="liquidate-btn"
+        onclick="fillLiquidationAmount()">
+        ⚡ Liquidar cuenta
+      </button>
+
+
+      <div class="form-group">
+
+        <label>
+          Monto a pagar
+        </label>
+
+        <input
+          id="paymentAmount"
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="0.00">
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Método de pago
+        </label>
+
+        <select id="paymentMethod">
+        </select>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Nota
+        </label>
+
+        <textarea
+          id="paymentNote"
+          rows="3"
+          placeholder="Nota opcional"></textarea>
+
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+
+      <button
+        class="btn light"
         onclick="closePaymentModal()">
         Cancelar
       </button>
@@ -843,28 +1352,46 @@
 
   <div class="modal-card">
 
-    <h3>
-      ⚠️ Cancelar cuenta
-    </h3>
+    <div class="modal-header">
 
-    <div
-      id="cancelSaleInfo"
-      class="account-data">
-    </div>
-
-    <label>
-      Motivo de cancelación
-    </label>
-
-    <textarea
-      id="cancelReason"
-      rows="4"
-      placeholder="Escribe el motivo de la cancelación..."></textarea>
-
-    <div class="modal-actions">
+      <h3>
+        ⚠️ Cancelar cuenta
+      </h3>
 
       <button
-        class="btn"
+        class="close-btn"
+        onclick="closeCancelModal()">
+        ×
+      </button>
+
+    </div>
+
+    <div class="modal-body">
+
+      <div
+        id="cancelSaleInfo"
+        class="detail-customer">
+      </div>
+
+      <div class="form-group">
+
+        <label>
+          Motivo de cancelación
+        </label>
+
+        <textarea
+          id="cancelReason"
+          rows="4"
+          placeholder="Escribe el motivo de la cancelación..."></textarea>
+
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+
+      <button
+        class="btn light"
         onclick="closeCancelModal()">
         Regresar
       </button>
@@ -883,6 +1410,10 @@
 
 
 <script>
+
+/* =========================================================
+   SUPABASE
+========================================================= */
 
 const SUPABASE_URL =
   "https://jrxklpstlloeckihcduv.supabase.co";
@@ -907,6 +1438,10 @@ const supabaseClient =
   );
 
 
+/* =========================================================
+   STATE
+========================================================= */
+
 let currentBusiness =
   localStorage.getItem("currentBusiness") ||
   "BakeQuiri";
@@ -920,6 +1455,7 @@ let paymentMethods = [];
 
 let currentPaymentSale = null;
 let currentCancelSale = null;
+let currentDetailsSale = null;
 
 
 /* =========================================================
@@ -927,9 +1463,7 @@ let currentCancelSale = null;
 ========================================================= */
 
 function $(id){
-
   return document.getElementById(id);
-
 }
 
 
@@ -947,9 +1481,7 @@ function money(value){
 
 
 function normalizeId(value){
-
   return String(value || "").trim();
-
 }
 
 
@@ -967,15 +1499,11 @@ function escapeHtml(value){
 
 function showError(message){
 
-  const box =
-    $("errorBox");
-
-  box.textContent =
+  $("errorBox").textContent =
     message;
 
-  box.classList.remove(
-    "hidden"
-  );
+  $("errorBox")
+    .classList.remove("hidden");
 
 }
 
@@ -983,9 +1511,7 @@ function showError(message){
 function hideError(){
 
   $("errorBox")
-    .classList.add(
-      "hidden"
-    );
+    .classList.add("hidden");
 
 }
 
@@ -1027,20 +1553,13 @@ function dateOnly(value){
     return "";
   }
 
-  const year =
-    date.getFullYear();
-
-  const month =
-    String(
-      date.getMonth()+1
-    ).padStart(2,"0");
-
-  const day =
-    String(
-      date.getDate()
-    ).padStart(2,"0");
-
-  return `${year}-${month}-${day}`;
+  return (
+    date.getFullYear() +
+    "-" +
+    String(date.getMonth()+1).padStart(2,"0") +
+    "-" +
+    String(date.getDate()).padStart(2,"0")
+  );
 
 }
 
@@ -1072,9 +1591,8 @@ function setBusiness(name){
 
 function updateBusinessUI(){
 
-  $("currentBusinessLabel")
-    .textContent =
-      currentBusiness;
+  $("currentBusinessLabel").textContent =
+    currentBusiness;
 
   $("btnBakeQuiri")
     .classList.toggle(
@@ -1100,7 +1618,7 @@ function goDashboard(){
 
 
 /* =========================================================
-   LOAD CUSTOMERS
+   CUSTOMERS
 ========================================================= */
 
 async function loadCustomers(){
@@ -1122,13 +1640,7 @@ async function loadCustomers(){
     ];
 
   if(!customerIds.length){
-
-    console.log(
-      "Las ventas no tienen customer_id."
-    );
-
     return;
-
   }
 
   const {
@@ -1162,21 +1674,10 @@ async function loadCustomers(){
   customers =
     data || [];
 
-  console.log(
-    "Clientes cargados:",
-    customers.length
-  );
-
 }
 
 
-/* =========================================================
-   CUSTOMER HELPERS
-========================================================= */
-
-function getCustomer(
-  customerId
-){
+function getCustomer(customerId){
 
   const id =
     normalizeId(
@@ -1189,22 +1690,13 @@ function getCustomer(
 
   return customers.find(
     customer =>
-      normalizeId(
-        customer.id
-      ) === id
+      normalizeId(customer.id) === id
   ) || null;
 
 }
 
 
-function getCustomerName(
-  sale
-){
-
-  /*
-    Primero usamos el nombre que pudiera
-    venir directamente en la venta.
-  */
+function getCustomerName(sale){
 
   const directName =
     sale.customer_name ||
@@ -1215,33 +1707,18 @@ function getCustomerName(
     return directName;
   }
 
-  /*
-    Después buscamos por customer_id
-    en customers.name.
-  */
-
   const customer =
     getCustomer(
       sale.customer_id
     );
 
-  if(customer){
-
-    return (
-      customer.name ||
-      "Cliente"
-    );
-
-  }
-
-  return "Cliente";
+  return customer?.name ||
+    "Cliente";
 
 }
 
 
-function getCustomerPhone(
-  sale
-){
+function getCustomerPhone(sale){
 
   const customer =
     getCustomer(
@@ -1249,16 +1726,14 @@ function getCustomerPhone(
     );
 
   return customer
-    ? String(
-        customer.phone || ""
-      ).trim()
+    ? String(customer.phone || "").trim()
     : "";
 
 }
 
 
 /* =========================================================
-   LOAD PRODUCTS
+   PRODUCTS
 ========================================================= */
 
 async function loadProducts(){
@@ -1267,10 +1742,6 @@ async function loadProducts(){
 
   const businessId =
     BUSINESS_IDS[currentBusiness];
-
-  if(!businessId){
-    return;
-  }
 
   const {
     data,
@@ -1292,6 +1763,7 @@ async function loadProducts(){
     );
 
     return;
+
   }
 
   products =
@@ -1300,160 +1772,13 @@ async function loadProducts(){
 }
 
 
-/* =========================================================
-   LOAD PAYMENT METHODS
-========================================================= */
-
-async function loadPaymentMethods(){
-
-  paymentMethods = [];
-
-  const businessId =
-    BUSINESS_IDS[currentBusiness];
-
-  if(!businessId){
-    return;
-  }
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("payment_methods")
-      .select(
-        "id,name,provider,active,business_id"
-      )
-      .eq(
-        "business_id",
-        businessId
-      )
-      .eq(
-        "active",
-        true
-      )
-      .order(
-        "name",
-        {
-          ascending:true
-        }
-      );
-
-  if(error){
-
-    console.warn(
-      "No se pudieron cargar métodos de pago:",
-      error
-    );
-
-    return;
-  }
-
-  paymentMethods =
-    data || [];
-
-}
-
-
-/* =========================================================
-   GET PAYMENT METHOD ID
-========================================================= */
-
-function getPaymentMethodId(
-  selectedName
-){
-
-  const wanted =
-    String(
-      selectedName || ""
-    )
-    .trim()
-    .toLowerCase();
-
-  if(!wanted){
-    return null;
-  }
-
-  let method =
-    paymentMethods.find(
-      item =>
-        String(
-          item.name || ""
-        )
-        .trim()
-        .toLowerCase() === wanted
-    );
-
-  if(!method){
-
-    method =
-      paymentMethods.find(
-        item =>
-          String(
-            item.provider || ""
-          )
-          .trim()
-          .toLowerCase() === wanted
-      );
-
-  }
-
-  if(!method){
-
-    method =
-      paymentMethods.find(
-        item => {
-
-          const name =
-            String(
-              item.name || ""
-            )
-            .trim()
-            .toLowerCase();
-
-          const provider =
-            String(
-              item.provider || ""
-            )
-            .trim()
-            .toLowerCase();
-
-          return (
-            name.includes(wanted) ||
-            wanted.includes(name) ||
-            provider.includes(wanted) ||
-            wanted.includes(provider)
-          );
-
-        }
-      );
-
-  }
-
-  return method
-    ? method.id
-    : null;
-
-}
-
-
-/* =========================================================
-   PRODUCT NAME
-========================================================= */
-
 function getProductName(
   productId,
   fallback=""
 ){
 
   const id =
-    normalizeId(
-      productId
-    );
-
-  if(!id){
-    return fallback || "Producto";
-  }
+    normalizeId(productId);
 
   const product =
     products.find(
@@ -1477,131 +1802,6 @@ function getProductName(
 }
 
 
-/* =========================================================
-   LOAD SALE ITEMS
-========================================================= */
-
-async function loadSaleItems(
-  saleIds
-){
-
-  saleItems = [];
-
-  const normalizedSaleIds =
-    [
-      ...new Set(
-        (saleIds || [])
-          .map(normalizeId)
-          .filter(Boolean)
-      )
-    ];
-
-  if(!normalizedSaleIds.length){
-    return;
-  }
-
-  const chunkSize = 100;
-
-  for(
-    let i = 0;
-    i < normalizedSaleIds.length;
-    i += chunkSize
-  ){
-
-    const chunk =
-      normalizedSaleIds.slice(
-        i,
-        i + chunkSize
-      );
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from("sale_items")
-        .select(
-          "id,sale_id,product_id,description,quantity,unit_price,subtotal"
-        )
-        .in(
-          "sale_id",
-          chunk
-        );
-
-    if(error){
-
-      console.error(
-        "Error cargando sale_items:",
-        error
-      );
-
-      throw new Error(
-        "No se pudieron cargar los productos de las ventas: " +
-        error.message
-      );
-
-    }
-
-    if(data){
-
-      saleItems.push(
-        ...data.map(item => ({
-
-          ...item,
-
-          sale_id:
-            normalizeId(
-              item.sale_id
-            ),
-
-          product_id:
-            normalizeId(
-              item.product_id
-            ),
-
-          quantity:
-            Number(
-              item.quantity || 0
-            ),
-
-          unit_price:
-            Number(
-              item.unit_price || 0
-            ),
-
-          subtotal:
-            Number(
-              item.subtotal ||
-              (
-                Number(item.quantity || 0) *
-                Number(item.unit_price || 0)
-              )
-            )
-
-        }))
-      );
-
-    }
-
-  }
-
-  saleItems =
-    saleItems.filter(
-      item =>
-        Number(
-          item.quantity || 0
-        ) > 0
-    );
-
-  await loadProductNames();
-
-}
-
-
-/* =========================================================
-   LOAD PRODUCT NAMES
-========================================================= */
-
 async function loadProductNames(){
 
   const productIds =
@@ -1617,10 +1817,6 @@ async function loadProductNames(){
           .filter(Boolean)
       )
     ];
-
-  if(!productIds.length){
-    return;
-  }
 
   const missingIds =
     productIds.filter(
@@ -1641,63 +1837,267 @@ async function loadProductNames(){
   } =
     await supabaseClient
       .from("products")
-      .select(
-        "id,name,nombre"
-      )
-      .in(
-        "id",
-        missingIds
-      );
+      .select("id,name,nombre")
+      .in("id",missingIds);
 
-  if(error){
-
-    console.warn(
-      "No se pudieron cargar nombres:",
-      error
-    );
-
-    return;
-  }
-
-  if(data){
-    products.push(
-      ...data
-    );
+  if(!error && data){
+    products.push(...data);
   }
 
 }
 
 
-/* =========================================================
-   GET SALE ITEMS
-========================================================= */
+async function loadSaleItems(saleIds){
 
-function getSaleItems(
-  saleId
-){
+  saleItems = [];
 
-  const normalizedSaleId =
-    normalizeId(
-      saleId
+  const ids =
+    [
+      ...new Set(
+        (saleIds || [])
+          .map(normalizeId)
+          .filter(Boolean)
+      )
+    ];
+
+  if(!ids.length){
+    return;
+  }
+
+  for(
+    let i=0;
+    i<ids.length;
+    i+=100
+  ){
+
+    const chunk =
+      ids.slice(i,i+100);
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient
+      .from("sale_items")
+      .select(
+        "id,sale_id,product_id,description,quantity,unit_price,subtotal"
+      )
+      .in(
+        "sale_id",
+        chunk
+      );
+
+    if(error){
+
+      throw new Error(
+        "No se pudieron cargar los productos: " +
+        error.message
+      );
+
+    }
+
+    if(data){
+
+      saleItems.push(
+        ...data.map(
+          item => ({
+
+            ...item,
+
+            sale_id:
+              normalizeId(item.sale_id),
+
+            product_id:
+              normalizeId(item.product_id),
+
+            quantity:
+              Number(item.quantity || 0),
+
+            unit_price:
+              Number(item.unit_price || 0),
+
+            subtotal:
+              Number(
+                item.subtotal ||
+                (
+                  Number(item.quantity || 0) *
+                  Number(item.unit_price || 0)
+                )
+              )
+
+          })
+        )
+      );
+
+    }
+
+  }
+
+  saleItems =
+    saleItems.filter(
+      item =>
+        Number(item.quantity || 0) > 0
     );
+
+  await loadProductNames();
+
+}
+
+
+function getSaleItems(saleId){
+
+  const id =
+    normalizeId(saleId);
 
   return saleItems.filter(
     item =>
-      normalizeId(
-        item.sale_id
-      ) === normalizedSaleId
+      normalizeId(item.sale_id) === id
   );
 
 }
 
 
 /* =========================================================
-   LOAD PAYMENTS
+   PAYMENT METHODS
 ========================================================= */
 
-async function loadPayments(
-  saleIds
-){
+async function loadPaymentMethods(){
+
+  paymentMethods = [];
+
+  const businessId =
+    BUSINESS_IDS[currentBusiness];
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+    .from("payment_methods")
+    .select(
+      "id,name,provider,active,business_id"
+    )
+    .eq(
+      "business_id",
+      businessId
+    )
+    .eq(
+      "active",
+      true
+    )
+    .order(
+      "name",
+      {
+        ascending:true
+      }
+    );
+
+  if(error){
+
+    console.warn(
+      "No se pudieron cargar métodos:",
+      error
+    );
+
+    return;
+
+  }
+
+  paymentMethods =
+    data || [];
+
+}
+
+
+function getPaymentMethodId(name){
+
+  const wanted =
+    String(name || "")
+      .trim()
+      .toLowerCase();
+
+  let method =
+    paymentMethods.find(
+      item =>
+        String(item.name || "")
+          .trim()
+          .toLowerCase() === wanted
+    );
+
+  if(!method){
+
+    method =
+      paymentMethods.find(
+        item =>
+          String(item.provider || "")
+            .trim()
+            .toLowerCase() === wanted
+      );
+
+  }
+
+  if(!method){
+
+    method =
+      paymentMethods.find(
+        item => {
+
+          const n =
+            String(item.name || "")
+              .trim()
+              .toLowerCase();
+
+          const p =
+            String(item.provider || "")
+              .trim()
+              .toLowerCase();
+
+          return (
+            n.includes(wanted) ||
+            wanted.includes(n) ||
+            p.includes(wanted) ||
+            wanted.includes(p)
+          );
+
+        }
+      );
+
+  }
+
+  return method
+    ? method.id
+    : null;
+
+}
+
+
+function getPaymentMethodName(payment){
+
+  const method =
+    paymentMethods.find(
+      item =>
+        normalizeId(item.id) ===
+        normalizeId(
+          payment.payment_method_id
+        )
+    );
+
+  return (
+    payment.method ||
+    payment.payment_method ||
+    method?.name ||
+    method?.provider ||
+    "Pago"
+  );
+
+}
+
+
+/* =========================================================
+   PAYMENTS
+========================================================= */
+
+async function loadPayments(saleIds){
 
   payments = [];
 
@@ -1718,19 +2118,19 @@ async function loadPayments(
     data,
     error
   } =
-    await supabaseClient
-      .from("payments")
-      .select("*")
-      .in(
-        "sale_id",
-        ids
-      )
-      .order(
-        "paid_at",
-        {
-          ascending:true
-        }
-      );
+  await supabaseClient
+    .from("payments")
+    .select("*")
+    .in(
+      "sale_id",
+      ids
+    )
+    .order(
+      "paid_at",
+      {
+        ascending:true
+      }
+    );
 
   if(error){
 
@@ -1740,6 +2140,7 @@ async function loadPayments(
     );
 
     return;
+
   }
 
   payments =
@@ -1748,70 +2149,14 @@ async function loadPayments(
 }
 
 
-/* =========================================================
-   PAYMENT METHOD NAME
-========================================================= */
-
-function getPaymentMethodName(
-  payment
-){
-
-  if(
-    payment.method ||
-    payment.payment_method
-  ){
-
-    return (
-      payment.method ||
-      payment.payment_method
-    );
-
-  }
-
-  const method =
-    paymentMethods.find(
-      item =>
-        normalizeId(
-          item.id
-        ) ===
-        normalizeId(
-          payment.payment_method_id
-        )
-    );
-
-  if(method){
-
-    return (
-      method.name ||
-      method.provider ||
-      "Pago"
-    );
-
-  }
-
-  return "Pago";
-
-}
-
-
-/* =========================================================
-   PAYMENTS BY SALE
-========================================================= */
-
-function getSalePayments(
-  saleId
-){
+function getSalePayments(saleId){
 
   const id =
-    normalizeId(
-      saleId
-    );
+    normalizeId(saleId);
 
   return payments.filter(
     payment =>
-      normalizeId(
-        payment.sale_id
-      ) === id
+      normalizeId(payment.sale_id) === id
   );
 
 }
@@ -1838,11 +2183,9 @@ async function loadSales(){
       BUSINESS_IDS[currentBusiness];
 
     if(!businessId){
-
       throw new Error(
-        "No se encontró el negocio seleccionado."
+        "No se encontró el negocio."
       );
-
     }
 
     await loadProducts();
@@ -1853,27 +2196,27 @@ async function loadSales(){
       data,
       error
     } =
-      await supabaseClient
-        .from("sales")
-        .select("*")
-        .eq(
-          "business_id",
-          businessId
-        )
-        .gt(
-          "balance",
-          0
-        )
-        .neq(
-          "status",
-          "cancelled"
-        )
-        .order(
-          "created_at",
-          {
-            ascending:false
-          }
-        );
+    await supabaseClient
+      .from("sales")
+      .select("*")
+      .eq(
+        "business_id",
+        businessId
+      )
+      .gt(
+        "balance",
+        0
+      )
+      .neq(
+        "status",
+        "cancelled"
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
 
     if(error){
       throw error;
@@ -1882,19 +2225,12 @@ async function loadSales(){
     sales =
       data || [];
 
-    /*
-      NUEVO:
-      cargar clientes usando sales.customer_id
-    */
-
     await loadCustomers();
 
     const saleIds =
       sales.map(
         sale =>
-          normalizeId(
-            sale.id
-          )
+          normalizeId(sale.id)
       );
 
     await loadSaleItems(
@@ -1947,20 +2283,16 @@ function getFilteredSales(){
       .toLowerCase();
 
   const from =
-    $("dateFrom")
-      .value;
+    $("dateFrom").value;
 
   const to =
-    $("dateTo")
-      .value;
+    $("dateTo").value;
 
   return sales.filter(
     sale => {
 
       const customerName =
-        getCustomerName(
-          sale
-        );
+        getCustomerName(sale);
 
       const text =
         [
@@ -1985,9 +2317,7 @@ function getFilteredSales(){
 
       const saleDate =
         sale.sale_date ||
-        dateOnly(
-          sale.created_at
-        );
+        dateOnly(sale.created_at);
 
       if(
         from &&
@@ -2023,7 +2353,7 @@ function clearFilters(){
 
 
 /* =========================================================
-   RENDER ACCOUNTS
+   RENDER
 ========================================================= */
 
 function renderAccounts(){
@@ -2031,71 +2361,54 @@ function renderAccounts(){
   const rows =
     getFilteredSales();
 
-  const validSaleIds =
+  const ids =
     new Set(
       rows.map(
         sale =>
-          normalizeId(
-            sale.id
-          )
+          normalizeId(sale.id)
       )
     );
 
   const filteredItems =
     saleItems.filter(
       item =>
-        validSaleIds.has(
-          normalizeId(
-            item.sale_id
-          )
+        ids.has(
+          normalizeId(item.sale_id)
         )
     );
 
   const totalPieces =
     filteredItems.reduce(
       (sum,item) =>
-        sum +
-        Number(
-          item.quantity || 0
-        ),
+        sum + Number(item.quantity || 0),
       0
     );
 
   const totalSales =
     rows.reduce(
       (sum,sale) =>
-        sum +
-        Number(
-          sale.total || 0
-        ),
+        sum + Number(sale.total || 0),
       0
     );
 
   const totalBalance =
     rows.reduce(
       (sum,sale) =>
-        sum +
-        Number(
-          sale.balance || 0
-        ),
+        sum + Number(sale.balance || 0),
       0
     );
 
-  $("countAccounts")
-    .textContent =
-      rows.length;
+  $("countAccounts").textContent =
+    rows.length;
 
-  $("count")
-    .textContent =
-      totalPieces;
+  $("count").textContent =
+    totalPieces;
 
-  $("total")
-    .textContent =
-      money(totalSales);
+  $("total").textContent =
+    money(totalSales);
 
-  $("balance")
-    .textContent =
-      money(totalBalance);
+  $("balance").textContent =
+    money(totalBalance);
 
   renderProductBreakdown(
     rows
@@ -2106,21 +2419,19 @@ function renderAccounts(){
     $("sales").innerHTML =
       `
         <div class="empty">
-          No hay cuentas pendientes
-          con los filtros seleccionados.
+          No hay cuentas pendientes.
         </div>
       `;
 
     return;
+
   }
 
   $("sales").innerHTML =
     rows
       .map(
         sale =>
-          renderSaleCard(
-            sale
-          )
+          renderSaleCard(sale)
       )
       .join("");
 
@@ -2131,100 +2442,75 @@ function renderAccounts(){
    PRODUCT BREAKDOWN
 ========================================================= */
 
-function renderProductBreakdown(
-  filteredRows
-){
+function renderProductBreakdown(rows){
 
-  const validSaleIds =
+  const ids =
     new Set(
-      filteredRows.map(
+      rows.map(
         sale =>
-          normalizeId(
-            sale.id
-          )
+          normalizeId(sale.id)
       )
-    );
-
-  const items =
-    saleItems.filter(
-      item =>
-        validSaleIds.has(
-          normalizeId(
-            item.sale_id
-          )
-        )
     );
 
   const grouped = {};
 
-  items.forEach(
-    item => {
+  saleItems
+    .filter(
+      item =>
+        ids.has(
+          normalizeId(item.sale_id)
+        )
+    )
+    .forEach(
+      item => {
 
-      const productId =
-        normalizeId(
-          item.product_id
-        );
-
-      const key =
-        productId ||
-        (
+        const key =
+          normalizeId(item.product_id) ||
           item.description ||
-          "Producto"
-        );
+          "Producto";
 
-      const name =
-        getProductName(
-          productId,
-          item.description ||
-          "Producto"
-        );
+        const name =
+          getProductName(
+            item.product_id,
+            item.description ||
+            "Producto"
+          );
 
-      if(!grouped[key]){
+        if(!grouped[key]){
 
-        grouped[key] = {
+          grouped[key] = {
+            name,
+            quantity:0,
+            total:0
+          };
 
-          name,
-          quantity:0,
-          total:0
+        }
 
-        };
+        grouped[key].quantity +=
+          Number(item.quantity || 0);
+
+        grouped[key].total +=
+          Number(item.subtotal || 0);
 
       }
-
-      grouped[key].quantity +=
-        Number(
-          item.quantity || 0
-        );
-
-      grouped[key].total +=
-        Number(
-          item.subtotal || 0
-        );
-
-    }
-  );
+    );
 
   const list =
-    Object.values(
-      grouped
-    )
-    .sort(
-      (a,b) =>
-        b.quantity -
-        a.quantity
-    );
+    Object.values(grouped)
+      .sort(
+        (a,b) =>
+          b.quantity-a.quantity
+      );
 
   const totalPieces =
     list.reduce(
       (sum,item) =>
-        sum +
-        item.quantity,
+        sum + item.quantity,
       0
     );
 
-  $("productBreakdownTotal")
-    .textContent =
-      `${totalPieces} piezas`;
+  $("productBreakdownTotal").textContent =
+    `${totalPieces} piezas`;
 
   if(!list.length){
 
@@ -2236,6 +2522,7 @@ function renderProductBreakdown(
       `;
 
     return;
+
   }
 
   $("productBreakdownList").innerHTML =
@@ -2247,14 +2534,14 @@ function renderProductBreakdown(
 
               <div>
 
-                <strong>
+                <div class="product-name">
                   ${escapeHtml(item.name)}
-                </strong>
+                </div>
 
-                <small>
+                <div class="product-qty">
                   ${item.quantity}
                   pieza${item.quantity === 1 ? "" : "s"}
-                </small>
+                </div>
 
               </div>
 
@@ -2271,37 +2558,25 @@ function renderProductBreakdown(
 
 
 /* =========================================================
-   RENDER SALE CARD
+   SALE CARD
 ========================================================= */
 
-function renderSaleCard(
-  sale
-){
+function renderSaleCard(sale){
 
   const saleId =
-    normalizeId(
-      sale.id
-    );
+    normalizeId(sale.id);
 
   const items =
-    getSaleItems(
-      saleId
-    );
+    getSaleItems(saleId);
 
-  const paymentRows =
-    getSalePayments(
-      saleId
-    );
+  const paymentsForSale =
+    getSalePayments(saleId);
 
   const customer =
-    getCustomerName(
-      sale
-    );
+    getCustomerName(sale);
 
-  const customerPhone =
-    getCustomerPhone(
-      sale
-    );
+  const phone =
+    getCustomerPhone(sale);
 
   const folio =
     sale.folio ||
@@ -2309,62 +2584,110 @@ function renderSaleCard(
     saleId.slice(0,8);
 
   const total =
-    Number(
-      sale.total || 0
-    );
+    Number(sale.total || 0);
 
   const balance =
-    Number(
-      sale.balance || 0
+    Number(sale.balance || 0);
+
+  const paid =
+    Math.max(
+      0,
+      total - balance
+    );
+
+  const progress =
+    total > 0
+      ? Math.min(
+          100,
+          (paid / total) * 100
+        )
+      : 0;
+
+  const pieces =
+    items.reduce(
+      (sum,item) =>
+        sum + Number(item.quantity || 0),
+      0
     );
 
   return `
+
     <article class="sale-card">
 
-      <div class="sale-header">
+      <div class="sale-card-top">
 
-        <div>
+        <div class="sale-main">
 
-          <div class="sale-title">
-            ${escapeHtml(customer)}
+          <div>
+
+            <div class="customer">
+              ${escapeHtml(customer)}
+            </div>
+
+            ${
+              phone
+                ? `
+                  <div class="sale-meta">
+                    📞 ${escapeHtml(phone)}
+                  </div>
+                `
+                : ""
+            }
+
+            <div class="sale-meta">
+              ${escapeHtml(folio)}
+              ·
+              ${escapeHtml(
+                formatDate(sale.created_at)
+              )}
+            </div>
+
+          </div>
+
+          <div class="sale-money">
+
+            <div class="sale-total">
+              ${money(total)}
+            </div>
+
+            <div class="sale-balance">
+              ${money(balance)}
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="sale-info">
+
+          <div class="info-chip">
+            🧾 ${pieces} pieza${pieces === 1 ? "" : "s"}
+          </div>
+
+          <div class="info-chip">
+            💵 Abonado ${money(paid)}
           </div>
 
           ${
-            customerPhone
+            paymentsForSale.length
               ? `
-                <div class="sale-meta">
-                  📞 ${escapeHtml(
-                    customerPhone
-                  )}
+                <div class="info-chip">
+                  💳 ${paymentsForSale.length}
+                  pago${paymentsForSale.length === 1 ? "" : "s"}
                 </div>
               `
               : ""
           }
 
-          <div class="sale-meta">
-            Folio:
-            ${escapeHtml(folio)}
-          </div>
-
-          <div class="sale-meta">
-            ${escapeHtml(
-              formatDate(
-                sale.created_at
-              )
-            )}
-          </div>
-
         </div>
 
-        <div class="sale-amount">
 
-          <div class="total">
-            ${money(total)}
-          </div>
+        <div class="balance-bar">
 
-          <div class="balance">
-            Pendiente:
-            ${money(balance)}
+          <div
+            class="balance-progress"
+            style="width:${progress}%">
           </div>
 
         </div>
@@ -2372,50 +2695,255 @@ function renderSaleCard(
       </div>
 
 
-      <div class="sale-body">
+      <div class="sale-actions">
 
-        ${renderSaleProducts(
-          saleId
-        )}
+        <button
+          class="action-btn action-details"
+          onclick="openDetailsModal('${saleId}')">
+          📋 Detalles
+        </button>
 
+        <button
+          class="action-btn action-pay"
+          onclick="openPaymentModal('${saleId}')">
+          💳 Abonar
+        </button>
+
+        <button
+          class="action-btn action-liquidate"
+          onclick="liquidateSale('${saleId}')">
+          ⚡ Liquidar
+        </button>
+
+        <button
+          class="action-btn action-whatsapp"
+          onclick="sendWhatsApp('${saleId}')">
+          💬 WhatsApp
+        </button>
+
+        <button
+          class="action-btn action-cancel"
+          onclick="openCancelModal('${saleId}')">
+          🗑️ Cancelar
+        </button>
+
+      </div>
+
+    </article>
+
+  `;
+
+}
+
+
+/* =========================================================
+   DETAILS
+========================================================= */
+
+function openDetailsModal(saleId){
+
+  const sale =
+    sales.find(
+      s =>
+        normalizeId(s.id) ===
+        normalizeId(saleId)
+    );
+
+  if(!sale){
+    return;
+  }
+
+  currentDetailsSale =
+    sale;
+
+  const items =
+    getSaleItems(saleId);
+
+  const salePayments =
+    getSalePayments(saleId);
+
+  const customer =
+    getCustomerName(sale);
+
+  const phone =
+    getCustomerPhone(sale);
+
+  const total =
+    Number(sale.total || 0);
+
+  const balance =
+    Number(sale.balance || 0);
+
+  const paid =
+    Math.max(
+      0,
+      total - balance
+    );
+
+  const folio =
+    sale.folio ||
+    sale.sale_number ||
+    normalizeId(sale.id).slice(0,8);
+
+  $("detailsContent").innerHTML =
+    `
+
+      <div class="detail-customer">
+
+        <div class="detail-customer-name">
+          ${escapeHtml(customer)}
+        </div>
 
         ${
-          paymentRows.length
+          phone
             ? `
-              <div class="payments">
+              <div class="detail-customer-meta">
+                📞 ${escapeHtml(phone)}
+              </div>
+            `
+            : ""
+        }
 
-                <strong>
-                  Pagos registrados
-                </strong>
+        <div class="detail-customer-meta">
+          🧾 Folio ${escapeHtml(folio)}
+        </div>
 
-                ${paymentRows.map(
+        <div class="detail-customer-meta">
+          📅 ${escapeHtml(
+            formatDate(sale.created_at)
+          )}
+        </div>
+
+      </div>
+
+
+      <div class="detail-section">
+
+        <div class="detail-title">
+          Productos
+        </div>
+
+        ${
+          items.length
+            ? items.map(
+                item => {
+
+                  const name =
+                    getProductName(
+                      item.product_id,
+                      item.description ||
+                      "Producto"
+                    );
+
+                  const quantity =
+                    Number(
+                      item.quantity || 0
+                    );
+
+                  const subtotal =
+                    Number(
+                      item.subtotal ||
+                      quantity *
+                      Number(
+                        item.unit_price || 0
+                      )
+                    );
+
+                  return `
+                    <div class="detail-row">
+
+                      <div>
+                        ${escapeHtml(name)}
+                      </div>
+
+                      <div class="detail-qty">
+                        ×${quantity}
+                      </div>
+
+                      <div class="detail-price">
+                        ${money(subtotal)}
+                      </div>
+
+                    </div>
+                  `;
+
+                }
+              ).join("")
+            : `
+              <div class="empty">
+                No hay productos registrados.
+              </div>
+            `
+        }
+
+      </div>
+
+
+      <div class="detail-section">
+
+        <div class="detail-title">
+          Resumen
+        </div>
+
+        <div class="total-box">
+
+          <div class="total-line">
+            <span>Total de venta</span>
+            <strong>${money(total)}</strong>
+          </div>
+
+          <div class="total-line">
+            <span>Total abonado</span>
+            <strong>${money(paid)}</strong>
+          </div>
+
+          <div class="total-line balance">
+            <span>Saldo pendiente</span>
+            <strong>${money(balance)}</strong>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="detail-section">
+
+        <div class="detail-title">
+          Historial de pagos
+        </div>
+
+        ${
+          salePayments.length
+            ? `
+              <div class="payment-history">
+
+                ${salePayments.map(
                   payment =>
                     `
-                      <div class="payment-row">
+                      <div class="payment-history-row">
 
-                        <span>
+                        <div>
 
-                          ${escapeHtml(
-                            getPaymentMethodName(
-                              payment
-                            )
-                          )}
+                          <div class="payment-method">
+                            ${escapeHtml(
+                              getPaymentMethodName(payment)
+                            )}
+                          </div>
 
-                          ·
+                          <div class="payment-date">
+                            ${escapeHtml(
+                              formatDate(
+                                payment.paid_at
+                              )
+                            )}
+                          </div>
 
-                          ${escapeHtml(
-                            formatDate(
-                              payment.paid_at
-                            )
-                          )}
+                        </div>
 
-                        </span>
-
-                        <strong>
-                          ${money(
-                            payment.amount
-                          )}
-                        </strong>
+                        <div class="payment-amount">
+                          ${money(payment.amount)}
+                        </div>
 
                       </div>
                     `
@@ -2423,156 +2951,124 @@ function renderSaleCard(
 
               </div>
             `
-            : ""
+            : `
+              <div class="empty">
+                No hay pagos registrados.
+              </div>
+            `
         }
-
-
-        <div class="sale-actions">
-
-          <button
-            class="btn green"
-            onclick="openPaymentModal('${saleId}')">
-            💳 Registrar pago
-          </button>
-
-          <button
-            class="btn whatsapp"
-            onclick="sendWhatsApp('${saleId}')">
-            WhatsApp
-          </button>
-
-          <button
-            class="btn red"
-            onclick="openCancelModal('${saleId}')">
-            Cancelar cuenta
-          </button>
-
-        </div>
 
       </div>
 
-    </article>
-  `;
+    `;
+
+  $("detailsModal")
+    .classList.remove("hidden");
+
+}
+
+
+function closeDetailsModal(){
+
+  $("detailsModal")
+    .classList.add("hidden");
+
+  currentDetailsSale =
+    null;
+
+}
+
+
+function paymentFromDetails(){
+
+  if(!currentDetailsSale){
+    return;
+  }
+
+  const id =
+    normalizeId(
+      currentDetailsSale.id
+    );
+
+  closeDetailsModal();
+
+  setTimeout(
+    () =>
+      openPaymentModal(id),
+    100
+  );
+
+}
+
+
+function liquidateFromDetails(){
+
+  if(!currentDetailsSale){
+    return;
+  }
+
+  const id =
+    normalizeId(
+      currentDetailsSale.id
+    );
+
+  closeDetailsModal();
+
+  setTimeout(
+    () =>
+      liquidateSale(id),
+    100
+  );
 
 }
 
 
 /* =========================================================
-   RENDER PRODUCTS OF SALE
+   PAYMENT
 ========================================================= */
 
-function renderSaleProducts(
-  saleId
-){
+function populatePaymentMethods(){
 
-  const items =
-    getSaleItems(
-      saleId
-    );
+  const select =
+    $("paymentMethod");
 
-  if(!items.length){
+  if(!paymentMethods.length){
 
-    return `
-      <div class="sale-products">
+    select.innerHTML =
+      `
+        <option value="">
+          No hay métodos disponibles
+        </option>
+      `;
 
-        <div class="sale-products-title">
-          Productos de la venta
-        </div>
-
-        <div class="no-products">
-          No hay productos registrados
-          para esta venta.
-        </div>
-
-      </div>
-    `;
+    return;
 
   }
 
-  return `
-    <div class="sale-products">
-
-      <div class="sale-products-title">
-        Productos de la venta
-      </div>
-
-      ${items.map(
-        item => {
-
-          const name =
-            getProductName(
-              item.product_id,
-              item.description ||
-              "Producto"
-            );
-
-          const quantity =
-            Number(
-              item.quantity || 0
-            );
-
-          const subtotal =
-            Number(
-              item.subtotal ||
-              (
-                quantity *
-                Number(
-                  item.unit_price || 0
-                )
-              )
-            );
-
-          return `
-            <div class="sale-product">
-
-              <div>
-
-                <strong>
-                  ${escapeHtml(name)}
-                </strong>
-
-                ${
-                  item.description &&
-                  item.description !== name
-                    ? `
-                      <small>
-                        ${escapeHtml(
-                          item.description
-                        )}
-                      </small>
-                    `
-                    : ""
-                }
-
-              </div>
-
-              <div class="qty">
-                ×${quantity}
-              </div>
-
-              <div class="price">
-                ${money(subtotal)}
-              </div>
-
-            </div>
-          `;
-
-        }
-      ).join("")}
-
-    </div>
-  `;
+  select.innerHTML =
+    paymentMethods
+      .map(
+        method =>
+          `
+            <option value="${escapeHtml(
+              method.name ||
+              method.provider ||
+              ""
+            )}">
+              ${escapeHtml(
+                method.name ||
+                method.provider ||
+                "Pago"
+              )}
+            </option>
+          `
+      )
+      .join("");
 
 }
 
 
-/* =========================================================
-   PAYMENT MODAL
-========================================================= */
-
-function openPaymentModal(
-  saleId
-){
+function openPaymentModal(saleId){
 
   const sale =
     sales.find(
@@ -2588,26 +3084,26 @@ function openPaymentModal(
   currentPaymentSale =
     sale;
 
-  $("paymentSaleInfo")
-    .innerHTML =
-      `
-        <strong>
-          ${escapeHtml(
-            getCustomerName(
-              sale
-            )
-          )}
-        </strong>
+  const customer =
+    getCustomerName(sale);
 
-        <br>
+  $("paymentSaleInfo").innerHTML =
+    `
+      <div class="detail-customer-name">
+        ${escapeHtml(customer)}
+      </div>
 
-        Pendiente:
-        <strong>
-          ${money(
-            sale.balance
-          )}
-        </strong>
-      `;
+      <div class="detail-customer-meta">
+        🧾 ${escapeHtml(
+          sale.folio ||
+          sale.sale_number ||
+          normalizeId(sale.id).slice(0,8)
+        )}
+      </div>
+    `;
+
+  $("paymentBalanceValue").textContent =
+    money(sale.balance);
 
   $("paymentAmount").value =
     "";
@@ -2615,15 +3111,15 @@ function openPaymentModal(
   $("paymentNote").value =
     "";
 
+  populatePaymentMethods();
+
   $("paymentModal")
-    .classList.remove(
-      "hidden"
-    );
+    .classList.remove("hidden");
 
   setTimeout(
     () =>
       $("paymentAmount").focus(),
-    100
+    120
   );
 
 }
@@ -2632,9 +3128,7 @@ function openPaymentModal(
 function closePaymentModal(){
 
   $("paymentModal")
-    .classList.add(
-      "hidden"
-    );
+    .classList.add("hidden");
 
   currentPaymentSale =
     null;
@@ -2642,9 +3136,58 @@ function closePaymentModal(){
 }
 
 
-/* =========================================================
-   SAVE PAYMENT
-========================================================= */
+function fillLiquidationAmount(){
+
+  if(!currentPaymentSale){
+    return;
+  }
+
+  $("paymentAmount").value =
+    Number(
+      currentPaymentSale.balance || 0
+    ).toFixed(2);
+
+}
+
+
+async function liquidateSale(saleId){
+
+  const sale =
+    sales.find(
+      s =>
+        normalizeId(s.id) ===
+        normalizeId(saleId)
+    );
+
+  if(!sale){
+    return;
+  }
+
+  const balance =
+    Number(sale.balance || 0);
+
+  if(balance <= 0){
+    return;
+  }
+
+  currentPaymentSale =
+    sale;
+
+  openPaymentModal(saleId);
+
+  setTimeout(
+    () => {
+
+      fillLiquidationAmount();
+
+      $("paymentAmount").focus();
+
+    },
+    150
+  );
+
+}
+
 
 async function savePayment(){
 
@@ -2667,24 +3210,41 @@ async function savePayment(){
     );
 
     return;
+
   }
 
-  const currentBalance =
+  const balance =
     Number(
       currentPaymentSale.balance || 0
     );
 
-  if(amount > currentBalance){
+  if(amount > balance){
 
     alert(
       "El pago no puede ser mayor al saldo pendiente."
     );
 
     return;
+
   }
 
-  const method =
+  const selectedMethod =
     $("paymentMethod").value;
+
+  const paymentMethodId =
+    getPaymentMethodId(
+      selectedMethod
+    );
+
+  if(!paymentMethodId){
+
+    alert(
+      "No se encontró el método de pago seleccionado en payment_methods."
+    );
+
+    return;
+
+  }
 
   try{
 
@@ -2692,54 +3252,31 @@ async function savePayment(){
       currentPaymentSale.business_id ||
       BUSINESS_IDS[currentBusiness];
 
-    if(!businessId){
-
-      throw new Error(
-        "No se encontró el negocio de la cuenta."
-      );
-
-    }
-
-    const paymentMethodId =
-      getPaymentMethodId(
-        method
-      );
-
-    if(!paymentMethodId){
-
-      throw new Error(
-        "No se encontró el método de pago \"" +
-        method +
-        "\" en payment_methods para " +
-        currentBusiness +
-        "."
-      );
-
-    }
-
     const {
       data,
       error
     } =
-      await supabaseClient
-        .rpc(
-          "register_payment",
-          {
-            p_business_id:
-              businessId,
+    await supabaseClient
+      .rpc(
+        "register_payment",
+        {
 
-            p_sale_id:
-              currentPaymentSale.id,
+          p_business_id:
+            businessId,
 
-            p_payment_method_id:
-              paymentMethodId,
+          p_sale_id:
+            currentPaymentSale.id,
 
-            p_amount:
-              Number(
-                amount.toFixed(2)
-              )
-          }
-        );
+          p_payment_method_id:
+            paymentMethodId,
+
+          p_amount:
+            Number(
+              amount.toFixed(2)
+            )
+
+        }
+      );
 
     if(error){
       throw error;
@@ -2755,7 +3292,9 @@ async function savePayment(){
     await loadSales();
 
     alert(
-      "Pago registrado correctamente."
+      amount === balance
+        ? "Cuenta liquidada correctamente."
+        : "Pago registrado correctamente."
     );
 
   }catch(error){
@@ -2779,12 +3318,10 @@ async function savePayment(){
 
 
 /* =========================================================
-   CANCEL MODAL
+   CANCEL
 ========================================================= */
 
-function openCancelModal(
-  saleId
-){
+function openCancelModal(saleId){
 
   const sale =
     sales.find(
@@ -2800,41 +3337,32 @@ function openCancelModal(
   currentCancelSale =
     sale;
 
-  $("cancelSaleInfo")
-    .innerHTML =
-      `
-        <strong>
-          ${escapeHtml(
-            getCustomerName(
-              sale
-            )
-          )}
-        </strong>
-
-        <br>
-
-        Total:
-        ${money(
-          sale.total
+  $("cancelSaleInfo").innerHTML =
+    `
+      <div class="detail-customer-name">
+        ${escapeHtml(
+          getCustomerName(sale)
         )}
+      </div>
 
-        <br>
+      <div class="detail-customer-meta">
+        Total:
+        ${money(sale.total)}
+      </div>
 
-        Pendiente:
+      <div class="detail-customer-meta">
+        Saldo:
         <strong>
-          ${money(
-            sale.balance
-          )}
+          ${money(sale.balance)}
         </strong>
-      `;
+      </div>
+    `;
 
   $("cancelReason").value =
     "";
 
   $("cancelModal")
-    .classList.remove(
-      "hidden"
-    );
+    .classList.remove("hidden");
 
 }
 
@@ -2842,19 +3370,13 @@ function openCancelModal(
 function closeCancelModal(){
 
   $("cancelModal")
-    .classList.add(
-      "hidden"
-    );
+    .classList.add("hidden");
 
   currentCancelSale =
     null;
 
 }
 
-
-/* =========================================================
-   CONFIRM CANCEL
-========================================================= */
 
 async function confirmCancel(){
 
@@ -2874,6 +3396,7 @@ async function confirmCancel(){
     );
 
     return;
+
   }
 
   if(
@@ -2889,17 +3412,19 @@ async function confirmCancel(){
     const {
       error
     } =
-      await supabaseClient
-        .rpc(
-          "cancel_sale_and_restore_inventory",
-          {
-            p_sale_id:
-              currentCancelSale.id,
+    await supabaseClient
+      .rpc(
+        "cancel_sale_and_restore_inventory",
+        {
 
-            p_cancel_reason:
-              reason
-          }
-        );
+          p_sale_id:
+            currentCancelSale.id,
+
+          p_cancel_reason:
+            reason
+
+        }
+      );
 
     if(error){
       throw error;
@@ -2909,11 +3434,6 @@ async function confirmCancel(){
 
     await loadSales();
 
-    $("cancelledPanel")
-      .classList.add(
-        "hidden"
-      );
-
     alert(
       "Cuenta cancelada correctamente.\n\nEl inventario fue restaurado."
     );
@@ -2921,7 +3441,7 @@ async function confirmCancel(){
   }catch(error){
 
     console.error(
-      "Error cancelando cuenta:",
+      "Error cancelando:",
       error
     );
 
@@ -2942,9 +3462,7 @@ async function confirmCancel(){
    WHATSAPP
 ========================================================= */
 
-function sendWhatsApp(
-  saleId
-){
+function sendWhatsApp(saleId){
 
   const sale =
     sales.find(
@@ -2958,45 +3476,35 @@ function sendWhatsApp(
   }
 
   const customer =
-    getCustomerName(
-      sale
-    );
+    getCustomerName(sale);
 
   const phone =
-    getCustomerPhone(
-      sale
-    );
+    getCustomerPhone(sale);
 
   const balance =
-    Number(
-      sale.balance || 0
-    );
+    Number(sale.balance || 0);
 
   const items =
-    getSaleItems(
-      saleId
-    );
+    getSaleItems(saleId);
 
   const productText =
     items.length
-      ? items
-          .map(
-            item => {
+      ? items.map(
+          item => {
 
-              const name =
-                getProductName(
-                  item.product_id,
-                  item.description ||
-                  "Producto"
-                );
-
-              return (
-                `• ${item.quantity} × ${name}`
+            const name =
+              getProductName(
+                item.product_id,
+                item.description ||
+                "Producto"
               );
 
-            }
-          )
-          .join("\n")
+            return (
+              `• ${item.quantity} × ${name}`
+            );
+
+          }
+        ).join("\n")
       : "";
 
   const message =
@@ -3015,62 +3523,40 @@ ${productText}
 
 ¡Muchas gracias! 🙌`;
 
-  /*
-    Si el cliente tiene teléfono,
-    abrimos directamente su WhatsApp.
-  */
-
-  let url;
-
   const cleanPhone =
     phone.replace(
       /[^0-9]/g,
       ""
     );
 
-  if(cleanPhone){
+  let whatsappPhone =
+    cleanPhone;
 
-    let whatsappPhone =
-      cleanPhone;
+  if(
+    whatsappPhone.length === 10
+  ){
 
-    /*
-      Si el teléfono mexicano
-      viene como 10 dígitos,
-      agregamos +52.
-    */
+    whatsappPhone =
+      "52" +
+      whatsappPhone;
 
-    if(
-      whatsappPhone.length === 10
-    ){
+  }
 
-      whatsappPhone =
-        "52" +
-        whatsappPhone;
+  let url;
 
-    }
+  if(whatsappPhone){
 
     url =
       "https://wa.me/" +
       whatsappPhone +
       "?text=" +
-      encodeURIComponent(
-        message
-      );
+      encodeURIComponent(message);
 
   }else{
 
-    /*
-      Si todavía no tiene teléfono,
-      se mantiene el comportamiento
-      anterior de abrir WhatsApp
-      para seleccionar contacto.
-    */
-
     url =
       "https://wa.me/?text=" +
-      encodeURIComponent(
-        message
-      );
+      encodeURIComponent(message);
 
   }
 
@@ -3089,9 +3575,7 @@ ${productText}
 async function showCancelled(){
 
   $("cancelledPanel")
-    .classList.remove(
-      "hidden"
-    );
+    .classList.remove("hidden");
 
   $("cancelledList").innerHTML =
     `
@@ -3109,23 +3593,23 @@ async function showCancelled(){
       data,
       error
     } =
-      await supabaseClient
-        .from("sales")
-        .select("*")
-        .eq(
-          "business_id",
-          businessId
-        )
-        .eq(
-          "status",
-          "cancelled"
-        )
-        .order(
-          "created_at",
-          {
-            ascending:false
-          }
-        );
+    await supabaseClient
+      .from("sales")
+      .select("*")
+      .eq(
+        "business_id",
+        businessId
+      )
+      .eq(
+        "status",
+        "cancelled"
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
 
     if(error){
       throw error;
@@ -3134,12 +3618,7 @@ async function showCancelled(){
     const cancelledSales =
       data || [];
 
-    /*
-      Cargar los clientes de las ventas
-      canceladas para mostrar sus nombres.
-    */
-
-    const cancelledCustomerIds =
+    const ids =
       [
         ...new Set(
           cancelledSales
@@ -3153,45 +3632,42 @@ async function showCancelled(){
         )
       ];
 
-    if(
-      cancelledCustomerIds.length
-    ){
+    if(ids.length){
 
       const {
-        data:cancelledCustomers,
-        error:customerError
+        data:cancelledCustomers
       } =
-        await supabaseClient
-          .from("customers")
-          .select(
-            "id,name,phone"
-          )
-          .in(
-            "id",
-            cancelledCustomerIds
-          );
+      await supabaseClient
+        .from("customers")
+        .select(
+          "id,name,phone"
+        )
+        .in(
+          "id",
+          ids
+        );
 
-      if(!customerError){
+      if(cancelledCustomers){
 
-        cancelledCustomers
-          ?.forEach(
-            customer => {
+        cancelledCustomers.forEach(
+          customer => {
 
-              const exists =
-                customers.some(
-                  c =>
-                    normalizeId(c.id) ===
-                    normalizeId(customer.id)
-                );
+            if(
+              !customers.some(
+                c =>
+                  normalizeId(c.id) ===
+                  normalizeId(customer.id)
+              )
+            ){
 
-              if(!exists){
-                customers.push(
-                  customer
-                );
-              }
+              customers.push(
+                customer
+              );
 
             }
-          );
+
+          }
+        );
 
       }
 
@@ -3207,46 +3683,47 @@ async function showCancelled(){
         `;
 
       return;
+
     }
 
     $("cancelledList").innerHTML =
       cancelledSales
         .map(
-          sale => {
-
-            const customer =
-              getCustomerName(
-                sale
-              );
-
-            return `
+          sale =>
+            `
               <div class="cancelled-card">
 
-                <div class="cancelled-title">
+                <div class="cancelled-name">
                   ${escapeHtml(
-                    customer
+                    getCustomerName(sale)
                   )}
                 </div>
 
-                <div>
+                <div class="cancelled-meta">
+                  Folio:
+                  ${escapeHtml(
+                    sale.folio ||
+                    sale.sale_number ||
+                    normalizeId(sale.id).slice(0,8)
+                  )}
+                </div>
+
+                <div class="cancelled-meta">
                   Total:
-                  ${money(
-                    sale.total
-                  )}
+                  ${money(sale.total)}
                 </div>
 
-                <div class="sale-meta">
+                <div class="cancelled-meta">
                   Cancelada:
                   ${escapeHtml(
                     formatDate(
-                      sale.cancelled_at ||
                       sale.updated_at ||
                       sale.created_at
                     )
                   )}
                 </div>
 
-                <div class="sale-meta">
+                <div class="cancelled-meta">
                   Motivo:
                   ${escapeHtml(
                     sale.cancellation_reason ||
@@ -3255,9 +3732,7 @@ async function showCancelled(){
                 </div>
 
               </div>
-            `;
-
-          }
+            `
         )
         .join("");
 
@@ -3270,8 +3745,7 @@ async function showCancelled(){
     $("cancelledList").innerHTML =
       `
         <div class="error">
-          No se pudieron cargar
-          las cuentas canceladas.
+          No se pudieron cargar las cuentas canceladas.
         </div>
       `;
 
@@ -3283,32 +3757,32 @@ async function showCancelled(){
 function hideCancelled(){
 
   $("cancelledPanel")
-    .classList.add(
-      "hidden"
-    );
+    .classList.add("hidden");
 
 }
 
 
 /* =========================================================
-   INIT
+   MODAL EVENTS
 ========================================================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
+$("detailsModal")
+  .addEventListener(
+    "click",
+    event => {
 
-    updateBusinessUI();
+      if(
+        event.target ===
+        $("detailsModal")
+      ){
 
-    loadSales();
+        closeDetailsModal();
 
-  }
-);
+      }
 
+    }
+  );
 
-/* =========================================================
-   CLOSE MODALS OUTSIDE
-========================================================= */
 
 $("paymentModal")
   .addEventListener(
@@ -3344,6 +3818,38 @@ $("cancelModal")
 
     }
   );
+
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if(event.key !== "Escape"){
+      return;
+    }
+
+    closeDetailsModal();
+    closePaymentModal();
+    closeCancelModal();
+
+  }
+);
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    updateBusinessUI();
+
+    loadSales();
+
+  }
+);
 
 </script>
 
