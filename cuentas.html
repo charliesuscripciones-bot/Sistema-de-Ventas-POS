@@ -163,7 +163,7 @@ button:disabled{
 
 .summary{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(4,1fr);
   gap:15px;
   margin-bottom:20px;
 }
@@ -185,6 +185,59 @@ button:disabled{
   font-size:28px;
   font-weight:800;
   margin-top:7px;
+}
+
+/* DESGLOSE DE PIEZAS */
+
+.product-breakdown{
+  background:#fff;
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:20px;
+  box-shadow:0 5px 20px rgba(0,0,0,.06);
+}
+
+.product-breakdown-title{
+  font-size:18px;
+  font-weight:800;
+  margin-bottom:15px;
+}
+
+.product-breakdown-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.product-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  padding:12px 14px;
+  background:#f8fafc;
+  border-radius:12px;
+}
+
+.product-name{
+  font-weight:700;
+  color:#334155;
+}
+
+.product-quantity{
+  font-size:17px;
+  font-weight:900;
+  color:#2680eb;
+  white-space:nowrap;
+}
+
+.product-breakdown-total{
+  display:flex;
+  justify-content:space-between;
+  border-top:2px solid #e2e8f0;
+  margin-top:12px;
+  padding-top:12px;
+  font-weight:900;
 }
 
 /* CUENTAS */
@@ -716,6 +769,14 @@ button:disabled{
 
 /* RESPONSIVE */
 
+@media(max-width:900px){
+
+  .summary{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+}
+
 @media(max-width:700px){
 
   .filters{
@@ -775,6 +836,10 @@ button:disabled{
 
   .cancelled-top{
     flex-direction:column;
+  }
+
+  .product-row{
+    padding:11px;
   }
 
 }
@@ -864,12 +929,26 @@ type="date">
 
 </div>
 
+<!-- RESUMEN -->
+
 <div class="summary">
 
 <div class="summary-card">
 
 <div class="label">
 CUENTAS PENDIENTES
+</div>
+
+<div id="countAccounts" class="value">
+0
+</div>
+
+</div>
+
+<div class="summary-card">
+
+<div class="label">
+PIEZAS PENDIENTES
 </div>
 
 <div id="count" class="value">
@@ -903,6 +982,38 @@ $0.00
 </div>
 
 </div>
+
+
+<!-- DESGLOSE DE PRODUCTOS -->
+
+<div
+id="productBreakdown"
+class="product-breakdown"
+style="display:none;">
+
+<div class="product-breakdown-title">
+📦 Productos pendientes por cobrar
+</div>
+
+<div
+id="productBreakdownList"
+class="product-breakdown-list">
+</div>
+
+<div class="product-breakdown-total">
+
+<span>
+Total de piezas
+</span>
+
+<span id="productBreakdownTotal">
+0
+</span>
+
+</div>
+
+</div>
+
 
 <div class="card">
 
@@ -1182,6 +1293,13 @@ let payments = [];
 
 let paymentMethods = [];
 
+/*
+   IMPORTANTE:
+   Aquí guardamos los productos/cantidades
+   correspondientes a cada venta.
+*/
+let saleItems = [];
+
 let selectedSaleForPayment = null;
 
 let selectedSaleForCancel = null;
@@ -1294,10 +1412,6 @@ function getWhatsAppPhone(phone){
   if(!clean)
     return null;
 
-  /*
-     Si ya viene con +52, lo conservamos.
-  */
-
   if(clean.startsWith("+52")){
 
     clean =
@@ -1307,11 +1421,6 @@ function getWhatsAppPhone(phone){
       );
 
   }
-
-  /*
-     Si viene como 52XXXXXXXXXX,
-     eliminamos el prefijo.
-  */
 
   if(
     clean.startsWith("52") &&
@@ -1323,22 +1432,11 @@ function getWhatsAppPhone(phone){
 
   }
 
-  /*
-     Para México utilizamos 52
-     como prefijo internacional.
-  */
-
   if(clean.length === 10){
 
     return "52" + clean;
 
   }
-
-  /*
-     Si no tiene exactamente 10 dígitos,
-     intentamos utilizar el número
-     recibido sin caracteres especiales.
-  */
 
   if(clean.length >= 10){
 
@@ -1385,16 +1483,23 @@ function sendWhatsAppReminder(
       getSaleDate(sale)
     );
 
+  /*
+     Mensaje corto para cobro.
+  */
+
   const message =
     "Hola " +
     customerName +
     " 👋\n\n" +
-    "Te recordamos que tienes un saldo pendiente de " +
+    "Tienes un saldo pendiente de " +
     money(balance) +
-    " correspondiente a tu cuenta del " +
+    " de tu cuenta del " +
     date +
     ".\n\n" +
-    "Cuando tengas oportunidad, ¿nos apoyas con tu pago? 💰\n\n" +
+    "Puedes realizar tu pago por transferencia:\n" +
+    "Titular: Carlos Ivan Rojas Marquez\n" +
+    "Cuenta: 730969300008248726\n" +
+    "Banco: Clip\n\n" +
     "¡Muchas gracias! 🙏";
 
   const url =
@@ -1579,6 +1684,391 @@ async function loadSelectedCustomer(){
 
 
 /* =====================================================
+   CARGAR PIEZAS DE LAS VENTAS
+===================================================== */
+
+async function loadSaleItems(saleIds){
+
+  saleItems = [];
+
+  if(!saleIds.length)
+    return;
+
+
+  /*
+     PRIMERA OPCIÓN:
+     sale_items es la fuente principal.
+  */
+
+  const itemsResult =
+    await supabaseClient
+      .from("sale_items")
+      .select(
+        "sale_id,product_id,description,quantity"
+      )
+      .in(
+        "sale_id",
+        saleIds
+      );
+
+
+  if(
+    !itemsResult.error &&
+    itemsResult.data &&
+    itemsResult.data.length
+  ){
+
+    saleItems =
+      itemsResult.data.map(
+        item => ({
+
+          sale_id:
+            item.sale_id,
+
+          product_id:
+            item.product_id,
+
+          description:
+            item.description ||
+            "Producto",
+
+          quantity:
+            Number(
+              item.quantity || 0
+            )
+
+        })
+      );
+
+    console.log(
+      "📦 Piezas cargadas desde sale_items:",
+      saleItems
+    );
+
+    return;
+
+  }
+
+
+  /*
+     RESPALDO:
+     Si sale_items no devuelve información,
+     utilizamos inventory_movements.
+
+     Las ventas tienen cantidades negativas,
+     por eso utilizamos Math.abs().
+  */
+
+  console.warn(
+    "⚠️ sale_items no devolvió registros. Intentando inventory_movements..."
+  );
+
+
+  const movementsResult =
+    await supabaseClient
+      .from("inventory_movements")
+      .select(
+        "reference_id,product_id,quantity,movement_type"
+      )
+      .in(
+        "reference_id",
+        saleIds
+      )
+      .eq(
+        "movement_type",
+        "sale"
+      );
+
+
+  if(
+    movementsResult.error
+  ){
+
+    console.error(
+      "No se pudieron cargar movimientos de inventario:",
+      movementsResult.error
+    );
+
+    return;
+
+  }
+
+
+  const movements =
+    movementsResult.data || [];
+
+
+  if(!movements.length){
+
+    console.warn(
+      "⚠️ No se encontraron movimientos de venta."
+    );
+
+    return;
+
+  }
+
+
+  /*
+     Cargamos nombres de productos
+     para mostrar el desglose.
+  */
+
+  const productIds =
+    [
+      ...new Set(
+        movements
+          .map(
+            movement =>
+              movement.product_id
+          )
+          .filter(Boolean)
+      )
+    ];
+
+
+  const productMap =
+    new Map();
+
+
+  if(productIds.length){
+
+    const productsResult =
+      await supabaseClient
+        .from("products")
+        .select(
+          "id,name"
+        )
+        .in(
+          "id",
+          productIds
+        );
+
+
+    if(!productsResult.error){
+
+      (productsResult.data || [])
+        .forEach(
+          product => {
+
+            productMap.set(
+              product.id,
+              product.name
+            );
+
+          }
+        );
+
+    }
+
+  }
+
+
+  saleItems =
+    movements.map(
+      movement => ({
+
+        sale_id:
+          movement.reference_id,
+
+        product_id:
+          movement.product_id,
+
+        description:
+          productMap.get(
+            movement.product_id
+          ) ||
+          "Producto",
+
+        quantity:
+          Math.abs(
+            Number(
+              movement.quantity || 0
+            )
+          )
+
+      })
+    );
+
+
+  console.log(
+    "📦 Piezas cargadas desde inventory_movements:",
+    saleItems
+  );
+
+}
+
+
+/* =====================================================
+   DESGLOSE DE PRODUCTOS
+===================================================== */
+
+function renderProductBreakdown(
+  filteredRows
+){
+
+  const panel =
+    $("productBreakdown");
+
+  const list =
+    $("productBreakdownList");
+
+  const totalElement =
+    $("productBreakdownTotal");
+
+
+  list.innerHTML = "";
+
+
+  const validSaleIds =
+    new Set(
+      filteredRows.map(
+        sale => sale.id
+      )
+    );
+
+
+  const filteredItems =
+    saleItems.filter(
+      item =>
+        validSaleIds.has(
+          item.sale_id
+        )
+    );
+
+
+  if(!filteredItems.length){
+
+    panel.style.display =
+      "none";
+
+    totalElement.textContent =
+      "0";
+
+    return;
+
+  }
+
+
+  const productMap =
+    new Map();
+
+
+  filteredItems.forEach(
+    item => {
+
+      const key =
+        item.product_id ||
+        item.description ||
+        "producto";
+
+      const current =
+        productMap.get(
+          key
+        ) || {
+
+          name:
+            item.description ||
+            "Producto",
+
+          quantity:
+            0
+
+        };
+
+
+      current.quantity +=
+        Number(
+          item.quantity || 0
+        );
+
+
+      productMap.set(
+        key,
+        current
+      );
+
+    }
+  );
+
+
+  let totalPieces = 0;
+
+
+  productMap.forEach(
+    product => {
+
+      totalPieces +=
+        product.quantity;
+
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+      row.className =
+        "product-row";
+
+
+      const name =
+        document.createElement(
+          "div"
+        );
+
+      name.className =
+        "product-name";
+
+      name.textContent =
+        product.name;
+
+
+      const quantity =
+        document.createElement(
+          "div"
+        );
+
+      quantity.className =
+        "product-quantity";
+
+      quantity.textContent =
+        Number(
+          product.quantity
+        ) +
+        (
+          Number(product.quantity) === 1
+          ? " pieza"
+          : " piezas"
+        );
+
+
+      row.appendChild(
+        name
+      );
+
+      row.appendChild(
+        quantity
+      );
+
+      list.appendChild(
+        row
+      );
+
+    }
+  );
+
+
+  totalElement.textContent =
+    totalPieces;
+
+
+  panel.style.display =
+    "block";
+
+}
+
+
+/* =====================================================
    CARGAR CUENTAS PENDIENTES
 ===================================================== */
 
@@ -1625,12 +2115,25 @@ async function loadSales(){
     sales =
       result.data || [];
 
+
     const saleIds =
       sales.map(
         sale => sale.id
       );
 
+
+    /*
+       NUEVO:
+       Cargar las piezas de las ventas.
+    */
+
+    await loadSaleItems(
+      saleIds
+    );
+
+
     payments = [];
+
 
     if(saleIds.length){
 
@@ -1658,6 +2161,7 @@ async function loadSales(){
         paymentsResult.data || [];
 
     }
+
 
     await loadPaymentMethods();
 
@@ -1829,10 +2333,62 @@ async function renderAccounts(){
     );
 
 
-  /* RESUMEN */
+  /* =================================================
+     RESUMEN
+  ================================================= */
+
+  /*
+     Número de cuentas.
+  */
+
+  $("countAccounts").textContent =
+    rows.length;
+
+
+  /*
+     Filtrar solamente los sale_items
+     pertenecientes a las cuentas visibles.
+  */
+
+  const validSaleIds =
+    new Set(
+      rows.map(
+        sale => sale.id
+      )
+    );
+
+
+  const filteredItems =
+    saleItems.filter(
+      item =>
+        validSaleIds.has(
+          item.sale_id
+        )
+    );
+
+
+  /*
+     CONTADOR DE PIEZAS
+  */
+
+  const totalPieces =
+    filteredItems.reduce(
+      (sum,item) =>
+        sum +
+        Number(
+          item.quantity || 0
+        ),
+      0
+    );
+
 
   $("count").textContent =
-    rows.length;
+    totalPieces;
+
+
+  /*
+     TOTAL VENTAS.
+  */
 
   $("total").textContent =
     money(
@@ -1846,6 +2402,11 @@ async function renderAccounts(){
       )
     );
 
+
+  /*
+     SALDO.
+  */
+
   $("balance").textContent =
     money(
       rows.reduce(
@@ -1857,6 +2418,15 @@ async function renderAccounts(){
         0
       )
     );
+
+
+  /*
+     DESGLOSE DE PRODUCTOS.
+  */
+
+  renderProductBreakdown(
+    rows
+  );
 
 
   if(!rows.length){
