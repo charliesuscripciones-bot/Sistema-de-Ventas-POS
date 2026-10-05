@@ -1523,12 +1523,6 @@ async function loadSales(){
 
     const rawSales=salesResult.data||[];
 
-    /*
-      IMPORTANTE:
-      sale_items NO se ordena por created_at porque
-      esa columna no existe en esa tabla.
-    */
-
     sales=[];
 
     if(rawSales.length){
@@ -2282,12 +2276,15 @@ async function confirmPayment(){
 
     /*
       1. Registramos el pago.
+      IMPORTANTE:
+      payments.business_id es obligatorio.
     */
 
     const paymentResult=
       await supabaseClient
         .from("payments")
         .insert({
+          business_id:BUSINESS_IDS[currentBusiness],
           sale_id:selectedSale.id,
           customer_id:selectedSale.customer_id||null,
           payment_method_id:selectedPaymentMethod.id,
@@ -2330,11 +2327,6 @@ async function confirmPayment(){
         .eq("id",selectedSale.id);
 
     if(saleUpdate.error){
-
-      /*
-        El pago sí pudo haberse registrado.
-        Informamos claramente para evitar duplicarlo.
-      */
 
       throw new Error(
         "El abono fue registrado, pero no fue posible actualizar "+
@@ -2410,8 +2402,8 @@ function sendWhatsApp(saleId){
 
     message=
       "Hola, "+name+" 👋\n\n"+
-      "Te recordamos que tienes un saldo pendiente de onigiris.\n\n"+
-      "Saldo pendiente de onigiris: "+money(balance)+"\n\n"+
+      "Te recordamos que tienes un pendiente: "+
+      money(balance)+".\n\n"+
       "Puedes realizar tu transferencia a:\n\n"+
       "Carlos Ivan Rojas Marquez\n"+
       "Cuenta: 730969300008248726\n"+
@@ -2423,9 +2415,9 @@ function sendWhatsApp(saleId){
 
     message=
       "Hola, "+name+" 👋\n\n"+
-      "Te recordamos que tienes un saldo pendiente en "+
-      currentBusiness+".\n\n"+
-      "Saldo pendiente: "+money(balance)+"\n\n"+
+      "Te recordamos que tienes un saldo pendiente de "+
+      money(balance)+
+      " en "+currentBusiness+".\n\n"+
       "Puedes realizar tu transferencia a:\n\n"+
       "Carlos Ivan Rojas Marquez\n"+
       "Cuenta: 730969300008248726\n"+
