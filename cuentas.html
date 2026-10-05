@@ -1413,6 +1413,24 @@ async function confirmPayment(){
       );
 
 
+    /*
+      Verificación de seguridad:
+      el método de pago debe pertenecer
+      al negocio seleccionado.
+    */
+
+    if(
+      selectedPaymentMethod.business_id &&
+      selectedPaymentMethod.business_id !== businessId
+    ){
+
+      throw new Error(
+        "El método de pago seleccionado no pertenece al negocio actual."
+      );
+
+    }
+
+
     console.log(
       "================================"
     );
@@ -1434,14 +1452,16 @@ async function confirmPayment(){
     /*
       ============================================
       INSERT PAYMENT
+      ============================================
 
       IMPORTANTE:
-      NO usamos .select()
+      payments.business_id es NOT NULL.
 
-      Esto evita que el INSERT intente
-      devolver la fila y choque con una
-      política SELECT de RLS.
-      ============================================
+      Por eso se envía explícitamente.
+
+      NO usamos .select() para que el INSERT
+      no necesite una lectura posterior
+      de la fila.
     */
 
     const paymentResult =
@@ -1556,6 +1576,10 @@ async function confirmPayment(){
         .eq(
           "id",
           saleId
+        )
+        .eq(
+          "business_id",
+          businessId
         );
 
 
@@ -1589,6 +1613,12 @@ async function confirmPayment(){
         "Detalle: "+
         (
           saleUpdate.error.details ||
+          "N/D"
+        )+"\n"+
+
+        "Sugerencia: "+
+        (
+          saleUpdate.error.hint ||
           "N/D"
         )
 
@@ -1781,20 +1811,40 @@ async function confirmCancel(){
 
   try{
 
+    const businessId =
+      selectedCancelSale.business_id ||
+      BUSINESS_IDS[currentBusiness];
+
+
+    const saleId =
+      selectedCancelSale.id;
+
+
     console.log(
-      "CANCELANDO VENTA:",
-      {
-        saleId:
-          selectedCancelSale.id,
-
-        businessId:
-          selectedCancelSale.business_id ||
-          BUSINESS_IDS[currentBusiness],
-
-        reason
-      }
+      "================================"
     );
 
+    console.log(
+      "CANCELANDO VENTA"
+    );
+
+    console.log({
+
+      saleId,
+
+      businessId,
+
+      currentBusiness,
+
+      reason
+
+    });
+
+
+    /*
+      Actualizamos únicamente la venta
+      que pertenece al negocio actual.
+    */
 
     const result =
       await supabaseClient
@@ -1810,7 +1860,11 @@ async function confirmCancel(){
         })
         .eq(
           "id",
-          selectedCancelSale.id
+          saleId
+        )
+        .eq(
+          "business_id",
+          businessId
         );
 
 
@@ -1845,6 +1899,14 @@ async function confirmCancel(){
       );
 
     }
+
+
+    /*
+      Supabase puede devolver data null
+      cuando no usamos .select().
+      Por eso aquí solamente verificamos
+      si existe error.
+    */
 
 
     closeModal(
@@ -2017,7 +2079,7 @@ document.addEventListener(
   function(){
 
     console.log(
-      "CUENTAS.HTML CARGADO - VERSIÓN RLS FIX"
+      "CUENTAS.HTML CARGADO - VERSIÓN RLS FIX 2"
     );
 
     loadSales();
