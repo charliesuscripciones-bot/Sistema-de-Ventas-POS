@@ -2,10 +2,11 @@
 <html lang="es">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Inventario | Sistema de Ventas POS</title>
+<title>Inventario | Charlie Shop</title>
 
 <style>
 
@@ -19,33 +20,84 @@ body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   background:#f5f5f5;
   color:#222;
+  min-height:100vh;
 }
+
+/* =========================================
+   HEADER
+========================================= */
 
 header{
   background:#111827;
   color:#fff;
-  padding:25px 20px;
+  padding-top:calc(18px + env(safe-area-inset-top));
+  padding-right:20px;
+  padding-bottom:20px;
+  padding-left:20px;
 }
 
-header h1{
-  font-size:30px;
+.header-inner{
+  max-width:1100px;
+  margin:auto;
 }
 
-header p{
-  font-size:16px;
-  opacity:.75;
-  margin-top:8px;
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
+
+.brand-logo{
+  width:54px;
+  height:54px;
+  flex-shrink:0;
+}
+
+.brand-logo svg{
+  width:100%;
+  height:100%;
+}
+
+.brand-text h1{
+  font-size:25px;
+  line-height:1.1;
+  font-weight:800;
+}
+
+.brand-text p{
+  font-size:13px;
+  opacity:.72;
+  margin-top:4px;
+  letter-spacing:.3px;
+}
+
+.page-title{
+  margin-top:18px;
+}
+
+.page-title h2{
+  font-size:25px;
+}
+
+.page-title p{
+  font-size:14px;
+  opacity:.72;
+  margin-top:5px;
+}
+
+/* =========================================
+   CONTAINER
+========================================= */
 
 .container{
   max-width:1100px;
   margin:auto;
-  padding:22px 20px 40px;
+  padding:20px 20px 50px;
 }
 
-/* =========================
+/* =========================================
    STATUS
-========================= */
+========================================= */
 
 .status{
   display:none;
@@ -53,6 +105,7 @@ header p{
   padding:14px 16px;
   border-radius:12px;
   font-weight:700;
+  line-height:1.4;
 }
 
 .status.ok{
@@ -67,15 +120,21 @@ header p{
   color:#991b1b;
 }
 
-/* =========================
+.status.warning{
+  display:block;
+  background:#fef3c7;
+  color:#92400e;
+}
+
+/* =========================================
    CONTROLES
-========================= */
+========================================= */
 
 .controls{
   background:#fff;
   border-radius:18px;
-  padding:18px;
-  margin-bottom:20px;
+  padding:16px;
+  margin-bottom:18px;
   box-shadow:0 5px 20px rgba(0,0,0,.06);
 }
 
@@ -89,10 +148,10 @@ header p{
 .refresh-btn,
 .dashboard-btn{
   border:2px solid #ddd;
-  padding:12px 18px;
+  padding:12px 16px;
   border-radius:11px;
   background:#fff;
-  font-size:15px;
+  font-size:14px;
   font-weight:800;
   cursor:pointer;
   min-height:48px;
@@ -118,33 +177,34 @@ header p{
   color:#111827;
 }
 
-/* =========================
-   RESUMEN
-========================= */
+/* =========================================
+   SUMMARY
+========================================= */
 
 .summary{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:15px;
-  margin-bottom:20px;
+  gap:14px;
+  margin-bottom:18px;
 }
 
 .summary-card{
   background:#fff;
   border-radius:18px;
-  padding:20px;
+  padding:18px;
   box-shadow:0 5px 20px rgba(0,0,0,.06);
 }
 
 .summary-label{
   color:#6b7280;
-  font-size:14px;
+  font-size:12px;
   font-weight:800;
-  margin-bottom:7px;
+  margin-bottom:6px;
+  letter-spacing:.3px;
 }
 
 .summary-value{
-  font-size:29px;
+  font-size:28px;
   font-weight:800;
 }
 
@@ -160,25 +220,57 @@ header p{
   color:#16a34a;
 }
 
-/* =========================
+/* =========================================
+   ACTIONS
+========================================= */
+
+.main-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-bottom:18px;
+}
+
+.main-action{
+  border:none;
+  border-radius:14px;
+  padding:15px;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  min-height:52px;
+}
+
+.entry-action{
+  background:#16a34a;
+  color:#fff;
+}
+
+.history-action{
+  background:#eef2ff;
+  color:#3730a3;
+}
+
+/* =========================================
    CARD
-========================= */
+========================================= */
 
 .card{
   background:#fff;
   border-radius:20px;
-  padding:22px;
+  padding:20px;
   box-shadow:0 5px 20px rgba(0,0,0,.06);
+  margin-bottom:18px;
 }
 
 .card h2{
-  font-size:23px;
-  margin-bottom:17px;
+  font-size:21px;
+  margin-bottom:15px;
 }
 
-/* =========================
-   BUSCADOR
-========================= */
+/* =========================================
+   SEARCH
+========================================= */
 
 .search{
   width:100%;
@@ -187,16 +279,16 @@ header p{
   border-radius:11px;
   font-size:16px;
   outline:none;
-  margin-bottom:18px;
+  margin-bottom:16px;
 }
 
 .search:focus{
   border-color:#2563eb;
 }
 
-/* =========================
-   PRODUCTOS
-========================= */
+/* =========================================
+   PRODUCTS
+========================================= */
 
 .products{
   display:grid;
@@ -226,12 +318,48 @@ header p{
   font-size:14px;
 }
 
+.stock-display{
+  margin-top:13px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.stock-number{
+  font-size:25px;
+  font-weight:900;
+}
+
+.stock-caption{
+  font-size:13px;
+  color:#6b7280;
+  font-weight:700;
+}
+
+.stock-badge{
+  padding:7px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.stock-badge.ok{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.stock-badge.low{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
 .stock-area{
   display:grid;
   grid-template-columns:auto 1fr auto;
   gap:10px;
   align-items:center;
-  margin-top:15px;
+  margin-top:14px;
 }
 
 .stock-label{
@@ -255,7 +383,7 @@ header p{
 
 .save-button{
   border:none;
-  background:#16a34a;
+  background:#111827;
   color:#fff;
   padding:11px 16px;
   border-radius:10px;
@@ -267,6 +395,45 @@ header p{
 .save-button:disabled{
   opacity:.6;
   cursor:wait;
+}
+
+.product-actions{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+}
+
+.quick-button{
+  border:none;
+  background:#eef2ff;
+  color:#3730a3;
+  padding:10px 12px;
+  border-radius:9px;
+  font-weight:800;
+  cursor:pointer;
+  min-height:42px;
+}
+
+.quick-button:hover{
+  background:#e0e7ff;
+}
+
+.product-entry-button{
+  margin-top:10px;
+  width:100%;
+  border:2px solid #bbf7d0;
+  background:#f0fdf4;
+  color:#166534;
+  padding:10px;
+  border-radius:10px;
+  font-weight:800;
+  cursor:pointer;
+  min-height:44px;
+}
+
+.product-entry-button:hover{
+  background:#dcfce7;
 }
 
 .stock-status{
@@ -283,27 +450,233 @@ header p{
   color:#16a34a;
 }
 
-.product-actions{
-  margin-top:12px;
+/* =========================================
+   HISTORY
+========================================= */
+
+.history-section{
+  scroll-margin-top:20px;
+}
+
+.history-filters{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+  margin-bottom:15px;
+}
+
+.filter{
+  width:100%;
+  padding:12px;
+  border:2px solid #ddd;
+  border-radius:10px;
+  font-size:14px;
+  background:#fff;
+  outline:none;
+}
+
+.filter:focus{
+  border-color:#2563eb;
+}
+
+.history-list{
+  display:grid;
+  gap:9px;
+}
+
+.movement{
+  border:1px solid #e5e7eb;
+  border-radius:13px;
+  padding:14px;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:12px;
+  align-items:center;
+}
+
+.movement-icon{
+  width:40px;
+  height:40px;
+  border-radius:50%;
   display:flex;
-  gap:8px;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  font-weight:900;
 }
 
-.quick-button{
-  flex:1;
-  border:none;
-  background:#eef2ff;
-  color:#3730a3;
-  padding:10px 12px;
-  border-radius:9px;
-  font-weight:800;
-  cursor:pointer;
-  min-height:42px;
+.movement-icon.in{
+  background:#dcfce7;
+  color:#166534;
 }
 
-.quick-button:hover{
+.movement-icon.out{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.movement-icon.adjustment{
   background:#e0e7ff;
+  color:#3730a3;
 }
+
+.movement-product{
+  font-weight:800;
+  font-size:15px;
+}
+
+.movement-meta{
+  margin-top:4px;
+  color:#6b7280;
+  font-size:12px;
+}
+
+.movement-quantity{
+  font-size:18px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.movement-quantity.in{
+  color:#16a34a;
+}
+
+.movement-quantity.out{
+  color:#dc2626;
+}
+
+.movement-quantity.adjustment{
+  color:#3730a3;
+}
+
+/* =========================================
+   MODAL
+========================================= */
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  z-index:1000;
+  padding:15px;
+}
+
+.modal.open{
+  display:flex;
+}
+
+.modal-box{
+  width:100%;
+  max-width:520px;
+  background:#fff;
+  border-radius:22px;
+  padding:22px;
+  box-shadow:0 15px 50px rgba(0,0,0,.25);
+  max-height:90vh;
+  overflow:auto;
+}
+
+.modal-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:18px;
+}
+
+.modal-header h3{
+  font-size:21px;
+}
+
+.close-button{
+  border:none;
+  background:#f3f4f6;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  font-size:20px;
+  cursor:pointer;
+}
+
+.modal-product{
+  background:#f9fafb;
+  border-radius:12px;
+  padding:13px;
+  margin-bottom:16px;
+}
+
+.modal-product-name{
+  font-weight:800;
+}
+
+.modal-product-stock{
+  color:#6b7280;
+  font-size:13px;
+  margin-top:3px;
+}
+
+.form-group{
+  margin-bottom:14px;
+}
+
+.form-group label{
+  display:block;
+  font-size:13px;
+  font-weight:800;
+  margin-bottom:7px;
+}
+
+.form-input{
+  width:100%;
+  padding:13px;
+  border:2px solid #ddd;
+  border-radius:10px;
+  font-size:16px;
+  outline:none;
+}
+
+.form-input:focus{
+  border-color:#2563eb;
+}
+
+.modal-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:18px;
+}
+
+.cancel-button,
+.confirm-button{
+  border:none;
+  padding:13px;
+  border-radius:11px;
+  font-weight:800;
+  font-size:15px;
+  cursor:pointer;
+  min-height:48px;
+}
+
+.cancel-button{
+  background:#f3f4f6;
+  color:#111827;
+}
+
+.confirm-button{
+  background:#16a34a;
+  color:#fff;
+}
+
+.confirm-button:disabled{
+  opacity:.6;
+}
+
+/* =========================================
+   EMPTY / LOADING
+========================================= */
 
 .empty,
 .loading{
@@ -312,13 +685,17 @@ header p{
   padding:35px 10px;
 }
 
-/* =========================
+/* =========================================
    RESPONSIVE
-========================= */
+========================================= */
 
 @media(max-width:800px){
 
   .summary{
+    grid-template-columns:1fr;
+  }
+
+  .history-filters{
     grid-template-columns:1fr;
   }
 
@@ -327,19 +704,16 @@ header p{
 @media(max-width:600px){
 
   header{
-    padding:22px 17px;
-  }
-
-  header h1{
-    font-size:25px;
+    padding-right:17px;
+    padding-left:17px;
   }
 
   .container{
-    padding:16px 14px 35px;
+    padding:15px 14px 40px;
   }
 
   .controls{
-    padding:14px;
+    padding:13px;
   }
 
   .businesses{
@@ -352,6 +726,10 @@ header p{
     width:100%;
     padding:11px 8px;
     font-size:13px;
+  }
+
+  .main-actions{
+    grid-template-columns:1fr;
   }
 
   .card{
@@ -374,6 +752,36 @@ header p{
     grid-column:auto;
   }
 
+  .movement{
+    grid-template-columns:auto 1fr;
+  }
+
+  .movement-quantity{
+    grid-column:2;
+    justify-self:start;
+  }
+
+  .modal{
+    padding:0;
+  }
+
+  .modal-box{
+    border-radius:22px 22px 0 0;
+    max-height:94vh;
+  }
+
+}
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media(prefers-reduced-motion:reduce){
+
+  *{
+    scroll-behavior:auto !important;
+  }
+
 }
 
 </style>
@@ -386,11 +794,88 @@ header p{
 
 <header>
 
-<h1>📦 Inventario</h1>
+<div class="header-inner">
+
+<div class="brand">
+
+<div class="brand-logo" aria-hidden="true">
+
+<svg
+viewBox="0 0 64 64"
+xmlns="http://www.w3.org/2000/svg"
+>
+
+<circle
+cx="32"
+cy="32"
+r="29"
+fill="none"
+stroke="#d4af37"
+stroke-width="2.5"
+/>
+
+<path
+d="M14 18h5l4 25h25l5-18H22"
+fill="none"
+stroke="#ffffff"
+stroke-width="3"
+stroke-linecap="round"
+stroke-linejoin="round"
+/>
+
+<circle
+cx="29"
+cy="50"
+r="3"
+fill="#d4af37"
+/>
+
+<circle
+cx="47"
+cy="50"
+r="3"
+fill="#d4af37"
+/>
+
+<text
+x="32"
+y="35"
+text-anchor="middle"
+font-family="Arial,sans-serif"
+font-size="14"
+font-weight="800"
+fill="#d4af37"
+>
+CS
+</text>
+
+</svg>
+
+</div>
+
+
+<div class="brand-text">
+
+<h1>Charlie Shop</h1>
+
+<p>productos seleccionados</p>
+
+</div>
+
+</div>
+
+
+<div class="page-title">
+
+<h2>📦 Inventario</h2>
 
 <p>
-Control y actualización de existencias
+Control de existencias y movimientos
 </p>
+
+</div>
+
+</div>
 
 </header>
 
@@ -400,70 +885,64 @@ Control y actualización de existencias
 
 <div
 id="status"
-class="status">
+class="status"
+>
 </div>
 
 
-<!-- =========================
+<!-- =====================================
      CONTROLES
-========================= -->
+===================================== -->
 
 <div class="controls">
 
 <div class="businesses">
 
-
 <button
 type="button"
 class="business-btn active"
-data-business="BakeQuiri">
-
+data-business="BakeQuiri"
+>
 🧁 BakeQuiri
-
 </button>
 
 
 <button
 type="button"
 class="business-btn"
-data-business="SpicyRoll">
-
+data-business="SpicyRoll"
+>
 🍣 SpicyRoll
-
 </button>
 
 
 <button
 type="button"
 class="refresh-btn"
-id="refreshButton">
-
+id="refreshButton"
+>
 🔄 Actualizar
-
 </button>
 
 
 <button
 type="button"
 class="dashboard-btn"
-id="dashboardButton">
-
+id="dashboardButton"
+>
 ← Dashboard
-
 </button>
 
-
 </div>
 
 </div>
 
 
-<!-- =========================
+<!-- =====================================
      RESUMEN
-========================= -->
+===================================== -->
 
 <div class="summary">
-
 
 <div class="summary-card">
 
@@ -473,10 +952,9 @@ PRODUCTOS ACTIVOS
 
 <div
 id="productCount"
-class="summary-value products-value">
-
+class="summary-value products-value"
+>
 0
-
 </div>
 
 </div>
@@ -490,10 +968,9 @@ UNIDADES EN INVENTARIO
 
 <div
 id="unitCount"
-class="summary-value units-value">
-
+class="summary-value units-value"
+>
 0
-
 </div>
 
 </div>
@@ -507,21 +984,45 @@ PRODUCTOS CON STOCK BAJO
 
 <div
 id="lowStockCount"
-class="summary-value low-value">
-
+class="summary-value low-value"
+>
 0
-
 </div>
 
 </div>
 
+</div>
+
+
+<!-- =====================================
+     ACCIONES PRINCIPALES
+===================================== -->
+
+<div class="main-actions">
+
+<button
+type="button"
+class="main-action entry-action"
+id="newEntryButton"
+>
+➕ Registrar entrada
+</button>
+
+
+<button
+type="button"
+class="main-action history-action"
+id="historyButton"
+>
+📋 Historial de movimientos
+</button>
 
 </div>
 
 
-<!-- =========================
+<!-- =====================================
      PRODUCTOS
-========================= -->
+===================================== -->
 
 <div class="card">
 
@@ -541,7 +1042,8 @@ autocomplete="off"
 
 <div
 id="products"
-class="products">
+class="products"
+>
 
 <div class="loading">
 Cargando inventario...
@@ -549,9 +1051,244 @@ Cargando inventario...
 
 </div>
 
+</div>
+
+
+<!-- =====================================
+     HISTORIAL
+===================================== -->
+
+<div
+class="card history-section"
+id="historySection"
+>
+
+<h2>
+📋 Historial de inventario
+</h2>
+
+
+<div class="history-filters">
+
+<select
+id="historyProduct"
+class="filter"
+>
+<option value="">
+Todos los productos
+</option>
+</select>
+
+
+<select
+id="historyType"
+class="filter"
+>
+
+<option value="">
+Todos los movimientos
+</option>
+
+<option value="in">
+Entradas
+</option>
+
+<option value="out">
+Salidas
+</option>
+
+<option value="adjustment">
+Ajustes
+</option>
+
+</select>
+
+
+<select
+id="historyDays"
+class="filter"
+>
+
+<option value="30">
+Últimos 30 días
+</option>
+
+<option value="90">
+Últimos 90 días
+</option>
+
+<option value="365">
+Último año
+</option>
+
+<option value="0">
+Todo el historial
+</option>
+
+</select>
 
 </div>
 
+
+<div
+id="historyList"
+class="history-list"
+>
+
+<div class="loading">
+Cargando movimientos...
+</div>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<!-- =====================================
+     MODAL ENTRADA
+===================================== -->
+
+<div
+id="entryModal"
+class="modal"
+>
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h3>
+➕ Registrar entrada
+</h3>
+
+<button
+type="button"
+class="close-button"
+id="closeEntryModal"
+>
+×
+</button>
+
+</div>
+
+
+<div
+id="entryProductInfo"
+class="modal-product"
+>
+Selecciona un producto.
+</div>
+
+
+<div class="form-group">
+
+<label for="entryProduct">
+Producto
+</label>
+
+<select
+id="entryProduct"
+class="form-input"
+>
+<option value="">
+Seleccionar producto...
+</option>
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label for="entryQuantity">
+Cantidad de piezas que entraron
+</label>
+
+<input
+id="entryQuantity"
+class="form-input"
+type="number"
+min="1"
+step="1"
+inputmode="numeric"
+placeholder="Ej. 20"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label for="entryDate">
+Fecha de entrada
+</label>
+
+<input
+id="entryDate"
+class="form-input"
+type="date"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label for="entryTime">
+Hora
+</label>
+
+<input
+id="entryTime"
+class="form-input"
+type="time"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label for="entryNote">
+Nota opcional
+</label>
+
+<input
+id="entryNote"
+class="form-input"
+type="text"
+maxlength="150"
+placeholder="Ej. Compra a proveedor"
+>
+
+</div>
+
+
+<div class="modal-buttons">
+
+<button
+type="button"
+class="cancel-button"
+id="cancelEntryButton"
+>
+Cancelar
+</button>
+
+
+<button
+type="button"
+class="confirm-button"
+id="confirmEntryButton"
+>
+Registrar entrada
+</button>
+
+</div>
+
+</div>
 
 </div>
 
@@ -598,11 +1335,39 @@ const BUSINESS_IDS = {
 };
 
 
+/* =========================================
+   NEGOCIO DESDE URL
+========================================= */
+
+const params =
+new URLSearchParams(
+  window.location.search
+);
+
+
+let urlBusiness =
+params.get("business");
+
+
+if(
+  urlBusiness !== "BakeQuiri" &&
+  urlBusiness !== "SpicyRoll"
+){
+
+  urlBusiness =
+  "BakeQuiri";
+
+}
+
+
 let currentBusiness =
-"BakeQuiri";
+urlBusiness;
 
 
 let products =
+[];
+
+let movements =
 [];
 
 
@@ -623,6 +1388,122 @@ function money(value){
 }
 
 
+function pad(value){
+
+  return String(value)
+    .padStart(2,"0");
+
+}
+
+
+function localDateInput(){
+
+  const date =
+  new Date();
+
+  return (
+    date.getFullYear() +
+    "-" +
+    pad(date.getMonth()+1) +
+    "-" +
+    pad(date.getDate())
+  );
+
+}
+
+
+function localTimeInput(){
+
+  const date =
+  new Date();
+
+  return (
+    pad(date.getHours()) +
+    ":" +
+    pad(date.getMinutes())
+  );
+
+}
+
+
+function formatDateTime(value){
+
+  if(!value){
+
+    return "Sin fecha";
+
+  }
+
+
+  const date =
+  new Date(value);
+
+
+  if(
+    Number.isNaN(
+      date.getTime()
+    )
+  ){
+
+    return "Fecha inválida";
+
+  }
+
+
+  return (
+    pad(date.getDate()) +
+    "/" +
+    pad(date.getMonth()+1) +
+    "/" +
+    date.getFullYear() +
+    " · " +
+    pad(date.getHours()) +
+    ":" +
+    pad(date.getMinutes())
+  );
+
+}
+
+
+function formatDateForInput(value){
+
+  const date =
+  new Date(value);
+
+
+  if(
+    Number.isNaN(
+      date.getTime()
+    )
+  ){
+
+    return "";
+
+  }
+
+
+  return (
+    date.getFullYear() +
+    "-" +
+    pad(date.getMonth()+1) +
+    "-" +
+    pad(date.getDate())
+  );
+
+}
+
+
+function escapeText(value){
+
+  return String(
+    value == null
+    ? ""
+    : value
+  );
+
+}
+
+
 function showStatus(
   message,
   type="ok"
@@ -634,6 +1515,11 @@ function showStatus(
   $("status").className =
   "status " + type;
 
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
 }
 
 
@@ -644,6 +1530,31 @@ function clearStatus(){
 
   $("status").className =
   "status";
+
+}
+
+
+/* =========================================
+   NEGOCIO ACTIVO
+========================================= */
+
+function updateBusinessButtons(){
+
+  document
+  .querySelectorAll(
+    ".business-btn"
+  )
+  .forEach(
+    button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.business ===
+        currentBusiness
+      );
+
+    }
+  );
 
 }
 
@@ -711,6 +1622,9 @@ async function loadInventory(){
 
     renderProducts();
 
+    populateProductSelectors();
+
+    await loadMovements();
 
   }
 
@@ -754,11 +1668,14 @@ function updateSummary(){
 
   const totalUnits =
   products.reduce(
-    (sum,product) =>
-    sum +
-    Number(
-      product.stock || 0
-    ),
+    (
+      sum,
+      product
+    ) =>
+      sum +
+      Number(
+        product.stock || 0
+      ),
     0
   );
 
@@ -787,7 +1704,7 @@ function updateSummary(){
 
 
 /* =========================================
-   RENDERIZAR PRODUCTOS
+   RENDER PRODUCTOS
 ========================================= */
 
 function renderProducts(){
@@ -873,10 +1790,14 @@ function createProductElement(
   );
 
 
+  const lowStock =
+  currentStock <= 5;
+
+
   element.className =
   "product" +
   (
-    currentStock <= 5
+    lowStock
     ? " low-stock"
     : ""
   );
@@ -919,7 +1840,86 @@ function createProductElement(
 
 
   /* =====================================
-     STOCK
+     STOCK DISPLAY
+  ===================================== */
+
+  const stockDisplay =
+  document.createElement(
+    "div"
+  );
+
+  stockDisplay.className =
+  "stock-display";
+
+
+  const stockInfo =
+  document.createElement(
+    "div"
+  );
+
+
+  const stockNumber =
+  document.createElement(
+    "div"
+  );
+
+  stockNumber.className =
+  "stock-number";
+
+  stockNumber.textContent =
+  currentStock;
+
+
+  const stockCaption =
+  document.createElement(
+    "div"
+  );
+
+  stockCaption.className =
+  "stock-caption";
+
+  stockCaption.textContent =
+  "unidades disponibles";
+
+
+  stockInfo.append(
+    stockNumber,
+    stockCaption
+  );
+
+
+  const badge =
+  document.createElement(
+    "span"
+  );
+
+  badge.className =
+  "stock-badge " +
+  (
+    lowStock
+    ? "low"
+    : "ok"
+  );
+
+  badge.textContent =
+  lowStock
+  ? "⚠️ Stock bajo"
+  : "✓ Stock normal";
+
+
+  stockDisplay.append(
+    stockInfo,
+    badge
+  );
+
+
+  element.appendChild(
+    stockDisplay
+  );
+
+
+  /* =====================================
+     ACTUALIZACIÓN MANUAL
   ===================================== */
 
   const stockArea =
@@ -990,13 +1990,13 @@ function createProductElement(
   status.className =
   "stock-status " +
   (
-    currentStock <= 5
+    lowStock
     ? "low"
     : "ok"
   );
 
   status.textContent =
-  currentStock <= 5
+  lowStock
   ? "⚠️ Stock bajo"
   : "✓ Stock normal";
 
@@ -1006,6 +2006,7 @@ function createProductElement(
     async event => {
 
       event.preventDefault();
+
       event.stopPropagation();
 
       await saveStock(
@@ -1083,16 +2084,13 @@ function createProductElement(
     "click",
     () => {
 
-      const value =
+      input.value =
       Math.max(
         Number(
           input.value || 0
         ) - 1,
         0
       );
-
-      input.value =
-      value;
 
     }
   );
@@ -1117,13 +2115,10 @@ function createProductElement(
     "click",
     () => {
 
-      const value =
+      input.value =
       Number(
         input.value || 0
       ) + 1;
-
-      input.value =
-      value;
 
     }
   );
@@ -1148,13 +2143,10 @@ function createProductElement(
     "click",
     () => {
 
-      const value =
+      input.value =
       Number(
         input.value || 0
       ) + 5;
-
-      input.value =
-      value;
 
     }
   );
@@ -1172,13 +2164,49 @@ function createProductElement(
   );
 
 
+  /* =====================================
+     ENTRADA DIRECTA
+  ===================================== */
+
+  const entryButton =
+  document.createElement(
+    "button"
+  );
+
+  entryButton.type =
+  "button";
+
+  entryButton.className =
+  "product-entry-button";
+
+  entryButton.textContent =
+  "➕ Registrar entrada de mercancía";
+
+
+  entryButton.addEventListener(
+    "click",
+    () => {
+
+      openEntryModal(
+        product.id
+      );
+
+    }
+  );
+
+
+  element.appendChild(
+    entryButton
+  );
+
+
   return element;
 
 }
 
 
 /* =========================================
-   GUARDAR STOCK — CORREGIDO
+   GUARDAR STOCK MANUAL
 ========================================= */
 
 async function saveStock(
@@ -1194,9 +2222,11 @@ async function saveStock(
   );
 
 
-  /* =====================================
-     VALIDACIÓN
-  ===================================== */
+  const oldStock =
+  Number(
+    product.stock || 0
+  );
+
 
   if(
     !Number.isInteger(
@@ -1211,6 +2241,25 @@ async function saveStock(
     );
 
     input.focus();
+
+    return;
+
+  }
+
+
+  if(
+    newStock ===
+    oldStock
+  ){
+
+    showStatus(
+      "ℹ️ El stock de " +
+      product.name +
+      " ya está en " +
+      newStock +
+      " unidades.",
+      "warning"
+    );
 
     return;
 
@@ -1235,11 +2284,7 @@ async function saveStock(
 
     /* =====================================
        PASO 1
-       UPDATE DIRECTO
-
-       IMPORTANTE:
-       NO usamos .select().single()
-       aquí.
+       ACTUALIZAR PRODUCTO
     ===================================== */
 
     const updateResult =
@@ -1271,13 +2316,7 @@ async function saveStock(
 
     /* =====================================
        PASO 2
-       VOLVER A CONSULTAR EL PRODUCTO
-
-       Usamos LIMIT 1 y NO .single().
-       Así evitamos el error:
-
-       "Cannot coerce the result
-        to a single JSON object"
+       VERIFICAR
     ===================================== */
 
     const verifyResult =
@@ -1316,7 +2355,7 @@ async function saveStock(
     if(!rows.length){
 
       throw new Error(
-        "Supabase no encontró el producto después de guardarlo. Revisa los permisos de la tabla products."
+        "Supabase no encontró el producto después de guardarlo."
       );
 
     }
@@ -1331,11 +2370,6 @@ async function saveStock(
       savedProduct.stock || 0
     );
 
-
-    /* =====================================
-       PASO 3
-       VERIFICAR EL VALOR REAL
-    ===================================== */
 
     if(
       savedStock !==
@@ -1352,8 +2386,46 @@ async function saveStock(
 
 
     /* =====================================
-       PASO 4
-       ACTUALIZAR MEMORIA LOCAL
+       PASO 3
+       REGISTRAR DIFERENCIA
+    ===================================== */
+
+    const difference =
+    newStock -
+    oldStock;
+
+
+    const movementResult =
+    await supabaseClient
+
+      .from("inventory_movements")
+
+      .insert({
+
+        business_id:
+        businessId,
+
+        product_id:
+        product.id,
+
+        quantity:
+        Math.abs(difference),
+
+        movement_type:
+        "adjustment",
+
+        reference_id:
+        null
+
+      });
+
+
+    /* =====================================
+       IMPORTANTE:
+       EL STOCK YA SE GUARDÓ.
+
+       SI RLS BLOQUEA EL INSERT,
+       NO REVERSAMOS EL STOCK.
     ===================================== */
 
     const index =
@@ -1371,11 +2443,6 @@ async function saveStock(
 
     }
 
-
-    /* =====================================
-       PASO 5
-       ACTUALIZAR INTERFAZ
-    ===================================== */
 
     updateSummary();
 
@@ -1395,15 +2462,44 @@ async function saveStock(
     : "✓ Stock normal";
 
 
+    if(
+      movementResult.error
+    ){
+
+      console.error(
+        "Stock actualizado pero movimiento no registrado:",
+        movementResult.error
+      );
+
+
+      showStatus(
+        "⚠️ El stock de " +
+        savedProduct.name +
+        " se actualizó a " +
+        savedStock +
+        ", pero no se pudo registrar el movimiento histórico. Revisa las políticas RLS de inventory_movements.",
+        "warning"
+      );
+
+
+      await loadMovements();
+
+      return;
+
+    }
+
+
     showStatus(
       "✅ Stock de " +
       savedProduct.name +
       " actualizado a " +
       savedStock +
-      " unidades.",
+      " unidades y movimiento registrado.",
       "ok"
     );
 
+
+    await loadMovements();
 
   }
 
@@ -1445,6 +2541,1021 @@ async function saveStock(
 
 
 /* =========================================
+   SELECTORES DE PRODUCTOS
+========================================= */
+
+function populateProductSelectors(){
+
+  const entrySelect =
+  $("entryProduct");
+
+
+  const historySelect =
+  $("historyProduct");
+
+
+  const currentEntryValue =
+  entrySelect.value;
+
+
+  const currentHistoryValue =
+  historySelect.value;
+
+
+  entrySelect.innerHTML =
+  '<option value="">' +
+  "Seleccionar producto..." +
+  "</option>";
+
+
+  historySelect.innerHTML =
+  '<option value="">' +
+  "Todos los productos" +
+  "</option>";
+
+
+  products.forEach(
+    product => {
+
+      const option =
+      document.createElement(
+        "option"
+      );
+
+      option.value =
+      product.id;
+
+      option.textContent =
+      product.name;
+
+
+      entrySelect.appendChild(
+        option
+      );
+
+
+      const historyOption =
+      document.createElement(
+        "option"
+      );
+
+      historyOption.value =
+      product.id;
+
+      historyOption.textContent =
+      product.name;
+
+
+      historySelect.appendChild(
+        historyOption
+      );
+
+    }
+  );
+
+
+  if(
+    products.some(
+      product =>
+      product.id ===
+      currentEntryValue
+    )
+  ){
+
+    entrySelect.value =
+    currentEntryValue;
+
+  }
+
+
+  if(
+    products.some(
+      product =>
+      product.id ===
+      currentHistoryValue
+    )
+  ){
+
+    historySelect.value =
+    currentHistoryValue;
+
+  }
+
+}
+
+
+/* =========================================
+   CARGAR MOVIMIENTOS
+========================================= */
+
+async function loadMovements(){
+
+  const businessId =
+  BUSINESS_IDS[currentBusiness];
+
+
+  $("historyList").innerHTML =
+  '<div class="loading">' +
+  "Cargando movimientos..." +
+  "</div>";
+
+
+  try{
+
+    const result =
+    await supabaseClient
+
+      .from("inventory_movements")
+
+      .select(
+        "id,business_id,product_id,quantity,movement_type,reference_id,created_at"
+      )
+
+      .eq(
+        "business_id",
+        businessId
+      )
+
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+
+    movements =
+    result.data || [];
+
+
+    renderHistory();
+
+  }
+
+  catch(error){
+
+    console.error(
+      "Error cargando movimientos:",
+      error
+    );
+
+
+    movements =
+    [];
+
+
+    $("historyList").innerHTML =
+    '<div class="empty">' +
+    "No se pudo cargar el historial de movimientos." +
+    "</div>";
+
+  }
+
+}
+
+
+/* =========================================
+   RENDER HISTORIAL
+========================================= */
+
+function renderHistory(){
+
+  const container =
+  $("historyList");
+
+
+  const productFilter =
+  $("historyProduct").value;
+
+
+  const typeFilter =
+  $("historyType").value;
+
+
+  const days =
+  Number(
+    $("historyDays").value || 0
+  );
+
+
+  let visible =
+  [...movements];
+
+
+  if(productFilter){
+
+    visible =
+    visible.filter(
+      movement =>
+      movement.product_id ===
+      productFilter
+    );
+
+  }
+
+
+  if(typeFilter){
+
+    visible =
+    visible.filter(
+      movement =>
+      movement.movement_type ===
+      typeFilter
+    );
+
+  }
+
+
+  if(days > 0){
+
+    const limit =
+    Date.now() -
+    (
+      days *
+      24 *
+      60 *
+      60 *
+      1000
+    );
+
+
+    visible =
+    visible.filter(
+      movement => {
+
+        const timestamp =
+        new Date(
+          movement.created_at
+        ).getTime();
+
+        return timestamp >= limit;
+
+      }
+    );
+
+  }
+
+
+  if(!visible.length){
+
+    container.innerHTML =
+    '<div class="empty">' +
+    "No hay movimientos para los filtros seleccionados." +
+    "</div>";
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+  "";
+
+
+  visible.forEach(
+    movement => {
+
+      const product =
+      products.find(
+        item =>
+        item.id ===
+        movement.product_id
+      );
+
+
+      const productName =
+      product
+      ? product.name
+      : "Producto eliminado";
+
+
+      const type =
+      normalizeMovementType(
+        movement.movement_type
+      );
+
+
+      const item =
+      document.createElement(
+        "div"
+      );
+
+      item.className =
+      "movement";
+
+
+      const icon =
+      document.createElement(
+        "div"
+      );
+
+      icon.className =
+      "movement-icon " +
+      type.className;
+
+      icon.textContent =
+      type.icon;
+
+
+      const info =
+      document.createElement(
+        "div"
+      );
+
+
+      const name =
+      document.createElement(
+        "div"
+      );
+
+      name.className =
+      "movement-product";
+
+      name.textContent =
+      productName;
+
+
+      const meta =
+      document.createElement(
+        "div"
+      );
+
+      meta.className =
+      "movement-meta";
+
+      meta.textContent =
+      type.label +
+      " · " +
+      formatDateTime(
+        movement.created_at
+      );
+
+
+      if(
+        movement.reference_id
+      ){
+
+        meta.textContent +=
+        " · Ref: " +
+        String(
+          movement.reference_id
+        )
+        .substring(
+          0,
+          8
+        );
+
+      }
+
+
+      info.append(
+        name,
+        meta
+      );
+
+
+      const quantity =
+      document.createElement(
+        "div"
+      );
+
+      quantity.className =
+      "movement-quantity " +
+      type.className;
+
+
+      if(
+        type.className ===
+        "in"
+      ){
+
+        quantity.textContent =
+        "+" +
+        Number(
+          movement.quantity || 0
+        );
+
+      }
+      else if(
+        type.className ===
+        "out"
+      ){
+
+        quantity.textContent =
+        "-" +
+        Number(
+          movement.quantity || 0
+        );
+
+      }
+      else{
+
+        quantity.textContent =
+        "±" +
+        Number(
+          movement.quantity || 0
+        );
+
+      }
+
+
+      item.append(
+        icon,
+        info,
+        quantity
+      );
+
+
+      container.appendChild(
+        item
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================
+   NORMALIZAR TIPO
+========================================= */
+
+function normalizeMovementType(
+  movementType
+){
+
+  const type =
+  String(
+    movementType ||
+    ""
+  )
+  .toLowerCase();
+
+
+  if(
+    type === "in" ||
+    type === "entrada" ||
+    type === "entry"
+  ){
+
+    return {
+      className:"in",
+      icon:"↑",
+      label:"Entrada"
+    };
+
+  }
+
+
+  if(
+    type === "out" ||
+    type === "salida" ||
+    type === "exit"
+  ){
+
+    return {
+      className:"out",
+      icon:"↓",
+      label:"Salida"
+    };
+
+  }
+
+
+  return {
+    className:"adjustment",
+    icon:"↕",
+    label:"Ajuste"
+  };
+
+}
+
+
+/* =========================================
+   ABRIR MODAL DE ENTRADA
+========================================= */
+
+function openEntryModal(
+  productId=""
+){
+
+  populateProductSelectors();
+
+
+  $("entryQuantity").value =
+  "";
+
+
+  $("entryDate").value =
+  localDateInput();
+
+
+  $("entryTime").value =
+  localTimeInput();
+
+
+  $("entryNote").value =
+  "";
+
+
+  $("entryProduct").value =
+  productId || "";
+
+
+  updateEntryProductInfo();
+
+
+  $("entryModal")
+  .classList
+  .add("open");
+
+
+  setTimeout(
+    () => {
+
+      if(productId){
+
+        $("entryQuantity")
+        .focus();
+
+      }
+      else{
+
+        $("entryProduct")
+        .focus();
+
+      }
+
+    },
+    100
+  );
+
+}
+
+
+/* =========================================
+   CERRAR MODAL
+========================================= */
+
+function closeEntryModal(){
+
+  $("entryModal")
+  .classList
+  .remove("open");
+
+}
+
+
+/* =========================================
+   INFO DEL PRODUCTO
+========================================= */
+
+function updateEntryProductInfo(){
+
+  const productId =
+  $("entryProduct").value;
+
+
+  const product =
+  products.find(
+    item =>
+    item.id ===
+    productId
+  );
+
+
+  if(!product){
+
+    $("entryProductInfo").textContent =
+    "Selecciona un producto para registrar la entrada.";
+
+    return;
+
+  }
+
+
+  $("entryProductInfo").innerHTML =
+  '<div class="modal-product-name">' +
+  escapeText(
+    product.name
+  ) +
+  "</div>" +
+
+  '<div class="modal-product-stock">' +
+  "Stock actual: " +
+  Number(
+    product.stock || 0
+  ) +
+  " unidades" +
+  "</div>";
+
+}
+
+
+/* =========================================
+   REGISTRAR ENTRADA
+========================================= */
+
+async function registerEntry(){
+
+  const productId =
+  $("entryProduct").value;
+
+
+  const quantity =
+  Number(
+    $("entryQuantity").value
+  );
+
+
+  const date =
+  $("entryDate").value;
+
+
+  const time =
+  $("entryTime").value ||
+  "00:00";
+
+
+  const note =
+  $("entryNote").value
+  .trim();
+
+
+  if(!productId){
+
+    showStatus(
+      "❌ Selecciona un producto.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(
+    !Number.isInteger(
+      quantity
+    ) ||
+    quantity <= 0
+  ){
+
+    showStatus(
+      "❌ La cantidad debe ser un número entero mayor a 0.",
+      "error"
+    );
+
+    $("entryQuantity").focus();
+
+    return;
+
+  }
+
+
+  if(!date){
+
+    showStatus(
+      "❌ Selecciona la fecha de entrada.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const product =
+  products.find(
+    item =>
+    item.id ===
+    productId
+  );
+
+
+  if(!product){
+
+    showStatus(
+      "❌ No se encontró el producto.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const businessId =
+  BUSINESS_IDS[currentBusiness];
+
+
+  const oldStock =
+  Number(
+    product.stock || 0
+  );
+
+
+  const newStock =
+  oldStock +
+  quantity;
+
+
+  const createdAt =
+  new Date(
+    date +
+    "T" +
+    time +
+    ":00"
+  );
+
+
+  if(
+    Number.isNaN(
+      createdAt.getTime()
+    )
+  ){
+
+    showStatus(
+      "❌ La fecha u hora no son válidas.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const button =
+  $("confirmEntryButton");
+
+
+  button.disabled =
+  true;
+
+  button.textContent =
+  "Registrando...";
+
+
+  clearStatus();
+
+
+  try{
+
+    /* =====================================
+       PASO 1
+       ACTUALIZAR STOCK
+    ===================================== */
+
+    const updateResult =
+    await supabaseClient
+
+      .from("products")
+
+      .update({
+        stock:newStock
+      })
+
+      .eq(
+        "id",
+        product.id
+      )
+
+      .eq(
+        "business_id",
+        businessId
+      );
+
+
+    if(updateResult.error){
+
+      throw updateResult.error;
+
+    }
+
+
+    /* =====================================
+       PASO 2
+       VERIFICAR STOCK
+    ===================================== */
+
+    const verifyResult =
+    await supabaseClient
+
+      .from("products")
+
+      .select(
+        "id,business_id,name,price,stock,active"
+      )
+
+      .eq(
+        "id",
+        product.id
+      )
+
+      .eq(
+        "business_id",
+        businessId
+      )
+
+      .limit(1);
+
+
+    if(verifyResult.error){
+
+      throw verifyResult.error;
+
+    }
+
+
+    const rows =
+    verifyResult.data || [];
+
+
+    if(!rows.length){
+
+      throw new Error(
+        "No se pudo verificar el producto después de actualizarlo."
+      );
+
+    }
+
+
+    const savedProduct =
+    rows[0];
+
+
+    const savedStock =
+    Number(
+      savedProduct.stock || 0
+    );
+
+
+    if(
+      savedStock !==
+      newStock
+    ){
+
+      throw new Error(
+        "El stock no coincide después de actualizarlo. Supabase reporta " +
+        savedStock +
+        " unidades."
+      );
+
+    }
+
+
+    /* =====================================
+       PASO 3
+       REGISTRAR MOVIMIENTO
+    ===================================== */
+
+    const movementResult =
+    await supabaseClient
+
+      .from("inventory_movements")
+
+      .insert({
+
+        business_id:
+        businessId,
+
+        product_id:
+        product.id,
+
+        quantity:
+        quantity,
+
+        movement_type:
+        "in",
+
+        reference_id:
+        null,
+
+        created_at:
+        createdAt.toISOString()
+
+      });
+
+
+    /* =====================================
+       ACTUALIZAR MEMORIA
+    ===================================== */
+
+    const index =
+    products.findIndex(
+      item =>
+      item.id ===
+      product.id
+    );
+
+
+    if(index !== -1){
+
+      products[index] =
+      savedProduct;
+
+    }
+
+
+    updateSummary();
+
+    renderProducts();
+
+
+    if(
+      movementResult.error
+    ){
+
+      console.error(
+        "Stock actualizado pero entrada no registrada:",
+        movementResult.error
+      );
+
+
+      closeEntryModal();
+
+
+      showStatus(
+        "⚠️ El stock de " +
+        product.name +
+        " aumentó a " +
+        savedStock +
+        ", pero la entrada histórica no pudo registrarse. Revisa las políticas RLS de inventory_movements.",
+        "warning"
+      );
+
+
+      return;
+
+    }
+
+
+    closeEntryModal();
+
+
+    showStatus(
+      "✅ Entrada registrada: +" +
+      quantity +
+      " unidades de " +
+      product.name +
+      ". Nuevo stock: " +
+      savedStock +
+      ".",
+      "ok"
+    );
+
+
+    await loadMovements();
+
+
+    $("historySection")
+    .scrollIntoView({
+      behavior:"smooth",
+      block:"start"
+    });
+
+  }
+
+  catch(error){
+
+    console.error(
+      "ERROR REGISTRANDO ENTRADA:",
+      error
+    );
+
+
+    showStatus(
+      "❌ No se pudo registrar la entrada: " +
+      (
+        error.message ||
+        error
+      ),
+      "error"
+    );
+
+  }
+
+  finally{
+
+    button.disabled =
+    false;
+
+    button.textContent =
+    "Registrar entrada";
+
+  }
+
+}
+
+
+/* =========================================
    BUSCADOR
 ========================================= */
 
@@ -1452,6 +3563,42 @@ $("search")
 .addEventListener(
   "input",
   renderProducts
+);
+
+
+/* =========================================
+   CAMBIO DE PRODUCTO MODAL
+========================================= */
+
+$("entryProduct")
+.addEventListener(
+  "change",
+  updateEntryProductInfo
+);
+
+
+/* =========================================
+   FILTROS HISTORIAL
+========================================= */
+
+$("historyProduct")
+.addEventListener(
+  "change",
+  renderHistory
+);
+
+
+$("historyType")
+.addEventListener(
+  "change",
+  renderHistory
+);
+
+
+$("historyDays")
+.addEventListener(
+  "change",
+  renderHistory
 );
 
 
@@ -1488,21 +3635,21 @@ document
         business;
 
 
-        document
-        .querySelectorAll(
-          ".business-btn"
-        )
-        .forEach(
-          item =>
-          item.classList.remove(
-            "active"
-          )
+        const newUrl =
+        "inventario.html?business=" +
+        encodeURIComponent(
+          currentBusiness
         );
 
 
-        button.classList.add(
-          "active"
+        window.history.replaceState(
+          null,
+          "",
+          newUrl
         );
+
+
+        updateBusinessButtons();
 
 
         $("search").value =
@@ -1530,6 +3677,104 @@ $("refreshButton")
 
 
 /* =========================================
+   NUEVA ENTRADA
+========================================= */
+
+$("newEntryButton")
+.addEventListener(
+  "click",
+  () => {
+
+    openEntryModal();
+
+  }
+);
+
+
+/* =========================================
+   HISTORIAL
+========================================= */
+
+$("historyButton")
+.addEventListener(
+  "click",
+  () => {
+
+    $("historySection")
+    .scrollIntoView({
+      behavior:"smooth",
+      block:"start"
+    });
+
+  }
+);
+
+
+/* =========================================
+   MODAL
+========================================= */
+
+$("closeEntryModal")
+.addEventListener(
+  "click",
+  closeEntryModal
+);
+
+
+$("cancelEntryButton")
+.addEventListener(
+  "click",
+  closeEntryModal
+);
+
+
+$("confirmEntryButton")
+.addEventListener(
+  "click",
+  registerEntry
+);
+
+
+$("entryModal")
+.addEventListener(
+  "click",
+  event => {
+
+    if(
+      event.target ===
+      $("entryModal")
+    ){
+
+      closeEntryModal();
+
+    }
+
+  }
+);
+
+
+/* =========================================
+   ESC PARA CERRAR
+========================================= */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key ===
+      "Escape"
+    ){
+
+      closeEntryModal();
+
+    }
+
+  }
+);
+
+
+/* =========================================
    DASHBOARD
 ========================================= */
 
@@ -1539,7 +3784,10 @@ $("dashboardButton")
   () => {
 
     window.location.href =
-    "dashboard.html";
+    "dashboard.html?business=" +
+    encodeURIComponent(
+      currentBusiness
+    );
 
   }
 );
@@ -1549,9 +3797,21 @@ $("dashboardButton")
    INICIO
 ========================================= */
 
+updateBusinessButtons();
+
+
+$("entryDate").value =
+localDateInput();
+
+
+$("entryTime").value =
+localTimeInput();
+
+
 loadInventory();
 
 </script>
 
 </body>
+
 </html>
