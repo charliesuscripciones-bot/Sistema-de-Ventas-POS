@@ -1,1445 +1,823 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#f2f2f7">
-  <title>Historial de ventas</title>
-
-  <style>
-    :root {
-      --bg: #f2f2f7;
-      --card: rgba(255,255,255,.94);
-      --white: #ffffff;
-      --text: #1c1c1e;
-      --secondary: #6e6e73;
-      --tertiary: #8e8e93;
-      --separator: #e5e5ea;
-      --blue: #007aff;
-      --blue-soft: #eaf3ff;
-      --green: #34c759;
-      --green-soft: #eaf8ee;
-      --orange: #ff9500;
-      --orange-soft: #fff4df;
-      --red: #ff3b30;
-      --red-soft: #fff0ef;
-      --purple: #af52de;
-      --purple-soft: #f7edfb;
-
-      --radius-lg: 22px;
-      --radius-md: 16px;
-      --radius-sm: 12px;
-
-      --shadow:
-        0 8px 30px rgba(0,0,0,.055),
-        0 2px 7px rgba(0,0,0,.035);
-    }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "SF Pro Display",
-        "SF Pro Text",
-        "Segoe UI",
-        Roboto,
-        Helvetica,
-        Arial,
-        sans-serif;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    button,
-    input,
-    select {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    /* =========================================================
-       APP
-    ========================================================= */
-
-    .app {
-      min-height: 100vh;
-      padding-bottom: 50px;
-    }
-
-    .container {
-      width: min(1180px, calc(100% - 28px));
-      margin: 0 auto;
-    }
-
-    /* =========================================================
-       HEADER
-    ========================================================= */
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      padding:
-        calc(12px + env(safe-area-inset-top))
-        0
-        12px;
-
-      background: rgba(242,242,247,.84);
-      backdrop-filter: saturate(180%) blur(22px);
-      -webkit-backdrop-filter: saturate(180%) blur(22px);
-
-      border-bottom: 1px solid rgba(0,0,0,.04);
-    }
-
-    .topbar-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-    }
-
-    .brand {
-      min-width: 0;
-    }
-
-    .eyebrow {
-      margin: 0 0 3px;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: .04em;
-      color: var(--blue);
-      text-transform: uppercase;
-    }
-
-    .title {
-      margin: 0;
-      font-size: clamp(24px, 5vw, 31px);
-      line-height: 1.08;
-      font-weight: 750;
-      letter-spacing: -.035em;
-    }
-
-    .subtitle {
-      margin: 5px 0 0;
-      color: var(--secondary);
-      font-size: 13px;
-      line-height: 1.35;
-    }
-
-    .icon-button {
-      flex: 0 0 auto;
-      width: 44px;
-      height: 44px;
-      border: 0;
-      border-radius: 50%;
-      background: rgba(255,255,255,.9);
-      color: var(--blue);
-      display: grid;
-      place-items: center;
-      box-shadow: 0 2px 12px rgba(0,0,0,.07);
-      transition: transform .16s ease, background .16s ease;
-    }
-
-    .icon-button:active {
-      transform: scale(.94);
-    }
-
-    .icon-button svg {
-      width: 21px;
-      height: 21px;
-    }
-
-    /* =========================================================
-       BUSINESS SWITCH
-    ========================================================= */
-
-    .business-switch-wrap {
-      margin-top: 18px;
-    }
-
-    .segmented {
-      width: 100%;
-      padding: 4px;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 4px;
-
-      background: #dedee3;
-      border-radius: 13px;
-      box-shadow:
-        inset 0 1px 1px rgba(0,0,0,.07),
-        0 1px 2px rgba(0,0,0,.03);
-    }
-
-    .segment {
-      min-height: 40px;
-      border: 0;
-      border-radius: 10px;
-      background: transparent;
-      color: #55555a;
-      font-weight: 650;
-      font-size: 14px;
-      transition: .18s ease;
-    }
-
-    .segment.active {
-      background: #fff;
-      color: var(--text);
-      box-shadow:
-        0 1px 4px rgba(0,0,0,.12),
-        0 1px 1px rgba(0,0,0,.05);
-    }
-
-    /* =========================================================
-       TOOLBAR
-    ========================================================= */
-
-    .toolbar {
-      margin-top: 12px;
-      display: grid;
-      grid-template-columns: 1fr 1fr auto;
-      gap: 9px;
-    }
-
-    .toolbar-button {
-      min-height: 42px;
-      padding: 0 14px;
-      border: 0;
-      border-radius: 13px;
-      background: rgba(255,255,255,.88);
-      color: var(--text);
-      font-weight: 650;
-      font-size: 13px;
-      box-shadow: 0 2px 10px rgba(0,0,0,.045);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      transition: transform .15s ease;
-    }
-
-    .toolbar-button:active {
-      transform: scale(.98);
-    }
-
-    .toolbar-button svg {
-      width: 17px;
-      height: 17px;
-    }
-
-    .toolbar-button.danger {
-      color: var(--red);
-    }
-
-    /* =========================================================
-       SUMMARY
-    ========================================================= */
-
-    .summary-grid {
-      margin-top: 18px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-    }
-
-    .summary-card {
-      position: relative;
-      min-height: 112px;
-      padding: 16px;
-      border-radius: var(--radius-lg);
-      background: var(--card);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .summary-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 11px;
-      display: grid;
-      place-items: center;
-      margin-bottom: 12px;
-    }
-
-    .summary-icon svg {
-      width: 18px;
-      height: 18px;
-    }
-
-    .summary-card.blue .summary-icon {
-      background: var(--blue-soft);
-      color: var(--blue);
-    }
-
-    .summary-card.orange .summary-icon {
-      background: var(--orange-soft);
-      color: var(--orange);
-    }
-
-    .summary-card.green .summary-icon {
-      background: var(--green-soft);
-      color: var(--green);
-    }
-
-    .summary-card.purple .summary-icon {
-      background: var(--purple-soft);
-      color: var(--purple);
-    }
-
-    .summary-label {
-      margin: 0;
-      color: var(--secondary);
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .summary-value {
-      margin: 3px 0 0;
-      font-size: 23px;
-      line-height: 1.1;
-      font-weight: 760;
-      letter-spacing: -.025em;
-    }
-
-    /* =========================================================
-       FILTERS
-    ========================================================= */
-
-    .filters-card {
-      margin-top: 16px;
-      padding: 14px;
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-    }
-
-    .search-wrap {
-      position: relative;
-    }
-
-    .search-wrap svg {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      width: 18px;
-      height: 18px;
-      transform: translateY(-50%);
-      color: var(--tertiary);
-      pointer-events: none;
-    }
-
-    .input,
-    .select {
-      width: 100%;
-      height: 44px;
-      border: 1px solid transparent;
-      border-radius: 13px;
-      background: #f2f2f7;
-      color: var(--text);
-      outline: none;
-      padding: 0 13px;
-      font-size: 14px;
-      transition: .16s ease;
-    }
-
-    .search-input {
-      padding-left: 42px;
-    }
-
-    .input:focus,
-    .select:focus {
-      background: #fff;
-      border-color: rgba(0,122,255,.45);
-      box-shadow: 0 0 0 3px rgba(0,122,255,.10);
-    }
-
-    .filter-row {
-      margin-top: 10px;
-      display: grid;
-      grid-template-columns: 1fr 1fr auto;
-      gap: 9px;
-    }
-
-    .clear-button {
-      min-width: 92px;
-      height: 44px;
-      border: 0;
-      border-radius: 13px;
-      background: var(--blue-soft);
-      color: var(--blue);
-      font-size: 13px;
-      font-weight: 700;
-      padding: 0 13px;
-    }
-
-    /* =========================================================
-       SECTION
-    ========================================================= */
-
-    .section {
-      margin-top: 24px;
-    }
-
-    .section-heading {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 10px;
-      margin: 0 3px 9px;
-    }
-
-    .section-title {
-      margin: 0;
-      font-size: 20px;
-      letter-spacing: -.025em;
-      font-weight: 750;
-    }
-
-    .section-count {
-      color: var(--secondary);
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    /* =========================================================
-       PRODUCT BREAKDOWN
-    ========================================================= */
-
-    .products-card {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: var(--shadow);
-    }
-
-    .product-summary-row {
-      display: grid;
-      grid-template-columns: minmax(0,1fr) auto auto;
-      gap: 12px;
-      align-items: center;
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--separator);
-    }
-
-    .product-summary-row:last-child {
-      border-bottom: 0;
-    }
-
-    .product-summary-name {
-      min-width: 0;
-      font-size: 14px;
-      font-weight: 650;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .product-summary-qty {
-      color: var(--secondary);
-      font-size: 13px;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    .product-summary-total {
-      min-width: 72px;
-      text-align: right;
-      font-size: 14px;
-      font-weight: 750;
-    }
-
-    .empty-state {
-      padding: 28px 18px;
-      text-align: center;
-      color: var(--secondary);
-      font-size: 14px;
-    }
-
-    /* =========================================================
-       SALE CARDS
-    ========================================================= */
-
-    .sales-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .sale-card {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .sale-head {
-      padding: 17px 17px 14px;
-      display: grid;
-      grid-template-columns: auto minmax(0,1fr) auto;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .customer-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: var(--blue-soft);
-      color: var(--blue);
-      display: grid;
-      place-items: center;
-      font-size: 17px;
-      font-weight: 750;
-    }
-
-    .customer-main {
-      min-width: 0;
-    }
-
-    .customer-name {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 720;
-      letter-spacing: -.015em;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .customer-meta {
-      margin-top: 3px;
-      color: var(--secondary);
-      font-size: 12px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px 7px;
-    }
-
-    .sale-amount {
-      text-align: right;
-    }
-
-    .sale-total {
-      font-size: 18px;
-      font-weight: 780;
-      letter-spacing: -.025em;
-    }
-
-    .balance-pill {
-      display: inline-flex;
-      margin-top: 5px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: var(--orange-soft);
-      color: #b76b00;
-      font-size: 11px;
-      font-weight: 750;
-    }
-
-    .balance-pill.paid {
-      background: var(--green-soft);
-      color: #1c8c3a;
-    }
-
-    /* =========================================================
-       PRODUCTS IN SALE
-    ========================================================= */
-
-    .sale-products {
-      margin: 0 13px;
-      padding: 2px 13px;
-      border-radius: 15px;
-      background: #f7f7f9;
-    }
-
-    .sale-product {
-      min-height: 47px;
-      display: grid;
-      grid-template-columns: minmax(0,1fr) auto auto;
-      gap: 10px;
-      align-items: center;
-      border-bottom: 1px solid var(--separator);
-    }
-
-    .sale-product:last-child {
-      border-bottom: 0;
-    }
-
-    .sale-product-name {
-      min-width: 0;
-      font-size: 13px;
-      font-weight: 620;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .sale-product-qty {
-      color: var(--secondary);
-      font-size: 12px;
-      font-weight: 650;
-      white-space: nowrap;
-    }
-
-    .sale-product-price {
-      min-width: 62px;
-      text-align: right;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    /* =========================================================
-       SALE FOOT
-    ========================================================= */
-
-    .sale-foot {
-      padding: 14px 13px 15px;
-    }
-
-    .totals {
-      display: grid;
-      gap: 5px;
-      padding: 0 4px 12px;
-    }
-
-    .total-line {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      font-size: 13px;
-      color: var(--secondary);
-    }
-
-    .total-line strong {
-      color: var(--text);
-      font-size: 14px;
-    }
-
-    .total-line.balance strong {
-      color: var(--orange);
-      font-size: 16px;
-    }
-
-    .actions {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-
-    .action-button {
-      min-height: 43px;
-      border: 0;
-      border-radius: 13px;
-      font-size: 12px;
-      font-weight: 720;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: transform .15s ease;
-    }
-
-    .action-button:active {
-      transform: scale(.97);
-    }
-
-    .action-button svg {
-      width: 16px;
-      height: 16px;
-    }
-
-    .action-button.primary {
-      background: var(--blue);
-      color: white;
-    }
-
-    .action-button.whatsapp {
-      background: var(--green-soft);
-      color: #168638;
-    }
-
-    .action-button.secondary {
-      background: #f2f2f7;
-      color: var(--text);
-    }
-
-    .action-button.cancel {
-      background: var(--red-soft);
-      color: var(--red);
-    }
-
-    /* =========================================================
-       CANCELLED
-    ========================================================= */
-
-    .cancelled-section {
-      margin-top: 28px;
-    }
-
-    .cancelled-card {
-      background: rgba(255,255,255,.82);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .cancelled-row {
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--separator);
-      display: grid;
-      grid-template-columns: minmax(0,1fr) auto;
-      gap: 10px;
-    }
-
-    .cancelled-row:last-child {
-      border-bottom: 0;
-    }
-
-    .cancelled-name {
-      font-size: 14px;
-      font-weight: 650;
-    }
-
-    .cancelled-meta {
-      margin-top: 3px;
-      color: var(--secondary);
-      font-size: 12px;
-    }
-
-    .cancelled-total {
-      color: var(--red);
-      font-weight: 750;
-      font-size: 14px;
-    }
-
-    /* =========================================================
-       LOADING
-    ========================================================= */
-
-    .loading {
-      padding: 35px 15px;
-      text-align: center;
-      color: var(--secondary);
-      font-size: 14px;
-    }
-
-    .spinner {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      border: 3px solid #d9d9de;
-      border-top-color: var(--blue);
-      animation: spin .8s linear infinite;
-      margin: 0 auto 10px;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    /* =========================================================
-       MODALS
-    ========================================================= */
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-      background: rgba(0,0,0,.35);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-
-    .modal.show {
-      display: flex;
-    }
-
-    .modal-card {
-      width: min(520px, 100%);
-      max-height: min(760px, calc(100vh - 30px));
-      overflow: auto;
-      background: #fff;
-      border-radius: 24px;
-      box-shadow: 0 25px 70px rgba(0,0,0,.22);
-      animation: modalIn .2s ease;
-    }
-
-    @keyframes modalIn {
-      from {
-        opacity: 0;
-        transform: translateY(15px) scale(.98);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    .modal-header {
-      position: sticky;
-      top: 0;
-      z-index: 2;
-      padding: 17px 18px;
-      background: rgba(255,255,255,.92);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border-bottom: 1px solid var(--separator);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .modal-title {
-      margin: 0;
-      font-size: 19px;
-      font-weight: 750;
-    }
-
-    .modal-close {
-      width: 32px;
-      height: 32px;
-      border: 0;
-      border-radius: 50%;
-      background: #f2f2f7;
-      color: var(--secondary);
-      display: grid;
-      place-items: center;
-    }
-
-    .modal-body {
-      padding: 18px;
-    }
-
-    .modal-footer {
-      padding: 12px 18px 18px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 9px;
-    }
-
-    .modal-button {
-      min-height: 46px;
-      border: 0;
-      border-radius: 14px;
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    .modal-button.primary {
-      background: var(--blue);
-      color: white;
-    }
-
-    .modal-button.secondary {
-      background: #f2f2f7;
-      color: var(--text);
-    }
-
-    .field {
-      margin-bottom: 13px;
-    }
-
-    .field:last-child {
-      margin-bottom: 0;
-    }
-
-    .field label {
-      display: block;
-      margin: 0 0 6px 3px;
-      color: var(--secondary);
-      font-size: 12px;
-      font-weight: 650;
-    }
-
-    .field input,
-    .field select {
-      width: 100%;
-      height: 46px;
-      border: 1px solid transparent;
-      border-radius: 13px;
-      background: #f2f2f7;
-      padding: 0 13px;
-      outline: none;
-    }
-
-    .field input:focus,
-    .field select:focus {
-      border-color: rgba(0,122,255,.45);
-      background: #fff;
-      box-shadow: 0 0 0 3px rgba(0,122,255,.10);
-    }
-
-    .payment-summary {
-      padding: 15px;
-      margin-bottom: 15px;
-      background: #f7f7f9;
-      border-radius: 16px;
-    }
-
-    .payment-summary-line {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 7px;
-      color: var(--secondary);
-      font-size: 13px;
-    }
-
-    .payment-summary-line:last-child {
-      margin-bottom: 0;
-    }
-
-    .payment-summary-line strong {
-      color: var(--text);
-    }
-
-    /* =========================================================
-       TOAST
-    ========================================================= */
-
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: calc(20px + env(safe-area-inset-bottom));
-      z-index: 200;
-      transform: translate(-50%, 120px);
-      opacity: 0;
-      pointer-events: none;
-
-      width: min(calc(100% - 30px), 430px);
-      padding: 13px 16px;
-
-      border-radius: 15px;
-      background: rgba(30,30,32,.94);
-      color: #fff;
-      box-shadow: 0 12px 40px rgba(0,0,0,.22);
-
-      text-align: center;
-      font-size: 13px;
-      font-weight: 600;
-
-      transition: .25s ease;
-    }
-
-    .toast.show {
-      transform: translate(-50%, 0);
-      opacity: 1;
-    }
-
-    /* =========================================================
-       RESPONSIVE
-    ========================================================= */
-
-    @media (max-width: 800px) {
-      .summary-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .filter-row {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .clear-button {
-        grid-column: 1 / -1;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        width: min(100% - 20px, 1180px);
-      }
-
-      .topbar {
-        padding-top: calc(10px + env(safe-area-inset-top));
-      }
-
-      .toolbar {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .toolbar-button:last-child {
-        grid-column: 1 / -1;
-      }
-
-      .summary-card {
-        min-height: 105px;
-        padding: 14px;
-      }
-
-      .summary-value {
-        font-size: 21px;
-      }
-
-      .sale-head {
-        grid-template-columns: auto minmax(0,1fr);
-      }
-
-      .sale-amount {
-        grid-column: 2;
-        text-align: left;
-        margin-top: -5px;
-      }
-
-      .actions {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .action-button:last-child {
-        grid-column: 1 / -1;
-      }
-
-      .modal {
-        align-items: flex-end;
-        padding: 0;
-      }
-
-      .modal-card {
-        width: 100%;
-        max-height: calc(100vh - 10px);
-        border-radius: 25px 25px 0 0;
-        animation: sheetIn .22s ease;
-      }
-
-      @keyframes sheetIn {
-        from {
-          transform: translateY(100%);
-        }
-        to {
-          transform: translateY(0);
-        }
-      }
-    }
-
-    @media (max-width: 420px) {
-      .filter-row {
-        grid-template-columns: 1fr;
-      }
-
-      .clear-button {
-        grid-column: auto;
-      }
-
-      .sale-product {
-        grid-template-columns: minmax(0,1fr) auto;
-      }
-
-      .sale-product-price {
-        grid-column: 2;
-      }
-
-      .sale-product-qty {
-        display: none;
-      }
-    }
-
-    @media (min-width: 900px) {
-      .sales-list {
-        grid-template-columns: repeat(2, minmax(0,1fr));
-      }
-
-      .sale-card {
-        height: 100%;
-      }
-    }
-
-    /* =========================================================
-       UTILITY
-    ========================================================= */
-
-    .hidden {
-      display: none !important;
-    }
-
-    .text-danger {
-      color: var(--red);
-    }
-
-    .text-success {
-      color: var(--green);
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f2f2f7">
+
+<title>Cuentas pendientes</title>
+
+<style>
+:root{
+  --bg:#f2f2f7;
+  --card:#ffffff;
+  --text:#1c1c1e;
+  --secondary:#8e8e93;
+  --blue:#007aff;
+  --green:#34c759;
+  --red:#ff3b30;
+  --orange:#ff9500;
+  --border:#e5e5ea;
+  --shadow:0 2px 12px rgba(0,0,0,.06);
+  --radius:18px;
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+button,
+input,
+select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.app{
+  width:100%;
+  max-width:1100px;
+  margin:auto;
+  padding:20px 16px 40px;
+}
+
+/* HEADER */
+
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:18px;
+}
+
+.header-title h1{
+  margin:0;
+  font-size:28px;
+  font-weight:700;
+  letter-spacing:-.6px;
+}
+
+.header-title p{
+  margin:4px 0 0;
+  color:var(--secondary);
+  font-size:14px;
+}
+
+.refresh-button{
+  width:44px;
+  height:44px;
+  border:0;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:var(--shadow);
+  color:var(--blue);
+  font-size:20px;
+}
+
+/* BUSINESS SEGMENT */
+
+.segmented{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  background:#e5e5ea;
+  padding:3px;
+  border-radius:13px;
+  margin-bottom:16px;
+}
+
+.segmented button{
+  height:38px;
+  border:0;
+  background:transparent;
+  border-radius:10px;
+  color:#636366;
+  font-weight:600;
+}
+
+.segmented button.active{
+  background:#fff;
+  color:var(--text);
+  box-shadow:0 1px 4px rgba(0,0,0,.12);
+}
+
+/* SUMMARY */
+
+.summary-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-bottom:16px;
+}
+
+.summary-card{
+  background:var(--card);
+  border-radius:16px;
+  padding:14px;
+  box-shadow:var(--shadow);
+  min-width:0;
+}
+
+.summary-label{
+  color:var(--secondary);
+  font-size:12px;
+  margin-bottom:7px;
+}
+
+.summary-value{
+  font-size:23px;
+  font-weight:700;
+  letter-spacing:-.4px;
+}
+
+.summary-value.small{
+  font-size:18px;
+}
+
+/* TOOLBAR */
+
+.toolbar{
+  background:#fff;
+  border-radius:18px;
+  padding:12px;
+  box-shadow:var(--shadow);
+  margin-bottom:16px;
+}
+
+.search-box{
+  position:relative;
+  margin-bottom:10px;
+}
+
+.search-box input{
+  width:100%;
+  height:44px;
+  border:0;
+  outline:none;
+  background:#f2f2f7;
+  border-radius:13px;
+  padding:0 14px 0 40px;
+  font-size:15px;
+}
+
+.search-icon{
+  position:absolute;
+  left:14px;
+  top:12px;
+  color:var(--secondary);
+}
+
+.filters{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+.filters select{
+  width:100%;
+  height:40px;
+  border:0;
+  background:#f2f2f7;
+  border-radius:11px;
+  padding:0 10px;
+  color:var(--text);
+  outline:none;
+}
+
+/* SECTION */
+
+.section-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:22px 4px 10px;
+}
+
+.section-title h2{
+  margin:0;
+  font-size:19px;
+  letter-spacing:-.2px;
+}
+
+.section-title span{
+  color:var(--secondary);
+  font-size:13px;
+}
+
+/* PRODUCT SUMMARY */
+
+.products-card{
+  background:#fff;
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.product-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:13px 15px;
+  border-bottom:1px solid var(--border);
+}
+
+.product-row:last-child{
+  border-bottom:0;
+}
+
+.product-name{
+  font-weight:600;
+  font-size:14px;
+}
+
+.product-qty{
+  color:var(--blue);
+  font-weight:700;
+  font-size:15px;
+}
+
+/* SALES */
+
+.sales-list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.sale-card{
+  background:#fff;
+  border-radius:20px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.sale-main{
+  padding:16px;
+}
+
+.sale-top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+}
+
+.customer-name{
+  font-size:17px;
+  font-weight:700;
+  margin-bottom:4px;
+}
+
+.sale-date{
+  color:var(--secondary);
+  font-size:12px;
+}
+
+.sale-total{
+  text-align:right;
+}
+
+.sale-total strong{
+  display:block;
+  font-size:19px;
+}
+
+.sale-total span{
+  font-size:11px;
+  color:var(--secondary);
+}
+
+.sale-info{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:14px;
+}
+
+.info-box{
+  background:#f2f2f7;
+  border-radius:12px;
+  padding:9px;
+}
+
+.info-label{
+  color:var(--secondary);
+  font-size:10px;
+  margin-bottom:3px;
+}
+
+.info-value{
+  font-size:13px;
+  font-weight:600;
+}
+
+.balance-positive{
+  color:var(--red);
+}
+
+.balance-zero{
+  color:var(--green);
+}
+
+.products-detail{
+  margin-top:14px;
+  border-top:1px solid var(--border);
+  padding-top:12px;
+}
+
+.products-detail-title{
+  font-size:12px;
+  color:var(--secondary);
+  margin-bottom:7px;
+  font-weight:600;
+}
+
+.sale-product{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:6px 0;
+  font-size:13px;
+}
+
+.sale-product-name{
+  flex:1;
+}
+
+.sale-product-qty{
+  color:var(--blue);
+  font-weight:700;
+}
+
+.sale-product-price{
+  min-width:70px;
+  text-align:right;
+}
+
+/* ACTIONS */
+
+.sale-actions{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  padding:12px;
+  border-top:1px solid var(--border);
+  background:#fafafa;
+}
+
+.action-button{
+  min-height:40px;
+  border:0;
+  border-radius:12px;
+  padding:0 10px;
+  font-weight:600;
+  font-size:13px;
+  background:#e9e9ee;
+  color:var(--text);
+}
+
+.action-button.primary{
+  background:#007aff;
+  color:#fff;
+}
+
+.action-button.success{
+  background:#34c759;
+  color:#fff;
+}
+
+.action-button.danger{
+  background:#ff3b30;
+  color:#fff;
+}
+
+.action-button.whatsapp{
+  background:#34c759;
+  color:#fff;
+}
+
+/* STATUS */
+
+.status{
+  display:inline-flex;
+  align-items:center;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:700;
+  margin-top:8px;
+}
+
+.status.open{
+  background:#fff0ef;
+  color:var(--red);
+}
+
+.status.paid{
+  background:#eaf8ee;
+  color:#248a3d;
+}
+
+.status.cancelled{
+  background:#eeeef2;
+  color:#636366;
+}
+
+/* CANCELLED */
+
+.cancelled-card{
+  opacity:.72;
+}
+
+/* EMPTY */
+
+.empty-state{
+  text-align:center;
+  padding:40px 20px;
+  color:var(--secondary);
+}
+
+.loading{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-height:160px;
+  color:var(--secondary);
+  gap:10px;
+}
+
+.spinner{
+  width:28px;
+  height:28px;
+  border:3px solid #d1d1d6;
+  border-top-color:var(--blue);
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg);}
+}
+
+/* MODAL */
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.35);
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  z-index:1000;
+  padding:0;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modal-sheet{
+  width:100%;
+  max-width:600px;
+  background:#fff;
+  border-radius:24px 24px 0 0;
+  padding:20px;
+  padding-bottom:calc(20px + env(safe-area-inset-bottom));
+  animation:sheetUp .22s ease;
+  max-height:90vh;
+  overflow:auto;
+}
+
+@keyframes sheetUp{
+  from{
+    transform:translateY(100%);
+  }
+  to{
+    transform:translateY(0);
+  }
+}
+
+.modal-handle{
+  width:38px;
+  height:5px;
+  background:#d1d1d6;
+  border-radius:5px;
+  margin:0 auto 18px;
+}
+
+.modal-title{
+  font-size:21px;
+  font-weight:700;
+  margin-bottom:16px;
+}
+
+.modal-field{
+  margin-bottom:14px;
+}
+
+.modal-field label{
+  display:block;
+  font-size:12px;
+  color:var(--secondary);
+  margin-bottom:6px;
+}
+
+.modal-field input,
+.modal-field textarea,
+.modal-field select{
+  width:100%;
+  border:0;
+  background:#f2f2f7;
+  border-radius:12px;
+  min-height:44px;
+  padding:10px 12px;
+  outline:none;
+}
+
+.modal-field textarea{
+  min-height:90px;
+  resize:none;
+}
+
+.modal-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:18px;
+}
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:25px;
+  transform:translateX(-50%) translateY(20px);
+  background:rgba(28,28,30,.94);
+  color:#fff;
+  padding:11px 17px;
+  border-radius:14px;
+  font-size:13px;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+  z-index:2000;
+  max-width:90%;
+  text-align:center;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:700px){
+
+  .app{
+    padding:16px 12px 35px;
+  }
+
+  .summary-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .filters{
+    grid-template-columns:1fr;
+  }
+
+  .sale-info{
+    grid-template-columns:1fr 1fr 1fr;
+  }
+
+  .sale-actions{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .action-button{
+    font-size:12px;
+    padding:0 5px;
+  }
+
+  .header-title h1{
+    font-size:25px;
+  }
+}
+
+@media(max-width:420px){
+
+  .sale-main{
+    padding:14px;
+  }
+
+  .sale-actions{
+    gap:6px;
+    padding:10px;
+  }
+
+  .action-button{
+    font-size:11px;
+  }
+
+  .sale-total strong{
+    font-size:17px;
+  }
+}
+</style>
 </head>
 
 <body>
 
 <div class="app">
 
-  <!-- =======================================================
-       HEADER
-  ======================================================== -->
-
-  <header class="topbar">
-    <div class="container">
-
-      <div class="topbar-inner">
-
-        <div class="brand">
-          <p class="eyebrow">Ventas</p>
-          <h1 class="title">Historial de ventas</h1>
-          <p class="subtitle" id="businessSubtitle">
-            Cargando información...
-          </p>
-        </div>
-
-        <button
-          class="icon-button"
-          id="refreshButton"
-          type="button"
-          title="Actualizar"
-          aria-label="Actualizar"
-          onclick="loadSales()"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 11a8.1 8.1 0 0 0-14.9-4M4 4v4h4"/>
-            <path d="M4 13a8.1 8.1 0 0 0 14.9 4M20 20v-4h-4"/>
-          </svg>
-        </button>
-
-      </div>
-
-      <div class="business-switch-wrap">
-
-        <div class="segmented">
-
-          <button
-            class="segment active"
-            id="businessBakeQuiri"
-            type="button"
-            onclick="switchBusiness('BakeQuiri')"
-          >
-            🧁 BakeQuiri
-          </button>
-
-          <button
-            class="segment"
-            id="businessSpicyRoll"
-            type="button"
-            onclick="switchBusiness('SpicyRoll')"
-          >
-            🍙 SpicyRoll
-          </button>
-
-        </div>
-
-      </div>
-
-      <div class="toolbar">
-
-        <button
-          class="toolbar-button"
-          type="button"
-          onclick="window.location.href='dashboard.html'"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="7" height="7" rx="1"/>
-            <rect x="14" y="3" width="7" height="7" rx="1"/>
-            <rect x="3" y="14" width="7" height="7" rx="1"/>
-            <rect x="14" y="14" width="7" height="7" rx="1"/>
-          </svg>
-          Dashboard
-        </button>
-
-        <button
-          class="toolbar-button"
-          type="button"
-          onclick="loadSales()"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 11a8.1 8.1 0 0 0-14.9-4M4 4v4h4"/>
-            <path d="M4 13a8.1 8.1 0 0 0 14.9 4M20 20v-4h-4"/>
-          </svg>
-          Actualizar
-        </button>
-
-        <button
-          class="toolbar-button danger"
-          type="button"
-          onclick="toggleCancelled()"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="9"/>
-            <path d="M8 8l8 8M16 8l-8 8"/>
-          </svg>
-          Canceladas
-        </button>
-
-      </div>
-
+  <header class="header">
+    <div class="header-title">
+      <h1>Cuentas</h1>
+      <p>Historial y cuentas pendientes</p>
     </div>
+
+    <button
+      class="refresh-button"
+      onclick="loadSales()"
+      title="Actualizar"
+    >
+      ↻
+    </button>
   </header>
 
-  <main class="container">
-
-    <!-- =====================================================
-         SUMMARY
-    ====================================================== -->
-
-    <section class="summary-grid">
-
-      <article class="summary-card blue">
-        <div class="summary-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 5h16v14H4z"/>
-            <path d="M8 9h8M8 13h5"/>
-          </svg>
-        </div>
-        <p class="summary-label">Cuentas</p>
-        <p class="summary-value" id="summaryAccounts">0</p>
-      </article>
-
-      <article class="summary-card orange">
-        <div class="summary-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M6 3h12v18H6z"/>
-            <path d="M9 7h6M9 11h6M9 15h3"/>
-          </svg>
-        </div>
-        <p class="summary-label">Piezas</p>
-        <p class="summary-value" id="summaryPieces">0</p>
-      </article>
-
-      <article class="summary-card purple">
-        <div class="summary-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="9"/>
-            <path d="M12 7v10M15 9.5c0-1.2-1.1-2-3-2s-3 .8-3 2 1 2 3 2 3 .8 3 2-1.1 2-3 2-3-.8-3-2"/>
-          </svg>
-        </div>
-        <p class="summary-label">Ventas</p>
-        <p class="summary-value" id="summarySales">$0.00</p>
-      </article>
-
-      <article class="summary-card green">
-        <div class="summary-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 7h18v13H3z"/>
-            <path d="M7 7V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/>
-            <path d="M3 12h18"/>
-            <path d="M10 12v2h4v-2"/>
-          </svg>
-        </div>
-        <p class="summary-label">Por cobrar</p>
-        <p class="summary-value" id="summaryBalance">$0.00</p>
-      </article>
-
-    </section>
-
-    <!-- =====================================================
-         FILTERS
-    ====================================================== -->
-
-    <section class="filters-card">
-
-      <div class="search-wrap">
-
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="7"/>
-          <path d="m20 20-4-4"/>
-        </svg>
-
-        <input
-          id="searchInput"
-          class="input search-input"
-          type="search"
-          placeholder="Buscar cliente, teléfono o producto..."
-          autocomplete="off"
-        >
-
-      </div>
-
-      <div class="filter-row">
-
-        <input
-          id="dateFrom"
-          class="input"
-          type="date"
-          title="Fecha inicial"
-        >
-
-        <input
-          id="dateTo"
-          class="input"
-          type="date"
-          title="Fecha final"
-        >
-
-        <button
-          id="clearFilters"
-          class="clear-button"
-          type="button"
-        >
-          Limpiar filtros
-        </button>
-
-      </div>
-
-    </section>
-
-    <!-- =====================================================
-         PRODUCT BREAKDOWN
-    ====================================================== -->
-
-    <section class="section">
-
-      <div class="section-heading">
-        <h2 class="section-title">Productos vendidos</h2>
-        <span class="section-count" id="productsCount">0 productos</span>
-      </div>
-
-      <div
-        id="productsBreakdown"
-        class="products-card"
-      >
-        <div class="loading">
-          <div class="spinner"></div>
-          Cargando...
-        </div>
-      </div>
-
-    </section>
-
-    <!-- =====================================================
-         SALES
-    ====================================================== -->
-
-    <section class="section">
-
-      <div class="section-heading">
-        <h2 class="section-title">Cuentas pendientes</h2>
-        <span class="section-count" id="salesCount">0 cuentas</span>
-      </div>
-
-      <div
-        id="salesList"
-        class="sales-list"
-      >
-        <div class="loading">
-          <div class="spinner"></div>
-          Cargando ventas...
-        </div>
-      </div>
-
-    </section>
-
-    <!-- =====================================================
-         CANCELLED
-    ====================================================== -->
-
-    <section
-      id="cancelledSection"
-      class="cancelled-section hidden"
+  <!-- NEGOCIO -->
+  <div class="segmented">
+    <button
+      id="businessBakeQuiri"
+      class="active"
+      onclick="changeBusiness('BakeQuiri')"
     >
+      BakeQuiri
+    </button>
 
-      <div class="section-heading">
-        <h2 class="section-title">Ventas canceladas</h2>
-        <span class="section-count" id="cancelledCount">0</span>
-      </div>
+    <button
+      id="businessSpicyRoll"
+      onclick="changeBusiness('SpicyRoll')"
+    >
+      SpicyRoll
+    </button>
+  </div>
 
-      <div
-        id="cancelledList"
-        class="cancelled-card"
-      ></div>
+  <!-- RESUMEN -->
+  <div class="summary-grid">
 
-    </section>
+    <div class="summary-card">
+      <div class="summary-label">Cuentas</div>
+      <div class="summary-value" id="summaryAccounts">0</div>
+    </div>
 
-  </main>
+    <div class="summary-card">
+      <div class="summary-label">Piezas</div>
+      <div class="summary-value" id="summaryPieces">0</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">Ventas</div>
+      <div class="summary-value small" id="summarySales">$0</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">Por cobrar</div>
+      <div class="summary-value small" id="summaryBalance">$0</div>
+    </div>
+
+  </div>
+
+  <!-- BUSCADOR -->
+  <div class="toolbar">
+
+    <div class="search-box">
+      <span class="search-icon">⌕</span>
+
+      <input
+        id="searchInput"
+        type="search"
+        placeholder="Buscar cliente, teléfono o folio..."
+        oninput="renderSales()"
+      >
+    </div>
+
+    <div class="filters">
+
+      <select id="statusFilter" onchange="renderSales()">
+        <option value="all">Todas las cuentas</option>
+        <option value="open">Pendientes</option>
+        <option value="paid">Pagadas</option>
+        <option value="cancelled">Canceladas</option>
+      </select>
+
+      <select id="dateFilter" onchange="renderSales()">
+        <option value="all">Todas las fechas</option>
+        <option value="today">Hoy</option>
+        <option value="7days">Últimos 7 días</option>
+        <option value="30days">Últimos 30 días</option>
+      </select>
+
+      <select id="sortFilter" onchange="renderSales()">
+        <option value="newest">Más recientes</option>
+        <option value="oldest">Más antiguas</option>
+        <option value="highest">Mayor importe</option>
+        <option value="lowest">Menor importe</option>
+      </select>
+
+    </div>
+
+  </div>
+
+  <!-- PRODUCTOS -->
+  <div class="section-title">
+    <h2>Productos vendidos</h2>
+    <span id="productsCount">0 productos</span>
+  </div>
+
+  <div class="products-card" id="productsBreakdown">
+    <div class="empty-state">
+      Cargando productos...
+    </div>
+  </div>
+
+  <!-- VENTAS -->
+  <div class="section-title">
+    <h2>Ventas</h2>
+    <span id="salesCount">0 cuentas</span>
+  </div>
+
+  <div id="salesList" class="sales-list">
+    <div class="loading">
+      <div class="spinner"></div>
+      Cargando ventas...
+    </div>
+  </div>
 
 </div>
 
-<!-- =========================================================
-     PAYMENT MODAL
-========================================================= -->
+<!-- MODAL PAGO -->
 
-<div
-  id="paymentModal"
-  class="modal"
-  onclick="if(event.target === this) closePaymentModal()"
->
+<div id="paymentModal" class="modal">
 
-  <div class="modal-card">
+  <div class="modal-sheet">
 
-    <div class="modal-header">
+    <div class="modal-handle"></div>
 
-      <h2 class="modal-title">Registrar pago</h2>
+    <div class="modal-title">
+      Registrar pago
+    </div>
 
-      <button
-        class="modal-close"
-        type="button"
-        onclick="closePaymentModal()"
+    <div id="paymentSaleInfo"></div>
+
+    <div class="modal-field">
+      <label>Importe a pagar</label>
+
+      <input
+        id="paymentAmount"
+        type="number"
+        step="0.01"
+        min="0"
+        placeholder="0.00"
       >
-        ✕
-      </button>
-
     </div>
 
-    <div class="modal-body">
+    <div class="modal-field">
+      <label>Método de pago</label>
 
-      <div
-        id="paymentSummary"
-        class="payment-summary"
-      ></div>
-
-      <div class="field">
-        <label for="paymentAmount">Monto</label>
-        <input
-          id="paymentAmount"
-          type="number"
-          min="0"
-          step="0.01"
-          inputmode="decimal"
-          placeholder="0.00"
-        >
-      </div>
-
-      <div class="field">
-        <label for="paymentMethod">Método de pago</label>
-
-        <select id="paymentMethod">
-          <option value="Efectivo">Efectivo</option>
-          <option value="Transferencia">Transferencia</option>
-          <option value="Clip Tap">Clip Tap</option>
-          <option value="BBVA">BBVA</option>
-        </select>
-
-      </div>
-
+      <select id="paymentMethod">
+        <option value="Efectivo">Efectivo</option>
+        <option value="Transferencia">Transferencia</option>
+        <option value="Clip">Clip</option>
+        <option value="BBVA">BBVA</option>
+      </select>
     </div>
 
-    <div class="modal-footer">
+    <div class="modal-buttons">
 
       <button
-        class="modal-button secondary"
-        type="button"
-        onclick="closePaymentModal()"
+        class="action-button"
+        onclick="closeModal('paymentModal')"
       >
         Cancelar
       </button>
 
       <button
-        class="modal-button primary"
-        type="button"
-        onclick="savePayment()"
+        class="action-button success"
+        onclick="confirmPayment()"
       >
         Registrar pago
       </button>
@@ -1450,100 +828,70 @@
 
 </div>
 
-<!-- =========================================================
-     SALE DETAIL MODAL
-========================================================= -->
+<!-- MODAL DETALLE -->
 
-<div
-  id="detailModal"
-  class="modal"
-  onclick="if(event.target === this) closeDetailModal()"
->
+<div id="detailModal" class="modal">
 
-  <div class="modal-card">
+  <div class="modal-sheet">
 
-    <div class="modal-header">
+    <div class="modal-handle"></div>
 
-      <h2 class="modal-title">Detalle de venta</h2>
+    <div class="modal-title">
+      Detalle de la venta
+    </div>
+
+    <div id="detailContent"></div>
+
+    <div class="modal-buttons">
 
       <button
-        class="modal-close"
-        type="button"
-        onclick="closeDetailModal()"
+        class="action-button"
+        onclick="closeModal('detailModal')"
       >
-        ✕
+        Cerrar
       </button>
 
     </div>
-
-    <div
-      id="detailContent"
-      class="modal-body"
-    ></div>
 
   </div>
 
 </div>
 
-<!-- =========================================================
-     CANCEL MODAL
-========================================================= -->
+<!-- MODAL CANCELAR -->
 
-<div
-  id="cancelModal"
-  class="modal"
-  onclick="if(event.target === this) closeCancelModal()"
->
+<div id="cancelModal" class="modal">
 
-  <div class="modal-card">
+  <div class="modal-sheet">
 
-    <div class="modal-header">
+    <div class="modal-handle"></div>
 
-      <h2 class="modal-title">Cancelar venta</h2>
+    <div class="modal-title">
+      Cancelar venta
+    </div>
 
-      <button
-        class="modal-close"
-        type="button"
-        onclick="closeCancelModal()"
-      >
-        ✕
-      </button>
+    <div class="modal-field">
+
+      <label>Motivo de cancelación</label>
+
+      <textarea
+        id="cancelReason"
+        placeholder="Escribe el motivo..."
+      ></textarea>
 
     </div>
 
-    <div class="modal-body">
-
-      <div class="field">
-
-        <label for="cancelReason">
-          Motivo de cancelación
-        </label>
-
-        <input
-          id="cancelReason"
-          type="text"
-          placeholder="Escribe el motivo..."
-        >
-
-      </div>
-
-    </div>
-
-    <div class="modal-footer">
+    <div class="modal-buttons">
 
       <button
-        class="modal-button secondary"
-        type="button"
-        onclick="closeCancelModal()"
+        class="action-button"
+        onclick="closeModal('cancelModal')"
       >
-        No cancelar
+        Regresar
       </button>
 
       <button
-        class="modal-button"
-        type="button"
-        style="background:var(--red);color:white"
-        onclick="confirmCancelSale()"
+        class="action-button danger"
+        onclick="confirmCancel()"
       >
         Cancelar venta
       </button>
@@ -1557,9 +905,10 @@
 <div id="toast" class="toast"></div>
 
 <script>
-/* ============================================================
+
+/* =========================================================
    SUPABASE
-============================================================ */
+========================================================= */
 
 const SUPABASE_URL =
   "https://jrxklpstlloeckihcduv.supabase.co";
@@ -1568,419 +917,365 @@ const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_XNTaRpicaIpdgNnzLy8yAA_5M4K_pWp";
 
 const BUSINESS_IDS = {
-  BakeQuiri: "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
-  SpicyRoll: "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
+
+  BakeQuiri:
+    "c435ee25-6a2b-4134-b3f8-90b38d6bde0c",
+
+  SpicyRoll:
+    "ebaf1740-2398-49d5-a3aa-3f6fd6fb40cf"
+
 };
 
 
-/* ============================================================
-   STATE
-============================================================ */
+/* =========================================================
+   ESTADO
+========================================================= */
 
 let currentBusiness = "BakeQuiri";
 
 let sales = [];
-let filteredSales = [];
-let customers = [];
 let saleItems = [];
+let customers = [];
 
-let currentPaymentSale = null;
-let currentCancelSale = null;
-
-let cancelledVisible = false;
+let selectedSale = null;
 
 
-/* ============================================================
-   SUPABASE REQUEST
-============================================================ */
+/* =========================================================
+   HELPERS
+========================================================= */
 
-async function supabaseFetch(
-  table,
-  options = {}
-) {
+function escapeHtml(value){
 
-  const {
-    select = "*",
-    filters = [],
-    order = null,
-    limit = null
-  } = options;
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 
-  let url =
-    `${SUPABASE_URL}/rest/v1/${table}?select=${encodeURIComponent(select)}`;
-
-  filters.forEach(filter => {
-    url += `&${filter.column}=${filter.operator}.${encodeURIComponent(filter.value)}`;
-  });
-
-  if (order) {
-    url += `&order=${encodeURIComponent(order)}`;
-  }
-
-  if (limit) {
-    url += `&limit=${limit}`;
-  }
-
-  const response = await fetch(url, {
-    headers: {
-      "apikey": SUPABASE_PUBLISHABLE_KEY,
-      "Authorization": `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
-      "Content-Type": "application/json"
-    }
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || `HTTP ${response.status}`);
-  }
-
-  return response.json();
 }
 
 
-/* ============================================================
-   SUPABASE INSERT
-============================================================ */
-
-async function supabaseInsert(
-  table,
-  data
-) {
-
-  const response = await fetch(
-    `${SUPABASE_URL}/rest/v1/${table}`,
-    {
-      method: "POST",
-
-      headers: {
-        "apikey": SUPABASE_PUBLISHABLE_KEY,
-        "Authorization": `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
-        "Content-Type": "application/json",
-        "Prefer": "return=representation"
-      },
-
-      body: JSON.stringify(data)
-    }
-  );
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || `HTTP ${response.status}`);
-  }
-
-  return response.json();
-}
-
-
-/* ============================================================
-   SUPABASE UPDATE
-============================================================ */
-
-async function supabaseUpdate(
-  table,
-  filters,
-  data
-) {
-
-  let url =
-    `${SUPABASE_URL}/rest/v1/${table}?`;
-
-  url += filters
-    .map(filter =>
-      `${filter.column}=${filter.operator}.${encodeURIComponent(filter.value)}`
-    )
-    .join("&");
-
-  const response = await fetch(url, {
-    method: "PATCH",
-
-    headers: {
-      "apikey": SUPABASE_PUBLISHABLE_KEY,
-      "Authorization": `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
-      "Content-Type": "application/json",
-      "Prefer": "return=representation"
-    },
-
-    body: JSON.stringify(data)
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || `HTTP ${response.status}`);
-  }
-
-  return response.json();
-}
-
-
-/* ============================================================
-   FORMATTERS
-============================================================ */
-
-function money(value) {
+function money(value){
 
   const number = Number(value || 0);
 
-  return number.toLocaleString("es-MX", {
-    style: "currency",
-    currency: "MXN"
+  return number.toLocaleString("es-MX",{
+    style:"currency",
+    currency:"MXN"
   });
+
 }
 
 
-function dateFormat(value) {
+function formatDate(value){
 
-  if (!value) return "Sin fecha";
+  if(!value) return "Sin fecha";
 
   const date = new Date(value);
 
-  if (isNaN(date.getTime())) {
+  if(Number.isNaN(date.getTime())){
     return value;
   }
 
   return date.toLocaleDateString(
     "es-MX",
     {
-      day: "2-digit",
-      month: "short",
-      year: "numeric"
+      day:"2-digit",
+      month:"short",
+      year:"numeric"
     }
   );
+
 }
 
 
-function dateTimeFormat(value) {
+function showToast(message){
 
-  if (!value) return "";
-
-  const date = new Date(value);
-
-  if (isNaN(date.getTime())) {
-    return value;
-  }
-
-  return date.toLocaleString(
-    "es-MX",
-    {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit"
-    }
-  );
-}
-
-
-function escapeHtml(value) {
-
-  if (value === null || value === undefined) {
-    return "";
-  }
-
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
-
-function getInitials(name) {
-
-  if (!name) return "C";
-
-  const parts =
-    String(name)
-      .trim()
-      .split(/\s+/)
-      .filter(Boolean);
-
-  if (!parts.length) return "C";
-
-  if (parts.length === 1) {
-    return parts[0].slice(0, 2).toUpperCase();
-  }
-
-  return (
-    parts[0][0] +
-    parts[parts.length - 1][0]
-  ).toUpperCase();
-}
-
-
-/* ============================================================
-   TOAST
-============================================================ */
-
-let toastTimer = null;
-
-function showToast(message) {
-
-  const toast =
-    document.getElementById("toast");
+  const toast = document.getElementById("toast");
 
   toast.textContent = message;
 
   toast.classList.add("show");
 
-  clearTimeout(toastTimer);
+  clearTimeout(window.toastTimer);
 
-  toastTimer =
-    setTimeout(() => {
-      toast.classList.remove("show");
-    }, 2500);
+  window.toastTimer = setTimeout(()=>{
+    toast.classList.remove("show");
+  },3000);
+
 }
 
 
-/* ============================================================
-   CUSTOMER FUNCTIONS
-============================================================ */
+/* =========================================================
+   SUPABASE FETCH
+========================================================= */
 
-async function loadCustomers() {
+async function supabaseFetch(
+  table,
+  options={}
+){
 
-  try {
+  const {
+    select="*",
+    filters=[],
+    order=null,
+    limit=null
+  } = options;
 
-    customers = await supabaseFetch(
+  let url =
+    `${SUPABASE_URL}/rest/v1/${table}?select=${encodeURIComponent(select)}`;
+
+  filters.forEach(filter=>{
+
+    url +=
+      `&${filter.column}=${filter.operator}.${encodeURIComponent(filter.value)}`;
+
+  });
+
+  if(order){
+
+    url +=
+      `&order=${encodeURIComponent(order)}`;
+
+  }
+
+  if(limit){
+
+    url +=
+      `&limit=${limit}`;
+
+  }
+
+  const response = await fetch(
+    url,
+    {
+      headers:{
+        "apikey":SUPABASE_PUBLISHABLE_KEY,
+        "Authorization":
+          `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+        "Content-Type":"application/json"
+      }
+    }
+  );
+
+  if(!response.ok){
+
+    const text = await response.text();
+
+    throw new Error(
+      text ||
+      `HTTP ${response.status}`
+    );
+
+  }
+
+  return response.json();
+
+}
+
+
+/* =========================================================
+   SUPABASE MUTATION
+========================================================= */
+
+async function supabaseInsert(
+  table,
+  data
+){
+
+  const response = await fetch(
+    `${SUPABASE_URL}/rest/v1/${table}`,
+    {
+      method:"POST",
+
+      headers:{
+        "apikey":SUPABASE_PUBLISHABLE_KEY,
+        "Authorization":
+          `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+        "Content-Type":"application/json",
+        "Prefer":"return=representation"
+      },
+
+      body:JSON.stringify(data)
+    }
+  );
+
+  if(!response.ok){
+
+    const text = await response.text();
+
+    throw new Error(
+      text ||
+      `HTTP ${response.status}`
+    );
+
+  }
+
+  return response.json();
+
+}
+
+
+async function supabaseUpdate(
+  table,
+  filters,
+  data
+){
+
+  let url =
+    `${SUPABASE_URL}/rest/v1/${table}?`;
+
+  filters.forEach((filter,index)=>{
+
+    if(index > 0){
+      url += "&";
+    }
+
+    url +=
+      `${filter.column}=${filter.operator}.${encodeURIComponent(filter.value)}`;
+
+  });
+
+  const response = await fetch(
+    url,
+    {
+      method:"PATCH",
+
+      headers:{
+        "apikey":SUPABASE_PUBLISHABLE_KEY,
+        "Authorization":
+          `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+        "Content-Type":"application/json",
+        "Prefer":"return=representation"
+      },
+
+      body:JSON.stringify(data)
+    }
+  );
+
+  if(!response.ok){
+
+    const text = await response.text();
+
+    throw new Error(
+      text ||
+      `HTTP ${response.status}`
+    );
+
+  }
+
+  return response.json();
+
+}
+
+
+/* =========================================================
+   CLIENTES
+========================================================= */
+
+async function loadCustomers(){
+
+  customers =
+    await supabaseFetch(
       "customers",
       {
-        select: "id,name,phone,notes"
+        select:"id,name,phone,notes"
       }
     );
 
-  } catch (error) {
-
-    console.error(
-      "Error cargando clientes:",
-      error
-    );
-
-    customers = [];
-  }
 }
 
 
-function getCustomer(customerId) {
+function getCustomer(customerId){
 
-  if (!customerId) {
+  if(!customerId){
     return null;
   }
 
   return customers.find(
-    customer => customer.id === customerId
+    customer =>
+      String(customer.id) === String(customerId)
   ) || null;
+
 }
 
 
-function getCustomerName(customerId) {
+function getCustomerName(customerId){
 
   const customer =
     getCustomer(customerId);
 
-  if (
-    customer &&
-    customer.name &&
-    customer.name.trim()
-  ) {
-    return customer.name.trim();
+  if(customer?.name){
+    return customer.name;
   }
 
   return "Cliente";
+
 }
 
 
-function getCustomerPhone(customerId) {
+function getCustomerPhone(customerId){
 
   const customer =
     getCustomer(customerId);
 
   return customer?.phone || "";
+
 }
 
 
-/* ============================================================
-   LOAD SALES
-============================================================ */
+/* =========================================================
+   PRODUCTOS DE UNA VENTA
+========================================================= */
 
-async function loadSales() {
+function getSaleItems(saleId){
 
-  const salesList =
-    document.getElementById("salesList");
-
-  salesList.innerHTML = `
-    <div class="loading">
-      <div class="spinner"></div>
-      Cargando ventas...
-    </div>
-  `;
-
-  try {
-
-    await loadCustomers();
-
-    const businessId =
-      BUSINESS_IDS[currentBusiness];
-
-    sales = await supabaseFetch(
-      "sales",
-      {
-        select: "*",
-        filters: [
-          {
-            column: "business_id",
-            operator: "eq",
-            value: businessId
-          }
-        ],
-        order: "created_at.desc"
-      }
-    );
-
-    saleItems = await supabaseFetch(
-      "sale_items",
-      {
-        select: "*",
-        order: "created_at.asc"
-      }
-    );
-
-    renderSales();
-
-  } catch (error) {
-
-    console.error(
-      "Error cargando ventas:",
-      error
-    );
-
-    salesList.innerHTML = `
-      <div class="empty-state">
-        No fue posible cargar las ventas.
-        <br><br>
-        <button
-          class="action-button primary"
-          type="button"
-          style="padding:0 20px"
-          onclick="loadSales()"
-        >
-          Intentar nuevamente
-        </button>
-      </div>
-    `;
-
-    showToast("Error cargando ventas");
-
+  if(!saleId){
+    return [];
   }
 
+  return saleItems.filter(
+    item =>
+      String(item.sale_id) === String(saleId)
+  );
+
 }
 
 
-/* ============================================================
-   SWITCH BUSINESS
-============================================================ */
+function getSalePieces(saleId){
 
-function switchBusiness(business) {
+  return getSaleItems(saleId)
+    .reduce(
+      (total,item)=>
+        total + Number(
+          item.quantity ??
+          item.qty ??
+          0
+        ),
+      0
+    );
+
+}
+
+
+function getItemDescription(item){
+
+  return (
+    item.description ||
+    item.product_name ||
+    item.name ||
+    "Producto"
+  );
+
+}
+
+
+/* =========================================================
+   CAMBIAR NEGOCIO
+========================================================= */
+
+function changeBusiness(business){
 
   currentBusiness = business;
 
@@ -1998,899 +1293,1264 @@ function switchBusiness(business) {
       business === "SpicyRoll"
     );
 
-  document
-    .getElementById("businessSubtitle")
-    .textContent =
-      business === "BakeQuiri"
-        ? "Cuentas y ventas de BakeQuiri"
-        : "Cuentas y ventas de SpicyRoll";
-
   loadSales();
+
 }
 
 
-/* ============================================================
-   FILTERS
-============================================================ */
+/* =========================================================
+   CARGAR VENTAS
+========================================================= */
 
-function applyFilters() {
+async function loadSales(){
+
+  const salesList =
+    document.getElementById("salesList");
+
+  salesList.innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div>
+      Cargando ventas...
+    </div>
+  `;
+
+  try{
+
+    /*
+      CLIENTES
+
+      Si falla la consulta de clientes,
+      NO bloqueamos las ventas.
+    */
+
+    try{
+
+      await loadCustomers();
+
+    }catch(error){
+
+      console.warn(
+        "No se pudieron cargar clientes:",
+        error
+      );
+
+      customers = [];
+
+    }
+
+
+    const businessId =
+      BUSINESS_IDS[currentBusiness];
+
+
+    /*
+      VENTAS
+
+      Esta es la consulta principal.
+    */
+
+    sales =
+      await supabaseFetch(
+        "sales",
+        {
+          select:"*",
+
+          filters:[
+            {
+              column:"business_id",
+              operator:"eq",
+              value:businessId
+            }
+          ],
+
+          order:"created_at.desc"
+        }
+      );
+
+
+    /*
+      PRODUCTOS
+
+      IMPORTANTE:
+      NO usamos created_at aquí porque
+      sale_items puede no tener esa columna.
+
+      Si los productos fallan,
+      las ventas siguen funcionando.
+    */
+
+    try{
+
+      saleItems =
+        await supabaseFetch(
+          "sale_items",
+          {
+            select:"*"
+          }
+        );
+
+    }catch(error){
+
+      console.warn(
+        "No se pudieron cargar productos:",
+        error
+      );
+
+      saleItems = [];
+
+    }
+
+
+    renderSales();
+
+  }catch(error){
+
+    console.error(
+      "ERROR REAL CARGANDO VENTAS:",
+      error
+    );
+
+    salesList.innerHTML = `
+      <div class="sale-card">
+
+        <div class="empty-state">
+
+          <div style="
+            font-size:42px;
+            margin-bottom:12px;
+          ">
+            ⚠️
+          </div>
+
+          <strong style="
+            font-size:17px;
+          ">
+            No fue posible cargar las ventas
+          </strong>
+
+          <br><br>
+
+          <span style="
+            display:block;
+            font-size:12px;
+            line-height:1.5;
+            color:#8e8e93;
+            word-break:break-word;
+            background:#f2f2f7;
+            padding:12px;
+            border-radius:12px;
+            text-align:left;
+          ">
+            ${escapeHtml(
+              error?.message ||
+              "Error desconocido"
+            )}
+          </span>
+
+          <br>
+
+          <button
+            class="action-button primary"
+            type="button"
+            style="
+              width:100%;
+              height:46px;
+              border-radius:14px;
+            "
+            onclick="loadSales()"
+          >
+            Intentar nuevamente
+          </button>
+
+        </div>
+
+      </div>
+    `;
+
+    showToast(
+      "Error cargando ventas"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   FILTROS
+========================================================= */
+
+function filterSales(){
 
   const search =
-    document
-      .getElementById("searchInput")
-      .value
-      .trim()
-      .toLowerCase();
+    (
+      document.getElementById(
+        "searchInput"
+      ).value || ""
+    )
+    .trim()
+    .toLowerCase();
 
-  const from =
-    document.getElementById("dateFrom").value;
+  const status =
+    document.getElementById(
+      "statusFilter"
+    ).value;
 
-  const to =
-    document.getElementById("dateTo").value;
+  const dateFilter =
+    document.getElementById(
+      "dateFilter"
+    ).value;
 
-  filteredSales =
-    sales.filter(sale => {
+  const sort =
+    document.getElementById(
+      "sortFilter"
+    ).value;
 
-      const isCancelled =
-        sale.status === "cancelled";
 
-      if (isCancelled) {
-        return false;
-      }
+  let result =
+    sales.filter(sale=>{
 
-      const customerName =
+      const name =
         getCustomerName(
           sale.customer_id
         ).toLowerCase();
 
-      const customerPhone =
+      const phone =
         getCustomerPhone(
           sale.customer_id
         ).toLowerCase();
 
-      const items =
-        getSaleItems(sale.id);
+      const id =
+        String(
+          sale.id || ""
+        ).toLowerCase();
 
-      const productText =
-        items
-          .map(item =>
-            String(
-              item.description ||
-              item.product_name ||
-              ""
-            )
-          )
-          .join(" ")
-          .toLowerCase();
 
       const matchesSearch =
         !search ||
-        customerName.includes(search) ||
-        customerPhone.includes(search) ||
-        productText.includes(search) ||
-        String(sale.id)
-          .toLowerCase()
-          .includes(search);
+        name.includes(search) ||
+        phone.includes(search) ||
+        id.includes(search);
 
-      if (!matchesSearch) {
+
+      if(!matchesSearch){
         return false;
       }
 
-      const saleDate =
+
+      const saleStatus =
         String(
-          sale.sale_date ||
-          sale.created_at ||
-          ""
-        ).slice(0, 10);
+          sale.status || ""
+        ).toLowerCase();
 
-      if (from && saleDate < from) {
+
+      if(
+        status !== "all" &&
+        saleStatus !== status
+      ){
+
         return false;
+
       }
 
-      if (to && saleDate > to) {
-        return false;
+
+      if(dateFilter !== "all"){
+
+        const saleDate =
+          new Date(
+            sale.created_at ||
+            sale.sale_date
+          );
+
+        const now =
+          new Date();
+
+        const diff =
+          now.getTime() -
+          saleDate.getTime();
+
+        const day =
+          24 * 60 * 60 * 1000;
+
+
+        if(
+          dateFilter === "today" &&
+          saleDate.toDateString() !==
+          now.toDateString()
+        ){
+
+          return false;
+
+        }
+
+
+        if(
+          dateFilter === "7days" &&
+          diff > 7 * day
+        ){
+
+          return false;
+
+        }
+
+
+        if(
+          dateFilter === "30days" &&
+          diff > 30 * day
+        ){
+
+          return false;
+
+        }
+
       }
+
 
       return true;
+
     });
 
-  renderFilteredSales();
-  renderProductBreakdown();
-  updateSummary();
+
+  result.sort((a,b)=>{
+
+    if(sort === "highest"){
+
+      return Number(b.total || 0) -
+             Number(a.total || 0);
+
+    }
+
+    if(sort === "lowest"){
+
+      return Number(a.total || 0) -
+             Number(b.total || 0);
+
+    }
+
+
+    const dateA =
+      new Date(
+        a.created_at ||
+        a.sale_date ||
+        0
+      ).getTime();
+
+    const dateB =
+      new Date(
+        b.created_at ||
+        b.sale_date ||
+        0
+      ).getTime();
+
+
+    if(sort === "oldest"){
+      return dateA - dateB;
+    }
+
+    return dateB - dateA;
+
+  });
+
+
+  return result;
+
 }
 
 
-/* ============================================================
-   GET SALE ITEMS
-============================================================ */
-
-function getSaleItems(saleId) {
-
-  return saleItems.filter(
-    item =>
-      String(item.sale_id) ===
-      String(saleId)
-  );
-}
-
-
-/* ============================================================
-   NORMALIZE ITEM
-============================================================ */
-
-function normalizeSaleItem(item) {
-
-  const quantity =
-    Number(
-      item.quantity ??
-      item.qty ??
-      0
-    );
-
-  const unitPrice =
-    Number(
-      item.unit_price ??
-      item.price ??
-      0
-    );
-
-  const subtotal =
-    Number(
-      item.subtotal ??
-      item.total ??
-      quantity * unitPrice
-    );
-
-  return {
-    ...item,
-    quantity,
-    unitPrice,
-    subtotal,
-    description:
-      item.description ||
-      item.product_name ||
-      item.name ||
-      "Producto"
-  };
-}
-
-
-/* ============================================================
+/* =========================================================
    RENDER SALES
-============================================================ */
+========================================================= */
 
-function renderSales() {
+function renderSales(){
 
-  applyFilters();
-
-  renderCancelled();
-}
+  const result =
+    filterSales();
 
 
-/* ============================================================
-   RENDER FILTERED SALES
-============================================================ */
+  const salesList =
+    document.getElementById(
+      "salesList"
+    );
 
-function renderFilteredSales() {
 
-  const container =
-    document.getElementById("salesList");
+  /*
+    SUMMARY
+  */
+
+  const activeSales =
+    result.filter(
+      sale =>
+        String(
+          sale.status || ""
+        ).toLowerCase()
+        !== "cancelled"
+    );
+
+
+  const totalPieces =
+    activeSales.reduce(
+      (total,sale)=>
+        total +
+        getSalePieces(sale.id),
+      0
+    );
+
+
+  const totalSales =
+    activeSales.reduce(
+      (total,sale)=>
+        total +
+        Number(sale.total || 0),
+      0
+    );
+
+
+  const totalBalance =
+    activeSales.reduce(
+      (total,sale)=>
+        total +
+        Number(sale.balance || 0),
+      0
+    );
+
+
+  const pendingAccounts =
+    activeSales.filter(
+      sale =>
+        Number(sale.balance || 0) > 0
+    ).length;
+
+
+  document.getElementById(
+    "summaryAccounts"
+  ).textContent =
+    pendingAccounts;
+
+
+  document.getElementById(
+    "summaryPieces"
+  ).textContent =
+    totalPieces;
+
+
+  document.getElementById(
+    "summarySales"
+  ).textContent =
+    money(totalSales);
+
+
+  document.getElementById(
+    "summaryBalance"
+  ).textContent =
+    money(totalBalance);
+
 
   document.getElementById(
     "salesCount"
   ).textContent =
-    `${filteredSales.length} ${
-      filteredSales.length === 1
+    `${result.length} ${
+      result.length === 1
         ? "cuenta"
         : "cuentas"
     }`;
 
-  if (!filteredSales.length) {
 
-    container.innerHTML = `
+  renderProductsBreakdown(
+    activeSales
+  );
+
+
+  if(!result.length){
+
+    salesList.innerHTML = `
       <div class="sale-card">
         <div class="empty-state">
-          No hay cuentas pendientes
-          con los filtros seleccionados.
+
+          <div style="
+            font-size:40px;
+            margin-bottom:10px;
+          ">
+            🧾
+          </div>
+
+          No hay ventas para mostrar.
+
         </div>
       </div>
     `;
 
     return;
+
   }
 
-  container.innerHTML =
-    filteredSales
+
+  salesList.innerHTML =
+    result
       .map(renderSaleCard)
       .join("");
+
 }
 
 
-/* ============================================================
-   RENDER SALE CARD
-============================================================ */
+/* =========================================================
+   RESUMEN DE PRODUCTOS
+========================================================= */
 
-function renderSaleCard(sale) {
-
-  const customerName =
-    getCustomerName(
-      sale.customer_id
-    );
-
-  const phone =
-    getCustomerPhone(
-      sale.customer_id
-    );
-
-  const items =
-    getSaleItems(sale.id)
-      .map(normalizeSaleItem);
-
-  const total =
-    Number(sale.total || 0);
-
-  const balance =
-    Number(sale.balance || 0);
-
-  const paid =
-    Math.max(
-      0,
-      total - balance
-    );
-
-  const statusPaid =
-    balance <= 0 ||
-    sale.status === "paid";
-
-  const avatar =
-    escapeHtml(
-      getInitials(customerName)
-    );
-
-  const itemsHtml =
-    items.length
-      ? items.map(item => `
-          <div class="sale-product">
-
-            <div class="sale-product-name">
-              ${escapeHtml(item.description)}
-            </div>
-
-            <div class="sale-product-qty">
-              ×${item.quantity}
-            </div>
-
-            <div class="sale-product-price">
-              ${money(item.subtotal)}
-            </div>
-
-          </div>
-        `).join("")
-      : `
-        <div class="empty-state">
-          No hay productos registrados para esta venta
-        </div>
-      `;
-
-  const whatsappButton =
-    phone
-      ? `
-        <button
-          class="action-button whatsapp"
-          type="button"
-          onclick="sendWhatsApp('${escapeHtml(phone)}', '${escapeHtml(customerName)}', '${sale.id}')"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"/>
-            <path d="M8.5 9.5c.3 1.7 1.4 3.1 3.1 4 .5.2 1 .3 1.4-.1l.6-.7"/>
-          </svg>
-          WhatsApp
-        </button>
-      `
-      : `
-        <button
-          class="action-button secondary"
-          type="button"
-          onclick="showToast('Este cliente no tiene teléfono registrado')"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 3.1 5.2 2 2 0 0 1 5.1 3h3a2 2 0 0 1 2 1.7l.5 2.2a2 2 0 0 1-.6 1.8L8.7 9.9a16 16 0 0 0 5.4 5.4l1.2-1.3a2 2 0 0 1 1.8-.6l2.2.5a2 2 0 0 1 1.7 2Z"/>
-          </svg>
-          Sin teléfono
-        </button>
-      `;
-
-  return `
-    <article class="sale-card">
-
-      <div class="sale-head">
-
-        <div class="customer-avatar">
-          ${avatar}
-        </div>
-
-        <div class="customer-main">
-
-          <h3 class="customer-name">
-            ${escapeHtml(customerName)}
-          </h3>
-
-          <div class="customer-meta">
-
-            ${
-              phone
-                ? `<span>📱 ${escapeHtml(phone)}</span>`
-                : `<span>Sin teléfono</span>`
-            }
-
-            <span>•</span>
-
-            <span>
-              ${dateFormat(
-                sale.sale_date ||
-                sale.created_at
-              )}
-            </span>
-
-          </div>
-
-        </div>
-
-        <div class="sale-amount">
-
-          <div class="sale-total">
-            ${money(total)}
-          </div>
-
-          <div class="balance-pill ${
-            statusPaid ? "paid" : ""
-          }">
-
-            ${
-              statusPaid
-                ? "Pagado"
-                : `Pendiente ${money(balance)}`
-            }
-
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="sale-products">
-
-        ${itemsHtml}
-
-      </div>
-
-      <div class="sale-foot">
-
-        <div class="totals">
-
-          <div class="total-line">
-            <span>Total</span>
-            <strong>${money(total)}</strong>
-          </div>
-
-          <div class="total-line">
-            <span>Pagado</span>
-            <strong>${money(paid)}</strong>
-          </div>
-
-          <div class="total-line balance">
-            <span>Pendiente</span>
-            <strong>${money(balance)}</strong>
-          </div>
-
-        </div>
-
-        <div class="actions">
-
-          ${
-            balance > 0
-              ? `
-                <button
-                  class="action-button primary"
-                  type="button"
-                  onclick="openPaymentModal('${sale.id}')"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="5" width="18" height="14" rx="2"/>
-                    <path d="M3 10h18"/>
-                  </svg>
-                  Registrar pago
-                </button>
-              `
-              : `
-                <button
-                  class="action-button secondary"
-                  type="button"
-                  onclick="showToast('Esta cuenta ya está pagada')"
-                >
-                  ✓ Pagada
-                </button>
-              `
-          }
-
-          ${whatsappButton}
-
-          <button
-            class="action-button secondary"
-            type="button"
-            onclick="openDetailModal('${sale.id}')"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="9"/>
-              <path d="M12 10v6"/>
-              <path d="M12 7h.01"/>
-            </svg>
-            Detalle
-          </button>
-
-        </div>
-
-        <div style="margin-top:8px">
-
-          <button
-            class="action-button cancel"
-            style="width:100%"
-            type="button"
-            onclick="openCancelModal('${sale.id}')"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="9"/>
-              <path d="M8 8l8 8M16 8l-8 8"/>
-            </svg>
-            Cancelar venta
-          </button>
-
-        </div>
-
-      </div>
-
-    </article>
-  `;
-}
-
-
-/* ============================================================
-   PRODUCT BREAKDOWN
-============================================================ */
-
-function renderProductBreakdown() {
+function renderProductsBreakdown(
+  activeSales
+){
 
   const container =
     document.getElementById(
       "productsBreakdown"
     );
 
-  const productMap = {};
 
-  filteredSales.forEach(sale => {
+  const counts = {};
+
+
+  activeSales.forEach(sale=>{
 
     const items =
-      getSaleItems(sale.id)
-        .map(normalizeSaleItem);
+      getSaleItems(
+        sale.id
+      );
 
-    items.forEach(item => {
 
-      const key =
-        String(
-          item.description
-        ).trim()
-        .toLowerCase();
+    items.forEach(item=>{
 
-      if (!productMap[key]) {
+      const name =
+        getItemDescription(item);
 
-        productMap[key] = {
-          name: item.description,
-          quantity: 0,
-          total: 0
-        };
 
+      const quantity =
+        Number(
+          item.quantity ??
+          item.qty ??
+          0
+        );
+
+
+      if(!counts[name]){
+        counts[name] = 0;
       }
 
-      productMap[key].quantity +=
-        Number(item.quantity || 0);
 
-      productMap[key].total +=
-        Number(item.subtotal || 0);
+      counts[name] +=
+        quantity;
 
     });
 
   });
 
-  const products =
-    Object.values(productMap)
+
+  const entries =
+    Object.entries(counts)
       .sort(
-        (a,b) =>
-          b.quantity - a.quantity
+        (a,b)=>b[1]-a[1]
       );
+
+
+  const totalPieces =
+    entries.reduce(
+      (sum,item)=>
+        sum + item[1],
+      0
+    );
+
 
   document.getElementById(
     "productsCount"
   ).textContent =
-    `${products.length} ${
-      products.length === 1
-        ? "producto"
-        : "productos"
+    `${totalPieces} ${
+      totalPieces === 1
+        ? "pieza"
+        : "piezas"
     }`;
 
-  if (!products.length) {
+
+  if(!entries.length){
 
     container.innerHTML = `
       <div class="empty-state">
-        No hay productos vendidos
-        para los filtros seleccionados.
+        No hay productos registrados.
       </div>
     `;
 
     return;
+
   }
 
+
   container.innerHTML =
-    products
-      .map(product => `
-        <div class="product-summary-row">
+    entries
+      .map(
+        ([name,quantity])=>`
 
-          <div class="product-summary-name">
-            ${escapeHtml(product.name)}
+          <div class="product-row">
+
+            <div class="product-name">
+              ${escapeHtml(name)}
+            </div>
+
+            <div class="product-qty">
+              ${quantity}
+            </div>
+
           </div>
 
-          <div class="product-summary-qty">
-            ×${product.quantity}
-          </div>
-
-          <div class="product-summary-total">
-            ${money(product.total)}
-          </div>
-
-        </div>
-      `)
+        `
+      )
       .join("");
+
 }
 
 
-/* ============================================================
-   SUMMARY
-============================================================ */
+/* =========================================================
+   TARJETA DE VENTA
+========================================================= */
 
-function updateSummary() {
-
-  const accountCount =
-    filteredSales.length;
-
-  const pieces =
-    filteredSales.reduce(
-      (sum, sale) => {
-
-        const items =
-          getSaleItems(sale.id)
-            .map(normalizeSaleItem);
-
-        return sum +
-          items.reduce(
-            (total, item) =>
-              total +
-              Number(item.quantity || 0),
-            0
-          );
-
-      },
-      0
-    );
-
-  const total =
-    filteredSales.reduce(
-      (sum, sale) =>
-        sum +
-        Number(sale.total || 0),
-      0
-    );
-
-  const balance =
-    filteredSales.reduce(
-      (sum, sale) =>
-        sum +
-        Number(sale.balance || 0),
-      0
-    );
-
-  document.getElementById(
-    "summaryAccounts"
-  ).textContent = accountCount;
-
-  document.getElementById(
-    "summaryPieces"
-  ).textContent = pieces;
-
-  document.getElementById(
-    "summarySales"
-  ).textContent = money(total);
-
-  document.getElementById(
-    "summaryBalance"
-  ).textContent = money(balance);
-}
-
-
-/* ============================================================
-   DETAIL MODAL
-============================================================ */
-
-function openDetailModal(saleId) {
-
-  const sale =
-    sales.find(
-      item =>
-        String(item.id) ===
-        String(saleId)
-    );
-
-  if (!sale) return;
+function renderSaleCard(sale){
 
   const customerName =
     getCustomerName(
       sale.customer_id
     );
 
-  const phone =
+  const customerPhone =
     getCustomerPhone(
       sale.customer_id
     );
 
-  const items =
-    getSaleItems(sale.id)
-      .map(normalizeSaleItem);
 
   const total =
-    Number(sale.total || 0);
+    Number(
+      sale.total || 0
+    );
+
 
   const balance =
-    Number(sale.balance || 0);
-
-  const paid =
-    Math.max(
-      0,
-      total - balance
+    Number(
+      sale.balance || 0
     );
 
-  const content =
-    document.getElementById(
-      "detailContent"
+
+  const status =
+    String(
+      sale.status || "open"
+    ).toLowerCase();
+
+
+  const pieces =
+    getSalePieces(
+      sale.id
     );
 
-  content.innerHTML = `
 
-    <div style="
-      display:flex;
-      align-items:center;
-      gap:12px;
-      margin-bottom:18px;
-    ">
+  const items =
+    getSaleItems(
+      sale.id
+    );
 
-      <div class="customer-avatar">
-        ${escapeHtml(
-          getInitials(customerName)
-        )}
+
+  let statusClass =
+    "open";
+
+  let statusText =
+    "Pendiente";
+
+
+  if(status === "paid"){
+
+    statusClass =
+      "paid";
+
+    statusText =
+      "Pagada";
+
+  }
+
+
+  if(status === "cancelled"){
+
+    statusClass =
+      "cancelled";
+
+    statusText =
+      "Cancelada";
+
+  }
+
+
+  let productsHtml = "";
+
+
+  if(items.length){
+
+    productsHtml = `
+
+      <div class="products-detail">
+
+        <div class="products-detail-title">
+          Productos de la venta
+        </div>
+
+        ${items.map(item=>{
+
+          const quantity =
+            Number(
+              item.quantity ??
+              item.qty ??
+              0
+            );
+
+
+          const price =
+            Number(
+              item.unit_price ??
+              item.price ??
+              0
+            );
+
+
+          return `
+
+            <div class="sale-product">
+
+              <div class="sale-product-name">
+                ${escapeHtml(
+                  getItemDescription(item)
+                )}
+              </div>
+
+              <div class="sale-product-qty">
+                ×${quantity}
+              </div>
+
+              <div class="sale-product-price">
+                ${money(
+                  Number(
+                    item.subtotal ??
+                    quantity * price
+                  )
+                )}
+              </div>
+
+            </div>
+
+          `;
+
+        }).join("")}
+
       </div>
 
-      <div>
-        <div style="
-          font-weight:750;
-          font-size:18px;
-        ">
-          ${escapeHtml(customerName)}
+    `;
+
+  }else{
+
+    productsHtml = `
+
+      <div class="products-detail">
+
+        <div class="products-detail-title">
+          Productos de la venta
         </div>
 
         <div style="
-          color:var(--secondary);
-          font-size:12px;
-          margin-top:3px;
+          color:#8e8e93;
+          font-size:13px;
         ">
-          ${
-            phone
-              ? `📱 ${escapeHtml(phone)}`
-              : "Sin teléfono registrado"
-          }
+          No hay productos registrados para esta venta.
         </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  return `
+
+    <div
+      class="sale-card ${
+        status === "cancelled"
+          ? "cancelled-card"
+          : ""
+      }"
+    >
+
+      <div class="sale-main">
+
+        <div class="sale-top">
+
+          <div>
+
+            <div class="customer-name">
+              ${escapeHtml(
+                customerName
+              )}
+            </div>
+
+            <div class="sale-date">
+              ${formatDate(
+                sale.created_at ||
+                sale.sale_date
+              )}
+            </div>
+
+            <div class="status ${statusClass}">
+              ${statusText}
+            </div>
+
+          </div>
+
+
+          <div class="sale-total">
+
+            <strong>
+              ${money(total)}
+            </strong>
+
+            <span>
+              Total
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="sale-info">
+
+          <div class="info-box">
+
+            <div class="info-label">
+              Piezas
+            </div>
+
+            <div class="info-value">
+              ${pieces}
+            </div>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <div class="info-label">
+              Pagado
+            </div>
+
+            <div class="info-value">
+              ${money(
+                total - balance
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <div class="info-label">
+              Saldo
+            </div>
+
+            <div class="
+              info-value
+              ${
+                balance > 0
+                  ? "balance-positive"
+                  : "balance-zero"
+              }
+            ">
+
+              ${money(balance)}
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        ${productsHtml}
+
+      </div>
+
+
+      <div class="sale-actions">
+
+        ${
+          balance > 0 &&
+          status !== "cancelled"
+
+          ?
+
+          `
+          <button
+            class="action-button success"
+            onclick="openPaymentModal('${sale.id}')"
+          >
+            💳 Pagar
+          </button>
+          `
+
+          :
+
+          `
+          <button
+            class="action-button"
+            onclick="openDetailModal('${sale.id}')"
+          >
+            👁 Detalle
+          </button>
+          `
+        }
+
+
+        ${
+          customerPhone &&
+          status !== "cancelled"
+
+          ?
+
+          `
+          <button
+            class="action-button whatsapp"
+            onclick="sendWhatsApp('${sale.id}')"
+          >
+            WhatsApp
+          </button>
+          `
+
+          :
+
+          `
+          <button
+            class="action-button"
+            onclick="openDetailModal('${sale.id}')"
+          >
+            Detalle
+          </button>
+          `
+        }
+
+
+        ${
+          status !== "cancelled"
+
+          ?
+
+          `
+          <button
+            class="action-button danger"
+            onclick="openCancelModal('${sale.id}')"
+          >
+            Cancelar
+          </button>
+          `
+
+          :
+
+          `
+          <button
+            class="action-button"
+            onclick="openDetailModal('${sale.id}')"
+          >
+            Ver
+          </button>
+          `
+        }
+
       </div>
 
     </div>
 
-    <div class="payment-summary">
+  `;
 
-      <div class="payment-summary-line">
-        <span>Fecha</span>
+}
+
+
+/* =========================================================
+   DETALLE
+========================================================= */
+
+function openDetailModal(
+  saleId
+){
+
+  selectedSale =
+    sales.find(
+      sale =>
+        String(sale.id) ===
+        String(saleId)
+    );
+
+
+  if(!selectedSale){
+    return;
+  }
+
+
+  const items =
+    getSaleItems(
+      selectedSale.id
+    );
+
+
+  const customer =
+    getCustomer(
+      selectedSale.customer_id
+    );
+
+
+  const total =
+    Number(
+      selectedSale.total || 0
+    );
+
+
+  const balance =
+    Number(
+      selectedSale.balance || 0
+    );
+
+
+  document.getElementById(
+    "detailContent"
+  ).innerHTML = `
+
+    <div class="info-box" style="margin-bottom:10px">
+
+      <div class="info-label">
+        Cliente
+      </div>
+
+      <div class="info-value">
+        ${escapeHtml(
+          customer?.name ||
+          "Cliente"
+        )}
+      </div>
+
+    </div>
+
+
+    <div class="info-box" style="margin-bottom:10px">
+
+      <div class="info-label">
+        Teléfono
+      </div>
+
+      <div class="info-value">
+        ${escapeHtml(
+          customer?.phone ||
+          "Sin teléfono"
+        )}
+      </div>
+
+    </div>
+
+
+    <div class="info-box" style="margin-bottom:10px">
+
+      <div class="info-label">
+        Total
+      </div>
+
+      <div class="info-value">
+        ${money(total)}
+      </div>
+
+    </div>
+
+
+    <div class="info-box" style="margin-bottom:10px">
+
+      <div class="info-label">
+        Saldo pendiente
+      </div>
+
+      <div class="info-value ${
+        balance > 0
+          ? "balance-positive"
+          : "balance-zero"
+      }">
+
+        ${money(balance)}
+
+      </div>
+
+    </div>
+
+
+    <div class="products-detail">
+
+      <div class="products-detail-title">
+        Productos
+      </div>
+
+      ${
+        items.length
+
+        ?
+
+        items.map(item=>{
+
+          const quantity =
+            Number(
+              item.quantity ??
+              item.qty ??
+              0
+            );
+
+
+          const price =
+            Number(
+              item.unit_price ??
+              item.price ??
+              0
+            );
+
+
+          return `
+
+            <div class="sale-product">
+
+              <div class="sale-product-name">
+                ${escapeHtml(
+                  getItemDescription(item)
+                )}
+              </div>
+
+              <div class="sale-product-qty">
+                ×${quantity}
+              </div>
+
+              <div class="sale-product-price">
+                ${money(
+                  Number(
+                    item.subtotal ??
+                    quantity * price
+                  )
+                )}
+              </div>
+
+            </div>
+
+          `;
+
+        }).join("")
+
+        :
+
+        `
+        <div style="
+          color:#8e8e93;
+          font-size:13px;
+        ">
+          No hay productos registrados para esta venta.
+        </div>
+        `
+
+      }
+
+    </div>
+
+  `;
+
+
+  openModal(
+    "detailModal"
+  );
+
+}
+
+
+/* =========================================================
+   PAGO
+========================================================= */
+
+function openPaymentModal(
+  saleId
+){
+
+  selectedSale =
+    sales.find(
+      sale =>
+        String(sale.id) ===
+        String(saleId)
+    );
+
+
+  if(!selectedSale){
+    return;
+  }
+
+
+  const balance =
+    Number(
+      selectedSale.balance || 0
+    );
+
+
+  document.getElementById(
+    "paymentAmount"
+  ).value =
+    balance.toFixed(2);
+
+
+  document.getElementById(
+    "paymentSaleInfo"
+  ).innerHTML = `
+
+    <div class="info-box" style="
+      margin-bottom:14px;
+    ">
+
+      <div class="info-label">
+        Cliente
+      </div>
+
+      <div class="info-value">
+        ${escapeHtml(
+          getCustomerName(
+            selectedSale.customer_id
+          )
+        )}
+      </div>
+
+      <div style="
+        margin-top:7px;
+        color:#8e8e93;
+        font-size:12px;
+      ">
+        Saldo pendiente:
         <strong>
-          ${dateTimeFormat(
-            sale.created_at ||
-            sale.sale_date
-          )}
-        </strong>
-      </div>
-
-      <div class="payment-summary-line">
-        <span>Venta</span>
-        <strong>
-          #${escapeHtml(
-            String(sale.id).slice(0,8)
-          )}
-        </strong>
-      </div>
-
-      <div class="payment-summary-line">
-        <span>Total</span>
-        <strong>${money(total)}</strong>
-      </div>
-
-      <div class="payment-summary-line">
-        <span>Pagado</span>
-        <strong>${money(paid)}</strong>
-      </div>
-
-      <div class="payment-summary-line">
-        <span>Pendiente</span>
-        <strong class="${
-          balance > 0
-            ? "text-danger"
-            : "text-success"
-        }">
           ${money(balance)}
         </strong>
       </div>
 
     </div>
 
-    <h3 style="
-      font-size:15px;
-      margin:0 0 9px;
-    ">
-      Productos de la venta
-    </h3>
-
-    <div class="sale-products">
-
-      ${
-        items.length
-          ? items.map(item => `
-              <div class="sale-product">
-
-                <div class="sale-product-name">
-                  ${escapeHtml(
-                    item.description
-                  )}
-                </div>
-
-                <div class="sale-product-qty">
-                  ×${item.quantity}
-                </div>
-
-                <div class="sale-product-price">
-                  ${money(item.subtotal)}
-                </div>
-
-              </div>
-            `).join("")
-          : `
-            <div class="empty-state">
-              No hay productos registrados para esta venta.
-            </div>
-          `
-      }
-
-    </div>
-
   `;
 
-  document
-    .getElementById("detailModal")
-    .classList.add("show");
+
+  openModal(
+    "paymentModal"
+  );
+
 }
 
 
-function closeDetailModal() {
+async function confirmPayment(){
 
-  document
-    .getElementById("detailModal")
-    .classList.remove("show");
-}
-
-
-/* ============================================================
-   PAYMENT MODAL
-============================================================ */
-
-function openPaymentModal(saleId) {
-
-  const sale =
-    sales.find(
-      item =>
-        String(item.id) ===
-        String(saleId)
-    );
-
-  if (!sale) return;
-
-  currentPaymentSale = sale;
-
-  const balance =
-    Number(sale.balance || 0);
-
-  const customerName =
-    getCustomerName(
-      sale.customer_id
-    );
-
-  document.getElementById(
-    "paymentSummary"
-  ).innerHTML = `
-
-    <div class="payment-summary-line">
-      <span>Cliente</span>
-      <strong>
-        ${escapeHtml(customerName)}
-      </strong>
-    </div>
-
-    <div class="payment-summary-line">
-      <span>Total</span>
-      <strong>
-        ${money(sale.total)}
-      </strong>
-    </div>
-
-    <div class="payment-summary-line">
-      <span>Pendiente</span>
-      <strong class="text-danger">
-        ${money(balance)}
-      </strong>
-    </div>
-
-  `;
-
-  const amountInput =
-    document.getElementById(
-      "paymentAmount"
-    );
-
-  amountInput.value =
-    balance.toFixed(2);
-
-  amountInput.max =
-    balance.toFixed(2);
-
-  document
-    .getElementById("paymentModal")
-    .classList.add("show");
-
-  setTimeout(() => {
-    amountInput.focus();
-    amountInput.select();
-  }, 100);
-}
-
-
-function closePaymentModal() {
-
-  document
-    .getElementById("paymentModal")
-    .classList.remove("show");
-
-  currentPaymentSale = null;
-}
-
-
-/* ============================================================
-   SAVE PAYMENT
-============================================================ */
-
-async function savePayment() {
-
-  if (!currentPaymentSale) {
+  if(!selectedSale){
     return;
   }
+
 
   const amount =
     Number(
@@ -2899,88 +2559,93 @@ async function savePayment() {
       ).value
     );
 
+
   const method =
     document.getElementById(
       "paymentMethod"
     ).value;
 
-  const currentBalance =
+
+  const balance =
     Number(
-      currentPaymentSale.balance || 0
+      selectedSale.balance || 0
     );
 
-  if (!amount || amount <= 0) {
+
+  if(!amount || amount <= 0){
 
     showToast(
-      "Ingresa un monto válido"
+      "Ingresa un importe válido"
     );
 
     return;
+
   }
 
-  if (amount > currentBalance + 0.01) {
+
+  if(amount > balance){
 
     showToast(
-      "El pago no puede superar el saldo pendiente"
+      "El pago no puede ser mayor al saldo"
     );
 
     return;
+
   }
 
-  try {
 
-    const newBalance =
-      Math.max(
-        0,
-        currentBalance - amount
-      );
-
-    const newStatus =
-      newBalance <= 0
-        ? "paid"
-        : "open";
+  try{
 
     await supabaseInsert(
       "payments",
       {
-        sale_id:
-          currentPaymentSale.id,
-
-        customer_id:
-          currentPaymentSale.customer_id,
-
-        amount,
-
-        payment_method:
-          method
+        sale_id:selectedSale.id,
+        customer_id:selectedSale.customer_id,
+        amount:amount,
+        payment_method:method
       }
     );
+
+
+    const newBalance =
+      Math.max(
+        0,
+        balance - amount
+      );
+
 
     await supabaseUpdate(
       "sales",
       [
         {
-          column: "id",
-          operator: "eq",
-          value:
-            currentPaymentSale.id
+          column:"id",
+          operator:"eq",
+          value:selectedSale.id
         }
       ],
       {
-        balance: newBalance,
-        status: newStatus
+        balance:newBalance,
+        status:
+          newBalance <= 0
+            ? "paid"
+            : "open"
       }
     );
 
-    closePaymentModal();
+
+    closeModal(
+      "paymentModal"
+    );
+
 
     showToast(
       "Pago registrado correctamente"
     );
 
+
     await loadSales();
 
-  } catch (error) {
+  }catch(error){
 
     console.error(
       "Error registrando pago:",
@@ -2992,29 +2657,17 @@ async function savePayment() {
     );
 
   }
+
 }
 
 
-/* ============================================================
+/* =========================================================
    WHATSAPP
-============================================================ */
+========================================================= */
 
 function sendWhatsApp(
-  phone,
-  customerName,
   saleId
-) {
-
-  let cleanPhone =
-    String(phone || "")
-      .replace(/\D/g, "");
-
-  if (
-    cleanPhone.length === 10
-  ) {
-    cleanPhone =
-      "52" + cleanPhone;
-  }
+){
 
   const sale =
     sales.find(
@@ -3023,123 +2676,150 @@ function sendWhatsApp(
         String(saleId)
     );
 
-  if (!sale) return;
+
+  if(!sale){
+    return;
+  }
+
+
+  const phone =
+    getCustomerPhone(
+      sale.customer_id
+    );
+
+
+  if(!phone){
+
+    showToast(
+      "El cliente no tiene teléfono registrado"
+    );
+
+    return;
+
+  }
+
+
+  const cleanPhone =
+    String(phone)
+      .replace(/\D/g,"");
+
+
+  const name =
+    getCustomerName(
+      sale.customer_id
+    );
+
 
   const balance =
-    Number(sale.balance || 0);
+    Number(
+      sale.balance || 0
+    );
+
 
   const message =
-    balance > 0
-      ? `Hola ${customerName}, te compartimos el recordatorio de tu cuenta. El saldo pendiente es de ${money(balance)}. ¡Gracias!`
-      : `Hola ${customerName}, gracias por tu compra. ¡Esperamos verte pronto!`;
+    `Hola ${name}, te compartimos un recordatorio de tu cuenta en ${currentBusiness}. Tu saldo pendiente es de ${money(balance)}. ¡Gracias!`;
+
 
   const url =
-    `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+    `https://wa.me/52${cleanPhone}?text=${encodeURIComponent(message)}`;
+
 
   window.open(
     url,
     "_blank"
   );
+
 }
 
 
-/* ============================================================
-   CANCEL SALE
-============================================================ */
+/* =========================================================
+   CANCELAR
+========================================================= */
 
-function openCancelModal(saleId) {
+function openCancelModal(
+  saleId
+){
 
-  const sale =
+  selectedSale =
     sales.find(
-      item =>
-        String(item.id) ===
+      sale =>
+        String(sale.id) ===
         String(saleId)
     );
 
-  if (!sale) return;
 
-  currentCancelSale = sale;
+  if(!selectedSale){
+    return;
+  }
+
 
   document.getElementById(
     "cancelReason"
   ).value = "";
 
-  document
-    .getElementById("cancelModal")
-    .classList.add("show");
 
-  setTimeout(() => {
+  openModal(
+    "cancelModal"
+  );
 
-    document.getElementById(
-      "cancelReason"
-    ).focus();
-
-  }, 100);
 }
 
 
-function closeCancelModal() {
+async function confirmCancel(){
 
-  document
-    .getElementById("cancelModal")
-    .classList.remove("show");
-
-  currentCancelSale = null;
-}
-
-
-/* ============================================================
-   CONFIRM CANCEL
-============================================================ */
-
-async function confirmCancelSale() {
-
-  if (!currentCancelSale) {
+  if(!selectedSale){
     return;
   }
 
-  const reason =
-    document
-      .getElementById("cancelReason")
-      .value
-      .trim();
 
-  if (!reason) {
+  const reason =
+    document.getElementById(
+      "cancelReason"
+    ).value.trim();
+
+
+  if(!reason){
 
     showToast(
-      "Escribe un motivo de cancelación"
+      "Escribe el motivo de cancelación"
     );
 
     return;
+
   }
 
-  try {
+
+  try{
 
     await supabaseUpdate(
       "sales",
       [
         {
-          column: "id",
-          operator: "eq",
-          value:
-            currentCancelSale.id
+          column:"id",
+          operator:"eq",
+          value:selectedSale.id
         }
       ],
       {
-        status: "cancelled",
-        cancellation_reason: reason
+        status:"cancelled",
+        cancellation_reason:reason
       }
     );
 
-    closeCancelModal();
+
+    closeModal(
+      "cancelModal"
+    );
+
 
     showToast(
       "Venta cancelada"
     );
 
+
     await loadSales();
 
-  } catch (error) {
+  }catch(error){
 
     console.error(
       "Error cancelando venta:",
@@ -3151,210 +2831,68 @@ async function confirmCancelSale() {
     );
 
   }
-}
-
-
-/* ============================================================
-   CANCELLED
-============================================================ */
-
-function toggleCancelled() {
-
-  cancelledVisible =
-    !cancelledVisible;
-
-  const section =
-    document.getElementById(
-      "cancelledSection"
-    );
-
-  section.classList.toggle(
-    "hidden",
-    !cancelledVisible
-  );
-
-  if (cancelledVisible) {
-    renderCancelled();
-
-    section.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  }
 
 }
 
 
-function renderCancelled() {
+/* =========================================================
+   MODALES
+========================================================= */
 
-  const container =
-    document.getElementById(
-      "cancelledList"
-    );
+function openModal(
+  id
+){
 
-  const cancelled =
-    sales.filter(
-      sale =>
-        sale.status === "cancelled"
-    );
+  document
+    .getElementById(id)
+    .classList.add("show");
 
-  document.getElementById(
-    "cancelledCount"
-  ).textContent =
-    cancelled.length;
+}
 
-  if (!cancelled.length) {
 
-    container.innerHTML = `
-      <div class="empty-state">
-        No hay ventas canceladas.
-      </div>
-    `;
+function closeModal(
+  id
+){
 
-    return;
-  }
+  document
+    .getElementById(id)
+    .classList.remove("show");
 
-  container.innerHTML =
-    cancelled
-      .map(sale => {
+}
 
-        const customerName =
-          getCustomerName(
-            sale.customer_id
+
+document
+  .querySelectorAll(".modal")
+  .forEach(modal=>{
+
+    modal.addEventListener(
+      "click",
+      event=>{
+
+        if(
+          event.target === modal
+        ){
+
+          modal.classList.remove(
+            "show"
           );
 
-        return `
-          <div class="cancelled-row">
+        }
 
-            <div>
+      }
+    );
 
-              <div class="cancelled-name">
-                ${escapeHtml(
-                  customerName
-                )}
-              </div>
-
-              <div class="cancelled-meta">
-
-                ${dateTimeFormat(
-                  sale.created_at ||
-                  sale.sale_date
-                )}
-
-                ${
-                  sale.cancellation_reason
-                    ? ` • ${escapeHtml(
-                        sale.cancellation_reason
-                      )}`
-                    : ""
-                }
-
-              </div>
-
-            </div>
-
-            <div class="cancelled-total">
-              ${money(sale.total)}
-            </div>
-
-          </div>
-        `;
-
-      })
-      .join("");
-}
+  });
 
 
-/* ============================================================
-   CLEAR FILTERS
-============================================================ */
-
-function clearFilters() {
-
-  document.getElementById(
-    "searchInput"
-  ).value = "";
-
-  document.getElementById(
-    "dateFrom"
-  ).value = "";
-
-  document.getElementById(
-    "dateTo"
-  ).value = "";
-
-  applyFilters();
-}
-
-
-/* ============================================================
-   EVENTS
-============================================================ */
-
-document
-  .getElementById("searchInput")
-  .addEventListener(
-    "input",
-    applyFilters
-  );
-
-document
-  .getElementById("dateFrom")
-  .addEventListener(
-    "change",
-    applyFilters
-  );
-
-document
-  .getElementById("dateTo")
-  .addEventListener(
-    "change",
-    applyFilters
-  );
-
-document
-  .getElementById("clearFilters")
-  .addEventListener(
-    "click",
-    clearFilters
-);
-
-
-/* ============================================================
-   ESC KEY
-============================================================ */
-
-document.addEventListener(
-  "keydown",
-  event => {
-
-    if (event.key !== "Escape") {
-      return;
-    }
-
-    closePaymentModal();
-    closeDetailModal();
-    closeCancelModal();
-
-  }
-);
-
-
-/* ============================================================
-   INITIALIZE
-============================================================ */
+/* =========================================================
+   INICIO
+========================================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
-  () => {
-
-    document.getElementById(
-      "businessSubtitle"
-    ).textContent =
-      "Cuentas y ventas de BakeQuiri";
-
+  ()=>{
     loadSales();
-
   }
 );
 
