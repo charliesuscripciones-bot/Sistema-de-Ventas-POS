@@ -2,912 +2,1629 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#f2f2f7">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 
-<title>Cuentas pendientes</title>
+<meta name="theme-color" content="#111827">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Charlie Shop">
+
+<title>Charlie Shop | Cuentas pendientes</title>
 
 <style>
-:root{
-  --bg:#f2f2f7;
-  --card:#ffffff;
-  --text:#1c1c1e;
-  --secondary:#8e8e93;
-  --blue:#007aff;
-  --green:#34c759;
-  --red:#ff3b30;
-  --orange:#ff9500;
-  --border:#e5e5ea;
-  --shadow:0 2px 12px rgba(0,0,0,.06);
-  --radius:18px;
-}
-
 *{
   box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
+  margin:0;
+  padding:0
+}
+
+html{
+  width:100%;
+  min-height:100%
 }
 
 body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#f5f5f5;
+  color:#222;
+  min-height:100vh
 }
 
-button,
-input,
-select{
-  font:inherit;
+body.modal-open{
+  overflow:hidden
 }
 
-button{
-  cursor:pointer;
+/* =========================================================
+   HEADER
+========================================================= */
+
+header{
+  background:#111827;
+  color:#fff;
+  padding-top:calc(18px + env(safe-area-inset-top));
+  padding-right:20px;
+  padding-bottom:20px;
+  padding-left:20px
 }
 
-.app{
-  width:100%;
-  max-width:1100px;
-  margin:auto;
-  padding:20px 16px 40px;
-}
-
-/* HEADER */
-
-.header{
+.brand{
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:18px;
+  gap:13px
 }
 
-.header-title h1{
-  margin:0;
+.brand-logo{
+  width:54px;
+  height:54px;
+  flex:0 0 54px;
+  display:flex;
+  align-items:center;
+  justify-content:center
+}
+
+.brand-logo svg{
+  width:54px;
+  height:54px;
+  display:block
+}
+
+.brand-text{
+  min-width:0
+}
+
+.brand-name{
   font-size:28px;
-  font-weight:700;
-  letter-spacing:-.6px;
+  line-height:1.05;
+  font-weight:850;
+  letter-spacing:-.5px
 }
 
-.header-title p{
-  margin:4px 0 0;
-  color:var(--secondary);
+.brand-slogan{
   font-size:14px;
-}
-
-.refresh-button{
-  width:44px;
-  height:44px;
-  border:0;
-  border-radius:50%;
-  background:#fff;
-  box-shadow:var(--shadow);
-  color:var(--blue);
-  font-size:20px;
-}
-
-/* BUSINESS SEGMENT */
-
-.segmented{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  background:#e5e5ea;
-  padding:3px;
-  border-radius:13px;
-  margin-bottom:16px;
-}
-
-.segmented button{
-  height:38px;
-  border:0;
-  background:transparent;
-  border-radius:10px;
-  color:#636366;
-  font-weight:600;
-}
-
-.segmented button.active{
-  background:#fff;
-  color:var(--text);
-  box-shadow:0 1px 4px rgba(0,0,0,.12);
-}
-
-/* SUMMARY */
-
-.summary-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-  margin-bottom:16px;
-}
-
-.summary-card{
-  background:var(--card);
-  border-radius:16px;
-  padding:14px;
-  box-shadow:var(--shadow);
-  min-width:0;
-}
-
-.summary-label{
-  color:var(--secondary);
-  font-size:12px;
-  margin-bottom:7px;
-}
-
-.summary-value{
-  font-size:23px;
+  line-height:1.2;
+  margin-top:6px;
+  color:#d4af37;
   font-weight:700;
-  letter-spacing:-.4px;
+  letter-spacing:.2px
 }
 
-.summary-value.small{
-  font-size:18px;
+header p{
+  font-size:14px;
+  opacity:.65;
+  margin-top:10px
 }
 
-/* TOOLBAR */
+/* =========================================================
+   STATUS
+========================================================= */
 
-.toolbar{
+.status{
+  margin:0 0 15px;
+  padding:14px 16px;
+  border-radius:12px;
+  font-size:14px;
+  display:none;
+  font-weight:700;
+  white-space:pre-line
+}
+
+.status.error{
+  display:block;
+  background:#fee2e2;
+  color:#991b1b
+}
+
+.status.ok{
+  display:block;
+  background:#dcfce7;
+  color:#166534
+}
+
+.status.warn{
+  display:block;
+  background:#fef3c7;
+  color:#92400e
+}
+
+/* =========================================================
+   CONTENEDOR
+========================================================= */
+
+.container{
+  width:100%;
+  max-width:1450px;
+  margin:0 auto;
+  padding:20px
+}
+
+/* =========================================================
+   NEGOCIOS
+========================================================= */
+
+.businesses{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px
+}
+
+.business-btn{
+  flex:1;
+  min-height:58px;
+  border:none;
+  padding:13px 20px;
+  border-radius:12px;
+  background:#fff;
+  border:2px solid #ddd;
+  font-weight:700;
+  cursor:pointer;
+  font-size:16px;
+  transition:.15s
+}
+
+.business-btn:active{
+  transform:scale(.98)
+}
+
+.business-btn.active{
+  background:#111827;
+  color:#fff;
+  border-color:#111827
+}
+
+/* =========================================================
+   NAVEGACIÓN
+========================================================= */
+
+.navigation{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
+  margin-bottom:20px
+}
+
+.nav-btn{
+  min-height:60px;
+  border:none;
+  padding:13px 10px;
+  border-radius:12px;
+  background:#fff;
+  border:2px solid #ddd;
+  font-weight:700;
+  cursor:pointer;
+  font-size:15px;
+  transition:.15s
+}
+
+.nav-btn:active{
+  transform:scale(.98)
+}
+
+.nav-btn.accounts{
+  background:#fff7ed;
+  border-color:#f59e0b;
+  color:#b45309
+}
+
+.nav-btn.clients{
+  background:#ecfdf5;
+  border-color:#10b981;
+  color:#047857
+}
+
+.nav-btn.history{
+  background:#f5f3ff;
+  border-color:#7c3aed;
+  color:#6d28d9
+}
+
+.nav-btn.inventory{
+  background:#eff6ff;
+  border-color:#2563eb;
+  color:#1d4ed8
+}
+
+/* =========================================================
+   TARJETAS
+========================================================= */
+
+.card{
   background:#fff;
   border-radius:18px;
-  padding:12px;
-  box-shadow:var(--shadow);
-  margin-bottom:16px;
+  padding:20px;
+  box-shadow:0 3px 14px rgba(0,0,0,.06);
+  margin-bottom:20px
+}
+
+.card h2{
+  font-size:21px;
+  margin-bottom:16px
+}
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.toolbar{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:12px;
+  align-items:center
 }
 
 .search-box{
-  position:relative;
-  margin-bottom:10px;
+  position:relative
 }
 
 .search-box input{
   width:100%;
-  height:44px;
-  border:0;
-  outline:none;
-  background:#f2f2f7;
-  border-radius:13px;
-  padding:0 14px 0 40px;
+  min-height:48px;
+  border:2px solid #ddd;
+  border-radius:12px;
+  padding:0 15px;
+  font-family:inherit;
   font-size:15px;
+  background:#fff
 }
 
-.search-icon{
-  position:absolute;
-  left:14px;
-  top:12px;
-  color:var(--secondary);
+.search-box input:focus{
+  outline:none;
+  border-color:#2563eb
 }
 
 .filters{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
+  display:flex;
   gap:8px;
+  flex-wrap:wrap
 }
 
-.filters select{
-  width:100%;
-  height:40px;
-  border:0;
-  background:#f2f2f7;
+.filter-btn{
+  min-height:44px;
+  padding:0 15px;
+  border:2px solid #ddd;
   border-radius:11px;
-  padding:0 10px;
-  color:var(--text);
-  outline:none;
-}
-
-/* SECTION */
-
-.section-title{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin:22px 4px 10px;
-}
-
-.section-title h2{
-  margin:0;
-  font-size:19px;
-  letter-spacing:-.2px;
-}
-
-.section-title span{
-  color:var(--secondary);
-  font-size:13px;
-}
-
-/* PRODUCT SUMMARY */
-
-.products-card{
   background:#fff;
-  border-radius:18px;
-  box-shadow:var(--shadow);
-  overflow:hidden;
+  font-family:inherit;
+  font-weight:700;
+  cursor:pointer;
+  color:#374151
 }
 
-.product-row{
+.filter-btn.active{
+  background:#111827;
+  border-color:#111827;
+  color:#fff
+}
+
+/* =========================================================
+   RESUMEN
+========================================================= */
+
+.summary{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-bottom:20px
+}
+
+.summary-card{
+  border:2px solid #eee;
+  border-radius:14px;
+  padding:16px;
+  background:#fff
+}
+
+.summary-label{
+  color:#6b7280;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:7px
+}
+
+.summary-value{
+  font-size:25px;
+  font-weight:850;
+  line-height:1.1
+}
+
+.summary-card.accounts-summary{
+  background:#fff7ed;
+  border-color:#fed7aa
+}
+
+.summary-card.pieces-summary{
+  background:#eff6ff;
+  border-color:#bfdbfe
+}
+
+.summary-card.sales-summary{
+  background:#f5f3ff;
+  border-color:#ddd6fe
+}
+
+.summary-card.balance-summary{
+  background:#ecfdf5;
+  border-color:#bbf7d0
+}
+
+/* =========================================================
+   PRODUCTOS
+========================================================= */
+
+.product-breakdown{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px
+}
+
+.product-stat{
+  border:2px solid #eee;
+  border-radius:14px;
+  padding:15px;
+  background:#fff;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:13px 15px;
-  border-bottom:1px solid var(--border);
+  gap:15px
 }
 
-.product-row:last-child{
-  border-bottom:0;
+.product-stat-name{
+  font-weight:800;
+  font-size:15px
 }
 
-.product-name{
-  font-weight:600;
-  font-size:14px;
+.product-stat-sales{
+  color:#6b7280;
+  font-size:12px;
+  margin-top:4px
 }
 
-.product-qty{
-  color:var(--blue);
-  font-weight:700;
-  font-size:15px;
+.product-stat-qty{
+  min-width:55px;
+  text-align:center;
+  padding:8px 10px;
+  border-radius:10px;
+  background:#eff6ff;
+  color:#1d4ed8;
+  font-size:17px;
+  font-weight:850
 }
 
-/* SALES */
+/* =========================================================
+   CUENTAS
+========================================================= */
 
 .sales-list{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
+  display:grid;
+  gap:14px
 }
 
 .sale-card{
   background:#fff;
-  border-radius:20px;
-  box-shadow:var(--shadow);
+  border:2px solid #e5e7eb;
+  border-radius:16px;
   overflow:hidden;
+  transition:.15s
 }
 
-.sale-main{
+.sale-card.pending{
+  border-color:#f59e0b
+}
+
+.sale-card.paid{
+  border-color:#d1d5db
+}
+
+.sale-card.cancelled{
+  border-color:#fecaca;
+  opacity:.9
+}
+
+.sale-header{
   padding:16px;
-}
-
-.sale-top{
   display:flex;
   justify-content:space-between;
-  gap:10px;
   align-items:flex-start;
+  gap:15px;
+  background:#fafafa
+}
+
+.sale-customer{
+  min-width:0
 }
 
 .customer-name{
-  font-size:17px;
-  font-weight:700;
-  margin-bottom:4px;
+  font-size:18px;
+  font-weight:850;
+  color:#111827;
+  word-break:break-word
+}
+
+.customer-phone{
+  color:#6b7280;
+  font-size:13px;
+  margin-top:5px
 }
 
 .sale-date{
-  color:var(--secondary);
+  color:#6b7280;
   font-size:12px;
+  margin-top:5px
 }
 
 .sale-total{
   text-align:right;
+  flex-shrink:0
 }
 
-.sale-total strong{
-  display:block;
-  font-size:19px;
+.sale-total-label{
+  color:#6b7280;
+  font-size:12px;
+  font-weight:700
 }
 
-.sale-total span{
+.sale-total-value{
+  font-size:22px;
+  font-weight:850;
+  margin-top:2px
+}
+
+.status-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 10px;
+  border-radius:20px;
   font-size:11px;
-  color:var(--secondary);
+  font-weight:850;
+  margin-top:7px
 }
 
-.sale-info{
+.status-badge.pending{
+  background:#fef3c7;
+  color:#92400e
+}
+
+.status-badge.paid{
+  background:#dcfce7;
+  color:#166534
+}
+
+.status-badge.cancelled{
+  background:#fee2e2;
+  color:#991b1b
+}
+
+.sale-body{
+  padding:16px
+}
+
+.sale-financial{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:8px;
-  margin-top:14px;
+  margin-bottom:14px
 }
 
-.info-box{
-  background:#f2f2f7;
-  border-radius:12px;
-  padding:9px;
+.financial-item{
+  border-radius:11px;
+  padding:11px;
+  background:#f5f5f5
 }
 
-.info-label{
-  color:var(--secondary);
-  font-size:10px;
-  margin-bottom:3px;
+.financial-label{
+  color:#6b7280;
+  font-size:11px;
+  font-weight:700
 }
 
-.info-value{
+.financial-value{
+  font-size:16px;
+  font-weight:850;
+  margin-top:3px
+}
+
+.financial-value.balance{
+  color:#b45309
+}
+
+.financial-value.paid{
+  color:#15803d
+}
+
+/* =========================================================
+   PRODUCTOS DE LA VENTA
+========================================================= */
+
+.sale-products{
+  border-top:1px solid #eee;
+  padding-top:12px
+}
+
+.sale-products-title{
   font-size:13px;
-  font-weight:600;
+  font-weight:850;
+  margin-bottom:8px;
+  color:#374151
 }
 
-.balance-positive{
-  color:var(--red);
-}
-
-.balance-zero{
-  color:var(--green);
-}
-
-.products-detail{
-  margin-top:14px;
-  border-top:1px solid var(--border);
-  padding-top:12px;
-}
-
-.products-detail-title{
-  font-size:12px;
-  color:var(--secondary);
-  margin-bottom:7px;
-  font-weight:600;
-}
-
-.sale-product{
+.sale-product-row{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:10px;
-  padding:6px 0;
-  font-size:13px;
+  gap:12px;
+  padding:9px 0;
+  border-bottom:1px solid #f0f0f0
+}
+
+.sale-product-row:last-child{
+  border-bottom:none
+}
+
+.sale-product-info{
+  min-width:0
 }
 
 .sale-product-name{
-  flex:1;
-}
-
-.sale-product-qty{
-  color:var(--blue);
   font-weight:700;
+  font-size:14px;
+  word-break:break-word
 }
 
-.sale-product-price{
-  min-width:70px;
-  text-align:right;
+.sale-product-meta{
+  font-size:12px;
+  color:#6b7280;
+  margin-top:3px
 }
 
-/* ACTIONS */
+.sale-product-subtotal{
+  flex-shrink:0;
+  font-weight:800;
+  font-size:14px
+}
+
+.no-products{
+  color:#9ca3af;
+  font-size:13px;
+  padding:8px 0
+}
+
+/* =========================================================
+   BOTONES DE ACCIÓN
+========================================================= */
 
 .sale-actions{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:8px;
-  padding:12px;
-  border-top:1px solid var(--border);
-  background:#fafafa;
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid #eee
 }
 
-.action-button{
-  min-height:40px;
-  border:0;
-  border-radius:12px;
-  padding:0 10px;
-  font-weight:600;
+.action-btn{
+  min-height:44px;
+  border:2px solid #ddd;
+  border-radius:11px;
+  background:#fff;
+  font-family:inherit;
   font-size:13px;
-  background:#e9e9ee;
-  color:var(--text);
+  font-weight:800;
+  cursor:pointer;
+  transition:.15s
 }
 
-.action-button.primary{
-  background:#007aff;
-  color:#fff;
+.action-btn:active{
+  transform:scale(.97)
 }
 
-.action-button.success{
-  background:#34c759;
-  color:#fff;
+.action-btn.pay{
+  background:#16a34a;
+  border-color:#16a34a;
+  color:#fff
 }
 
-.action-button.danger{
-  background:#ff3b30;
-  color:#fff;
+.action-btn.whatsapp{
+  background:#ecfdf5;
+  border-color:#10b981;
+  color:#047857
 }
 
-.action-button.whatsapp{
-  background:#34c759;
-  color:#fff;
+.action-btn.detail{
+  background:#eff6ff;
+  border-color:#93c5fd;
+  color:#1d4ed8
 }
 
-/* STATUS */
+.action-btn.cancel{
+  background:#fff;
+  border-color:#fca5a5;
+  color:#dc2626
+}
 
-.status{
+.action-btn:disabled{
+  opacity:.5;
+  cursor:not-allowed
+}
+
+/* =========================================================
+   CANCELADAS
+========================================================= */
+
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:15px
+}
+
+.section-title h2{
+  margin:0
+}
+
+.count-badge{
+  min-width:32px;
+  height:28px;
+  padding:0 9px;
   display:inline-flex;
   align-items:center;
-  padding:5px 9px;
-  border-radius:999px;
-  font-size:11px;
-  font-weight:700;
-  margin-top:8px;
+  justify-content:center;
+  border-radius:20px;
+  background:#f3f4f6;
+  color:#374151;
+  font-size:12px;
+  font-weight:850
 }
 
-.status.open{
-  background:#fff0ef;
-  color:var(--red);
-}
-
-.status.paid{
-  background:#eaf8ee;
-  color:#248a3d;
-}
-
-.status.cancelled{
-  background:#eeeef2;
-  color:#636366;
-}
-
-/* CANCELLED */
-
-.cancelled-card{
-  opacity:.72;
-}
-
-/* EMPTY */
+/* =========================================================
+   ESTADOS
+========================================================= */
 
 .empty-state{
   text-align:center;
-  padding:40px 20px;
-  color:var(--secondary);
+  color:#777;
+  padding:35px 15px
+}
+
+.empty-icon{
+  font-size:36px;
+  margin-bottom:10px
 }
 
 .loading{
   display:flex;
-  flex-direction:column;
   align-items:center;
   justify-content:center;
-  min-height:160px;
-  color:var(--secondary);
   gap:10px;
+  color:#6b7280;
+  padding:35px 15px;
+  font-weight:700
 }
 
 .spinner{
-  width:28px;
-  height:28px;
-  border:3px solid #d1d1d6;
-  border-top-color:var(--blue);
+  width:20px;
+  height:20px;
+  border:3px solid #ddd;
+  border-top-color:#2563eb;
   border-radius:50%;
-  animation:spin .8s linear infinite;
+  animation:spin .7s linear infinite
 }
 
 @keyframes spin{
-  to{transform:rotate(360deg);}
+  to{
+    transform:rotate(360deg)
+  }
 }
 
-/* MODAL */
+/* =========================================================
+   MODALES
+========================================================= */
 
 .modal{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.35);
+  z-index:99999;
   display:none;
-  align-items:flex-end;
+  align-items:center;
   justify-content:center;
-  z-index:1000;
-  padding:0;
+  padding:15px;
+  background:rgba(0,0,0,.58);
+  backdrop-filter:blur(5px);
+  -webkit-backdrop-filter:blur(5px)
 }
 
 .modal.show{
-  display:flex;
+  display:flex
 }
 
-.modal-sheet{
+.modal-box{
   width:100%;
-  max-width:600px;
-  background:#fff;
-  border-radius:24px 24px 0 0;
-  padding:20px;
-  padding-bottom:calc(20px + env(safe-area-inset-bottom));
-  animation:sheetUp .22s ease;
+  max-width:520px;
   max-height:90vh;
   overflow:auto;
+  background:#fff;
+  border-radius:22px;
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+  animation:modalIn .18s ease-out
 }
 
-@keyframes sheetUp{
+@keyframes modalIn{
   from{
-    transform:translateY(100%);
+    opacity:0;
+    transform:translateY(15px) scale(.97)
   }
   to{
-    transform:translateY(0);
+    opacity:1;
+    transform:translateY(0) scale(1)
   }
 }
 
-.modal-handle{
+.modal-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  padding:20px;
+  background:#111827;
+  color:#fff
+}
+
+.modal-header h3{
+  font-size:20px
+}
+
+.modal-header p{
+  font-size:13px;
+  opacity:.75;
+  margin-top:4px
+}
+
+.close-modal{
   width:38px;
-  height:5px;
-  background:#d1d1d6;
-  border-radius:5px;
-  margin:0 auto 18px;
+  height:38px;
+  border:none;
+  border-radius:50%;
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  font-size:25px;
+  cursor:pointer
 }
 
-.modal-title{
-  font-size:21px;
-  font-weight:700;
-  margin-bottom:16px;
+.modal-content{
+  padding:20px
 }
 
-.modal-field{
-  margin-bottom:14px;
-}
-
-.modal-field label{
-  display:block;
-  font-size:12px;
-  color:var(--secondary);
-  margin-bottom:6px;
-}
-
-.modal-field input,
-.modal-field textarea,
-.modal-field select{
-  width:100%;
-  border:0;
-  background:#f2f2f7;
-  border-radius:12px;
-  min-height:44px;
-  padding:10px 12px;
-  outline:none;
-}
-
-.modal-field textarea{
-  min-height:90px;
-  resize:none;
-}
-
-.modal-buttons{
+.modal-actions{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:10px;
-  margin-top:18px;
+  margin-top:20px
 }
 
-/* TOAST */
+.modal-button{
+  min-height:48px;
+  border:none;
+  border-radius:11px;
+  font-family:inherit;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer
+}
+
+.modal-button.secondary{
+  background:#f3f4f6;
+  color:#374151
+}
+
+.modal-button.primary{
+  background:#2563eb;
+  color:#fff
+}
+
+.modal-button.danger{
+  background:#dc2626;
+  color:#fff
+}
+
+.payment-list{
+  display:grid;
+  gap:9px
+}
+
+.payment-option{
+  width:100%;
+  padding:14px;
+  border:2px solid #ddd;
+  border-radius:11px;
+  background:#fff;
+  text-align:left;
+  font-family:inherit;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer
+}
+
+.payment-option:hover{
+  border-color:#2563eb
+}
+
+.detail-list{
+  display:grid;
+  gap:9px
+}
+
+.detail-row{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  padding:11px 0;
+  border-bottom:1px solid #eee
+}
+
+.detail-row:last-child{
+  border-bottom:none
+}
+
+.detail-label{
+  color:#6b7280;
+  font-size:13px
+}
+
+.detail-value{
+  font-weight:800;
+  text-align:right
+}
+
+.modal-warning{
+  padding:13px;
+  border-radius:11px;
+  background:#fef3c7;
+  color:#92400e;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:15px
+}
+
+.modal-danger{
+  padding:13px;
+  border-radius:11px;
+  background:#fee2e2;
+  color:#991b1b;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:15px
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
 
 .toast{
   position:fixed;
   left:50%;
   bottom:25px;
-  transform:translateX(-50%) translateY(20px);
-  background:rgba(28,28,30,.94);
+  transform:translate(-50%,20px);
+  z-index:100000;
+  background:#111827;
   color:#fff;
-  padding:11px 17px;
-  border-radius:14px;
-  font-size:13px;
+  padding:13px 17px;
+  border-radius:12px;
+  font-size:14px;
+  font-weight:700;
+  box-shadow:0 10px 30px rgba(0,0,0,.25);
   opacity:0;
   pointer-events:none;
-  transition:.25s;
-  z-index:2000;
-  max-width:90%;
-  text-align:center;
+  transition:.2s;
+  max-width:calc(100% - 30px);
+  text-align:center
 }
 
 .toast.show{
   opacity:1;
-  transform:translateX(-50%) translateY(0);
+  transform:translate(-50%,0)
 }
 
-/* RESPONSIVE */
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
-@media(max-width:700px){
+@media(max-width:950px){
 
-  .app{
-    padding:16px 12px 35px;
+  .navigation{
+    grid-template-columns:repeat(3,1fr)
   }
 
-  .summary-grid{
-    grid-template-columns:repeat(2,1fr);
+  .summary{
+    grid-template-columns:repeat(2,1fr)
+  }
+
+}
+
+@media(max-width:650px){
+
+  .container{
+    padding:15px
+  }
+
+  .navigation{
+    grid-template-columns:repeat(2,1fr)
+  }
+
+  .toolbar{
+    grid-template-columns:1fr
   }
 
   .filters{
-    grid-template-columns:1fr;
+    display:grid;
+    grid-template-columns:repeat(2,1fr)
   }
 
-  .sale-info{
-    grid-template-columns:1fr 1fr 1fr;
+  .filter-btn{
+    width:100%
+  }
+
+  .product-breakdown{
+    grid-template-columns:1fr
+  }
+
+  .sale-header{
+    flex-direction:column
+  }
+
+  .sale-total{
+    text-align:left
+  }
+
+  .sale-financial{
+    grid-template-columns:1fr 1fr 1fr
   }
 
   .sale-actions{
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:1fr 1fr
   }
 
-  .action-button{
-    font-size:12px;
-    padding:0 5px;
+  .sale-actions .detail{
+    grid-column:span 2
   }
 
-  .header-title h1{
-    font-size:25px;
-  }
 }
 
-@media(max-width:420px){
+@media(max-width:500px){
 
-  .sale-main{
-    padding:14px;
+  .brand-logo{
+    width:48px;
+    height:48px;
+    flex-basis:48px
+  }
+
+  .brand-logo svg{
+    width:48px;
+    height:48px
+  }
+
+  .brand-name{
+    font-size:25px
+  }
+
+  .brand-slogan{
+    font-size:13px
+  }
+
+  header p{
+    font-size:13px
+  }
+
+  .businesses{
+    gap:8px
+  }
+
+  .business-btn{
+    min-height:52px;
+    padding:10px 8px;
+    font-size:14px
+  }
+
+  .navigation{
+    grid-template-columns:1fr 1fr;
+    gap:8px
+  }
+
+  .nav-btn{
+    min-height:55px;
+    font-size:13px
+  }
+
+  .card{
+    padding:16px;
+    border-radius:16px
+  }
+
+  .summary{
+    grid-template-columns:1fr 1fr;
+    gap:8px
+  }
+
+  .summary-card{
+    padding:13px
+  }
+
+  .summary-value{
+    font-size:21px
+  }
+
+  .sale-financial{
+    grid-template-columns:1fr;
+    gap:6px
   }
 
   .sale-actions{
-    gap:6px;
-    padding:10px;
+    grid-template-columns:1fr 1fr
   }
 
-  .action-button{
-    font-size:11px;
+  .sale-actions .detail{
+    grid-column:span 2
   }
 
-  .sale-total strong{
-    font-size:17px;
+  .modal{
+    padding:10px
   }
+
+  .modal-box{
+    border-radius:18px;
+    max-height:92vh
+  }
+
+  .modal-content{
+    padding:16px
+  }
+
+}
+
+@supports (-webkit-touch-callout:none){
+
+  header{
+    padding-top:calc(18px + env(safe-area-inset-top))
+  }
+
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<header>
 
-  <header class="header">
-    <div class="header-title">
-      <h1>Cuentas</h1>
-      <p>Historial y cuentas pendientes</p>
-    </div>
+<div class="brand">
 
-    <button
-      class="refresh-button"
-      onclick="loadSales()"
-      title="Actualizar"
-    >
-      ↻
-    </button>
-  </header>
+  <div class="brand-logo" aria-hidden="true">
 
-  <!-- NEGOCIO -->
-  <div class="segmented">
-    <button
-      id="businessBakeQuiri"
-      class="active"
-      onclick="changeBusiness('BakeQuiri')"
-    >
-      BakeQuiri
-    </button>
+    <svg
+      viewBox="0 0 64 64"
+      xmlns="http://www.w3.org/2000/svg">
 
-    <button
-      id="businessSpicyRoll"
-      onclick="changeBusiness('SpicyRoll')"
-    >
-      SpicyRoll
-    </button>
-  </div>
+      <circle
+        cx="32"
+        cy="32"
+        r="29"
+        fill="none"
+        stroke="#d4af37"
+        stroke-width="2.5"/>
 
-  <!-- RESUMEN -->
-  <div class="summary-grid">
+      <path
+        d="M14 18h5l4 25h25l5-18H22"
+        fill="none"
+        stroke="#ffffff"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
 
-    <div class="summary-card">
-      <div class="summary-label">Cuentas</div>
-      <div class="summary-value" id="summaryAccounts">0</div>
-    </div>
+      <circle
+        cx="29"
+        cy="50"
+        r="3"
+        fill="#d4af37"/>
 
-    <div class="summary-card">
-      <div class="summary-label">Piezas</div>
-      <div class="summary-value" id="summaryPieces">0</div>
-    </div>
+      <circle
+        cx="47"
+        cy="50"
+        r="3"
+        fill="#d4af37"/>
 
-    <div class="summary-card">
-      <div class="summary-label">Ventas</div>
-      <div class="summary-value small" id="summarySales">$0</div>
-    </div>
+      <text
+        x="32"
+        y="35"
+        text-anchor="middle"
+        font-family="Arial,sans-serif"
+        font-size="14"
+        font-weight="800"
+        fill="#d4af37">
+        CS
+      </text>
 
-    <div class="summary-card">
-      <div class="summary-label">Por cobrar</div>
-      <div class="summary-value small" id="summaryBalance">$0</div>
-    </div>
+    </svg>
 
   </div>
 
-  <!-- BUSCADOR -->
-  <div class="toolbar">
+  <div class="brand-text">
 
-    <div class="search-box">
-      <span class="search-icon">⌕</span>
-
-      <input
-        id="searchInput"
-        type="search"
-        placeholder="Buscar cliente, teléfono o folio..."
-        oninput="renderSales()"
-      >
+    <div class="brand-name">
+      Charlie Shop
     </div>
 
-    <div class="filters">
-
-      <select id="statusFilter" onchange="renderSales()">
-        <option value="all">Todas las cuentas</option>
-        <option value="open">Pendientes</option>
-        <option value="paid">Pagadas</option>
-        <option value="cancelled">Canceladas</option>
-      </select>
-
-      <select id="dateFilter" onchange="renderSales()">
-        <option value="all">Todas las fechas</option>
-        <option value="today">Hoy</option>
-        <option value="7days">Últimos 7 días</option>
-        <option value="30days">Últimos 30 días</option>
-      </select>
-
-      <select id="sortFilter" onchange="renderSales()">
-        <option value="newest">Más recientes</option>
-        <option value="oldest">Más antiguas</option>
-        <option value="highest">Mayor importe</option>
-        <option value="lowest">Menor importe</option>
-      </select>
-
-    </div>
-
-  </div>
-
-  <!-- PRODUCTOS -->
-  <div class="section-title">
-    <h2>Productos vendidos</h2>
-    <span id="productsCount">0 productos</span>
-  </div>
-
-  <div class="products-card" id="productsBreakdown">
-    <div class="empty-state">
-      Cargando productos...
-    </div>
-  </div>
-
-  <!-- VENTAS -->
-  <div class="section-title">
-    <h2>Ventas</h2>
-    <span id="salesCount">0 cuentas</span>
-  </div>
-
-  <div id="salesList" class="sales-list">
-    <div class="loading">
-      <div class="spinner"></div>
-      Cargando ventas...
-    </div>
-  </div>
-
-</div>
-
-<!-- MODAL PAGO -->
-
-<div id="paymentModal" class="modal">
-
-  <div class="modal-sheet">
-
-    <div class="modal-handle"></div>
-
-    <div class="modal-title">
-      Registrar pago
-    </div>
-
-    <div id="paymentSaleInfo"></div>
-
-    <div class="modal-field">
-      <label>Importe a pagar</label>
-
-      <input
-        id="paymentAmount"
-        type="number"
-        step="0.01"
-        min="0"
-        placeholder="0.00"
-      >
-    </div>
-
-    <div class="modal-field">
-      <label>Método de pago</label>
-
-      <select id="paymentMethod">
-        <option value="Efectivo">Efectivo</option>
-        <option value="Transferencia">Transferencia</option>
-        <option value="Clip">Clip</option>
-        <option value="BBVA">BBVA</option>
-      </select>
-    </div>
-
-    <div class="modal-buttons">
-
-      <button
-        class="action-button"
-        onclick="closeModal('paymentModal')"
-      >
-        Cancelar
-      </button>
-
-      <button
-        class="action-button success"
-        onclick="confirmPayment()"
-      >
-        Registrar pago
-      </button>
-
+    <div class="brand-slogan">
+      Productos seleccionados
     </div>
 
   </div>
 
 </div>
 
-<!-- MODAL DETALLE -->
+<p>
+Administración de negocios y ventas
+</p>
 
-<div id="detailModal" class="modal">
+</header>
 
-  <div class="modal-sheet">
+<div class="container">
 
-    <div class="modal-handle"></div>
+<div id="status" class="status"></div>
 
-    <div class="modal-title">
-      Detalle de la venta
-    </div>
+<!-- =======================================================
+     NEGOCIOS
+======================================================= -->
 
-    <div id="detailContent"></div>
+<div class="businesses">
 
-    <div class="modal-buttons">
+<button
+  type="button"
+  class="business-btn active"
+  data-business="BakeQuiri">
+  🧁 BakeQuiri
+</button>
 
-      <button
-        class="action-button"
-        onclick="closeModal('detailModal')"
-      >
-        Cerrar
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-<!-- MODAL CANCELAR -->
-
-<div id="cancelModal" class="modal">
-
-  <div class="modal-sheet">
-
-    <div class="modal-handle"></div>
-
-    <div class="modal-title">
-      Cancelar venta
-    </div>
-
-    <div class="modal-field">
-
-      <label>Motivo de cancelación</label>
-
-      <textarea
-        id="cancelReason"
-        placeholder="Escribe el motivo..."
-      ></textarea>
-
-    </div>
-
-    <div class="modal-buttons">
-
-      <button
-        class="action-button"
-        onclick="closeModal('cancelModal')"
-      >
-        Regresar
-      </button>
-
-      <button
-        class="action-button danger"
-        onclick="confirmCancel()"
-      >
-        Cancelar venta
-      </button>
-
-    </div>
-
-  </div>
+<button
+  type="button"
+  class="business-btn"
+  data-business="SpicyRoll">
+  🍣 SpicyRoll
+</button>
 
 </div>
 
-<div id="toast" class="toast"></div>
+<!-- =======================================================
+     NAVEGACIÓN
+======================================================= -->
+
+<div class="navigation">
+
+<button
+  type="button"
+  class="nav-btn accounts"
+  id="accountsButton">
+  💰 Cuentas pendientes
+</button>
+
+<button
+  type="button"
+  class="nav-btn clients"
+  id="clientsButton">
+  👥 Clientes
+</button>
+
+<button
+  type="button"
+  class="nav-btn history"
+  id="historyButton">
+  🧾 Historial
+</button>
+
+<button
+  type="button"
+  class="nav-btn inventory"
+  id="inventoryButton">
+  📦 Inventario
+</button>
+
+<button
+  type="button"
+  class="nav-btn"
+  id="dashboardButton">
+  📊 Dashboard
+</button>
+
+</div>
+
+<!-- =======================================================
+     RESUMEN
+======================================================= -->
+
+<div class="summary">
+
+<div class="summary-card accounts-summary">
+
+<div class="summary-label">
+Cuentas pendientes
+</div>
+
+<div
+  id="summaryAccounts"
+  class="summary-value">
+0
+</div>
+
+</div>
+
+<div class="summary-card pieces-summary">
+
+<div class="summary-label">
+Piezas vendidas
+</div>
+
+<div
+  id="summaryPieces"
+  class="summary-value">
+0
+</div>
+
+</div>
+
+<div class="summary-card sales-summary">
+
+<div class="summary-label">
+Ventas
+</div>
+
+<div
+  id="summarySales"
+  class="summary-value">
+0
+</div>
+
+</div>
+
+<div class="summary-card balance-summary">
+
+<div class="summary-label">
+Por cobrar
+</div>
+
+<div
+  id="summaryBalance"
+  class="summary-value">
+$0.00
+</div>
+
+</div>
+
+</div>
+
+<!-- =======================================================
+     BUSCAR / FILTROS
+======================================================= -->
+
+<div class="card">
+
+<div class="toolbar">
+
+<div class="search-box">
+
+<input
+  type="search"
+  id="searchInput"
+  placeholder="🔎 Buscar cliente, teléfono o producto..."
+  autocomplete="off">
+
+</div>
+
+<div class="filters">
+
+<button
+  type="button"
+  class="filter-btn active"
+  data-filter="pending">
+  Pendientes
+</button>
+
+<button
+  type="button"
+  class="filter-btn"
+  data-filter="all">
+  Todas
+</button>
+
+<button
+  type="button"
+  class="filter-btn"
+  data-filter="paid">
+  Pagadas
+</button>
+
+<button
+  type="button"
+  class="filter-btn"
+  data-filter="cancelled">
+  Canceladas
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- =======================================================
+     PRODUCTOS
+======================================================= -->
+
+<div class="card">
+
+<div class="section-title">
+
+<h2>
+📦 Productos vendidos
+</h2>
+
+<span
+  id="productsCount"
+  class="count-badge">
+0
+</span>
+
+</div>
+
+<div
+  id="productBreakdown"
+  class="product-breakdown">
+
+<div class="loading">
+<div class="spinner"></div>
+Cargando productos...
+</div>
+
+</div>
+
+</div>
+
+<!-- =======================================================
+     CUENTAS
+======================================================= -->
+
+<div class="card">
+
+<div class="section-title">
+
+<h2>
+💰 Cuentas
+</h2>
+
+<span
+  id="salesCount"
+  class="count-badge">
+0
+</span>
+
+</div>
+
+<div
+  id="salesList"
+  class="sales-list">
+
+<div class="loading">
+<div class="spinner"></div>
+Cargando ventas...
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- =======================================================
+     MODAL PAGAR
+======================================================= -->
+
+<div
+  id="paymentModal"
+  class="modal"
+  aria-hidden="true">
+
+<div
+  class="modal-box">
+
+<div class="modal-header">
+
+<div>
+
+<h3>
+💳 Registrar pago
+</h3>
+
+<p>
+Selecciona el método de pago
+</p>
+
+</div>
+
+<button
+  type="button"
+  class="close-modal"
+  id="closePaymentModal">
+×
+</button>
+
+</div>
+
+<div class="modal-content">
+
+<div
+  id="paymentSaleInfo"
+  class="modal-warning">
+</div>
+
+<div
+  id="paymentMethodsList"
+  class="payment-list">
+</div>
+
+<div class="modal-actions">
+
+<button
+  type="button"
+  class="modal-button secondary"
+  id="cancelPaymentModal">
+Cancelar
+</button>
+
+<button
+  type="button"
+  class="modal-button primary"
+  id="confirmPaymentButton">
+Registrar pago
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- =======================================================
+     MODAL DETALLE
+======================================================= -->
+
+<div
+  id="detailModal"
+  class="modal"
+  aria-hidden="true">
+
+<div
+  class="modal-box">
+
+<div class="modal-header">
+
+<div>
+
+<h3>
+🧾 Detalle de venta
+</h3>
+
+<p>
+Información completa de la operación
+</p>
+
+</div>
+
+<button
+  type="button"
+  class="close-modal"
+  id="closeDetailModal">
+×
+</button>
+
+</div>
+
+<div
+  id="detailContent"
+  class="modal-content">
+</div>
+
+</div>
+
+</div>
+
+<!-- =======================================================
+     MODAL CANCELAR
+======================================================= -->
+
+<div
+  id="cancelModal"
+  class="modal"
+  aria-hidden="true">
+
+<div
+  class="modal-box">
+
+<div class="modal-header">
+
+<div>
+
+<h3>
+❌ Cancelar venta
+</h3>
+
+<p>
+Esta acción quedará registrada
+</p>
+
+</div>
+
+<button
+  type="button"
+  class="close-modal"
+  id="closeCancelModal">
+×
+</button>
+
+</div>
+
+<div class="modal-content">
+
+<div class="modal-danger">
+
+La cancelación de una venta puede afectar el inventario y el saldo de la cuenta.
+
+</div>
+
+<label
+  for="cancelReason"
+  style="display:block;font-weight:800;font-size:14px;margin-bottom:7px">
+Motivo de cancelación
+</label>
+
+<textarea
+  id="cancelReason"
+  placeholder="Escribe el motivo..."
+  style="width:100%;min-height:100px;padding:13px;border:2px solid #ddd;border-radius:11px;font-family:inherit;font-size:15px;resize:vertical"></textarea>
+
+<div class="modal-actions">
+
+<button
+  type="button"
+  class="modal-button secondary"
+  id="cancelCancelModal">
+Volver
+</button>
+
+<button
+  type="button"
+  class="modal-button danger"
+  id="confirmCancelButton">
+Cancelar venta
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div
+  id="toast"
+  class="toast">
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
+"use strict";
 
 /* =========================================================
-   SUPABASE
+   CONFIGURACIÓN
 ========================================================= */
 
 const SUPABASE_URL =
@@ -926,25 +1643,56 @@ const BUSINESS_IDS = {
 
 };
 
+let supabaseClient = null;
 
-/* =========================================================
-   ESTADO
-========================================================= */
+let currentBusiness =
+  new URLSearchParams(
+    window.location.search
+  ).get("business") || "BakeQuiri";
 
-let currentBusiness = "BakeQuiri";
+if(
+  !BUSINESS_IDS[currentBusiness]
+){
+  currentBusiness = "BakeQuiri";
+}
 
 let sales = [];
 let saleItems = [];
 let customers = [];
+let payments = [];
 
-let selectedSale = null;
+let currentFilter = "pending";
+let searchQuery = "";
+
+let selectedSaleForPayment = null;
+let selectedSaleForDetail = null;
+let selectedSaleForCancel = null;
 
 
 /* =========================================================
    HELPERS
 ========================================================= */
 
-function escapeHtml(value){
+function $(id){
+  return document.getElementById(id);
+}
+
+
+function money(value){
+
+  return "$" +
+    Number(value || 0).toLocaleString(
+      "es-MX",
+      {
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+      }
+    );
+
+}
+
+
+function escapeHTML(value){
 
   return String(value ?? "")
     .replaceAll("&","&amp;")
@@ -956,116 +1704,206 @@ function escapeHtml(value){
 }
 
 
-function money(value){
+function showStatus(
+  message,
+  type = "error"
+){
 
-  const number = Number(value || 0);
+  $("status").textContent =
+    message;
 
-  return number.toLocaleString("es-MX",{
-    style:"currency",
-    currency:"MXN"
-  });
+  $("status").className =
+    "status " + type;
 
 }
 
 
-function formatDate(value){
+function clearStatus(){
 
-  if(!value) return "Sin fecha";
+  $("status").textContent = "";
 
-  const date = new Date(value);
-
-  if(Number.isNaN(date.getTime())){
-    return value;
-  }
-
-  return date.toLocaleDateString(
-    "es-MX",
-    {
-      day:"2-digit",
-      month:"short",
-      year:"numeric"
-    }
-  );
+  $("status").className =
+    "status";
 
 }
 
 
 function showToast(message){
 
-  const toast = document.getElementById("toast");
+  const toast =
+    $("toast");
 
-  toast.textContent = message;
+  toast.textContent =
+    message;
 
-  toast.classList.add("show");
+  toast.classList.add(
+    "show"
+  );
 
-  clearTimeout(window.toastTimer);
+  clearTimeout(
+    window.__toastTimer
+  );
 
-  window.toastTimer = setTimeout(()=>{
-    toast.classList.remove("show");
-  },3000);
+  window.__toastTimer =
+    setTimeout(
+      () => {
+
+        toast.classList.remove(
+          "show"
+        );
+
+      },
+      2600
+    );
+
+}
+
+
+function formatDate(value){
+
+  if(!value){
+    return "Sin fecha";
+  }
+
+  const date =
+    new Date(value);
+
+  if(
+    Number.isNaN(
+      date.getTime()
+    )
+  ){
+
+    return String(value);
+
+  }
+
+  return date.toLocaleString(
+    "es-MX",
+    {
+      day:"2-digit",
+      month:"short",
+      year:"numeric",
+      hour:"2-digit",
+      minute:"2-digit"
+    }
+  );
 
 }
 
 
 /* =========================================================
-   SUPABASE FETCH
+   SUPABASE
+========================================================= */
+
+function initializeSupabase(){
+
+  if(
+    !window.supabase ||
+    typeof window.supabase.createClient !==
+      "function"
+  ){
+
+    throw new Error(
+      "No se pudo cargar la librería de Supabase."
+    );
+
+  }
+
+  if(!supabaseClient){
+
+    supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+      );
+
+  }
+
+}
+
+
+/* =========================================================
+   FETCH REST ROBUSTO
 ========================================================= */
 
 async function supabaseFetch(
   table,
-  options={}
+  options = {}
 ){
 
   const {
-    select="*",
-    filters=[],
-    order=null,
-    limit=null
+    select = "*",
+    filters = [],
+    order = null
   } = options;
 
   let url =
-    `${SUPABASE_URL}/rest/v1/${table}?select=${encodeURIComponent(select)}`;
+    SUPABASE_URL +
+    "/rest/v1/" +
+    table +
+    "?select=" +
+    encodeURIComponent(
+      select
+    );
 
-  filters.forEach(filter=>{
+  filters.forEach(
+    filter => {
 
-    url +=
-      `&${filter.column}=${filter.operator}.${encodeURIComponent(filter.value)}`;
+      url +=
+        "&" +
+        filter.column +
+        "=" +
+        filter.operator +
+        "." +
+        encodeURIComponent(
+          filter.value
+        );
 
-  });
+    }
+  );
 
   if(order){
 
     url +=
-      `&order=${encodeURIComponent(order)}`;
+      "&order=" +
+      encodeURIComponent(
+        order
+      );
 
   }
 
-  if(limit){
+  const response =
+    await fetch(
+      url,
+      {
+        method:"GET",
+        headers:{
+          "apikey":
+            SUPABASE_PUBLISHABLE_KEY,
 
-    url +=
-      `&limit=${limit}`;
+          "Authorization":
+            "Bearer " +
+            SUPABASE_PUBLISHABLE_KEY,
 
-  }
+          "Content-Type":
+            "application/json",
 
-  const response = await fetch(
-    url,
-    {
-      headers:{
-        "apikey":SUPABASE_PUBLISHABLE_KEY,
-        "Authorization":
-          `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
-        "Content-Type":"application/json"
+          "Accept":
+            "application/json"
+        }
       }
-    }
-  );
+    );
 
   if(!response.ok){
 
-    const text = await response.text();
+    const text =
+      await response.text();
 
     throw new Error(
       text ||
-      `HTTP ${response.status}`
+      "HTTP " +
+      response.status
     );
 
   }
@@ -1076,224 +1914,83 @@ async function supabaseFetch(
 
 
 /* =========================================================
-   SUPABASE MUTATION
-========================================================= */
-
-async function supabaseInsert(
-  table,
-  data
-){
-
-  const response = await fetch(
-    `${SUPABASE_URL}/rest/v1/${table}`,
-    {
-      method:"POST",
-
-      headers:{
-        "apikey":SUPABASE_PUBLISHABLE_KEY,
-        "Authorization":
-          `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
-        "Content-Type":"application/json",
-        "Prefer":"return=representation"
-      },
-
-      body:JSON.stringify(data)
-    }
-  );
-
-  if(!response.ok){
-
-    const text = await response.text();
-
-    throw new Error(
-      text ||
-      `HTTP ${response.status}`
-    );
-
-  }
-
-  return response.json();
-
-}
-
-
-async function supabaseUpdate(
-  table,
-  filters,
-  data
-){
-
-  let url =
-    `${SUPABASE_URL}/rest/v1/${table}?`;
-
-  filters.forEach((filter,index)=>{
-
-    if(index > 0){
-      url += "&";
-    }
-
-    url +=
-      `${filter.column}=${filter.operator}.${encodeURIComponent(filter.value)}`;
-
-  });
-
-  const response = await fetch(
-    url,
-    {
-      method:"PATCH",
-
-      headers:{
-        "apikey":SUPABASE_PUBLISHABLE_KEY,
-        "Authorization":
-          `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
-        "Content-Type":"application/json",
-        "Prefer":"return=representation"
-      },
-
-      body:JSON.stringify(data)
-    }
-  );
-
-  if(!response.ok){
-
-    const text = await response.text();
-
-    throw new Error(
-      text ||
-      `HTTP ${response.status}`
-    );
-
-  }
-
-  return response.json();
-
-}
-
-
-/* =========================================================
-   CLIENTES
+   CARGAR CLIENTES
 ========================================================= */
 
 async function loadCustomers(){
 
-  customers =
-    await supabaseFetch(
-      "customers",
-      {
-        select:"id,name,phone,notes"
-      }
+  try{
+
+    customers =
+      await supabaseFetch(
+        "customers",
+        {
+          select:
+            "id,name,phone,notes"
+        }
+      );
+
+  }
+
+  catch(error){
+
+    console.warn(
+      "No se pudieron cargar clientes:",
+      error
     );
 
-}
+    customers = [];
 
-
-function getCustomer(customerId){
-
-  if(!customerId){
-    return null;
   }
-
-  return customers.find(
-    customer =>
-      String(customer.id) === String(customerId)
-  ) || null;
-
-}
-
-
-function getCustomerName(customerId){
-
-  const customer =
-    getCustomer(customerId);
-
-  if(customer?.name){
-    return customer.name;
-  }
-
-  return "Cliente";
-
-}
-
-
-function getCustomerPhone(customerId){
-
-  const customer =
-    getCustomer(customerId);
-
-  return customer?.phone || "";
 
 }
 
 
 /* =========================================================
-   PRODUCTOS DE UNA VENTA
+   CARGAR MÉTODOS DE PAGO
 ========================================================= */
 
-function getSaleItems(saleId){
+async function loadPayments(){
 
-  if(!saleId){
-    return [];
+  try{
+
+    payments =
+      await supabaseFetch(
+        "payment_methods",
+        {
+          select:
+            "id,name,provider,active,business_id",
+          filters:[
+            {
+              column:"business_id",
+              operator:"eq",
+              value:
+                BUSINESS_IDS[
+                  currentBusiness
+                ]
+            },
+            {
+              column:"active",
+              operator:"eq",
+              value:"true"
+            }
+          ],
+          order:"name.asc"
+        }
+      );
+
   }
 
-  return saleItems.filter(
-    item =>
-      String(item.sale_id) === String(saleId)
-  );
+  catch(error){
 
-}
-
-
-function getSalePieces(saleId){
-
-  return getSaleItems(saleId)
-    .reduce(
-      (total,item)=>
-        total + Number(
-          item.quantity ??
-          item.qty ??
-          0
-        ),
-      0
+    console.warn(
+      "No se pudieron cargar métodos de pago:",
+      error
     );
 
-}
+    payments = [];
 
-
-function getItemDescription(item){
-
-  return (
-    item.description ||
-    item.product_name ||
-    item.name ||
-    "Producto"
-  );
-
-}
-
-
-/* =========================================================
-   CAMBIAR NEGOCIO
-========================================================= */
-
-function changeBusiness(business){
-
-  currentBusiness = business;
-
-  document
-    .getElementById("businessBakeQuiri")
-    .classList.toggle(
-      "active",
-      business === "BakeQuiri"
-    );
-
-  document
-    .getElementById("businessSpicyRoll")
-    .classList.toggle(
-      "active",
-      business === "SpicyRoll"
-    );
-
-  loadSales();
+  }
 
 }
 
@@ -1305,7 +2002,7 @@ function changeBusiness(business){
 async function loadSales(){
 
   const salesList =
-    document.getElementById("salesList");
+    $("salesList");
 
   salesList.innerHTML = `
     <div class="loading">
@@ -1317,36 +2014,23 @@ async function loadSales(){
   try{
 
     /*
-      CLIENTES
-
-      Si falla la consulta de clientes,
-      NO bloqueamos las ventas.
+      Los clientes son auxiliares.
+      Si fallan NO deben impedir
+      que aparezcan las ventas.
     */
 
-    try{
-
-      await loadCustomers();
-
-    }catch(error){
-
-      console.warn(
-        "No se pudieron cargar clientes:",
-        error
-      );
-
-      customers = [];
-
-    }
-
+    await loadCustomers();
 
     const businessId =
-      BUSINESS_IDS[currentBusiness];
+      BUSINESS_IDS[
+        currentBusiness
+      ];
 
 
     /*
-      VENTAS
-
-      Esta es la consulta principal.
+      PRIMERO cargamos ventas.
+      Esta consulta es independiente
+      de sale_items.
     */
 
     sales =
@@ -1363,20 +2047,16 @@ async function loadSales(){
             }
           ],
 
-          order:"created_at.desc"
+          order:
+            "created_at.desc"
         }
       );
 
 
     /*
-      PRODUCTOS
-
-      IMPORTANTE:
-      NO usamos created_at aquí porque
+      DESPUÉS cargamos productos.
+      No utilizamos created_at aquí porque
       sale_items puede no tener esa columna.
-
-      Si los productos fallan,
-      las ventas siguen funcionando.
     */
 
     try{
@@ -1389,10 +2069,12 @@ async function loadSales(){
           }
         );
 
-    }catch(error){
+    }
+
+    catch(error){
 
       console.warn(
-        "No se pudieron cargar productos:",
+        "No se pudieron cargar los productos de las ventas:",
         error
       );
 
@@ -1401,9 +2083,19 @@ async function loadSales(){
     }
 
 
-    renderSales();
+    /*
+      Métodos de pago.
+    */
 
-  }catch(error){
+    await loadPayments();
+
+
+    renderEverything();
+
+
+  }
+
+  catch(error){
 
     console.error(
       "ERROR REAL CARGANDO VENTAS:",
@@ -1411,60 +2103,42 @@ async function loadSales(){
     );
 
     salesList.innerHTML = `
-      <div class="sale-card">
 
-        <div class="empty-state">
+      <div class="empty-state">
 
-          <div style="
-            font-size:42px;
-            margin-bottom:12px;
-          ">
-            ⚠️
-          </div>
-
-          <strong style="
-            font-size:17px;
-          ">
-            No fue posible cargar las ventas
-          </strong>
-
-          <br><br>
-
-          <span style="
-            display:block;
-            font-size:12px;
-            line-height:1.5;
-            color:#8e8e93;
-            word-break:break-word;
-            background:#f2f2f7;
-            padding:12px;
-            border-radius:12px;
-            text-align:left;
-          ">
-            ${escapeHtml(
-              error?.message ||
-              "Error desconocido"
-            )}
-          </span>
-
-          <br>
-
-          <button
-            class="action-button primary"
-            type="button"
-            style="
-              width:100%;
-              height:46px;
-              border-radius:14px;
-            "
-            onclick="loadSales()"
-          >
-            Intentar nuevamente
-          </button>
-
+        <div class="empty-icon">
+          ⚠️
         </div>
 
+        <strong>
+          No fue posible cargar las ventas
+        </strong>
+
+        <br><br>
+
+        <span style="
+          font-size:12px;
+          color:#8e8e93;
+          word-break:break-word;
+          display:block;
+          margin-bottom:18px
+        ">
+          ${escapeHTML(
+            error?.message ||
+            "Error desconocido"
+          )}
+        </span>
+
+        <button
+          type="button"
+          class="action-btn detail"
+          style="padding:0 20px"
+          onclick="loadSales()">
+          Intentar nuevamente
+        </button>
+
       </div>
+
     `;
 
     showToast(
@@ -1477,404 +2151,452 @@ async function loadSales(){
 
 
 /* =========================================================
-   FILTROS
+   NORMALIZAR DATOS
 ========================================================= */
 
-function filterSales(){
+function getCustomer(
+  customerId
+){
 
-  const search =
-    (
-      document.getElementById(
-        "searchInput"
-      ).value || ""
-    )
-    .trim()
-    .toLowerCase();
+  if(!customerId){
+    return null;
+  }
 
-  const status =
-    document.getElementById(
-      "statusFilter"
-    ).value;
-
-  const dateFilter =
-    document.getElementById(
-      "dateFilter"
-    ).value;
-
-  const sort =
-    document.getElementById(
-      "sortFilter"
-    ).value;
-
-
-  let result =
-    sales.filter(sale=>{
-
-      const name =
-        getCustomerName(
-          sale.customer_id
-        ).toLowerCase();
-
-      const phone =
-        getCustomerPhone(
-          sale.customer_id
-        ).toLowerCase();
-
-      const id =
-        String(
-          sale.id || ""
-        ).toLowerCase();
-
-
-      const matchesSearch =
-        !search ||
-        name.includes(search) ||
-        phone.includes(search) ||
-        id.includes(search);
-
-
-      if(!matchesSearch){
-        return false;
-      }
-
-
-      const saleStatus =
-        String(
-          sale.status || ""
-        ).toLowerCase();
-
-
-      if(
-        status !== "all" &&
-        saleStatus !== status
-      ){
-
-        return false;
-
-      }
-
-
-      if(dateFilter !== "all"){
-
-        const saleDate =
-          new Date(
-            sale.created_at ||
-            sale.sale_date
-          );
-
-        const now =
-          new Date();
-
-        const diff =
-          now.getTime() -
-          saleDate.getTime();
-
-        const day =
-          24 * 60 * 60 * 1000;
-
-
-        if(
-          dateFilter === "today" &&
-          saleDate.toDateString() !==
-          now.toDateString()
-        ){
-
-          return false;
-
-        }
-
-
-        if(
-          dateFilter === "7days" &&
-          diff > 7 * day
-        ){
-
-          return false;
-
-        }
-
-
-        if(
-          dateFilter === "30days" &&
-          diff > 30 * day
-        ){
-
-          return false;
-
-        }
-
-      }
-
-
-      return true;
-
-    });
-
-
-  result.sort((a,b)=>{
-
-    if(sort === "highest"){
-
-      return Number(b.total || 0) -
-             Number(a.total || 0);
-
-    }
-
-    if(sort === "lowest"){
-
-      return Number(a.total || 0) -
-             Number(b.total || 0);
-
-    }
-
-
-    const dateA =
-      new Date(
-        a.created_at ||
-        a.sale_date ||
-        0
-      ).getTime();
-
-    const dateB =
-      new Date(
-        b.created_at ||
-        b.sale_date ||
-        0
-      ).getTime();
-
-
-    if(sort === "oldest"){
-      return dateA - dateB;
-    }
-
-    return dateB - dateA;
-
-  });
-
-
-  return result;
+  return customers.find(
+    customer =>
+      String(customer.id) ===
+      String(customerId)
+  ) || null;
 
 }
 
 
-/* =========================================================
-   RENDER SALES
-========================================================= */
+function getCustomerName(
+  sale
+){
 
-function renderSales(){
-
-  const result =
-    filterSales();
-
-
-  const salesList =
-    document.getElementById(
-      "salesList"
+  const customer =
+    getCustomer(
+      sale.customer_id
     );
 
+  if(customer?.name){
 
-  /*
-    SUMMARY
-  */
-
-  const activeSales =
-    result.filter(
-      sale =>
-        String(
-          sale.status || ""
-        ).toLowerCase()
-        !== "cancelled"
-    );
-
-
-  const totalPieces =
-    activeSales.reduce(
-      (total,sale)=>
-        total +
-        getSalePieces(sale.id),
-      0
-    );
-
-
-  const totalSales =
-    activeSales.reduce(
-      (total,sale)=>
-        total +
-        Number(sale.total || 0),
-      0
-    );
-
-
-  const totalBalance =
-    activeSales.reduce(
-      (total,sale)=>
-        total +
-        Number(sale.balance || 0),
-      0
-    );
-
-
-  const pendingAccounts =
-    activeSales.filter(
-      sale =>
-        Number(sale.balance || 0) > 0
-    ).length;
-
-
-  document.getElementById(
-    "summaryAccounts"
-  ).textContent =
-    pendingAccounts;
-
-
-  document.getElementById(
-    "summaryPieces"
-  ).textContent =
-    totalPieces;
-
-
-  document.getElementById(
-    "summarySales"
-  ).textContent =
-    money(totalSales);
-
-
-  document.getElementById(
-    "summaryBalance"
-  ).textContent =
-    money(totalBalance);
-
-
-  document.getElementById(
-    "salesCount"
-  ).textContent =
-    `${result.length} ${
-      result.length === 1
-        ? "cuenta"
-        : "cuentas"
-    }`;
-
-
-  renderProductsBreakdown(
-    activeSales
-  );
-
-
-  if(!result.length){
-
-    salesList.innerHTML = `
-      <div class="sale-card">
-        <div class="empty-state">
-
-          <div style="
-            font-size:40px;
-            margin-bottom:10px;
-          ">
-            🧾
-          </div>
-
-          No hay ventas para mostrar.
-
-        </div>
-      </div>
-    `;
-
-    return;
+    return customer.name;
 
   }
 
+  /*
+    Algunos registros antiguos
+    pueden tener nombre directo.
+  */
 
-  salesList.innerHTML =
-    result
-      .map(renderSaleCard)
-      .join("");
+  if(
+    sale.customer_name
+  ){
+
+    return sale.customer_name;
+
+  }
+
+  return "Consumidor general";
+
+}
+
+
+function getCustomerPhone(
+  sale
+){
+
+  const customer =
+    getCustomer(
+      sale.customer_id
+    );
+
+  return (
+    customer?.phone ||
+    sale.customer_phone ||
+    ""
+  );
+
+}
+
+
+function getSaleItems(
+  saleId
+){
+
+  return saleItems.filter(
+    item =>
+      String(item.sale_id) ===
+      String(saleId)
+  );
+
+}
+
+
+function getSaleQuantity(
+  saleId
+){
+
+  return getSaleItems(
+    saleId
+  ).reduce(
+    (
+      total,
+      item
+    ) =>
+      total +
+      Number(
+        item.quantity || 0
+      ),
+    0
+  );
+
+}
+
+
+function getSaleBalance(
+  sale
+){
+
+  if(
+    sale.status ===
+    "cancelled"
+  ){
+
+    return 0;
+
+  }
+
+  return Number(
+    sale.balance ??
+    sale.total ??
+    0
+  );
+
+}
+
+
+function getSalePaid(
+  sale
+){
+
+  const total =
+    Number(
+      sale.total || 0
+    );
+
+  const balance =
+    getSaleBalance(
+      sale
+    );
+
+  return Math.max(
+    0,
+    total - balance
+  );
+
+}
+
+
+function isCancelled(
+  sale
+){
+
+  return (
+    sale.status ===
+    "cancelled" ||
+    sale.cancelled === true
+  );
+
+}
+
+
+function isPaid(
+  sale
+){
+
+  return (
+    !isCancelled(sale) &&
+    (
+      sale.status ===
+      "paid" ||
+      getSaleBalance(sale) <= 0
+    )
+  );
 
 }
 
 
 /* =========================================================
-   RESUMEN DE PRODUCTOS
+   FILTRO
 ========================================================= */
 
-function renderProductsBreakdown(
-  activeSales
+function saleMatchesSearch(
+  sale
 ){
 
-  const container =
-    document.getElementById(
-      "productsBreakdown"
+  if(!searchQuery){
+    return true;
+  }
+
+  const customer =
+    getCustomerName(
+      sale
+    ).toLowerCase();
+
+  const phone =
+    getCustomerPhone(
+      sale
+    ).toLowerCase();
+
+  const id =
+    String(
+      sale.id || ""
+    ).toLowerCase();
+
+  const items =
+    getSaleItems(
+      sale.id
+    )
+    .map(
+      item =>
+        String(
+          item.description ||
+          ""
+        ).toLowerCase()
+    )
+    .join(" ");
+
+  return(
+    customer.includes(
+      searchQuery
+    ) ||
+    phone.includes(
+      searchQuery
+    ) ||
+    id.includes(
+      searchQuery
+    ) ||
+    items.includes(
+      searchQuery
+    )
+  );
+
+}
+
+
+function saleMatchesFilter(
+  sale
+){
+
+  if(
+    currentFilter ===
+    "cancelled"
+  ){
+
+    return isCancelled(
+      sale
     );
 
+  }
 
-  const counts = {};
+  if(
+    currentFilter ===
+    "paid"
+  ){
 
+    return isPaid(
+      sale
+    );
 
-  activeSales.forEach(sale=>{
+  }
 
-    const items =
-      getSaleItems(
-        sale.id
-      );
+  if(
+    currentFilter ===
+    "pending"
+  ){
 
+    return (
+      !isCancelled(sale) &&
+      !isPaid(sale) &&
+      getSaleBalance(sale) > 0
+    );
 
-    items.forEach(item=>{
+  }
 
-      const name =
-        getItemDescription(item);
+  return true;
 
-
-      const quantity =
-        Number(
-          item.quantity ??
-          item.qty ??
-          0
-        );
-
-
-      if(!counts[name]){
-        counts[name] = 0;
-      }
-
-
-      counts[name] +=
-        quantity;
-
-    });
-
-  });
+}
 
 
-  const entries =
-    Object.entries(counts)
-      .sort(
-        (a,b)=>b[1]-a[1]
-      );
+/* =========================================================
+   RESUMEN
+========================================================= */
 
+function renderSummary(){
 
-  const totalPieces =
-    entries.reduce(
-      (sum,item)=>
-        sum + item[1],
+  const activeSales =
+    sales.filter(
+      sale =>
+        !isCancelled(sale)
+    );
+
+  const pendingSales =
+    activeSales.filter(
+      sale =>
+        getSaleBalance(sale) > 0
+    );
+
+  const pieces =
+    activeSales.reduce(
+      (
+        total,
+        sale
+      ) =>
+        total +
+        getSaleQuantity(
+          sale.id
+        ),
+      0
+    );
+
+  const balance =
+    pendingSales.reduce(
+      (
+        total,
+        sale
+      ) =>
+        total +
+        getSaleBalance(
+          sale
+        ),
       0
     );
 
 
-  document.getElementById(
-    "productsCount"
-  ).textContent =
-    `${totalPieces} ${
-      totalPieces === 1
-        ? "pieza"
-        : "piezas"
-    }`;
+  $("summaryAccounts").textContent =
+    pendingSales.length;
 
 
-  if(!entries.length){
+  $("summaryPieces").textContent =
+    pieces;
+
+
+  $("summarySales").textContent =
+    activeSales.length;
+
+
+  $("summaryBalance").textContent =
+    money(balance);
+
+}
+
+
+/* =========================================================
+   PRODUCTOS VENDIDOS
+========================================================= */
+
+function renderProductBreakdown(){
+
+  const container =
+    $("productBreakdown");
+
+  const map =
+    new Map();
+
+  const activeSales =
+    sales.filter(
+      sale =>
+        !isCancelled(sale)
+    );
+
+
+  activeSales.forEach(
+    sale => {
+
+      const items =
+        getSaleItems(
+          sale.id
+        );
+
+      items.forEach(
+        item => {
+
+          const name =
+            item.description ||
+            item.product_name ||
+            "Producto";
+
+          const key =
+            String(name)
+              .trim()
+              .toLowerCase();
+
+
+          if(!map.has(key)){
+
+            map.set(
+              key,
+              {
+                name,
+                quantity:0,
+                sales:0
+              }
+            );
+
+          }
+
+
+          const record =
+            map.get(key);
+
+
+          record.quantity +=
+            Number(
+              item.quantity || 0
+            );
+
+          record.sales++;
+
+        }
+      );
+
+    }
+  );
+
+
+  const products =
+    Array.from(
+      map.values()
+    )
+    .sort(
+      (a,b) =>
+        b.quantity -
+        a.quantity
+    );
+
+
+  $("productsCount").textContent =
+    products.length;
+
+
+  if(!products.length){
 
     container.innerHTML = `
-      <div class="empty-state">
-        No hay productos registrados.
+
+      <div class="empty-state"
+           style="grid-column:1/-1">
+
+        <div class="empty-icon">
+          📦
+        </div>
+
+        Todavía no hay productos vendidos.
+
       </div>
+
     `;
 
     return;
@@ -1883,18 +2605,30 @@ function renderProductsBreakdown(
 
 
   container.innerHTML =
-    entries
+    products
       .map(
-        ([name,quantity])=>`
+        product => `
 
-          <div class="product-row">
+          <div class="product-stat">
 
-            <div class="product-name">
-              ${escapeHtml(name)}
+            <div>
+
+              <div class="product-stat-name">
+                ${escapeHTML(
+                  product.name
+                )}
+              </div>
+
+              <div class="product-stat-sales">
+                Registrado en
+                ${product.sales}
+                operación${product.sales === 1 ? "" : "es"}
+              </div>
+
             </div>
 
-            <div class="product-qty">
-              ${quantity}
+            <div class="product-stat-qty">
+              ${product.quantity}
             </div>
 
           </div>
@@ -1907,19 +2641,573 @@ function renderProductsBreakdown(
 
 
 /* =========================================================
+   RENDER VENTAS
+========================================================= */
+
+function renderSales(){
+
+  const container =
+    $("salesList");
+
+
+  let filtered =
+    sales
+      .filter(
+        sale =>
+          saleMatchesFilter(
+            sale
+          )
+      )
+      .filter(
+        sale =>
+          saleMatchesSearch(
+            sale
+          )
+      );
+
+
+  /*
+    Pendientes primero:
+    más recientes primero.
+  */
+
+  filtered.sort(
+    (a,b) => {
+
+      const aTime =
+        new Date(
+          a.created_at ||
+          a.sale_date ||
+          0
+        ).getTime();
+
+      const bTime =
+        new Date(
+          b.created_at ||
+          b.sale_date ||
+          0
+        ).getTime();
+
+      return bTime - aTime;
+
+    }
+  );
+
+
+  $("salesCount").textContent =
+    filtered.length;
+
+
+  if(!filtered.length){
+
+    container.innerHTML = `
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          ${
+            currentFilter === "pending"
+              ? "🎉"
+              : "🧾"
+          }
+        </div>
+
+        <strong>
+          ${
+            currentFilter === "pending"
+              ? "No hay cuentas pendientes"
+              : "No encontramos ventas"
+          }
+        </strong>
+
+        <br>
+
+        <span style="font-size:13px">
+          ${
+            searchQuery
+              ? "Prueba con otra búsqueda."
+              : ""
+          }
+        </span>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    filtered
+      .map(
+        sale =>
+          renderSaleCard(
+            sale
+          )
+      )
+      .join("");
+
+
+  attachSaleEvents();
+
+}
+
+
+/* =========================================================
    TARJETA DE VENTA
 ========================================================= */
 
-function renderSaleCard(sale){
+function renderSaleCard(
+  sale
+){
+
+  const cancelled =
+    isCancelled(
+      sale
+    );
+
+  const paid =
+    isPaid(
+      sale
+    );
+
+  const balance =
+    getSaleBalance(
+      sale
+    );
+
+  const total =
+    Number(
+      sale.total || 0
+    );
+
+  const paidAmount =
+    getSalePaid(
+      sale
+    );
+
+  const quantity =
+    getSaleQuantity(
+      sale.id
+    );
 
   const customerName =
     getCustomerName(
-      sale.customer_id
+      sale
     );
 
-  const customerPhone =
+  const phone =
     getCustomerPhone(
-      sale.customer_id
+      sale
+    );
+
+  const items =
+    getSaleItems(
+      sale.id
+    );
+
+
+  let badgeClass =
+    "pending";
+
+  let badgeText =
+    "PENDIENTE";
+
+
+  if(cancelled){
+
+    badgeClass =
+      "cancelled";
+
+    badgeText =
+      "CANCELADA";
+
+  }
+
+  else if(paid){
+
+    badgeClass =
+      "paid";
+
+    badgeText =
+      "PAGADA";
+
+  }
+
+
+  const productsHTML =
+    items.length
+      ? items
+          .map(
+            item => `
+
+              <div class="sale-product-row">
+
+                <div class="sale-product-info">
+
+                  <div class="sale-product-name">
+                    ${escapeHTML(
+                      item.description ||
+                      "Producto"
+                    )}
+                  </div>
+
+                  <div class="sale-product-meta">
+                    ${Number(
+                      item.quantity || 0
+                    )}
+                    ×
+                    ${money(
+                      item.unit_price
+                    )}
+                  </div>
+
+                </div>
+
+                <div class="sale-product-subtotal">
+                  ${money(
+                    item.subtotal ??
+                    (
+                      Number(
+                        item.quantity || 0
+                      ) *
+                      Number(
+                        item.unit_price || 0
+                      )
+                    )
+                  )}
+                </div>
+
+              </div>
+
+            `
+          )
+          .join("")
+      : `
+          <div class="no-products">
+            No hay productos registrados para esta venta.
+          </div>
+        `;
+
+
+  return `
+
+    <article
+      class="sale-card ${
+        cancelled
+          ? "cancelled"
+          : paid
+            ? "paid"
+            : "pending"
+      }"
+      data-sale-id="${escapeHTML(
+        sale.id
+      )}">
+
+      <div class="sale-header">
+
+        <div class="sale-customer">
+
+          <div class="customer-name">
+            👤 ${escapeHTML(
+              customerName
+            )}
+          </div>
+
+          ${
+            phone
+              ? `
+                <div class="customer-phone">
+                  📱 ${escapeHTML(
+                    phone
+                  )}
+                </div>
+              `
+              : ""
+          }
+
+          <div class="sale-date">
+            ${formatDate(
+              sale.created_at ||
+              sale.sale_date
+            )}
+          </div>
+
+        </div>
+
+        <div class="sale-total">
+
+          <div class="sale-total-label">
+            TOTAL
+          </div>
+
+          <div class="sale-total-value">
+            ${money(total)}
+          </div>
+
+          <div class="status-badge ${badgeClass}">
+            ${badgeText}
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="sale-body">
+
+        <div class="sale-financial">
+
+          <div class="financial-item">
+
+            <div class="financial-label">
+              PIEZAS
+            </div>
+
+            <div class="financial-value">
+              ${quantity}
+            </div>
+
+          </div>
+
+          <div class="financial-item">
+
+            <div class="financial-label">
+              PAGADO
+            </div>
+
+            <div class="financial-value paid">
+              ${money(
+                paidAmount
+              )}
+            </div>
+
+          </div>
+
+          <div class="financial-item">
+
+            <div class="financial-label">
+              SALDO
+            </div>
+
+            <div class="financial-value balance">
+              ${money(
+                balance
+              )}
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="sale-products">
+
+          <div class="sale-products-title">
+            📦 Productos de la venta
+          </div>
+
+          ${productsHTML}
+
+        </div>
+
+
+        <div class="sale-actions">
+
+          ${
+            !cancelled && balance > 0
+              ? `
+                <button
+                  type="button"
+                  class="action-btn pay"
+                  data-action="pay"
+                  data-id="${escapeHTML(
+                    sale.id
+                  )}">
+                  💳 Pagar
+                </button>
+              `
+              : `
+                <button
+                  type="button"
+                  class="action-btn pay"
+                  disabled>
+                  ${
+                    cancelled
+                      ? "Cancelada"
+                      : "✓ Pagada"
+                  }
+                </button>
+              `
+          }
+
+
+          ${
+            phone && !cancelled
+              ? `
+                <button
+                  type="button"
+                  class="action-btn whatsapp"
+                  data-action="whatsapp"
+                  data-id="${escapeHTML(
+                    sale.id
+                  )}">
+                  📱 WhatsApp
+                </button>
+              `
+              : `
+                <button
+                  type="button"
+                  class="action-btn whatsapp"
+                  disabled>
+                  📱 WhatsApp
+                </button>
+              `
+          }
+
+
+          <button
+            type="button"
+            class="action-btn detail"
+            data-action="detail"
+            data-id="${escapeHTML(
+              sale.id
+            )}">
+            🧾 Ver detalle
+          </button>
+
+
+          ${
+            !cancelled
+              ? `
+                <button
+                  type="button"
+                  class="action-btn cancel"
+                  data-action="cancel"
+                  data-id="${escapeHTML(
+                    sale.id
+                  )}">
+                  ❌ Cancelar
+                </button>
+              `
+              : ""
+          }
+
+        </div>
+
+      </div>
+
+    </article>
+
+  `;
+
+}
+
+
+/* =========================================================
+   EVENTOS DE VENTAS
+========================================================= */
+
+function attachSaleEvents(){
+
+  document
+    .querySelectorAll(
+      "[data-action]"
+    )
+    .forEach(
+      button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            const action =
+              button.dataset.action;
+
+            const id =
+              button.dataset.id;
+
+            const sale =
+              sales.find(
+                item =>
+                  String(item.id) ===
+                  String(id)
+              );
+
+            if(!sale){
+              return;
+            }
+
+
+            if(
+              action === "pay"
+            ){
+
+              openPaymentModal(
+                sale
+              );
+
+            }
+
+
+            if(
+              action === "detail"
+            ){
+
+              openDetailModal(
+                sale
+              );
+
+            }
+
+
+            if(
+              action === "cancel"
+            ){
+
+              openCancelModal(
+                sale
+              );
+
+            }
+
+
+            if(
+              action === "whatsapp"
+            ){
+
+              sendWhatsApp(
+                sale
+              );
+
+            }
+
+          }
+        );
+
+      }
+    );
+
+}
+
+
+/* =========================================================
+   MODAL DETALLE
+========================================================= */
+
+function openDetailModal(
+  sale
+){
+
+  selectedSaleForDetail =
+    sale;
+
+
+  const items =
+    getSaleItems(
+      sale.id
     );
 
 
@@ -1930,539 +3218,175 @@ function renderSaleCard(sale){
 
 
   const balance =
-    Number(
-      sale.balance || 0
+    getSaleBalance(
+      sale
     );
 
 
-  const status =
-    String(
-      sale.status || "open"
-    ).toLowerCase();
-
-
-  const pieces =
-    getSalePieces(
-      sale.id
-    );
-
-
-  const items =
-    getSaleItems(
-      sale.id
-    );
-
-
-  let statusClass =
-    "open";
-
-  let statusText =
-    "Pendiente";
-
-
-  if(status === "paid"){
-
-    statusClass =
-      "paid";
-
-    statusText =
-      "Pagada";
-
-  }
-
-
-  if(status === "cancelled"){
-
-    statusClass =
-      "cancelled";
-
-    statusText =
-      "Cancelada";
-
-  }
-
-
-  let productsHtml = "";
-
-
-  if(items.length){
-
-    productsHtml = `
-
-      <div class="products-detail">
-
-        <div class="products-detail-title">
-          Productos de la venta
-        </div>
-
-        ${items.map(item=>{
-
-          const quantity =
-            Number(
-              item.quantity ??
-              item.qty ??
-              0
-            );
-
-
-          const price =
-            Number(
-              item.unit_price ??
-              item.price ??
-              0
-            );
-
-
-          return `
-
-            <div class="sale-product">
-
-              <div class="sale-product-name">
-                ${escapeHtml(
-                  getItemDescription(item)
-                )}
-              </div>
-
-              <div class="sale-product-qty">
-                ×${quantity}
-              </div>
-
-              <div class="sale-product-price">
-                ${money(
-                  Number(
-                    item.subtotal ??
-                    quantity * price
-                  )
-                )}
-              </div>
-
-            </div>
-
-          `;
-
-        }).join("")}
-
-      </div>
-
-    `;
-
-  }else{
-
-    productsHtml = `
-
-      <div class="products-detail">
-
-        <div class="products-detail-title">
-          Productos de la venta
-        </div>
-
-        <div style="
-          color:#8e8e93;
-          font-size:13px;
-        ">
-          No hay productos registrados para esta venta.
-        </div>
-
-      </div>
-
-    `;
-
-  }
-
-
-  return `
-
-    <div
-      class="sale-card ${
-        status === "cancelled"
-          ? "cancelled-card"
-          : ""
-      }"
-    >
-
-      <div class="sale-main">
-
-        <div class="sale-top">
-
-          <div>
-
-            <div class="customer-name">
-              ${escapeHtml(
-                customerName
-              )}
-            </div>
-
-            <div class="sale-date">
-              ${formatDate(
-                sale.created_at ||
-                sale.sale_date
-              )}
-            </div>
-
-            <div class="status ${statusClass}">
-              ${statusText}
-            </div>
-
-          </div>
-
-
-          <div class="sale-total">
-
-            <strong>
-              ${money(total)}
-            </strong>
-
-            <span>
-              Total
-            </span>
-
-          </div>
-
-        </div>
-
-
-        <div class="sale-info">
-
-          <div class="info-box">
-
-            <div class="info-label">
-              Piezas
-            </div>
-
-            <div class="info-value">
-              ${pieces}
-            </div>
-
-          </div>
-
-
-          <div class="info-box">
-
-            <div class="info-label">
-              Pagado
-            </div>
-
-            <div class="info-value">
-              ${money(
-                total - balance
-              )}
-            </div>
-
-          </div>
-
-
-          <div class="info-box">
-
-            <div class="info-label">
-              Saldo
-            </div>
-
-            <div class="
-              info-value
-              ${
-                balance > 0
-                  ? "balance-positive"
-                  : "balance-zero"
-              }
-            ">
-
-              ${money(balance)}
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        ${productsHtml}
-
-      </div>
-
-
-      <div class="sale-actions">
-
-        ${
-          balance > 0 &&
-          status !== "cancelled"
-
-          ?
-
-          `
-          <button
-            class="action-button success"
-            onclick="openPaymentModal('${sale.id}')"
-          >
-            💳 Pagar
-          </button>
-          `
-
-          :
-
-          `
-          <button
-            class="action-button"
-            onclick="openDetailModal('${sale.id}')"
-          >
-            👁 Detalle
-          </button>
-          `
-        }
-
-
-        ${
-          customerPhone &&
-          status !== "cancelled"
-
-          ?
-
-          `
-          <button
-            class="action-button whatsapp"
-            onclick="sendWhatsApp('${sale.id}')"
-          >
-            WhatsApp
-          </button>
-          `
-
-          :
-
-          `
-          <button
-            class="action-button"
-            onclick="openDetailModal('${sale.id}')"
-          >
-            Detalle
-          </button>
-          `
-        }
-
-
-        ${
-          status !== "cancelled"
-
-          ?
-
-          `
-          <button
-            class="action-button danger"
-            onclick="openCancelModal('${sale.id}')"
-          >
-            Cancelar
-          </button>
-          `
-
-          :
-
-          `
-          <button
-            class="action-button"
-            onclick="openDetailModal('${sale.id}')"
-          >
-            Ver
-          </button>
-          `
-        }
-
-      </div>
-
-    </div>
-
-  `;
-
-}
-
-
-/* =========================================================
-   DETALLE
-========================================================= */
-
-function openDetailModal(
-  saleId
-){
-
-  selectedSale =
-    sales.find(
-      sale =>
-        String(sale.id) ===
-        String(saleId)
-    );
-
-
-  if(!selectedSale){
-    return;
-  }
-
-
-  const items =
-    getSaleItems(
-      selectedSale.id
+  const paid =
+    getSalePaid(
+      sale
     );
 
 
   const customer =
-    getCustomer(
-      selectedSale.customer_id
+    getCustomerName(
+      sale
     );
 
 
-  const total =
-    Number(
-      selectedSale.total || 0
-    );
+  $("detailContent").innerHTML = `
 
+    <div class="detail-list">
 
-  const balance =
-    Number(
-      selectedSale.balance || 0
-    );
+      <div class="detail-row">
 
-
-  document.getElementById(
-    "detailContent"
-  ).innerHTML = `
-
-    <div class="info-box" style="margin-bottom:10px">
-
-      <div class="info-label">
-        Cliente
-      </div>
-
-      <div class="info-value">
-        ${escapeHtml(
-          customer?.name ||
-          "Cliente"
-        )}
-      </div>
-
-    </div>
-
-
-    <div class="info-box" style="margin-bottom:10px">
-
-      <div class="info-label">
-        Teléfono
-      </div>
-
-      <div class="info-value">
-        ${escapeHtml(
-          customer?.phone ||
-          "Sin teléfono"
-        )}
-      </div>
-
-    </div>
-
-
-    <div class="info-box" style="margin-bottom:10px">
-
-      <div class="info-label">
-        Total
-      </div>
-
-      <div class="info-value">
-        ${money(total)}
-      </div>
-
-    </div>
-
-
-    <div class="info-box" style="margin-bottom:10px">
-
-      <div class="info-label">
-        Saldo pendiente
-      </div>
-
-      <div class="info-value ${
-        balance > 0
-          ? "balance-positive"
-          : "balance-zero"
-      }">
-
-        ${money(balance)}
-
-      </div>
-
-    </div>
-
-
-    <div class="products-detail">
-
-      <div class="products-detail-title">
-        Productos
-      </div>
-
-      ${
-        items.length
-
-        ?
-
-        items.map(item=>{
-
-          const quantity =
-            Number(
-              item.quantity ??
-              item.qty ??
-              0
-            );
-
-
-          const price =
-            Number(
-              item.unit_price ??
-              item.price ??
-              0
-            );
-
-
-          return `
-
-            <div class="sale-product">
-
-              <div class="sale-product-name">
-                ${escapeHtml(
-                  getItemDescription(item)
-                )}
-              </div>
-
-              <div class="sale-product-qty">
-                ×${quantity}
-              </div>
-
-              <div class="sale-product-price">
-                ${money(
-                  Number(
-                    item.subtotal ??
-                    quantity * price
-                  )
-                )}
-              </div>
-
-            </div>
-
-          `;
-
-        }).join("")
-
-        :
-
-        `
-        <div style="
-          color:#8e8e93;
-          font-size:13px;
-        ">
-          No hay productos registrados para esta venta.
+        <div class="detail-label">
+          Cliente
         </div>
-        `
 
-      }
+        <div class="detail-value">
+          ${escapeHTML(
+            customer
+          )}
+        </div>
+
+      </div>
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          Fecha
+        </div>
+
+        <div class="detail-value">
+          ${formatDate(
+            sale.created_at ||
+            sale.sale_date
+          )}
+        </div>
+
+      </div>
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          Total
+        </div>
+
+        <div class="detail-value">
+          ${money(total)}
+        </div>
+
+      </div>
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          Pagado
+        </div>
+
+        <div class="detail-value"
+             style="color:#15803d">
+          ${money(paid)}
+        </div>
+
+      </div>
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          Saldo
+        </div>
+
+        <div class="detail-value"
+             style="color:#b45309">
+          ${money(balance)}
+        </div>
+
+      </div>
 
     </div>
+
+    <div style="
+      margin-top:20px;
+      font-size:16px;
+      font-weight:850;
+      margin-bottom:10px
+    ">
+      📦 Productos
+    </div>
+
+    ${
+      items.length
+        ? items
+            .map(
+              item => `
+
+                <div class="sale-product-row">
+
+                  <div class="sale-product-info">
+
+                    <div class="sale-product-name">
+                      ${escapeHTML(
+                        item.description ||
+                        "Producto"
+                      )}
+                    </div>
+
+                    <div class="sale-product-meta">
+                      ${Number(
+                        item.quantity || 0
+                      )}
+                      ×
+                      ${money(
+                        item.unit_price
+                      )}
+                    </div>
+
+                  </div>
+
+                  <div class="sale-product-subtotal">
+                    ${money(
+                      item.subtotal
+                    )}
+                  </div>
+
+                </div>
+
+              `
+            )
+            .join("")
+        : `
+            <div class="no-products">
+              No hay productos registrados para esta venta.
+            </div>
+          `
+    }
+
+    ${
+      sale.notes
+        ? `
+          <div style="
+            margin-top:18px;
+            padding:13px;
+            background:#f3f4f6;
+            border-radius:11px;
+            font-size:13px
+          ">
+            <strong>Notas:</strong><br>
+            ${escapeHTML(
+              sale.notes
+            )}
+          </div>
+        `
+        : ""
+    }
 
   `;
 
 
-  openModal(
+  showModal(
     "detailModal"
   );
 
@@ -2470,75 +3394,111 @@ function openDetailModal(
 
 
 /* =========================================================
-   PAGO
+   MODAL PAGOS
 ========================================================= */
 
 function openPaymentModal(
-  saleId
+  sale
 ){
 
-  selectedSale =
-    sales.find(
-      sale =>
-        String(sale.id) ===
-        String(saleId)
-    );
+  selectedSaleForPayment =
+    sale;
 
 
-  if(!selectedSale){
-    return;
+  $("paymentSaleInfo").innerHTML =
+
+    "<strong>" +
+    escapeHTML(
+      getCustomerName(
+        sale
+      )
+    ) +
+    "</strong><br>" +
+
+    "Saldo pendiente: <strong>" +
+    money(
+      getSaleBalance(
+        sale
+      )
+    ) +
+    "</strong>";
+
+
+  const container =
+    $("paymentMethodsList");
+
+
+  if(!payments.length){
+
+    container.innerHTML = `
+      <div class="empty-state">
+        No hay métodos de pago disponibles.
+      </div>
+    `;
+
+  }
+
+  else{
+
+    container.innerHTML =
+      payments
+        .map(
+          payment => `
+
+            <button
+              type="button"
+              class="payment-option"
+              data-payment-id="${escapeHTML(
+                payment.id
+              )}">
+              💳
+              ${escapeHTML(
+                payment.name
+              )}
+            </button>
+
+          `
+        )
+        .join("");
+
+
+    container
+      .querySelectorAll(
+        "[data-payment-id]"
+      )
+      .forEach(
+        button => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              container
+                .querySelectorAll(
+                  ".payment-option"
+                )
+                .forEach(
+                  item =>
+                    item.style.borderColor =
+                      "#ddd"
+                );
+
+              button.style.borderColor =
+                "#2563eb";
+
+              button.dataset.selected =
+                "true";
+
+            }
+          );
+
+        }
+      );
+
   }
 
 
-  const balance =
-    Number(
-      selectedSale.balance || 0
-    );
-
-
-  document.getElementById(
-    "paymentAmount"
-  ).value =
-    balance.toFixed(2);
-
-
-  document.getElementById(
-    "paymentSaleInfo"
-  ).innerHTML = `
-
-    <div class="info-box" style="
-      margin-bottom:14px;
-    ">
-
-      <div class="info-label">
-        Cliente
-      </div>
-
-      <div class="info-value">
-        ${escapeHtml(
-          getCustomerName(
-            selectedSale.customer_id
-          )
-        )}
-      </div>
-
-      <div style="
-        margin-top:7px;
-        color:#8e8e93;
-        font-size:12px;
-      ">
-        Saldo pendiente:
-        <strong>
-          ${money(balance)}
-        </strong>
-      </div>
-
-    </div>
-
-  `;
-
-
-  openModal(
+  showModal(
     "paymentModal"
   );
 
@@ -2547,35 +3507,23 @@ function openPaymentModal(
 
 async function confirmPayment(){
 
-  if(!selectedSale){
+  if(!selectedSaleForPayment){
+
     return;
+
   }
 
 
-  const amount =
-    Number(
-      document.getElementById(
-        "paymentAmount"
-      ).value
+  const selected =
+    document.querySelector(
+      ".payment-option[data-selected='true']"
     );
 
 
-  const method =
-    document.getElementById(
-      "paymentMethod"
-    ).value;
-
-
-  const balance =
-    Number(
-      selectedSale.balance || 0
-    );
-
-
-  if(!amount || amount <= 0){
+  if(!selected){
 
     showToast(
-      "Ingresa un importe válido"
+      "Selecciona un método de pago."
     );
 
     return;
@@ -2583,78 +3531,108 @@ async function confirmPayment(){
   }
 
 
-  if(amount > balance){
+  const paymentId =
+    selected.dataset.paymentId;
 
-    showToast(
-      "El pago no puede ser mayor al saldo"
-    );
 
-    return;
+  const sale =
+    selectedSaleForPayment;
 
-  }
+
+  const button =
+    $("confirmPaymentButton");
+
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    "Registrando...";
 
 
   try{
 
-    await supabaseInsert(
-      "payments",
-      {
-        sale_id:selectedSale.id,
-        customer_id:selectedSale.customer_id,
-        amount:amount,
-        payment_method:method
-      }
-    );
+    initializeSupabase();
 
 
-    const newBalance =
-      Math.max(
-        0,
-        balance - amount
+    /*
+      Intentamos registrar el pago usando
+      la tabla payments.
+    */
+
+    const amount =
+      getSaleBalance(
+        sale
       );
 
 
-    await supabaseUpdate(
-      "sales",
-      [
-        {
-          column:"id",
-          operator:"eq",
-          value:selectedSale.id
-        }
-      ],
-      {
-        balance:newBalance,
-        status:
-          newBalance <= 0
-            ? "paid"
-            : "open"
-      }
-    );
+    const result =
+      await supabaseClient
+        .from("payments")
+        .insert({
+
+          sale_id:
+            sale.id,
+
+          customer_id:
+            sale.customer_id ||
+            null,
+
+          payment_method_id:
+            paymentId,
+
+          amount:
+            amount
+
+        });
 
 
-    closeModal(
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+
+    hideModal(
       "paymentModal"
     );
 
 
     showToast(
-      "Pago registrado correctamente"
+      "Pago registrado correctamente."
     );
 
 
     await loadSales();
 
-  }catch(error){
+  }
+
+  catch(error){
 
     console.error(
       "Error registrando pago:",
       error
     );
 
-    showToast(
-      "No fue posible registrar el pago"
+
+    showStatus(
+      "No se pudo registrar el pago.\n\n" +
+      (
+        error?.message ||
+        String(error)
+      )
     );
+
+  }
+
+  finally{
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "Registrar pago";
 
   }
 
@@ -2666,32 +3644,19 @@ async function confirmPayment(){
 ========================================================= */
 
 function sendWhatsApp(
-  saleId
+  sale
 ){
-
-  const sale =
-    sales.find(
-      item =>
-        String(item.id) ===
-        String(saleId)
-    );
-
-
-  if(!sale){
-    return;
-  }
-
 
   const phone =
     getCustomerPhone(
-      sale.customer_id
+      sale
     );
 
 
   if(!phone){
 
     showToast(
-      "El cliente no tiene teléfono registrado"
+      "Este cliente no tiene teléfono registrado."
     );
 
     return;
@@ -2700,28 +3665,61 @@ function sendWhatsApp(
 
 
   const cleanPhone =
-    String(phone)
-      .replace(/\D/g,"");
+    phone.replace(
+      /\D/g,
+      ""
+    );
 
 
-  const name =
+  if(!cleanPhone){
+
+    showToast(
+      "El teléfono del cliente no es válido."
+    );
+
+    return;
+
+  }
+
+
+  const customerName =
     getCustomerName(
-      sale.customer_id
+      sale
     );
 
 
-  const balance =
-    Number(
-      sale.balance || 0
+  const items =
+    getSaleItems(
+      sale.id
     );
+
+
+  const productText =
+    items.length
+      ? items
+          .map(
+            item =>
+              `${item.description || "Producto"} x${Number(item.quantity || 0)}`
+          )
+          .join("\n")
+      : "Productos no registrados";
 
 
   const message =
-    `Hola ${name}, te compartimos un recordatorio de tu cuenta en ${currentBusiness}. Tu saldo pendiente es de ${money(balance)}. ¡Gracias!`;
+    `Hola ${customerName}, te comparto el detalle de tu cuenta en Charlie Shop:\n\n` +
+    `${productText}\n\n` +
+    `Total: ${money(sale.total)}\n` +
+    `Saldo pendiente: ${money(getSaleBalance(sale))}\n\n` +
+    `Gracias por tu compra.`;
 
 
   const url =
-    `https://wa.me/52${cleanPhone}?text=${encodeURIComponent(message)}`;
+    "https://wa.me/52" +
+    cleanPhone +
+    "?text=" +
+    encodeURIComponent(
+      message
+    );
 
 
   window.open(
@@ -2733,32 +3731,22 @@ function sendWhatsApp(
 
 
 /* =========================================================
-   CANCELAR
+   CANCELAR VENTA
 ========================================================= */
 
 function openCancelModal(
-  saleId
+  sale
 ){
 
-  selectedSale =
-    sales.find(
-      sale =>
-        String(sale.id) ===
-        String(saleId)
-    );
+  selectedSaleForCancel =
+    sale;
 
 
-  if(!selectedSale){
-    return;
-  }
+  $("cancelReason").value =
+    "";
 
 
-  document.getElementById(
-    "cancelReason"
-  ).value = "";
-
-
-  openModal(
+  showModal(
     "cancelModal"
   );
 
@@ -2767,67 +3755,174 @@ function openCancelModal(
 
 async function confirmCancel(){
 
-  if(!selectedSale){
+  if(!selectedSaleForCancel){
+
     return;
+
   }
 
 
+  const sale =
+    selectedSaleForCancel;
+
+
   const reason =
-    document.getElementById(
-      "cancelReason"
-    ).value.trim();
+    $("cancelReason")
+      .value
+      .trim();
 
 
   if(!reason){
 
     showToast(
-      "Escribe el motivo de cancelación"
+      "Escribe el motivo de cancelación."
     );
+
+    $("cancelReason").focus();
 
     return;
 
   }
 
 
+  const button =
+    $("confirmCancelButton");
+
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    "Cancelando...";
+
+
   try{
 
-    await supabaseUpdate(
-      "sales",
-      [
-        {
-          column:"id",
-          operator:"eq",
-          value:selectedSale.id
-        }
-      ],
-      {
-        status:"cancelled",
-        cancellation_reason:reason
-      }
-    );
+    initializeSupabase();
 
 
-    closeModal(
+    const result =
+      await supabaseClient
+        .from("sales")
+        .update({
+
+          status:
+            "cancelled",
+
+          cancellation_reason:
+            reason
+
+        })
+        .eq(
+          "id",
+          sale.id
+        );
+
+
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+
+    hideModal(
       "cancelModal"
     );
 
 
     showToast(
-      "Venta cancelada"
+      "Venta cancelada correctamente."
     );
 
 
     await loadSales();
 
-  }catch(error){
+  }
+
+  catch(error){
 
     console.error(
       "Error cancelando venta:",
       error
     );
 
-    showToast(
-      "No fue posible cancelar la venta"
+
+    showStatus(
+      "No se pudo cancelar la venta.\n\n" +
+      (
+        error?.message ||
+        String(error)
+      )
+    );
+
+  }
+
+  finally{
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "Cancelar venta";
+
+  }
+
+}
+
+
+/* =========================================================
+   MODALES GENERALES
+========================================================= */
+
+function showModal(
+  id
+){
+
+  const modal =
+    $(id);
+
+  modal.classList.add(
+    "show"
+  );
+
+  modal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  document.body.classList.add(
+    "modal-open"
+  );
+
+}
+
+
+function hideModal(
+  id
+){
+
+  const modal =
+    $(id);
+
+  modal.classList.remove(
+    "show"
+  );
+
+  modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+
+  if(
+    !document.querySelector(
+      ".modal.show"
+    )
+  ){
+
+    document.body.classList.remove(
+      "modal-open"
     );
 
   }
@@ -2836,65 +3931,483 @@ async function confirmCancel(){
 
 
 /* =========================================================
-   MODALES
+   RENDER GENERAL
 ========================================================= */
 
-function openModal(
-  id
-){
+function renderEverything(){
 
-  document
-    .getElementById(id)
-    .classList.add("show");
+  renderSummary();
 
-}
+  renderProductBreakdown();
 
-
-function closeModal(
-  id
-){
-
-  document
-    .getElementById(id)
-    .classList.remove("show");
+  renderSales();
 
 }
 
+
+/* =========================================================
+   BÚSQUEDA
+========================================================= */
+
+$("searchInput").addEventListener(
+  "input",
+  event => {
+
+    searchQuery =
+      String(
+        event.target.value || ""
+      )
+      .trim()
+      .toLowerCase();
+
+    renderSales();
+
+  }
+);
+
+
+/* =========================================================
+   FILTROS
+========================================================= */
 
 document
-  .querySelectorAll(".modal")
-  .forEach(modal=>{
+  .querySelectorAll(
+    ".filter-btn"
+  )
+  .forEach(
+    button => {
 
-    modal.addEventListener(
-      "click",
-      event=>{
+      button.addEventListener(
+        "click",
+        () => {
 
-        if(
-          event.target === modal
-        ){
+          currentFilter =
+            button.dataset.filter;
 
-          modal.classList.remove(
-            "show"
+
+          document
+            .querySelectorAll(
+              ".filter-btn"
+            )
+            .forEach(
+              item =>
+                item.classList.remove(
+                  "active"
+                )
+            );
+
+
+          button.classList.add(
+            "active"
+          );
+
+
+          renderSales();
+
+        }
+      );
+
+    }
+  );
+
+
+/* =========================================================
+   CAMBIO DE NEGOCIO
+========================================================= */
+
+async function changeBusiness(
+  name,
+  button
+){
+
+  if(
+    name ===
+    currentBusiness
+  ){
+
+    return;
+
+  }
+
+
+  currentBusiness =
+    name;
+
+
+  document
+    .querySelectorAll(
+      ".business-btn"
+    )
+    .forEach(
+      item =>
+        item.classList.remove(
+          "active"
+        )
+    );
+
+
+  button.classList.add(
+    "active"
+  );
+
+
+  const url =
+    new URL(
+      window.location.href
+    );
+
+
+  url.searchParams.set(
+    "business",
+    currentBusiness
+  );
+
+
+  window.history.replaceState(
+    {},
+    "",
+    url
+  );
+
+
+  sales = [];
+  saleItems = [];
+  customers = [];
+  payments = [];
+
+
+  clearStatus();
+
+
+  $("salesList").innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div>
+      Cargando ${escapeHTML(
+        currentBusiness
+      )}...
+    </div>
+  `;
+
+
+  await loadSales();
+
+}
+
+
+/* =========================================================
+   BOTONES NEGOCIO
+========================================================= */
+
+document
+  .querySelectorAll(
+    ".business-btn"
+  )
+  .forEach(
+    button => {
+
+      if(
+        button.dataset.business ===
+        currentBusiness
+      ){
+
+        button.classList.add(
+          "active"
+        );
+
+      }
+      else{
+
+        button.classList.remove(
+          "active"
+        );
+
+      }
+
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          changeBusiness(
+            button.dataset.business,
+            button
           );
 
         }
+      );
 
-      }
+    }
+  );
+
+
+/* =========================================================
+   NAVEGACIÓN
+========================================================= */
+
+function goTo(
+  page
+){
+
+  window.location.href =
+    page +
+    "?business=" +
+    encodeURIComponent(
+      currentBusiness
     );
 
-  });
+}
+
+
+$("accountsButton")
+  .addEventListener(
+    "click",
+    () => {}
+  );
+
+
+$("clientsButton")
+  .addEventListener(
+    "click",
+    () =>
+      goTo("clientes.html")
+  );
+
+
+$("historyButton")
+  .addEventListener(
+    "click",
+    () =>
+      goTo("historial.html")
+  );
+
+
+$("inventoryButton")
+  .addEventListener(
+    "click",
+    () =>
+      goTo("inventario.html")
+  );
+
+
+$("dashboardButton")
+  .addEventListener(
+    "click",
+    () =>
+      goTo("dashboard.html")
+  );
+
+
+/*
+  Si existe un archivo principal index.html
+  usamos esa ruta para regresar al POS.
+  No se agrega botón adicional porque mantenemos
+  exactamente la navegación del POS proporcionado.
+*/
+
+
+/* =========================================================
+   MODAL PAGOS
+========================================================= */
+
+$("closePaymentModal")
+  .addEventListener(
+    "click",
+    () =>
+      hideModal("paymentModal")
+  );
+
+
+$("cancelPaymentModal")
+  .addEventListener(
+    "click",
+    () =>
+      hideModal("paymentModal")
+  );
+
+
+$("confirmPaymentButton")
+  .addEventListener(
+    "click",
+    confirmPayment
+  );
+
+
+/* =========================================================
+   MODAL DETALLE
+========================================================= */
+
+$("closeDetailModal")
+  .addEventListener(
+    "click",
+    () =>
+      hideModal("detailModal")
+  );
+
+
+/* =========================================================
+   MODAL CANCELACIÓN
+========================================================= */
+
+$("closeCancelModal")
+  .addEventListener(
+    "click",
+    () =>
+      hideModal("cancelModal")
+  );
+
+
+$("cancelCancelModal")
+  .addEventListener(
+    "click",
+    () =>
+      hideModal("cancelModal")
+  );
+
+
+$("confirmCancelButton")
+  .addEventListener(
+    "click",
+    confirmCancel
+  );
+
+
+/* =========================================================
+   CERRAR MODALES
+========================================================= */
+
+document
+  .querySelectorAll(
+    ".modal"
+  )
+  .forEach(
+    modal => {
+
+      modal.addEventListener(
+        "click",
+        event => {
+
+          if(
+            event.target ===
+            modal
+          ){
+
+            hideModal(
+              modal.id
+            );
+
+          }
+
+        }
+      );
+
+    }
+  );
+
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key !==
+      "Escape"
+    ){
+
+      return;
+
+    }
+
+
+    document
+      .querySelectorAll(
+        ".modal.show"
+      )
+      .forEach(
+        modal =>
+          hideModal(
+            modal.id
+          )
+      );
+
+  }
+);
+
+
+/* =========================================================
+   ONLINE / OFFLINE
+========================================================= */
+
+window.addEventListener(
+  "online",
+  () => {
+
+    showToast(
+      "Conexión restaurada."
+    );
+
+    loadSales();
+
+  }
+);
+
+
+window.addEventListener(
+  "offline",
+  () => {
+
+    showStatus(
+      "📴 Sin conexión a Internet.\nLas ventas existentes podrían no actualizarse hasta recuperar la conexión.",
+      "warn"
+    );
+
+  }
+);
 
 
 /* =========================================================
    INICIO
 ========================================================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  ()=>{
-    loadSales();
+async function startApp(){
+
+  /*
+    Marcamos correctamente el negocio
+    seleccionado desde la URL.
+  */
+
+  document
+    .querySelectorAll(
+      ".business-btn"
+    )
+    .forEach(
+      button => {
+
+        button.classList.toggle(
+          "active",
+          button.dataset.business ===
+          currentBusiness
+        );
+
+      }
+    );
+
+
+  if(!navigator.onLine){
+
+    showStatus(
+      "📴 No hay conexión a Internet.",
+      "warn"
+    );
+
   }
-);
+
+
+  await loadSales();
+
+}
+
+
+startApp();
 
 </script>
 
