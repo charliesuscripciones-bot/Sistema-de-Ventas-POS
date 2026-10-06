@@ -125,7 +125,7 @@ button{
   grid-template-columns:
     minmax(180px,1fr)
     150px
-    150px
+    minmax(260px,300px)
     auto;
   gap:10px;
   margin-bottom:15px;
@@ -183,6 +183,54 @@ button{
 .btn-red{
   background:#dc2626;
   color:white;
+}
+
+/* DATE RANGE */
+
+.date-range{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+  min-width:0;
+}
+
+.date-range .date-box{
+  position:relative;
+  min-width:0;
+}
+
+.date-range .date-label{
+  position:absolute;
+  left:10px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#6b7280;
+  font-size:10px;
+  font-weight:800;
+  pointer-events:none;
+  background:white;
+  padding:0 2px;
+  z-index:1;
+}
+
+.date-range input{
+  width:100%;
+  height:42px;
+  border:1px solid #d9dde4;
+  border-radius:9px;
+  padding:0 8px 0 45px;
+  outline:none;
+  background:white;
+  font-size:12px;
+  min-width:0;
+}
+
+.date-range input:focus{
+  border-color:#111827;
+}
+
+.date-range input::-webkit-calendar-picker-indicator{
+  cursor:pointer;
 }
 
 /* SUMMARY */
@@ -555,10 +603,14 @@ button{
 
 /* RESPONSIVE */
 
-@media(max-width:850px){
+@media(max-width:900px){
 
   .filters{
     grid-template-columns:1fr 1fr;
+  }
+
+  .date-range{
+    grid-column:span 2;
   }
 
   .summary{
@@ -591,6 +643,11 @@ button{
     grid-template-columns:1fr;
   }
 
+  .date-range{
+    grid-column:auto;
+    grid-template-columns:1fr 1fr;
+  }
+
   .summary{
     grid-template-columns:1fr 1fr;
   }
@@ -619,6 +676,24 @@ button{
 
   .product-quantity{
     font-size:17px;
+  }
+
+}
+
+@media(max-width:420px){
+
+  .date-range{
+    gap:5px;
+  }
+
+  .date-range input{
+    padding-left:38px;
+    font-size:11px;
+  }
+
+  .date-range .date-label{
+    left:7px;
+    font-size:9px;
   }
 
 }
@@ -672,8 +747,9 @@ button{
       class="input"
       type="text"
       placeholder="Buscar cliente, teléfono o folio..."
-      oninput="renderSales"
+      oninput="renderSales()"
     >
+
 
     <select
       id="statusFilter"
@@ -698,12 +774,42 @@ button{
 
     </select>
 
-    <input
-      id="dateFilter"
-      class="input"
-      type="date"
-      onchange="renderSales()"
-    >
+
+    <!-- RANGO DE FECHAS -->
+
+    <div class="date-range">
+
+      <div class="date-box">
+
+        <span class="date-label">
+          Desde
+        </span>
+
+        <input
+          id="dateFrom"
+          type="date"
+          onchange="renderSales()"
+        >
+
+      </div>
+
+
+      <div class="date-box">
+
+        <span class="date-label">
+          Hasta
+        </span>
+
+        <input
+          id="dateTo"
+          type="date"
+          onchange="renderSales()"
+        >
+
+      </div>
+
+    </div>
+
 
     <button
       class="btn btn-dark"
@@ -1756,6 +1862,94 @@ function getSaleStatus(
 
 
 /* =========================================================
+   RANGO DE FECHAS
+========================================================= */
+
+function matchesDateRange(
+  sale
+){
+
+  const dateFrom =
+    document.getElementById(
+      "dateFrom"
+    ).value;
+
+  const dateTo =
+    document.getElementById(
+      "dateTo"
+    ).value;
+
+
+  /*
+    Si no se selecciona ninguna fecha,
+    se muestran todas las cuentas.
+  */
+
+  if(
+    !dateFrom &&
+    !dateTo
+  ){
+
+    return true;
+
+  }
+
+
+  const saleDate =
+    dateOnly(
+      sale.created_at ||
+      sale.sale_date
+    );
+
+
+  if(!saleDate){
+
+    return false;
+
+  }
+
+
+  /*
+    Solo fecha inicial
+  */
+
+  if(
+    dateFrom &&
+    !dateTo
+  ){
+
+    return saleDate >= dateFrom;
+
+  }
+
+
+  /*
+    Solo fecha final
+  */
+
+  if(
+    !dateFrom &&
+    dateTo
+  ){
+
+    return saleDate <= dateTo;
+
+  }
+
+
+  /*
+    Ambas fechas
+  */
+
+  return (
+    saleDate >= dateFrom &&
+    saleDate <= dateTo
+  );
+
+}
+
+
+/* =========================================================
    RENDER SALES
 ========================================================= */
 
@@ -1774,12 +1968,6 @@ function renderSales(){
   const statusFilter =
     document.getElementById(
       "statusFilter"
-    ).value;
-
-
-  const selectedDate =
-    document.getElementById(
-      "dateFilter"
     ).value;
 
 
@@ -1848,11 +2036,9 @@ function renderSales(){
 
 
         const matchesDate =
-          !selectedDate ||
-          dateOnly(
-            sale.created_at ||
-            sale.sale_date
-          ) === selectedDate;
+          matchesDateRange(
+            sale
+          );
 
 
         return (
@@ -3268,7 +3454,6 @@ async function confirmCancellation(){
 
 /* =========================================================
    WHATSAPP
-   MENSAJE OFICIAL DE COBRANZA
 ========================================================= */
 
 function sendWhatsApp(
